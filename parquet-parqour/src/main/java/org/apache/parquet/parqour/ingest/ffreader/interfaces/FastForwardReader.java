@@ -14,4 +14,5 @@ public interface FastForwardReader {
   boolean isEof();
 
   void fastForwardTo(int entryNumber);
+  long currentEntryNumber();
 }

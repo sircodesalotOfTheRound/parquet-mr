@@ -27,10 +27,9 @@ public final class PlainInt32FastForwardReader extends FastForwardReaderBase imp
 
   @Override
   public void fastForwardTo(int entryNumber) {
-    long jumpDistance = (entryNumber - currentRow) * SIZEOF_INT32;
+    long jumpDistance = (entryNumber - currentEntryNumber) * SIZEOF_INT32;
 
     dataOffset += jumpDistance;
-    currentRow = entryNumber;
+    currentEntryNumber = entryNumber;
   }
 }
-

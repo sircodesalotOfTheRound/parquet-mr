@@ -41,13 +41,12 @@ public final class RLEBooleanFastForwardReader extends FastForwardReaderBase imp
         break;
 
       default:
-        while (currentRow < entryNumber) {
+        while (currentEntryNumber < entryNumber) {
           this.readtf();
         }
     }
 
-    currentRow = entryNumber;
+    currentEntryNumber = entryNumber;
   }
-
 }
 

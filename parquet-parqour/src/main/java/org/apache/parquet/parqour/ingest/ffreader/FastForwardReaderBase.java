@@ -18,8 +18,7 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 public abstract class FastForwardReaderBase implements FastForwardReader {
   protected final DataPageMetadata metadata;
   protected final ValuesType type;
-  protected long currentRow;
-  protected long currentRowOnPage;
+  protected long currentEntryNumber;
   protected long totalItemsOnPage;
 
   protected byte[] data;
@@ -29,19 +28,20 @@ public abstract class FastForwardReaderBase implements FastForwardReader {
     this.metadata = metadata;
     this.type = type;
     this.data = metadata.data();
-    this.currentRow = metadata.startingEntryNumber();
     this.totalItemsOnPage = metadata.totalItems();
     this.dataOffset = metadata.computeOffset(metadata, type) - 1;
-    this.currentRow = metadata.startingEntryNumber();
 
-    this.currentRowOnPage = -1;
+    this.currentEntryNumber = 0;
   }
 
   public void advanceRowNumber() {
-    this.currentRow++;
-    this.currentRowOnPage++;
+    this.currentEntryNumber++;
   }
 
+  @Override
+  public final long currentEntryNumber() {
+    return this.currentEntryNumber;
+  }
 
   @Override
   public long totalItemsOnPage() { return this.totalItemsOnPage; }
@@ -50,8 +50,7 @@ public abstract class FastForwardReaderBase implements FastForwardReader {
   public ValuesType type() { return this.type; }
 
   @Override
-  public boolean isEof() { return this.currentRowOnPage >= totalItemsOnPage - 1;}
-
+  public boolean isEof() { return this.currentEntryNumber >= totalItemsOnPage;}
 
   public static FastForwardReaderBase resolve(DataPageMetadata metadata, ValuesType type) {
     switch (type) {

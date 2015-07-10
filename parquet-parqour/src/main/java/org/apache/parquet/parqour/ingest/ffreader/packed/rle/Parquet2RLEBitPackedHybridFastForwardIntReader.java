@@ -41,12 +41,12 @@ public final class Parquet2RLEBitPackedHybridFastForwardIntReader extends FastFo
         break;
 
       default:
-        while (currentRow < entryNumber) {
+        while (currentEntryNumber < entryNumber) {
           this.nextRelationshipLevel();
         }
     }
 
-    currentRow = entryNumber;
+    currentEntryNumber = entryNumber;
   }
 }
 

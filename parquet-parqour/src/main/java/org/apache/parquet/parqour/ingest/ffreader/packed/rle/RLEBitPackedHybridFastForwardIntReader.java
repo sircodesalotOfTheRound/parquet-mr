@@ -40,12 +40,12 @@ public final class RLEBitPackedHybridFastForwardIntReader extends FastForwardRea
         break;
 
       default:
-        while (currentRow < entryNumber) {
+        while (currentEntryNumber < entryNumber) {
           this.nextRelationshipLevel();
         }
     }
 
-    currentRow = entryNumber;
+    currentEntryNumber = entryNumber;
   }
 }
 

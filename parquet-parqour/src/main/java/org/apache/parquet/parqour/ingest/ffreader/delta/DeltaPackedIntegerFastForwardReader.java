@@ -34,7 +34,7 @@ public class DeltaPackedIntegerFastForwardReader extends FastForwardReaderBase
 
   @Override
   public void fastForwardTo(int entryNumber) {
-    for (long index = currentRow; index < entryNumber; index++) {
+    for (long index = currentEntryNumber; index < entryNumber; index++) {
       deltaPackedSegment.readi64();
     }
   }

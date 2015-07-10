@@ -33,6 +33,11 @@ public final class Int32IngestNode extends ColumnIngestNodeBase<Int32FastForward
   }
 
   @Override
+  protected void updateValuesReaderValue() {
+    this.currentValue = valuesReader.readi32();
+  }
+
+  @Override
   protected AdvanceableCursor onLinkToParent(AggregatingIngestNode parentNode, int[] relationships) {
     this.relationshipLinks = relationships;
     return cursor;
@@ -66,7 +71,7 @@ public final class Int32IngestNode extends ColumnIngestNodeBase<Int32FastForward
     do {
       // (2) If the current row number is not the same as the row number to be read, perform a fast forward.
       if (currentRowNumber < rowNumber) {
-        this.performFastForward(rowNumber);
+        this.forwardToRowNumber(rowNumber);
       }
 
       boolean isDefined = currentEntryDefinitionLevel >= definitionLevelAtThisNode;

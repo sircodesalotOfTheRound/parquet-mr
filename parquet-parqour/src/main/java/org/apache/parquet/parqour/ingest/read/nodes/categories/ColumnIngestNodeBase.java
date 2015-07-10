@@ -58,8 +58,16 @@ public abstract class ColumnIngestNodeBase<TFFReaderType extends FastForwardRead
     if (this.parent() == null) throw new ReadNodeException("Record-reading ingest nodes nodes must have a parent.");
   }
 
-  protected void performFastForward(int rowNumber) {
+  protected void forwardToRowNumber(int rowNumber) {
     if (canPerformTrueFastForwards) {
+      performFastForwardTo(rowNumber);
+    } else {
+      this.performSlowForwardTo(rowNumber);
+    }
+  }
+
+  private void performFastForwardTo(int rowNumber) {
+    if (currentRowNumber != rowNumber) {
       moveToPageContainingRowNumber(rowNumber);
 
       definitionLevelReader.fastForwardTo(rowNumber);
@@ -67,20 +75,17 @@ public abstract class ColumnIngestNodeBase<TFFReaderType extends FastForwardRead
       valuesReader.fastForwardTo(rowNumber);
 
       this.onPreReadFirstRecordOnPage();
-    } else {
-      // True fast forwards require all REQUIRED fields, for this node and all parents.
-      throw new DataIngestException("Slow-Forwards not yet implemented.");
     }
   }
 
-  public void moveToNextPage() {
+  protected final void moveToNextPage() {
     this.dataPage = diskInterfaceManager.getNextPageForColumn(dataPage);
     this.totalItemsOnThisPage = dataPage.totalItems();
 
     this.onPageRead(dataPage);
   }
 
-  public void moveToPageContainingRowNumber(int rowNumber) {
+  protected final void moveToPageContainingRowNumber(int rowNumber) {
     while (!this.dataPage.containsRow(rowNumber)) {
       this.dataPage = diskInterfaceManager.getNextPageForColumn(dataPage);
     }
@@ -88,6 +93,35 @@ public abstract class ColumnIngestNodeBase<TFFReaderType extends FastForwardRead
     this.totalItemsOnThisPage = dataPage.totalItems();
     this.onPageRead(dataPage);
   }
+
+  protected final void performSlowForwardTo(long rowNumber) {
+    int valuesEntryNumber = 0;
+    while (currentRowNumber != rowNumber) {
+      currentEntryDefinitionLevel = definitionLevelReader.nextRelationshipLevel();
+      currentEntryRepetitionLevel = repetitionLevelReader.nextRelationshipLevel();
+
+      // If the value is defined at this level, then increment the number of values we need
+      // to fast forward to.
+      if (currentEntryDefinitionLevel == definitionLevelAtThisNode) {
+        valuesEntryNumber++;
+      }
+
+      // Move the row number forward if we reach a repetition level of ZERO.
+      if (currentEntryRepetitionLevel == 0) {
+        currentRowNumber++;
+      }
+    }
+
+    // Fast forward the values reader to this entry.
+    valuesReader.fastForwardTo(valuesEntryNumber);
+
+    // If defined for this record, update the value at this entry.
+    if (currentEntryDefinitionLevel == definitionLevelAtThisNode) {
+      this.updateValuesReaderValue();
+    }
+  }
+
+  protected abstract void updateValuesReaderValue();
 
   public void onPageRead(DataPageDecorator page) {
     this.definitionLevelReader = page.definitionLevelReader();

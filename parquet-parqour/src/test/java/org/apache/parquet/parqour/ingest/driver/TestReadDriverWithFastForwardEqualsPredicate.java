@@ -7,6 +7,7 @@ import org.apache.parquet.parqour.testtools.ParquetConfiguration;
 import org.apache.parquet.parqour.testtools.TestTools;
 import org.apache.parquet.parqour.testtools.WriteTools;
 import org.apache.hadoop.fs.Path;
+import org.apache.parquet.schema.MessageType;
 import org.junit.Test;
 import org.apache.parquet.example.data.Group;
 import org.apache.parquet.example.data.simple.SimpleGroup;
@@ -30,13 +31,15 @@ import static org.apache.parquet.schema.Type.Repetition.REQUIRED;
 /**
  * Created by sircodesalot on 6/22/15.
  */
-public class TestReadDriverWithEqualsPredicate {
+public class TestReadDriverWithFastForwardEqualsPredicate {
   private static int TOTAL_ROWS = 1000000;
   private static int ROW_TO_SEARCH_FOR = TestTools.generateRandomInt(TOTAL_ROWS);
   private static final Operators.IntColumn COLUMN = FilterApi.intColumn("one");
   private static final Operators.Eq<Integer> EQUALS_PREDICATE = FilterApi.eq(COLUMN, ROW_TO_SEARCH_FOR);
 
-  private final GroupType COUNTING_SCHEMA = new GroupType(REQUIRED, "multipliers",
+  // If a PrimitiveType node and all of it's ancestors (except for the root, which is always REPEATED), have
+  // a RepeatType of 'REQUIRED' then we can use fast forwarding.
+  private final MessageType COUNTING_SCHEMA = new MessageType("multipliers",
     new PrimitiveType(REQUIRED, INT32, "one"),
     new PrimitiveType(REQUIRED, INT32, "two"),
     new PrimitiveType(REQUIRED, INT32, "three"));
@@ -72,7 +75,6 @@ public class TestReadDriverWithEqualsPredicate {
             // Should have all results reported, and there should be just one item.
             Cursor cursor = driver.cursor();
 
-            // TODO: Broken test.
             assertEquals((Integer) ROW_TO_SEARCH_FOR, cursor.i32("one"));
             assertEquals((Integer) (ROW_TO_SEARCH_FOR * 2), cursor.i32("two"));
             assertEquals((Integer) (ROW_TO_SEARCH_FOR * 3), cursor.i32("three"));

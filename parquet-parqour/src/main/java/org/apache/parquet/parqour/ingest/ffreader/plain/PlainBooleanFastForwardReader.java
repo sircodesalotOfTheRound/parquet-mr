@@ -12,24 +12,23 @@ public class PlainBooleanFastForwardReader extends FastForwardReaderBase impleme
   public PlainBooleanFastForwardReader(DataPageMetadata metadata, ValuesType type) {
     super(metadata, type);
 
-    this.currentRowOnPage = 0;
+    this.currentEntryNumber = 0;
   }
 
   @Override
   public boolean readtf() {
-    int byteNumber = (int)(this.currentRowOnPage / 8);
-    int bitNumber = (int)(this.currentRowOnPage % 8);
+    int byteNumber = (int)(this.currentEntryNumber / 8);
+    int bitNumber = (int)(this.currentEntryNumber % 8);
 
-    currentRow++;
-    currentRowOnPage++;
+    currentEntryNumber++;
     return (data[byteNumber] & (1 << bitNumber)) != 0;
   }
 
   @Override
   public void fastForwardTo(int entryNumber) {
-    long jumpDistance = (entryNumber - currentRow);
+    long jumpDistance = (entryNumber - currentEntryNumber);
 
-    this.currentRow = entryNumber;
-    this.currentRowOnPage += jumpDistance;
+    this.currentEntryNumber = entryNumber;
+    this.currentEntryNumber += jumpDistance;
   }
 }

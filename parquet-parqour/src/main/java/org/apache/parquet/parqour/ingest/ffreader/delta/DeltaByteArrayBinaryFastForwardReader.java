@@ -55,4 +55,5 @@ public class DeltaByteArrayBinaryFastForwardReader extends FastForwardReaderBase
   public void fastForwardTo(int entryNumber) {
 
   }
+
 }
