@@ -74,8 +74,8 @@ public class TestReadDriverWithEqualsPredicate {
 
             // TODO: Broken test.
             assertEquals((Integer) ROW_TO_SEARCH_FOR, cursor.i32("one"));
-          /*assertEquals((Integer) (ROW_TO_SEARCH_FOR * 2), cursor.i32("two"));
-          assertEquals((Integer) (ROW_TO_SEARCH_FOR * 3), cursor.i32("three"));*/
+            assertEquals((Integer) (ROW_TO_SEARCH_FOR * 2), cursor.i32("two"));
+            assertEquals((Integer) (ROW_TO_SEARCH_FOR * 3), cursor.i32("three"));
           }
         }
       });

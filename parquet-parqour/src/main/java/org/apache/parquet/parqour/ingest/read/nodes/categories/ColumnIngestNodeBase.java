@@ -62,6 +62,8 @@ public abstract class ColumnIngestNodeBase<TFFReaderType extends FastForwardRead
     definitionLevelReader.fastForwardTo(rowNumber);
     repetitionLevelReader.fastForwardTo(rowNumber);
     valuesReader.fastForwardTo(rowNumber);
+
+    this.onPreReadFirstRecordOnPage();
   }
 
   public void moveToNextPage() {
