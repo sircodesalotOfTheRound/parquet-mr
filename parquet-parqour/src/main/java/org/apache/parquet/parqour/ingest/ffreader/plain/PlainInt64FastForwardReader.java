@@ -28,7 +28,7 @@ public final class PlainInt64FastForwardReader extends FastForwardReaderBase imp
   }
 
   @Override
-  public void fastForwardTo(int rowNumber) {
+  public void fastForwardTo(int entryNumber) {
 
   }
 }

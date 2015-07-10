@@ -45,7 +45,7 @@ public final class PlainFixedBinaryFastForwardReader extends FastForwardReaderBa
   public byte[] data() { throw new NotImplementedException(); }
 
   @Override
-  public void fastForwardTo(int rowNumber) {
+  public void fastForwardTo(int entryNumber) {
 
   }
 }

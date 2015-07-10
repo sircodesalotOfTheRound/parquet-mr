@@ -1,5 +1,6 @@
 package org.apache.parquet.parqour.ingest.read.nodes.categories;
 
+import org.apache.parquet.parqour.exceptions.DataIngestException;
 import org.apache.parquet.parqour.exceptions.ReadNodeException;
 import org.apache.parquet.parqour.ingest.ffreader.interfaces.FastForwardReader;
 import org.apache.parquet.parqour.ingest.ffreader.interfaces.RelationshipLevelFastForwardReader;
@@ -10,6 +11,7 @@ import org.apache.parquet.parqour.ingest.schema.SchemaInfo;
 import org.apache.parquet.column.ColumnDescriptor;
 import org.apache.parquet.hadoop.metadata.ColumnPath;
 import org.apache.parquet.schema.Type;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * Created by sircodesalot on 6/2/15.
@@ -57,13 +59,18 @@ public abstract class ColumnIngestNodeBase<TFFReaderType extends FastForwardRead
   }
 
   protected void performFastForward(int rowNumber) {
-    moveToPageContainingRowNumber(rowNumber);
+    if (canPerformTrueFastForwards) {
+      moveToPageContainingRowNumber(rowNumber);
 
-    definitionLevelReader.fastForwardTo(rowNumber);
-    repetitionLevelReader.fastForwardTo(rowNumber);
-    valuesReader.fastForwardTo(rowNumber);
+      definitionLevelReader.fastForwardTo(rowNumber);
+      repetitionLevelReader.fastForwardTo(rowNumber);
+      valuesReader.fastForwardTo(rowNumber);
 
-    this.onPreReadFirstRecordOnPage();
+      this.onPreReadFirstRecordOnPage();
+    } else {
+      // True fast forwards require all REQUIRED fields, for this node and all parents.
+      throw new DataIngestException("Slow-Forwards not yet implemented.");
+    }
   }
 
   public void moveToNextPage() {

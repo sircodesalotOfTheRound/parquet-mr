@@ -35,18 +35,18 @@ public final class RLEBooleanFastForwardReader extends FastForwardReaderBase imp
   }
 
   @Override
-  public void fastForwardTo(int rowNumber) {
+  public void fastForwardTo(int entryNumber) {
     switch (segment.type()) {
       case ZERO: /* No-op*/
         break;
 
       default:
-        while (currentRow < rowNumber) {
+        while (currentRow < entryNumber) {
           this.readtf();
         }
     }
 
-    currentRow = rowNumber;
+    currentRow = entryNumber;
   }
 
 }

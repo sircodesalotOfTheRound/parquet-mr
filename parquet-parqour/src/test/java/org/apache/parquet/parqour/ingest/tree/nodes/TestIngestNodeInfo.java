@@ -48,6 +48,7 @@ public class TestIngestNodeInfo {
     AggregatingIngestNode aggregatingIngestNode = mock(AggregatingIngestNode.class);
     when(aggregatingIngestNode.schemaNode()).thenReturn(SCHEMA);
 
+
     return aggregatingIngestNode;
   }
 

@@ -28,7 +28,7 @@ public final class PlainDoubleFastForwardReader extends FastForwardReaderBase {
   }
 
   @Override
-  public void fastForwardTo(int rowNumber) {
+  public void fastForwardTo(int entryNumber) {
 
   }
 }

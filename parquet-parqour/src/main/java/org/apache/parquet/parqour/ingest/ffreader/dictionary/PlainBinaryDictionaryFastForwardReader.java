@@ -75,7 +75,7 @@ public final class PlainBinaryDictionaryFastForwardReader extends DictionaryBase
 
 
   @Override
-  public void fastForwardTo(int rowNumber) {
+  public void fastForwardTo(int entryNumber) {
 
   }
 

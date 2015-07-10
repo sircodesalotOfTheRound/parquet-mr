@@ -72,7 +72,7 @@ public class Int32DictionaryFastForwardReader extends FastForwardReaderBase impl
   }
 
   @Override
-  public void fastForwardTo(int rowNumber) {
+  public void fastForwardTo(int entryNumber) {
 
   }
 }

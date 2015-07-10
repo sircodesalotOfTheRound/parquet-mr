@@ -77,7 +77,7 @@ public final class RLEFixedBinaryDictionaryFastForwardReader extends FastForward
 
 
   @Override
-  public void fastForwardTo(int rowNumber) {
+  public void fastForwardTo(int entryNumber) {
 
   }
 

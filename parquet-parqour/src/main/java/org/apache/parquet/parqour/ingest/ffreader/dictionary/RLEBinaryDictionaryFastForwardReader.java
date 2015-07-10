@@ -74,7 +74,7 @@ public final class RLEBinaryDictionaryFastForwardReader extends FastForwardReade
 
 
   @Override
-  public void fastForwardTo(int rowNumber) {
+  public void fastForwardTo(int entryNumber) {
 
   }
 

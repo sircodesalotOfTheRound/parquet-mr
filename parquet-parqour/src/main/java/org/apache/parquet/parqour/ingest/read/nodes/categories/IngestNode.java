@@ -76,7 +76,13 @@ public abstract class IngestNode {
     if (node.schemaNode().getRepetition() == Type.Repetition.REQUIRED) {
       return determineCanPerformTrueFastForwarding(node.parent);
     } else {
-      return false;
+      // If we've reached the root level without hitting an OPTIONAL, or REPEAT, then this
+      // node can perform fast forwards (since the root is always REPEAT).
+      if (!node.hasParent) {
+        return true;
+      } else {
+        return false;
+      }
     }
   }
 

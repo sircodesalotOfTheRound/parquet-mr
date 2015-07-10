@@ -35,18 +35,18 @@ public final class Parquet2RLEBitPackedHybridFastForwardIntReader extends FastFo
   }
 
   @Override
-  public void fastForwardTo(int rowNumber) {
+  public void fastForwardTo(int entryNumber) {
     switch (segment.type()) {
       case ZERO: /* No-op*/
         break;
 
       default:
-        while (currentRow < rowNumber) {
+        while (currentRow < entryNumber) {
           this.nextRelationshipLevel();
         }
     }
 
-    currentRow = rowNumber;
+    currentRow = entryNumber;
   }
 }
 

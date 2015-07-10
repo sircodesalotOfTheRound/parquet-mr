@@ -13,5 +13,5 @@ public interface FastForwardReader {
   @Deprecated
   boolean isEof();
 
-  void fastForwardTo(int rowNumber);
+  void fastForwardTo(int entryNumber);
 }

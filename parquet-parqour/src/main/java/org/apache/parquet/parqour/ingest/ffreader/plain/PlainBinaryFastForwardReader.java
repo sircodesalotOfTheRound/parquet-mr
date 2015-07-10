@@ -47,7 +47,7 @@ public final class PlainBinaryFastForwardReader extends FastForwardReaderBase
   public byte[] data() { return super.data; }
 
   @Override
-  public void fastForwardTo(int rowNumber) {
+  public void fastForwardTo(int entryNumber) {
 
   }
 
