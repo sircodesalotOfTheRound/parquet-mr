@@ -75,6 +75,7 @@ public abstract class ColumnIngestNodeBase<TFFReaderType extends FastForwardRead
       valuesReader.fastForwardTo(rowNumber);
 
       this.onPreReadFirstRecordOnPage();
+      currentEntryOnPage = rowNumber - dataPage.startingEntryNumber();
     }
   }
 
@@ -97,19 +98,30 @@ public abstract class ColumnIngestNodeBase<TFFReaderType extends FastForwardRead
   protected final void performSlowForwardTo(long rowNumber) {
     int valuesEntryNumber = 0;
     while (currentRowNumber != rowNumber) {
-      currentEntryDefinitionLevel = definitionLevelReader.nextRelationshipLevel();
-      currentEntryRepetitionLevel = repetitionLevelReader.nextRelationshipLevel();
+      // If there are no more items on this page, move to the next.
+      // And reset the values entry number.
+      if (currentEntryOnPage >= totalItemsOnThisPage) {
+        this.moveToNextPage();
+        valuesEntryNumber = 0;
+      }
 
-      // If the value is defined at this level, then increment the number of values we need
-      // to fast forward to.
+      // Read the RL/DL values for this entry.
+      currentEntryRepetitionLevel = repetitionLevelReader.nextRelationshipLevel();
+      currentEntryDefinitionLevel = definitionLevelReader.nextRelationshipLevel();
+
+      // If the value is defined at this level, then increment the number of values we need to fast forward to.
+      // Notice that we fast-forward the values entry only after we move to the right entry number.
       if (currentEntryDefinitionLevel == definitionLevelAtThisNode) {
         valuesEntryNumber++;
       }
 
-      // Move the row number forward if we reach a repetition level of ZERO.
+      // Move the row number forward if we reach a repetition level of ZERO, since ZERO means 'new record'.
       if (currentEntryRepetitionLevel == 0) {
         currentRowNumber++;
       }
+
+      // Move the current entry number forward.
+      currentEntryOnPage++;
     }
 
     // Fast forward the values reader to this entry.
