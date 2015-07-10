@@ -1,7 +1,7 @@
 package org.apache.parquet.parqour.ingest.driver;
 
 import org.apache.parquet.parqour.ingest.cursor.iface.Cursor;
-import org.apache.parquet.parqour.ingest.read.driver.ParqourReadDriver;
+import org.apache.parquet.parqour.ingest.read.driver.ParqourPredicateReadDriver;
 import org.apache.parquet.parqour.ingest.schema.SchemaInfo;
 import org.apache.parquet.parqour.testtools.ParquetConfiguration;
 import org.apache.parquet.parqour.testtools.TestTools;
@@ -17,7 +17,6 @@ import org.apache.parquet.format.converter.ParquetMetadataConverter;
 import org.apache.parquet.hadoop.ParquetFileReader;
 import org.apache.parquet.hadoop.ParquetWriter;
 import org.apache.parquet.hadoop.metadata.ParquetMetadata;
-import org.apache.parquet.schema.GroupType;
 import org.apache.parquet.schema.PrimitiveType;
 
 import java.io.IOException;
@@ -69,7 +68,7 @@ public class TestReadDriverWithFastForwardEqualsPredicate {
         public void execute() throws Exception {
           ParquetMetadata metadata = ParquetFileReader.readFooter(EMPTY_CONFIGURATION, new Path(TEST_FILE_PATH), ParquetMetadataConverter.NO_FILTER);
           SchemaInfo schemaInfo = new SchemaInfo(EMPTY_CONFIGURATION, new Path(TEST_FILE_PATH), metadata, COUNTING_SCHEMA, EQUALS_PREDICATE);
-          ParqourReadDriver driver = new ParqourReadDriver(schemaInfo);
+          ParqourPredicateReadDriver driver = new ParqourPredicateReadDriver(schemaInfo);
 
           while (driver.readNext()) {
             // Should have all results reported, and there should be just one item.

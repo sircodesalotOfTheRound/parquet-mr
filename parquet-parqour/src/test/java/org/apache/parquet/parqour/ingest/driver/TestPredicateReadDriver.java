@@ -19,7 +19,7 @@ import static org.apache.parquet.schema.Type.Repetition.REQUIRED;
 /**
  * Created by sircodesalot on 6/16/15.
  */
-public class TestPredicateDriver {
+public class TestPredicateReadDriver {
   private static int TOTAL_ROWS = 1000000;
   private static int ROW_TO_SEARCH_FOR = TestTools.generateRandomInt(TOTAL_ROWS);
   private static final Operators.IntColumn COLUMN = FilterApi.intColumn("one");

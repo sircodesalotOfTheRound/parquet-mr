@@ -165,4 +165,5 @@ public class SchemaInfo {
   public List<BlockMetaData> blocks() { return this.blocks; }
   public MessageType projectionSchema() { return this.projectionSchema; }
   public FilterPredicate predicate() { return this.predicate; }
+  public boolean hasPredicate() { return this.predicate != null; }
 }

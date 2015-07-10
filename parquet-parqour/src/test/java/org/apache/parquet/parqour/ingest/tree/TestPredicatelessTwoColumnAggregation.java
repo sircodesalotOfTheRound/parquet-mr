@@ -1,7 +1,7 @@
 package org.apache.parquet.parqour.ingest.tree;
 
 import org.apache.parquet.parqour.ingest.cursor.iface.Cursor;
-import org.apache.parquet.parqour.ingest.read.driver.ParqourReadDriver;
+import org.apache.parquet.parqour.ingest.read.driver.ParqourPredicateReadDriver;
 import org.apache.parquet.parqour.ingest.schema.SchemaInfo;
 import org.apache.parquet.parqour.testtools.TestTools;
 import org.apache.parquet.parqour.testtools.UsesPersistence;
@@ -64,7 +64,7 @@ public class TestPredicatelessTwoColumnAggregation extends UsesPersistence {
         ParquetMetadata metadata = ParquetFileReader.readFooter(TestTools.EMPTY_CONFIGURATION, new Path(TestTools.TEST_FILE_PATH), ParquetMetadataConverter.NO_FILTER);
 
         SchemaInfo schemaInfo = new SchemaInfo(TestTools.EMPTY_CONFIGURATION, new Path(TestTools.TEST_FILE_PATH), metadata, COUNTING_SCHEMA);
-        ParqourReadDriver driver = new ParqourReadDriver(schemaInfo);
+        ParqourPredicateReadDriver driver = new ParqourPredicateReadDriver(schemaInfo);
 
         // Follow the aggregate pointers to the leaf nodes.
         Cursor cursor = driver.cursor();

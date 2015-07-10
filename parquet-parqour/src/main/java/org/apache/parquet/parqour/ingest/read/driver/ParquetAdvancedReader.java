@@ -13,7 +13,7 @@ import org.apache.parquet.schema.GroupType;
  */
 public class ParquetAdvancedReader {
   private final SchemaInfo schemaInfo;
-  private final ParqourReadDriver driver;
+  private final ParqourPredicateReadDriver driver;
 
   public ParquetAdvancedReader(Configuration configuration, Path path, ParquetMetadata metadata, FilterPredicate predicate) {
     this(configuration, path, metadata, metadata.getFileMetaData().getSchema(), predicate);
@@ -23,7 +23,7 @@ public class ParquetAdvancedReader {
                                     GroupType projectionSchema, FilterPredicate predicate) {
 
     this.schemaInfo = new SchemaInfo(configuration, path, metadata, projectionSchema, predicate);
-    this.driver = new ParqourReadDriver(schemaInfo);
+    this.driver = new ParqourPredicateReadDriver(schemaInfo);
   }
 
   public SchemaInfo schemaInfo() { return this.schemaInfo; }

@@ -1,6 +1,8 @@
 package org.apache.parquet.parqour.ingest.driver;
 
 import org.apache.parquet.parqour.ingest.cursor.iface.Cursor;
+import org.apache.parquet.parqour.ingest.read.driver.ParqourNoPredicateReadDriver;
+import org.apache.parquet.parqour.ingest.read.driver.ParqourPredicateReadDriver;
 import org.apache.parquet.parqour.ingest.read.driver.ParqourReadDriver;
 import org.apache.parquet.parqour.ingest.schema.SchemaInfo;
 import org.apache.parquet.parqour.testtools.ParquetConfiguration;
@@ -26,7 +28,7 @@ import static org.apache.parquet.schema.Type.Repetition.REQUIRED;
 /**
  * Created by sircodesalot on 6/22/15.
  */
-public class TestReadDriverWithNoPredicate {
+public class TestNoPredicateReadDriver {
   private static int TOTAL_ROWS = 1000000;
   private static int ROW_TO_SEARCH_FOR = TestTools.generateRandomInt(TOTAL_ROWS);
 
@@ -61,7 +63,7 @@ public class TestReadDriverWithNoPredicate {
         public void execute() throws Exception {
           ParquetMetadata metadata = ParquetFileReader.readFooter(TestTools.EMPTY_CONFIGURATION, new Path(TestTools.TEST_FILE_PATH), ParquetMetadataConverter.NO_FILTER);
           SchemaInfo schemaInfo = new SchemaInfo(TestTools.EMPTY_CONFIGURATION, new Path(TestTools.TEST_FILE_PATH), metadata, COUNTING_SCHEMA);
-          ParqourReadDriver driver = new ParqourReadDriver(schemaInfo);
+          ParqourReadDriver driver = new ParqourNoPredicateReadDriver(schemaInfo);
 
           for (int index = 0; index < TOTAL_ROWS; index++) {
             driver.readNext();
