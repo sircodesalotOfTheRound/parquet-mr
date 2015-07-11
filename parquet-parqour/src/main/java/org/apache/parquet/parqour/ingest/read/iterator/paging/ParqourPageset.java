@@ -7,17 +7,16 @@ import java.util.Iterator;
 /**
  * Created by sircodesalot on 6/27/15.
  */
-public class ParqourPageset<T> extends Parqour<T> {
-  private final Iterator<T> iterator;
+public class ParqourPageset<T> implements Iterable<ParqourPage<T>> {
   private final int size;
+  private final Parqour<T> recordset;
 
-  public ParqourPageset(Iterator<T> iterator, int size) {
-    this.iterator = iterator;
+  public ParqourPageset(Parqour<T> recordset, int size) {
+    this.recordset = recordset;
     this.size = size;
   }
-
   @Override
-  public Iterator<T> iterator() {
-    return new PageIterator<T>(iterator, size);
+  public Iterator<ParqourPage<T>> iterator() {
+    return new PagingIterator<T>(recordset.iterator(), size);
   }
 }

@@ -3,7 +3,7 @@ package org.apache.parquet.parqour.ingest.read.iterator;
 import org.apache.parquet.parqour.ingest.read.iterator.filtering.ParqourFilterIterable;
 import org.apache.parquet.parqour.ingest.read.iterator.lamba.Predicate;
 import org.apache.parquet.parqour.ingest.read.iterator.lamba.Projection;
-import org.apache.parquet.parqour.ingest.read.iterator.paging.PagingIterable;
+import org.apache.parquet.parqour.ingest.read.iterator.paging.ParqourPageset;
 import org.apache.parquet.parqour.materialization.LambdaMaterializer;
 import org.apache.parquet.parqour.query.expressions.pql.ParquelTreeRootExpression;
 import org.apache.parquet.parqour.query.iface.ParqourQuery;
@@ -27,7 +27,7 @@ public abstract class Parqour<T> implements Iterable<T> {
     return new ParqourFilterIterable<T>(this, expression);
   }
 
-  public PagingIterable<T> paginate(int size) {
-    return new PagingIterable<T>(this, size);
+  public ParqourPageset<T> paginate(int size) {
+    return new ParqourPageset<T>(this, size);
   }
 }

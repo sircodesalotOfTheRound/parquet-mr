@@ -7,7 +7,7 @@ import java.util.Iterator;
 /**
  * Created by sircodesalot on 6/27/15.
  */
-public class PagingIterator<T> implements Iterator<ParqourPageset<T>> {
+public class PagingIterator<T> implements Iterator<ParqourPage<T>> {
   private final Iterator<T> iterator;
   private final int size;
 
@@ -23,8 +23,8 @@ public class PagingIterator<T> implements Iterator<ParqourPageset<T>> {
   }
 
   @Override
-  public ParqourPageset<T> next() {
-    return new ParqourPageset<T>(iterator, size);
+  public ParqourPage<T> next() {
+    return new ParqourPage<T>(iterator, size);
   }
 
   @Override

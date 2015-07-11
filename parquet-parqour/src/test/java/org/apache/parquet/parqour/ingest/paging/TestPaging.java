@@ -3,6 +3,7 @@ package org.apache.parquet.parqour.ingest.paging;
 import org.apache.parquet.parqour.ingest.cursor.iface.Cursor;
 import org.apache.parquet.parqour.ingest.read.iterator.Parqour;
 import org.apache.parquet.parqour.ingest.read.iterator.paging.ParqourPageset;
+import org.apache.parquet.parqour.ingest.read.iterator.paging.ParqourPage;
 import org.apache.parquet.parqour.testtools.ParquetConfiguration;
 import org.apache.parquet.parqour.testtools.TestTools;
 import org.apache.parquet.parqour.testtools.UsesPersistence;
@@ -59,7 +60,7 @@ public class TestPaging extends UsesPersistence {
         @Override
         public void execute() throws Exception {
           int totalRead = 0;
-          for (ParqourPageset<Cursor> page : Parqour.query(TestTools.TEST_FILE_PATH).paginate(PAGE_SIZE)) {
+          for (ParqourPage<Cursor> page : Parqour.query(TestTools.TEST_FILE_PATH).paginate(PAGE_SIZE)) {
             int pageItemCount = 0;
             for (Cursor cursor : page) {
               assertEquals(totalRead++, (int)cursor.i32("one"));
