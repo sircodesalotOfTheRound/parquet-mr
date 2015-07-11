@@ -45,7 +45,7 @@ public class RecordSet<T> implements Iterable<T> {
     return collector;
   }
 
-  public final <U> Iterable<U> keep(Projection<T, U> projection) {
+  public final <U> Iterable<U> materialize(Projection<T, U> projection) {
     List<U> items = new ArrayList<U>();
     for (T item : this) {
       items.add(projection.apply(item));

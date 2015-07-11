@@ -10,7 +10,7 @@ public class KeepableRecordSet<T> extends RecordSet<T> {
     super(iterable);
   }
 
-  public final Iterable<T> keep() {
+  public final Iterable<T> materialize() {
     return new KeepList<T>(this);
   }
 }
