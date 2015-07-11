@@ -10,7 +10,7 @@ public class RollableRecordSet<T> extends RecordSet<T> {
     super(iterable);
   }
 
-  public final Iterable<T> materialize() {
+  public final Iterable<T> roll() {
     return new Roll<T>(this);
   }
 }
