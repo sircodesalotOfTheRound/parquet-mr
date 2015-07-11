@@ -1,7 +1,7 @@
 package org.apache.parquet.parqour.ingest.cursor;
 
 import org.apache.parquet.parqour.ingest.cursor.iface.AdvanceableCursor;
-import org.apache.parquet.parqour.ingest.cursor.iterators.KeepableRecordSet;
+import org.apache.parquet.parqour.ingest.cursor.iterators.RollableRecordSet;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.Iterator;
@@ -61,8 +61,8 @@ public final class Int32Cursor extends AdvanceableCursor implements Iterable<Int
   }
 
   @Override
-  public KeepableRecordSet<Integer> i32iter() {
-    return new KeepableRecordSet<Integer>(this);
+  public RollableRecordSet<Integer> i32iter() {
+    return new RollableRecordSet<Integer>(this);
   }
 
 }

@@ -1,7 +1,7 @@
 package org.apache.parquet.parqour.ingest.cursor.iface;
 
 import org.apache.parquet.parqour.exceptions.DataIngestException;
-import org.apache.parquet.parqour.ingest.cursor.iterators.KeepableRecordSet;
+import org.apache.parquet.parqour.ingest.cursor.iterators.RollableRecordSet;
 import org.apache.parquet.parqour.ingest.cursor.iterators.RecordSet;
 
 /**
@@ -64,12 +64,12 @@ public abstract class AdvanceableCursor implements Cursor {
     throw new DataIngestException("Invalid path");
   }
 
-  public KeepableRecordSet<Integer> i32iter() {
+  public RollableRecordSet<Integer> i32iter() {
     throw new DataIngestException("Invalid path");
   }
 
   @Override
-  public KeepableRecordSet<Integer> i32iter(int index) {
+  public RollableRecordSet<Integer> i32iter(int index) {
     throw new DataIngestException("Invalid path");
   }
 

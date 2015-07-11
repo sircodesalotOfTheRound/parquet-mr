@@ -1,6 +1,6 @@
 package org.apache.parquet.parqour.ingest.cursor.collections;
 
-import org.apache.parquet.parqour.ingest.cursor.iterators.KeepableRecordSet;
+import org.apache.parquet.parqour.ingest.cursor.iterators.RollableRecordSet;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -9,10 +9,10 @@ import java.util.List;
 /**
  * Created by sircodesalot on 7/5/15.
  */
-public class KeepList<T> extends KeepableRecordSet<T> {
+public class Roll<T> extends RollableRecordSet<T> {
   private final List<T> items;
 
-  public KeepList(Iterable<T> iterable) {
+  public Roll(Iterable<T> iterable) {
     super(iterable);
 
     List<T> items = new ArrayList<T>();
