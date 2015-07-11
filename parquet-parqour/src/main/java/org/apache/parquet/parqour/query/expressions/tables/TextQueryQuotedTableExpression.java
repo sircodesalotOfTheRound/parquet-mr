@@ -1,21 +1,22 @@
 package org.apache.parquet.parqour.query.expressions.tables;
 
 import org.apache.parquet.parqour.exceptions.ParquelException;
-import org.apache.parquet.parqour.query.collections.ParquelAppendableCollection;
-import org.apache.parquet.parqour.query.expressions.ParquelExpression;
+import org.apache.parquet.parqour.query.collections.TextQueryAppendableCollection;
+import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
 import org.apache.parquet.parqour.query.expressions.categories.ParquelExpressionType;
 import org.apache.parquet.parqour.query.lexing.ParquelLexer;
 import org.apache.parquet.parqour.query.tokens.ParquelPunctuationToken;
 import org.apache.parquet.parqour.query.tokens.ParquelToken;
+import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
 
 /**
  * Created by sircodesalot on 7/5/15.
  */
-public class ParquelQuotedTableExpression extends ParquelTableExpression {
-  private final ParquelAppendableCollection<ParquelToken> expressionTokens;
+public class TextQueryQuotedTableExpression extends TextQueryTableExpression {
+  private final TextQueryAppendableCollection<ParquelToken> expressionTokens;
   private final String expressionAsString;
 
-  public ParquelQuotedTableExpression(ParquelExpression parent, ParquelLexer lexer) {
+  public TextQueryQuotedTableExpression(TextQueryExpression parent, ParquelLexer lexer) {
     super(parent, lexer, ParquelTableExpressionType.QUOTED);
 
     this.validateLexing(parent, lexer);
@@ -35,14 +36,14 @@ public class ParquelQuotedTableExpression extends ParquelTableExpression {
     return new ParquelAppendableCollection<ParquelExpression>(fqn);
   }*/
 
-  private void validateLexing(ParquelExpression parent, ParquelLexer lexer) {
+  private void validateLexing(TextQueryExpression parent, ParquelLexer lexer) {
     if (!lexer.currentIs(ParquelExpressionType.PUNCTUATION, ParquelPunctuationToken.SINGLE_QUOTE)) {
       throw new ParquelException("Named table expressions must start with a single quote.");
     }
   }
 
-  private ParquelAppendableCollection<ParquelToken> readExpression(ParquelLexer lexer) {
-    ParquelAppendableCollection<ParquelToken> tokens = new ParquelAppendableCollection<ParquelToken>();
+  private TextQueryAppendableCollection<ParquelToken> readExpression(ParquelLexer lexer) {
+    TextQueryAppendableCollection<ParquelToken> tokens = new TextQueryAppendableCollection<ParquelToken>();
 
     lexer.temporarilyIncludeWhitespaces();
     lexer.readCurrentAndAdvance(ParquelExpressionType.PUNCTUATION, ParquelPunctuationToken.SINGLE_QUOTE);
@@ -55,7 +56,7 @@ public class ParquelQuotedTableExpression extends ParquelTableExpression {
     return tokens;
   }
 
-  private String convertExpressionToString(ParquelAppendableCollection<ParquelToken> expressionTokens) {
+  private String convertExpressionToString(TextQueryAppendableCollection<ParquelToken> expressionTokens) {
     StringBuilder builder = new StringBuilder();
     for (ParquelToken token : expressionTokens) {
       builder.append(token.toString());
@@ -64,8 +65,8 @@ public class ParquelQuotedTableExpression extends ParquelTableExpression {
     return builder.toString().trim();
   }
 
-  public static ParquelQuotedTableExpression read(ParquelExpression parent, ParquelLexer lexer) {
-    return new ParquelQuotedTableExpression(parent, lexer);
+  public static TextQueryQuotedTableExpression read(TextQueryExpression parent, ParquelLexer lexer) {
+    return new TextQueryQuotedTableExpression(parent, lexer);
   }
 
   public String asString() {
@@ -76,4 +77,10 @@ public class ParquelQuotedTableExpression extends ParquelTableExpression {
   public String toString() {
     return this.expressionAsString;
   }
+
+  @Override
+  public <TReturnType> TReturnType accept(TextQueryExpressionVisitor<TReturnType> visitor) {
+    return null;
+  }
+
 }

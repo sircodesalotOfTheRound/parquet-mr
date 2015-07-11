@@ -1,18 +1,19 @@
 package org.apache.parquet.parqour.query.expressions.tables;
 
 import org.apache.parquet.parqour.exceptions.ParquelException;
-import org.apache.parquet.parqour.query.expressions.ParquelExpression;
-import org.apache.parquet.parqour.query.expressions.pql.ParquelFullyQualifiedNameExpression;
+import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
+import org.apache.parquet.parqour.query.expressions.pql.TextQueryFullyQualifiedNameExpression;
 import org.apache.parquet.parqour.query.expressions.categories.ParquelExpressionType;
 import org.apache.parquet.parqour.query.lexing.ParquelLexer;
+import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
 
 /**
  * Created by sircodesalot on 15/4/3.
  */
-public class ParquelNamedTableExpression extends ParquelTableExpression {
-  private final ParquelFullyQualifiedNameExpression fqn;
+public class TextQueryNamedTableExpression extends TextQueryTableExpression {
+  private final TextQueryFullyQualifiedNameExpression fqn;
 
-  public ParquelNamedTableExpression(ParquelExpression parent, ParquelLexer lexer) {
+  public TextQueryNamedTableExpression(TextQueryExpression parent, ParquelLexer lexer) {
     super (parent, lexer, ParquelTableExpressionType.NAMED);
 
     this.validateLexing(parent, lexer);
@@ -30,7 +31,7 @@ public class ParquelNamedTableExpression extends ParquelTableExpression {
     return new ParquelAppendableCollection<ParquelExpression>(fqn);
   }*/
 
-  private void validateLexing(ParquelExpression parent, ParquelLexer lexer) {
+  private void validateLexing(TextQueryExpression parent, ParquelLexer lexer) {
     if (!lexer.currentIs(ParquelExpressionType.IDENTIFIER)) {
       throw new ParquelException("Named table expressions must read ");
     } else if (!parent.is(ParquelExpressionType.TABLE_SET)) {
@@ -38,15 +39,15 @@ public class ParquelNamedTableExpression extends ParquelTableExpression {
     }
   }
 
-  private ParquelFullyQualifiedNameExpression readFqn(ParquelLexer lexer) {
-    return ParquelFullyQualifiedNameExpression.read(this, lexer);
+  private TextQueryFullyQualifiedNameExpression readFqn(ParquelLexer lexer) {
+    return TextQueryFullyQualifiedNameExpression.read(this, lexer);
   }
 
-  public static ParquelNamedTableExpression read(ParquelExpression parent, ParquelLexer lexer) {
-    return new ParquelNamedTableExpression(parent, lexer);
+  public static TextQueryNamedTableExpression read(TextQueryExpression parent, ParquelLexer lexer) {
+    return new TextQueryNamedTableExpression(parent, lexer);
   }
 
-  public ParquelFullyQualifiedNameExpression fullyQualifiedName() {
+  public TextQueryFullyQualifiedNameExpression fullyQualifiedName() {
     return this.fqn;
   }
 
@@ -54,4 +55,10 @@ public class ParquelNamedTableExpression extends ParquelTableExpression {
   public String toString() {
     return String.format("[%s]", this.fullyQualifiedName());
   }
+
+  @Override
+  public <TReturnType> TReturnType accept(TextQueryExpressionVisitor<TReturnType> visitor) {
+    return null;
+  }
+
 }

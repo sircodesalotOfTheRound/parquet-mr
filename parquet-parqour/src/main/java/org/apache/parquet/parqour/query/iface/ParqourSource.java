@@ -1,6 +1,6 @@
 package org.apache.parquet.parqour.query.iface;
 
-import org.apache.parquet.parqour.query.expressions.pql.ParquelTreeRootExpression;
+import org.apache.parquet.parqour.query.expressions.pql.TextQueryTreeRootExpression;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
@@ -9,11 +9,11 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 public class ParqourSource {
   private final String path;
 
-  public ParqourSource(ParquelTreeRootExpression expression) {
+  public ParqourSource(TextQueryTreeRootExpression expression) {
     this.path = determinePathFromExpression(expression);
   }
 
-  private String determinePathFromExpression(ParquelTreeRootExpression expression) {
+  private String determinePathFromExpression(TextQueryTreeRootExpression expression) {
     if (expression.isFqnExpression()) {
       return expression.asFqnExpression().toString();
     }

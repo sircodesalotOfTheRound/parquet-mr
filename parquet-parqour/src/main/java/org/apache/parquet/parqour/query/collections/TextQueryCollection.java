@@ -2,7 +2,7 @@ package org.apache.parquet.parqour.query.collections;
 
 import org.apache.parquet.parqour.ingest.read.iterator.lamba.Projection;
 import org.apache.parquet.parqour.ingest.read.iterator.lamba.Predicate;
-import org.apache.parquet.parqour.query.expressions.ParquelExpression;
+import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -11,11 +11,11 @@ import java.util.List;
 /**
  * Created by sircodesalot on 15/4/3.
  */
-public abstract class ParquelCollection<T> implements Iterable<T> {
-  public static final ParquelCollection<ParquelExpression> EMPTY = new ParquelCollection<ParquelExpression>() {
-    private final List<ParquelExpression> emptyList = new ArrayList<ParquelExpression>();
+public abstract class TextQueryCollection<T> implements Iterable<T> {
+  public static final TextQueryCollection<TextQueryExpression> EMPTY = new TextQueryCollection<TextQueryExpression>() {
+    private final List<TextQueryExpression> emptyList = new ArrayList<TextQueryExpression>();
     @Override
-    public Iterable<ParquelExpression> items() {
+    public Iterable<TextQueryExpression> items() {
       return emptyList;
     }
   };
@@ -46,8 +46,8 @@ public abstract class ParquelCollection<T> implements Iterable<T> {
     return true;
   }
 
-  public <U> ParquelCollection<U> castTo(Class<U> toType) {
-    ParquelAppendableCollection<U> castedItems = new ParquelAppendableCollection<U>();
+  public <U> TextQueryCollection<U> castTo(Class<U> toType) {
+    TextQueryAppendableCollection<U> castedItems = new TextQueryAppendableCollection<U>();
     for (T item : this.items()) {
       castedItems.add((U)item);
     }
@@ -55,8 +55,8 @@ public abstract class ParquelCollection<T> implements Iterable<T> {
     return castedItems;
   }
 
-  public <U> ParquelCollection<U> ofType(Class<U> type) {
-    ParquelAppendableCollection<U> itemsOfType = new ParquelAppendableCollection<U>();
+  public <U> TextQueryCollection<U> ofType(Class<U> type) {
+    TextQueryAppendableCollection<U> itemsOfType = new TextQueryAppendableCollection<U>();
     for (T item : this.items()) {
       if (type.isAssignableFrom(item.getClass())) {
         itemsOfType.add((U) item);
@@ -66,8 +66,8 @@ public abstract class ParquelCollection<T> implements Iterable<T> {
     return itemsOfType;
   }
 
-  public <U> ParquelCollection<U> map(Projection<T, U> projection) {
-    ParquelAppendableCollection<U> items = new ParquelAppendableCollection<U>();
+  public <U> TextQueryCollection<U> map(Projection<T, U> projection) {
+    TextQueryAppendableCollection<U> items = new TextQueryAppendableCollection<U>();
 
     for (T item : this.items()) {
       items.add(projection.apply(item));
@@ -76,8 +76,8 @@ public abstract class ParquelCollection<T> implements Iterable<T> {
     return items;
   }
 
-  public ParquelCollection<T> where(Predicate<T> test) {
-    ParquelAppendableCollection<T> items = new ParquelAppendableCollection<T>();
+  public TextQueryCollection<T> where(Predicate<T> test) {
+    TextQueryAppendableCollection<T> items = new TextQueryAppendableCollection<T>();
 
     for (T item : this.items()) {
       if (test.test(item)) {

@@ -7,7 +7,7 @@ import org.apache.parquet.parqour.ingest.read.iterator.filtering.ParqourQueryFil
 import org.apache.parquet.parqour.ingest.read.iterator.lamba.Predicate;
 import org.apache.parquet.parqour.ingest.schema.SchemaInfo;
 import org.apache.parquet.parqour.materialization.ReadSupportIterable;
-import org.apache.parquet.parqour.query.expressions.pql.ParquelTreeRootExpression;
+import org.apache.parquet.parqour.query.expressions.pql.TextQueryTreeRootExpression;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.parquet.format.converter.ParquetMetadataConverter;
@@ -26,7 +26,7 @@ public abstract class ParqourQuery extends Parqour<Cursor> {
 
   protected final ParqourSource source;
   protected final SchemaInfo schemaInfo;
-  protected final ParquelTreeRootExpression query;
+  protected final TextQueryTreeRootExpression query;
   protected final ParquetMetadata metadata;
 
   public ParqourQuery (ParqourQuery query) {
@@ -36,7 +36,7 @@ public abstract class ParqourQuery extends Parqour<Cursor> {
     this.metadata = query.metadata;
   }
 
-  public ParqourQuery(ParqourSource source, ParquelTreeRootExpression query) {
+  public ParqourQuery(ParqourSource source, TextQueryTreeRootExpression query) {
     this.source = source;
     this.metadata = captureMetadata(source);
     this.schemaInfo = captureSchemaInfo(source, metadata);
@@ -58,7 +58,7 @@ public abstract class ParqourQuery extends Parqour<Cursor> {
     return new SchemaInfo(EMPTY_CONFIGURATION, sourceFile, metadata, schema);
   }
 
-  public static ParqourQuery fromRootExpression(ParquelTreeRootExpression expression) {
+  public static ParqourQuery fromRootExpression(TextQueryTreeRootExpression expression) {
     ParqourSource source = new ParqourSource(expression);
     return new ParqourPlainQuery(source, expression);
   }

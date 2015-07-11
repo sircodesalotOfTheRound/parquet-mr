@@ -1,18 +1,19 @@
 package org.apache.parquet.parqour.query.delimiters;
 
-import org.apache.parquet.parqour.query.expressions.ParquelExpression;
+import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
 import org.apache.parquet.parqour.query.expressions.categories.ParquelDelimiterExpression;
 import org.apache.parquet.parqour.query.expressions.categories.ParquelExpressionType;
 import org.apache.parquet.parqour.query.lexing.ParquelLexer;
 import org.apache.parquet.parqour.query.tokens.ParquelPunctuationToken;
+import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
 
 /**
  * Created by sircodesalot on 15/4/9.
  */
-public class ParquelCommaExpression extends ParquelExpression implements ParquelDelimiterExpression {
+public class TextQueryCommaExpression extends TextQueryExpression implements ParquelDelimiterExpression {
   private final ParquelPunctuationToken comma;
 
-  public ParquelCommaExpression(ParquelExpression parent, ParquelLexer lexer) {
+  public TextQueryCommaExpression(TextQueryExpression parent, ParquelLexer lexer) {
     super(parent, lexer, ParquelExpressionType.COMMA);
 
     this.comma = readComma(lexer);
@@ -33,11 +34,17 @@ public class ParquelCommaExpression extends ParquelExpression implements Parquel
     return ParquelCollection.EMPTY;
   }
 */
-  public static boolean canRead(ParquelExpression parent, ParquelLexer lexer) {
+  public static boolean canRead(TextQueryExpression parent, ParquelLexer lexer) {
     return lexer.currentIs(ParquelExpressionType.PUNCTUATION, ParquelPunctuationToken.COMMA);
   }
 
-  public static ParquelCommaExpression read(ParquelExpression parent, ParquelLexer lexer) {
-    return new ParquelCommaExpression(parent, lexer);
+  public static TextQueryCommaExpression read(TextQueryExpression parent, ParquelLexer lexer) {
+    return new TextQueryCommaExpression(parent, lexer);
   }
+
+  @Override
+  public <TReturnType> TReturnType accept(TextQueryExpressionVisitor<TReturnType> visitor) {
+    return null;
+  }
+
 }

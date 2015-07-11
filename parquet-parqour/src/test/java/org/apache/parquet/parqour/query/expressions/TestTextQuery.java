@@ -2,21 +2,21 @@ package org.apache.parquet.parqour.query.expressions;
 
 import org.apache.parquet.parqour.ingest.read.iterator.lamba.Predicate;
 import org.apache.parquet.parqour.ingest.read.iterator.lamba.Projection;
-import org.apache.parquet.parqour.query.collections.ParquelCollection;
+import org.apache.parquet.parqour.query.collections.TextQueryCollection;
 import org.apache.parquet.parqour.query.expressions.categories.ParquelExpressionType;
-import org.apache.parquet.parqour.query.expressions.column.ParquelColumnExpression;
-import org.apache.parquet.parqour.query.expressions.infix.ParquelInfixExpression;
-import org.apache.parquet.parqour.query.expressions.column.ParquelNamedColumnExpression;
-import org.apache.parquet.parqour.query.expressions.column.ParquelWildcardExpression;
-import org.apache.parquet.parqour.query.expressions.pql.ParquelTreeRootExpression;
-import org.apache.parquet.parqour.query.expressions.tables.ParquelNamedTableExpression;
-import org.apache.parquet.parqour.query.expressions.tables.ParquelQuotedTableExpression;
-import org.apache.parquet.parqour.query.expressions.tables.ParquelTableExpression;
+import org.apache.parquet.parqour.query.expressions.column.TextQueryColumnExpression;
+import org.apache.parquet.parqour.query.expressions.infix.TextQueryInfixExpression;
+import org.apache.parquet.parqour.query.expressions.column.TextQueryNamedColumnExpression;
+import org.apache.parquet.parqour.query.expressions.column.TextQueryWildcardExpression;
+import org.apache.parquet.parqour.query.expressions.pql.TextQueryTreeRootExpression;
+import org.apache.parquet.parqour.query.expressions.tables.TextQueryNamedTableExpression;
+import org.apache.parquet.parqour.query.expressions.tables.TextQueryQuotedTableExpression;
+import org.apache.parquet.parqour.query.expressions.tables.TextQueryTableExpression;
 import org.apache.parquet.parqour.query.expressions.tables.ParquelTableExpressionType;
 import org.apache.parquet.parqour.query.lexing.ParquelLexer;
-import org.apache.parquet.parqour.query.expressions.pql.ParquelFullyQualifiedNameExpression;
-import org.apache.parquet.parqour.query.expressions.pql.ParquelSelectStatement;
-import org.apache.parquet.parqour.query.expressions.pql.ParquelWhereExpression;
+import org.apache.parquet.parqour.query.expressions.pql.TextQueryFullyQualifiedNameExpression;
+import org.apache.parquet.parqour.query.expressions.pql.TextQuerySelectStatement;
+import org.apache.parquet.parqour.query.expressions.pql.TextQueryWhereExpression;
 import org.junit.Test;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
@@ -33,21 +33,21 @@ public class TestTextQuery {
   @Test
   public void testRootExpression() {
     ParquelLexer lexer = new ParquelLexer("select one, two, three from sometable", true);
-    ParquelTreeRootExpression root = new ParquelTreeRootExpression(lexer);
+    TextQueryTreeRootExpression root = new TextQueryTreeRootExpression(lexer);
 
-    ParquelCollection<ParquelExpression> expressions = root.expressions();
+    TextQueryCollection<TextQueryExpression> expressions = root.expressions();
 
     assertEquals(1, expressions.count());
-    assertTrue(expressions.all(new Predicate<ParquelExpression>() {
+    assertTrue(expressions.all(new Predicate<TextQueryExpression>() {
       @Override
-      public boolean test(ParquelExpression expression) {
+      public boolean test(TextQueryExpression expression) {
         return expression.is(ParquelExpressionType.SELECT);
       }
     }));
 
     assertTrue(root.containsSelectExpression());
 
-    ParquelSelectStatement select = root.asSelectStatement();
+    TextQuerySelectStatement select = root.asSelectStatement();
     final Set<String> columns = new HashSet<String>() {{
       add("one");
       add("two");
@@ -58,15 +58,15 @@ public class TestTextQuery {
 
     // Columns -> NamedColumns -> NamedColumn.toString() -> All(name in columns-hash).
     assertTrue(select.columnSet().columns()
-      .map(new Projection<ParquelColumnExpression, ParquelNamedColumnExpression>() {
+      .map(new Projection<TextQueryColumnExpression, TextQueryNamedColumnExpression>() {
         @Override
-        public ParquelNamedColumnExpression apply(ParquelColumnExpression expression) {
-          return (ParquelNamedColumnExpression) expression;
+        public TextQueryNamedColumnExpression apply(TextQueryColumnExpression expression) {
+          return (TextQueryNamedColumnExpression) expression;
         }
       })
-      .map(new Projection<ParquelNamedColumnExpression, String>() {
+      .map(new Projection<TextQueryNamedColumnExpression, String>() {
         @Override
-        public String apply(ParquelNamedColumnExpression expression) {
+        public String apply(TextQueryNamedColumnExpression expression) {
           return expression.identifier().toString();
         }
       })
@@ -81,34 +81,34 @@ public class TestTextQuery {
   @Test
   public void testSelectExpression() {
     ParquelLexer lexer = new ParquelLexer("select *, first, second, third, fourth from table1, table2", true);
-    ParquelTreeRootExpression root = new ParquelTreeRootExpression(lexer);
+    TextQueryTreeRootExpression root = new TextQueryTreeRootExpression(lexer);
 
     assertTrue(root.isSelectStatement());
 
-    ParquelSelectStatement select = (ParquelSelectStatement) root.expressions().first();
+    TextQuerySelectStatement select = (TextQuerySelectStatement) root.expressions().first();
 
     final Set<String> columnNames = fillSet("first", "second", "third", "fourth");
     final Set<String> tableNames = fillSet("table1", "table2");
 
     assert (select.columnSet().columns().count() == 5);
-    assert (select.columnSet().columns().ofType(ParquelWildcardExpression.class).count() == 1);
-    assert (select.columnSet().columns().ofType(ParquelNamedColumnExpression.class).count() == 4);
+    assert (select.columnSet().columns().ofType(TextQueryWildcardExpression.class).count() == 1);
+    assert (select.columnSet().columns().ofType(TextQueryNamedColumnExpression.class).count() == 4);
     assert (select.from().tableSet().tables().count() == 2);
 
     boolean areAllColumnsContainedInTheSetAbove = select.columnSet().columns()
-      .ofType(ParquelNamedColumnExpression.class)
-      .all(new Predicate<ParquelNamedColumnExpression>() {
+      .ofType(TextQueryNamedColumnExpression.class)
+      .all(new Predicate<TextQueryNamedColumnExpression>() {
         @Override
-        public boolean test(ParquelNamedColumnExpression column) {
+        public boolean test(TextQueryNamedColumnExpression column) {
           return columnNames.contains(column.identifier().toString());
         }
       });
 
     boolean areAllTablesContainedInTheSetAbove = select.from().tableSet().tables()
-      .ofType(ParquelNamedTableExpression.class)
-      .all(new Predicate<ParquelNamedTableExpression>() {
+      .ofType(TextQueryNamedTableExpression.class)
+      .all(new Predicate<TextQueryNamedTableExpression>() {
         @Override
-        public boolean test(ParquelNamedTableExpression table) {
+        public boolean test(TextQueryNamedTableExpression table) {
           return tableNames.contains(table.fullyQualifiedName().toString());
         }
       });
@@ -129,10 +129,10 @@ public class TestTextQuery {
   @Test
   public void testAsFQNExpression() {
     ParquelLexer lexer = new ParquelLexer("file.parq", true);
-    ParquelTreeRootExpression root = new ParquelTreeRootExpression(lexer);
+    TextQueryTreeRootExpression root = new TextQueryTreeRootExpression(lexer);
 
     assertTrue(root.isFqnExpression());
-    ParquelFullyQualifiedNameExpression path = root.asFqnExpression();
+    TextQueryFullyQualifiedNameExpression path = root.asFqnExpression();
 
     assertEquals("file.parq", path.toString());
 
@@ -141,13 +141,13 @@ public class TestTextQuery {
   @Test
   public void testFromFQNExpression() {
     ParquelLexer lexer = new ParquelLexer("select one, two, three from sometable.parq", true);
-    ParquelTreeRootExpression root = new ParquelTreeRootExpression(lexer);
+    TextQueryTreeRootExpression root = new TextQueryTreeRootExpression(lexer);
 
-    ParquelNamedTableExpression tableExpression = root.asSelectStatement()
+    TextQueryNamedTableExpression tableExpression = root.asSelectStatement()
       .from()
       .tableSet()
       .tables()
-      .firstAs(ParquelNamedTableExpression.class);
+      .firstAs(TextQueryNamedTableExpression.class);
 
     String tableName = tableExpression.fullyQualifiedName().toString();
     assertEquals("sometable.parq", tableName);
@@ -158,16 +158,16 @@ public class TestTextQuery {
     for (String path : new String[] { "one.parq", "two three.parq", "four   five.parq", "relative/path/file.parq", "/absolute/path/item.parq" }) {
       String queryExpression = String.format("select * from '%s'", path);
       ParquelLexer lexer = new ParquelLexer(queryExpression, true);
-      ParquelTreeRootExpression root = new ParquelTreeRootExpression(lexer);
+      TextQueryTreeRootExpression root = new TextQueryTreeRootExpression(lexer);
 
-      ParquelTableExpression tableExpression = root.asSelectStatement()
+      TextQueryTableExpression tableExpression = root.asSelectStatement()
         .from()
         .tableSet()
         .tables()
         .first();
 
       assertTrue(tableExpression.tableExpressionType() == ParquelTableExpressionType.QUOTED);
-      ParquelQuotedTableExpression quotedTableExpression = tableExpression.asQuotedTableExpression();
+      TextQueryQuotedTableExpression quotedTableExpression = tableExpression.asQuotedTableExpression();
 
       String tableName = quotedTableExpression.asString();
       assertEquals(path, tableName);
@@ -181,9 +181,9 @@ public class TestTextQuery {
         for (String operator : new String[]{ "=", "!=", "<", ">" }) {
           String statement = String.format("select * from something where %s %s %s", lhs, operator, rhs);
           ParquelLexer lexer = new ParquelLexer(statement, true);
-          ParquelTreeRootExpression rootExpression = new ParquelTreeRootExpression(lexer);
+          TextQueryTreeRootExpression rootExpression = new TextQueryTreeRootExpression(lexer);
 
-          ParquelSelectStatement selectStatement = rootExpression.asSelectStatement();
+          TextQuerySelectStatement selectStatement = rootExpression.asSelectStatement();
           assertTrue(selectStatement.columnSet().containsWildcardColumn());
 
           assertWhereIsLike(selectStatement.where(), lhs, operator, rhs);
@@ -192,8 +192,8 @@ public class TestTextQuery {
     }
   }
 
-  public void assertWhereIsLike(ParquelWhereExpression whereExpression, String lhs, String operator, String rhs) {
-    ParquelInfixExpression infixExpression = whereExpression.infixExpression();
+  public void assertWhereIsLike(TextQueryWhereExpression whereExpression, String lhs, String operator, String rhs) {
+    TextQueryInfixExpression infixExpression = whereExpression.infixExpression();
 
     assertEquals(getLexedTypeForString(lhs), infixExpression.lhs().type());
     assertEquals(getLexedTypeForString(rhs), infixExpression.rhs().type());
@@ -204,7 +204,7 @@ public class TestTextQuery {
   }
 
   public ParquelExpressionType getLexedTypeForString(String string) {
-    if (Character.isAlphabetic(string.charAt(0))) return ParquelExpressionType.FQN;
+    if (Character.isAlphabetic(string.charAt(0))) return ParquelExpressionType.NAMED_COLUMN;
     if (Character.isDigit(string.charAt(0))) return ParquelExpressionType.NUMERIC;
 
     throw new NotImplementedException();

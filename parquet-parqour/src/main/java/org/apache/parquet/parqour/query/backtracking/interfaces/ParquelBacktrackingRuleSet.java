@@ -2,7 +2,7 @@ package org.apache.parquet.parqour.query.backtracking.interfaces;
 
 import org.apache.parquet.parqour.exceptions.ParquelException;
 import org.apache.parquet.parqour.query.collections.OneToManyMap;
-import org.apache.parquet.parqour.query.expressions.ParquelExpression;
+import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
 import org.apache.parquet.parqour.query.expressions.categories.ParquelExpressionType;
 import org.apache.parquet.parqour.query.lexing.ParquelLexer;
 
@@ -21,7 +21,7 @@ public class ParquelBacktrackingRuleSet<TExpressionType> {
     return this;
   }
 
-  public TExpressionType read(ParquelExpression parent, ParquelLexer lexer) {
+  public TExpressionType read(TextQueryExpression parent, ParquelLexer lexer) {
     if (lexer.isEof()) {
       throw new ParquelException("Attempt to read past end of stream");
     }
@@ -33,7 +33,7 @@ public class ParquelBacktrackingRuleSet<TExpressionType> {
     return this.findMatch(typeOfCurrentToken, parent, lexer);
   }
 
-  public boolean canParse(ParquelExpression parent, ParquelLexer lexer) {
+  public boolean canParse(TextQueryExpression parent, ParquelLexer lexer) {
     if (lexer.isEof()) {
       return false;
     }
@@ -53,7 +53,7 @@ public class ParquelBacktrackingRuleSet<TExpressionType> {
     return false;
   }
 
-  private TExpressionType findMatch (ParquelExpressionType type, ParquelExpression parent, ParquelLexer lexer) {
+  private TExpressionType findMatch (ParquelExpressionType type, TextQueryExpression parent, ParquelLexer lexer) {
     if (!canParse(parent, lexer)) {
       return null;
     }

@@ -1,4 +1,4 @@
-package org.apache.parquet.parqour.analysis;
+package org.apache.parquet.parqour.analysis.predicates;
 
 import org.apache.parquet.parqour.ingest.plan.analysis.PredicateAnalysis;
 import org.apache.parquet.parqour.ingest.plan.predicates.traversal.TraversalPreference;
@@ -20,7 +20,7 @@ import static org.apache.parquet.schema.PrimitiveType.PrimitiveTypeName.INT32;
 /**
  * Created by sircodesalot on 6/8/15.
  */
-public class TestTraversalInfo {
+public class TestTraversalPreferences {
   private static final MessageType SCHEMA = new MessageType("single_column_schema",
     new PrimitiveType(Type.Repetition.REQUIRED, BINARY, "binary_column"),
     new PrimitiveType(Type.Repetition.REQUIRED, INT32, "numeric_column"));

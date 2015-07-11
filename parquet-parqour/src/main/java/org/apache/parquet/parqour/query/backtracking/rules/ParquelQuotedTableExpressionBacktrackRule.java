@@ -2,9 +2,9 @@ package org.apache.parquet.parqour.query.backtracking.rules;
 
 
 import org.apache.parquet.parqour.query.backtracking.interfaces.ParquelBacktrackRuleBase;
-import org.apache.parquet.parqour.query.expressions.ParquelExpression;
+import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
 import org.apache.parquet.parqour.query.expressions.categories.ParquelExpressionType;
-import org.apache.parquet.parqour.query.expressions.tables.ParquelQuotedTableExpression;
+import org.apache.parquet.parqour.query.expressions.tables.TextQueryQuotedTableExpression;
 import org.apache.parquet.parqour.query.lexing.ParquelLexer;
 import org.apache.parquet.parqour.query.tokens.ParquelPunctuationToken;
 
@@ -17,13 +17,13 @@ public class ParquelQuotedTableExpressionBacktrackRule extends ParquelBacktrackR
   }
 
   @Override
-  public boolean isMatch(ParquelExpression parent, ParquelLexer lexer) {
+  public boolean isMatch(TextQueryExpression parent, ParquelLexer lexer) {
     return (parent != null)
       && lexer.currentIs(ParquelExpressionType.PUNCTUATION, ParquelPunctuationToken.SINGLE_QUOTE);
   }
 
   @Override
-  public ParquelExpression read(ParquelExpression parent, ParquelLexer lexer) {
-    return ParquelQuotedTableExpression.read(parent, lexer);
+  public TextQueryExpression read(TextQueryExpression parent, ParquelLexer lexer) {
+    return TextQueryQuotedTableExpression.read(parent, lexer);
   }
 }

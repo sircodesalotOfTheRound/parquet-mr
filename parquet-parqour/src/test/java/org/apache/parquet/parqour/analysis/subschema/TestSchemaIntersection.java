@@ -1,10 +1,11 @@
-package org.apache.parquet.parqour.analysis;
+package org.apache.parquet.parqour.analysis.subschema;
 
 import org.apache.parquet.parqour.ingest.read.iterator.lamba.Projection;
 import org.apache.parquet.parqour.ingest.schema.SchemaIntersection;
-import org.apache.parquet.parqour.query.expressions.pql.ParquelTreeRootExpression;
-import org.apache.parquet.parqour.query.expressions.column.ParquelNamedColumnExpression;
+import org.apache.parquet.parqour.query.expressions.pql.TextQueryTreeRootExpression;
+import org.apache.parquet.parqour.query.expressions.column.TextQueryNamedColumnExpression;
 import org.apache.parquet.parqour.query.lexing.ParquelLexer;
+import org.apache.parquet.parqour.query.visitor.TextQueryColumnCollectingVisitor;
 import org.junit.Test;
 import org.apache.parquet.schema.GroupType;
 import org.apache.parquet.schema.MessageType;
@@ -129,13 +130,13 @@ public class TestSchemaIntersection {
 
   private Iterable<String> subschemaColumnsFromString(String expression) {
     ParquelLexer lexer = new ParquelLexer(expression, true);
-    ParquelTreeRootExpression rootExpression = new ParquelTreeRootExpression(lexer);
+    TextQueryTreeRootExpression rootExpression = new TextQueryTreeRootExpression(lexer);
 
     return rootExpression.asSelectStatement().columnSet().columns()
-      .castTo(ParquelNamedColumnExpression.class)
-      .map(new Projection<ParquelNamedColumnExpression, String>() {
+      .castTo(TextQueryNamedColumnExpression.class)
+      .map(new Projection<TextQueryNamedColumnExpression, String>() {
         @Override
-        public String apply(ParquelNamedColumnExpression columnExpression) {
+        public String apply(TextQueryNamedColumnExpression columnExpression) {
           return columnExpression.identifier().toString();
         }
       });

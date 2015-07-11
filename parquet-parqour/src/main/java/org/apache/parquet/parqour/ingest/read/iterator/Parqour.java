@@ -5,7 +5,7 @@ import org.apache.parquet.parqour.ingest.read.iterator.lamba.Predicate;
 import org.apache.parquet.parqour.ingest.read.iterator.lamba.Projection;
 import org.apache.parquet.parqour.ingest.read.iterator.paging.ParqourPageset;
 import org.apache.parquet.parqour.materialization.LambdaMaterializer;
-import org.apache.parquet.parqour.query.expressions.pql.ParquelTreeRootExpression;
+import org.apache.parquet.parqour.query.expressions.pql.TextQueryTreeRootExpression;
 import org.apache.parquet.parqour.query.iface.ParqourQuery;
 
 /**
@@ -15,7 +15,7 @@ public abstract class Parqour<T> implements Iterable<T> {
   protected Parqour() { }
 
   public static ParqourQuery query(String pql) {
-    ParquelTreeRootExpression expression = ParquelTreeRootExpression.fromString(pql);
+    TextQueryTreeRootExpression expression = TextQueryTreeRootExpression.fromString(pql);
     return ParqourQuery.fromRootExpression(expression);
   }
 

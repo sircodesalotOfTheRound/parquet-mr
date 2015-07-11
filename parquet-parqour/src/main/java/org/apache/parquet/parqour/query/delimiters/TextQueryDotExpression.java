@@ -1,18 +1,19 @@
 package org.apache.parquet.parqour.query.delimiters;
 
-import org.apache.parquet.parqour.query.expressions.ParquelExpression;
+import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
 import org.apache.parquet.parqour.query.expressions.categories.ParquelDelimiterExpression;
 import org.apache.parquet.parqour.query.expressions.categories.ParquelExpressionType;
 import org.apache.parquet.parqour.query.lexing.ParquelLexer;
 import org.apache.parquet.parqour.query.tokens.ParquelPunctuationToken;
+import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
 
 /**
  * Created by sircodesalot on 15/4/9.
  */
-public class ParquelDotExpression extends ParquelExpression implements ParquelDelimiterExpression {
+public class TextQueryDotExpression extends TextQueryExpression implements ParquelDelimiterExpression {
   private final ParquelPunctuationToken dot;
 
-  public ParquelDotExpression(ParquelExpression parent, ParquelLexer lexer) {
+  public TextQueryDotExpression(TextQueryExpression parent, ParquelLexer lexer) {
     super(parent, lexer, ParquelExpressionType.DOT);
 
     this.dot = readComma(lexer);
@@ -33,11 +34,17 @@ public class ParquelDotExpression extends ParquelExpression implements ParquelDe
     return ParquelCollection.EMPTY;
   }*/
 
-  public static boolean canRead(ParquelExpression parent, ParquelLexer lexer) {
+  public static boolean canRead(TextQueryExpression parent, ParquelLexer lexer) {
     return lexer.currentIs(ParquelExpressionType.PUNCTUATION, ParquelPunctuationToken.DOT);
   }
 
-  public static ParquelDotExpression read(ParquelExpression parent, ParquelLexer lexer) {
-    return new ParquelDotExpression(parent, lexer);
+  public static TextQueryDotExpression read(TextQueryExpression parent, ParquelLexer lexer) {
+    return new TextQueryDotExpression(parent, lexer);
   }
+
+  @Override
+  public <TReturnType> TReturnType accept(TextQueryExpressionVisitor<TReturnType> visitor) {
+    return null;
+  }
+
 }

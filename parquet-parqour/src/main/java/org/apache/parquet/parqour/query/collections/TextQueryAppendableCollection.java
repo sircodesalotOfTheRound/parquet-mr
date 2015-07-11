@@ -6,28 +6,28 @@ import java.util.List;
 /**
  * Created by sircodesalot on 15/4/7.
  */
-public class ParquelAppendableCollection<T>  extends ParquelCollection<T> {
+public class TextQueryAppendableCollection<T>  extends TextQueryCollection<T> {
   private final List<T> items = new ArrayList<T>();
 
-  public ParquelAppendableCollection() {
+  public TextQueryAppendableCollection() {
   }
 
-  public ParquelAppendableCollection(Iterable<T> items) {
+  public TextQueryAppendableCollection(Iterable<T> items) {
     this.add(items);
   }
 
-  public ParquelAppendableCollection(T... items) {
+  public TextQueryAppendableCollection(T... items) {
     for (T item : items) {
       this.add(item);
     }
   }
 
-  public ParquelAppendableCollection add(T item) {
+  public TextQueryAppendableCollection add(T item) {
     this.items.add(item);
     return this;
   }
 
-  public ParquelAppendableCollection add(Iterable<T> items) {
+  public TextQueryAppendableCollection add(Iterable<T> items) {
     for (T item : items) {
       this.add(item);
     }

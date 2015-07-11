@@ -1,22 +1,23 @@
 package org.apache.parquet.parqour.query.expressions.pql;
 
 import org.apache.parquet.parqour.exceptions.ParquelException;
-import org.apache.parquet.parqour.query.expressions.ParquelExpression;
+import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
 import org.apache.parquet.parqour.query.expressions.categories.ParquelMemberExpression;
 import org.apache.parquet.parqour.query.lexing.ParquelLexer;
 import org.apache.parquet.parqour.query.tokens.ParquelIdentifierToken;
 import org.apache.parquet.parqour.query.expressions.categories.ParquelExpressionType;
+import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
 
 /**
  * Created by sircodesalot on 15/4/2.
  */
-public class ParquelIdentifierExpression extends ParquelExpression implements ParquelMemberExpression {
+public class TextQueryIdentifierExpression extends TextQueryExpression implements ParquelMemberExpression {
   private final ParquelIdentifierToken identifier;
   //private final ParquelGenericParameterListExpression genericParameters;
   private final String representation;
   //private final ParquelCollection<ParquelExpression> children;
 
-  public ParquelIdentifierExpression(ParquelExpression parent, ParquelLexer lexer) {
+  public TextQueryIdentifierExpression(TextQueryExpression parent, ParquelLexer lexer) {
     super(parent, lexer, ParquelExpressionType.IDENTIFIER);
 
     this.identifier = readIdentifier(lexer);
@@ -72,8 +73,8 @@ public class ParquelIdentifierExpression extends ParquelExpression implements Pa
     return this.children;
   }*/
 
-  public static ParquelIdentifierExpression read(ParquelExpression parent, ParquelLexer lexer) {
-    return new ParquelIdentifierExpression(parent, lexer);
+  public static TextQueryIdentifierExpression read(TextQueryExpression parent, ParquelLexer lexer) {
+    return new TextQueryIdentifierExpression(parent, lexer);
   }
 
   @Override
@@ -81,7 +82,13 @@ public class ParquelIdentifierExpression extends ParquelExpression implements Pa
     return this.representation;
   }
 
-  public static boolean canRead(ParquelExpression parent, ParquelLexer lexer) {
+  public static boolean canRead(TextQueryExpression parent, ParquelLexer lexer) {
     return lexer.currentIs(ParquelExpressionType.IDENTIFIER);
   }
+
+  @Override
+  public <TReturnType> TReturnType accept(TextQueryExpressionVisitor<TReturnType> visitor) {
+    return null;
+  }
+
 }

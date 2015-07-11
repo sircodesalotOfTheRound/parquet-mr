@@ -2,10 +2,10 @@ package org.apache.parquet.parqour.query.backtracking.rules;
 
 
 import org.apache.parquet.parqour.query.backtracking.interfaces.ParquelBacktrackRuleBase;
-import org.apache.parquet.parqour.query.expressions.ParquelExpression;
-import org.apache.parquet.parqour.query.expressions.pql.ParquelKeywordExpression;
+import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
+import org.apache.parquet.parqour.query.expressions.pql.TextQueryKeywordExpression;
 import org.apache.parquet.parqour.query.expressions.categories.ParquelExpressionType;
-import org.apache.parquet.parqour.query.expressions.tables.ParquelNamedTableExpression;
+import org.apache.parquet.parqour.query.expressions.tables.TextQueryNamedTableExpression;
 import org.apache.parquet.parqour.query.lexing.ParquelLexer;
 
 /**
@@ -17,15 +17,15 @@ public class ParquelNamedTableExpressionBacktrackRule extends ParquelBacktrackRu
   }
 
   @Override
-  public boolean isMatch(ParquelExpression parent, ParquelLexer lexer) {
+  public boolean isMatch(TextQueryExpression parent, ParquelLexer lexer) {
     return (parent != null)
       && parent.is(ParquelExpressionType.TABLE_SET)
       && lexer.currentIs(ParquelExpressionType.IDENTIFIER)
-      && !ParquelKeywordExpression.isKeyword(lexer);
+      && !TextQueryKeywordExpression.isKeyword(lexer);
   }
 
   @Override
-  public ParquelExpression read(ParquelExpression parent, ParquelLexer lexer) {
-    return ParquelNamedTableExpression.read(parent, lexer);
+  public TextQueryExpression read(TextQueryExpression parent, ParquelLexer lexer) {
+    return TextQueryNamedTableExpression.read(parent, lexer);
   }
 }

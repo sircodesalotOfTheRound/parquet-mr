@@ -1,4 +1,4 @@
-package org.apache.parquet.parqour.analysis;
+package org.apache.parquet.parqour.analysis.predicates;
 import org.apache.parquet.parqour.ingest.plan.analysis.PredicateAnalysis;
 import org.apache.parquet.parqour.ingest.plan.predicates.ColumnPredicate;
 import org.apache.parquet.parqour.ingest.plan.predicates.leaf.sys.*;
