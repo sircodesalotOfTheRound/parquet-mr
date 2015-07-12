@@ -3,9 +3,9 @@ package org.apache.parquet.parqour.query.expressions.pql;
 
 import org.apache.parquet.parqour.exceptions.ParquelException;
 import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
-import org.apache.parquet.parqour.query.expressions.categories.ParquelExpressionType;
-import org.apache.parquet.parqour.query.lexing.ParquelLexer;
-import org.apache.parquet.parqour.query.tokens.ParquelIdentifierToken;
+import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
+import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
+import org.apache.parquet.parqour.query.tokens.TextQueryIdentifierToken;
 import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
 
 import java.util.HashSet;
@@ -26,9 +26,9 @@ public abstract class TextQueryKeywordExpression extends TextQueryExpression {
   public static final String TABLE = "TABLE";
   public static final String COMMENT = "COMMENT";
 
-  private final ParquelIdentifierToken token;
+  private final TextQueryIdentifierToken token;
 
-  public TextQueryKeywordExpression(TextQueryExpression parent, ParquelLexer lexer, ParquelExpressionType type) {
+  public TextQueryKeywordExpression(TextQueryExpression parent, TextQueryLexer lexer, TextQueryExpressionType type) {
     super(parent, lexer, type);
 
     this.token = readToken(lexer);
@@ -39,15 +39,15 @@ public abstract class TextQueryKeywordExpression extends TextQueryExpression {
     return null;
   }
 
-  private ParquelIdentifierToken readToken(ParquelLexer lexer) {
+  private TextQueryIdentifierToken readToken(TextQueryLexer lexer) {
     if (!isKeyword(lexer)) {
       throw new ParquelException("Keyword expressions must be keywords");
     }
 
-    return (ParquelIdentifierToken)lexer.current();
+    return (TextQueryIdentifierToken)lexer.current();
   }
 
-  public static boolean isKeyword(ParquelLexer lexer) {
+  public static boolean isKeyword(TextQueryLexer lexer) {
     return isKeyword(lexer.current().toString());
   }
 

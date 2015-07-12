@@ -2,17 +2,17 @@ package org.apache.parquet.parqour.query.tokens;
 
 
 import org.apache.parquet.parqour.exceptions.ParquelException;
-import org.apache.parquet.parqour.query.expressions.categories.ParquelExpressionType;
+import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
 import org.apache.parquet.parqour.query.lexing.ParquelCharacterStream;
 
 /**
  * Created by sircodesalot on 15/4/2.
  */
-public class ParquelIdentifierToken extends ParquelToken {
+public class TextQueryIdentifierToken extends TextQueryToken {
   private final String identifier;
 
-  private ParquelIdentifierToken(ParquelCharacterStream stream) {
-    super(stream.position(), ParquelExpressionType.IDENTIFIER);
+  private TextQueryIdentifierToken(ParquelCharacterStream stream) {
+    super(stream.position(), TextQueryExpressionType.IDENTIFIER);
     this.identifier = parseIdentifier(stream);
   }
 
@@ -38,7 +38,7 @@ public class ParquelIdentifierToken extends ParquelToken {
     return identifier;
   }
 
-  public static ParquelIdentifierToken read(ParquelCharacterStream stream) {
-    return new ParquelIdentifierToken(stream);
+  public static TextQueryIdentifierToken read(ParquelCharacterStream stream) {
+    return new TextQueryIdentifierToken(stream);
   }
 }

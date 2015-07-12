@@ -4,8 +4,7 @@ import org.apache.parquet.parqour.ingest.read.iterator.lamba.Projection;
 import org.apache.parquet.parqour.ingest.schema.SchemaIntersection;
 import org.apache.parquet.parqour.query.expressions.pql.TextQueryTreeRootExpression;
 import org.apache.parquet.parqour.query.expressions.column.TextQueryNamedColumnExpression;
-import org.apache.parquet.parqour.query.lexing.ParquelLexer;
-import org.apache.parquet.parqour.query.visitor.TextQueryColumnCollectingVisitor;
+import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
 import org.junit.Test;
 import org.apache.parquet.schema.GroupType;
 import org.apache.parquet.schema.MessageType;
@@ -129,7 +128,7 @@ public class TestSchemaIntersection {
   }
 
   private Iterable<String> subschemaColumnsFromString(String expression) {
-    ParquelLexer lexer = new ParquelLexer(expression, true);
+    TextQueryLexer lexer = new TextQueryLexer(expression, true);
     TextQueryTreeRootExpression rootExpression = new TextQueryTreeRootExpression(lexer);
 
     return rootExpression.asSelectStatement().columnSet().columns()

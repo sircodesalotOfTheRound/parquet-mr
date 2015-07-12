@@ -4,8 +4,8 @@ import org.apache.parquet.parqour.query.backtracking.interfaces.ParquelBacktrack
 import org.apache.parquet.parqour.query.backtracking.rules.ParquelNamedTableExpressionBacktrackRule;
 import org.apache.parquet.parqour.query.backtracking.rules.ParquelQuotedTableExpressionBacktrackRule;
 import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
-import org.apache.parquet.parqour.query.expressions.categories.ParquelExpressionType;
-import org.apache.parquet.parqour.query.lexing.ParquelLexer;
+import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
+import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
 import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
 
 /**
@@ -18,8 +18,8 @@ public abstract class TextQueryTableExpression extends TextQueryExpression {
 
   private final ParquelTableExpressionType tableExpressionType;
 
-  public TextQueryTableExpression(TextQueryExpression parent, ParquelLexer lexer, ParquelTableExpressionType tableExpressionType) {
-    super(parent, lexer, ParquelExpressionType.TABLE);
+  public TextQueryTableExpression(TextQueryExpression parent, TextQueryLexer lexer, ParquelTableExpressionType tableExpressionType) {
+    super(parent, lexer, TextQueryExpressionType.TABLE);
 
     this.tableExpressionType = tableExpressionType;
   }
@@ -30,7 +30,7 @@ public abstract class TextQueryTableExpression extends TextQueryExpression {
     return null;
   }
 */
-  public static boolean canParse(TextQueryExpression parent, ParquelLexer lexer) {
+  public static boolean canParse(TextQueryExpression parent, TextQueryLexer lexer) {
     return rules.canParse(parent, lexer);
   }
 
@@ -42,7 +42,7 @@ public abstract class TextQueryTableExpression extends TextQueryExpression {
     return (TextQueryNamedTableExpression)this;
   }
 
-  public static TextQueryTableExpression read(TextQueryExpression parent, ParquelLexer lexer) {
+  public static TextQueryTableExpression read(TextQueryExpression parent, TextQueryLexer lexer) {
     return rules.read(parent, lexer);
   }
 

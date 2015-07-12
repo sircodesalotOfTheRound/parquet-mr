@@ -16,7 +16,7 @@ public class TestParquelTokenList {
     Map<Class, Integer> tokensCounts = new HashMap<Class, Integer>();
     ParquelTokenList tokens = new ParquelTokenList("select 1, second.third from table1, where name = 'smith'");
 
-    for (ParquelToken token : tokens) {
+    for (TextQueryToken token : tokens) {
       Class tokenType = token.getClass();
       if (tokensCounts.containsKey(token.getClass())) {
         int seenTimes = tokensCounts.get(tokenType);
@@ -28,9 +28,9 @@ public class TestParquelTokenList {
 
     assert (tokens.size() == 23);
 
-    assert (tokensCounts.get(ParquelWhitespaceToken.class) == 8);
-    assert (tokensCounts.get(ParquelIdentifierToken.class) == 8);
-    assert (tokensCounts.get(ParquelNumericToken.class) == 1);
-    assert (tokensCounts.get(ParquelPunctuationToken.class) == 6);
+    assert (tokensCounts.get(TextQueryWhitespaceToken.class) == 8);
+    assert (tokensCounts.get(TextQueryIdentifierToken.class) == 8);
+    assert (tokensCounts.get(TextQueryNumericToken.class) == 1);
+    assert (tokensCounts.get(TextQueryPunctuationToken.class) == 6);
   }
 }

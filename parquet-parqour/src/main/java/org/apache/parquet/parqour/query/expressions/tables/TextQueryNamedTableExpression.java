@@ -3,8 +3,8 @@ package org.apache.parquet.parqour.query.expressions.tables;
 import org.apache.parquet.parqour.exceptions.ParquelException;
 import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
 import org.apache.parquet.parqour.query.expressions.pql.TextQueryFullyQualifiedNameExpression;
-import org.apache.parquet.parqour.query.expressions.categories.ParquelExpressionType;
-import org.apache.parquet.parqour.query.lexing.ParquelLexer;
+import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
+import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
 import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
 
 /**
@@ -13,7 +13,7 @@ import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
 public class TextQueryNamedTableExpression extends TextQueryTableExpression {
   private final TextQueryFullyQualifiedNameExpression fqn;
 
-  public TextQueryNamedTableExpression(TextQueryExpression parent, ParquelLexer lexer) {
+  public TextQueryNamedTableExpression(TextQueryExpression parent, TextQueryLexer lexer) {
     super (parent, lexer, ParquelTableExpressionType.NAMED);
 
     this.validateLexing(parent, lexer);
@@ -31,19 +31,19 @@ public class TextQueryNamedTableExpression extends TextQueryTableExpression {
     return new ParquelAppendableCollection<ParquelExpression>(fqn);
   }*/
 
-  private void validateLexing(TextQueryExpression parent, ParquelLexer lexer) {
-    if (!lexer.currentIs(ParquelExpressionType.IDENTIFIER)) {
+  private void validateLexing(TextQueryExpression parent, TextQueryLexer lexer) {
+    if (!lexer.currentIs(TextQueryExpressionType.IDENTIFIER)) {
       throw new ParquelException("Named table expressions must read ");
-    } else if (!parent.is(ParquelExpressionType.TABLE_SET)) {
+    } else if (!parent.is(TextQueryExpressionType.TABLE_SET)) {
       throw new ParquelException("Parent of ParquelTableExpression must be ParquelTableSetExpression");
     }
   }
 
-  private TextQueryFullyQualifiedNameExpression readFqn(ParquelLexer lexer) {
+  private TextQueryFullyQualifiedNameExpression readFqn(TextQueryLexer lexer) {
     return TextQueryFullyQualifiedNameExpression.read(this, lexer);
   }
 
-  public static TextQueryNamedTableExpression read(TextQueryExpression parent, ParquelLexer lexer) {
+  public static TextQueryNamedTableExpression read(TextQueryExpression parent, TextQueryLexer lexer) {
     return new TextQueryNamedTableExpression(parent, lexer);
   }
 

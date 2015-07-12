@@ -1,21 +1,21 @@
 package org.apache.parquet.parqour.query.expressions.column;
 
 import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
-import org.apache.parquet.parqour.query.expressions.categories.ParquelExpressionType;
+import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
 import org.apache.parquet.parqour.query.expressions.categories.ParquelMemberExpression;
-import org.apache.parquet.parqour.query.lexing.ParquelLexer;
-import org.apache.parquet.parqour.query.tokens.ParquelPunctuationToken;
-import org.apache.parquet.parqour.query.tokens.ParquelToken;
+import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
+import org.apache.parquet.parqour.query.tokens.TextQueryPunctuationToken;
+import org.apache.parquet.parqour.query.tokens.TextQueryToken;
 import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
 
 /**
  * Created by sircodesalot on 15/4/2.
  */
 public class TextQueryWildcardExpression extends TextQueryColumnExpression implements ParquelMemberExpression {
-  public ParquelToken token;
+  public TextQueryToken token;
 
-  public TextQueryWildcardExpression(TextQueryExpression parent, ParquelLexer lexer) {
-    super(parent, lexer, ParquelExpressionType.WILDCARD);
+  public TextQueryWildcardExpression(TextQueryExpression parent, TextQueryLexer lexer) {
+    super(parent, lexer, TextQueryExpressionType.WILDCARD);
 
     this.token = readToken(lexer);
   }
@@ -30,17 +30,17 @@ public class TextQueryWildcardExpression extends TextQueryColumnExpression imple
     return null;
   }*/
 
-  private ParquelToken readToken(ParquelLexer lexer) {
-    return lexer.readCurrentAndAdvance(ParquelExpressionType.PUNCTUATION, ParquelPunctuationToken.WILDCARD);
+  private TextQueryToken readToken(TextQueryLexer lexer) {
+    return lexer.readCurrentAndAdvance(TextQueryExpressionType.PUNCTUATION, TextQueryPunctuationToken.WILDCARD);
   }
 
-  public static TextQueryWildcardExpression read(TextQueryExpression parent, ParquelLexer lexer) {
+  public static TextQueryWildcardExpression read(TextQueryExpression parent, TextQueryLexer lexer) {
     return new TextQueryWildcardExpression(parent, lexer);
   }
 
   @Override
   public String toString() {
-    return ParquelPunctuationToken.WILDCARD;
+    return TextQueryPunctuationToken.WILDCARD;
   }
 
   @Override

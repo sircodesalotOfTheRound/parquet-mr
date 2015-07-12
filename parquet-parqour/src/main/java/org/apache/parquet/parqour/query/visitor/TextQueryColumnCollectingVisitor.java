@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * Created by sircodesalot on 7/11/15.
  */
-public class TextQueryColumnCollectingVisitor implements TextQueryExpressionVisitor<Iterable<TextQueryNamedColumnExpression>> {
+public class TextQueryColumnCollectingVisitor extends TextQueryExpressionVisitor<Iterable<TextQueryNamedColumnExpression>> {
   private boolean containsAWildcardExpression = false;
   private final TextQueryAppendableCollection<TextQueryNamedColumnExpression> columns
     = new TextQueryAppendableCollection<TextQueryNamedColumnExpression>();

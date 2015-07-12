@@ -7,10 +7,10 @@ import org.apache.parquet.parqour.query.collections.TextQueryAppendableCollectio
 import org.apache.parquet.parqour.query.collections.TextQueryCollection;
 import org.apache.parquet.parqour.query.delimiters.TextQueryDotExpression;
 import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
-import org.apache.parquet.parqour.query.expressions.categories.ParquelExpressionType;
+import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
 import org.apache.parquet.parqour.query.expressions.categories.ParquelMemberExpression;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryVariableExpression;
-import org.apache.parquet.parqour.query.lexing.ParquelLexer;
+import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
 import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
 
 /**
@@ -24,14 +24,14 @@ public class TextQueryFullyQualifiedNameExpression extends TextQueryVariableExpr
   private final TextQueryCollection<ParquelMemberExpression> members;
   private final String representation;
 
-  public TextQueryFullyQualifiedNameExpression(TextQueryExpression parent, ParquelLexer lexer) {
-    super(parent, lexer, ParquelExpressionType.FQN);
+  public TextQueryFullyQualifiedNameExpression(TextQueryExpression parent, TextQueryLexer lexer) {
+    super(parent, lexer, TextQueryExpressionType.FQN);
 
     this.members = this.readMembers(lexer);
     this.representation = generateRepresentation();
   }
 
-  private TextQueryCollection<ParquelMemberExpression> readMembers(ParquelLexer lexer) {
+  private TextQueryCollection<ParquelMemberExpression> readMembers(TextQueryLexer lexer) {
     TextQueryAppendableCollection<ParquelMemberExpression> identifiers = new TextQueryAppendableCollection<ParquelMemberExpression>();
     while (!lexer.isEof()) {
       if (memberTypeRules.canParse(this, lexer)) {
@@ -79,7 +79,7 @@ public class TextQueryFullyQualifiedNameExpression extends TextQueryVariableExpr
   }
   */
 
-  public static TextQueryFullyQualifiedNameExpression read(TextQueryExpression parent, ParquelLexer lexer) {
+  public static TextQueryFullyQualifiedNameExpression read(TextQueryExpression parent, TextQueryLexer lexer) {
     return new TextQueryFullyQualifiedNameExpression(parent, lexer);
   }
 

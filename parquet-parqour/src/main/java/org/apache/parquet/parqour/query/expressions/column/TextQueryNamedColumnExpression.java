@@ -3,8 +3,8 @@ package org.apache.parquet.parqour.query.expressions.column;
 import org.apache.parquet.parqour.exceptions.ParquelException;
 import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
 import org.apache.parquet.parqour.query.expressions.pql.TextQueryFullyQualifiedNameExpression;
-import org.apache.parquet.parqour.query.expressions.categories.ParquelExpressionType;
-import org.apache.parquet.parqour.query.lexing.ParquelLexer;
+import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
+import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
 import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
 
 /**
@@ -13,21 +13,21 @@ import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
 public class TextQueryNamedColumnExpression extends TextQueryColumnExpression {
   private final TextQueryFullyQualifiedNameExpression identifier;
 
-  public TextQueryNamedColumnExpression(TextQueryExpression parent, ParquelLexer lexer) {
-    super(parent, lexer, ParquelExpressionType.NAMED_COLUMN);
+  public TextQueryNamedColumnExpression(TextQueryExpression parent, TextQueryLexer lexer) {
+    super(parent, lexer, TextQueryExpressionType.NAMED_COLUMN);
 
     this.identifier = readFqn(lexer);
   }
 
-  private TextQueryFullyQualifiedNameExpression readFqn(ParquelLexer lexer) {
-    if (!lexer.currentIs(ParquelExpressionType.IDENTIFIER)) {
+  private TextQueryFullyQualifiedNameExpression readFqn(TextQueryLexer lexer) {
+    if (!lexer.currentIs(TextQueryExpressionType.IDENTIFIER)) {
       throw new ParquelException("Identifier Expressions must be located on identifiers");
     }
 
     return TextQueryFullyQualifiedNameExpression.read(this, lexer);
   }
 
-  public static TextQueryColumnExpression read(TextQueryExpression parent, ParquelLexer lexer) {
+  public static TextQueryColumnExpression read(TextQueryExpression parent, TextQueryLexer lexer) {
     return new TextQueryNamedColumnExpression(parent, lexer);
   }
 
@@ -38,6 +38,10 @@ public class TextQueryNamedColumnExpression extends TextQueryColumnExpression {
   @Override
   public String toString() {
     return String.format("%s", this.identifier());
+  }
+
+  public String path() {
+    return this.identifier.toString();
   }
 
   @Override

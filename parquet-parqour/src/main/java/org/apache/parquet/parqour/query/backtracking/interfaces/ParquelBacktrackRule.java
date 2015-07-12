@@ -5,12 +5,12 @@ package org.apache.parquet.parqour.query.backtracking.interfaces;
  */
 
 import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
-import org.apache.parquet.parqour.query.expressions.categories.ParquelExpressionType;
-import org.apache.parquet.parqour.query.lexing.ParquelLexer;
+import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
+import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
 
 public interface ParquelBacktrackRule {
-  ParquelExpressionType launchForTokensOfType();
+  TextQueryExpressionType launchForTokensOfType();
 
-  boolean isMatch(TextQueryExpression parent, ParquelLexer lexer);
-  TextQueryExpression read(TextQueryExpression parent, ParquelLexer lexer);
+  boolean isMatch(TextQueryExpression parent, TextQueryLexer lexer);
+  TextQueryExpression read(TextQueryExpression parent, TextQueryLexer lexer);
 }

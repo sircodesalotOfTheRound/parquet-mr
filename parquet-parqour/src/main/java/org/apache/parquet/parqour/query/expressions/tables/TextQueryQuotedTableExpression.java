@@ -3,20 +3,20 @@ package org.apache.parquet.parqour.query.expressions.tables;
 import org.apache.parquet.parqour.exceptions.ParquelException;
 import org.apache.parquet.parqour.query.collections.TextQueryAppendableCollection;
 import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
-import org.apache.parquet.parqour.query.expressions.categories.ParquelExpressionType;
-import org.apache.parquet.parqour.query.lexing.ParquelLexer;
-import org.apache.parquet.parqour.query.tokens.ParquelPunctuationToken;
-import org.apache.parquet.parqour.query.tokens.ParquelToken;
+import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
+import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
+import org.apache.parquet.parqour.query.tokens.TextQueryPunctuationToken;
+import org.apache.parquet.parqour.query.tokens.TextQueryToken;
 import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
 
 /**
  * Created by sircodesalot on 7/5/15.
  */
 public class TextQueryQuotedTableExpression extends TextQueryTableExpression {
-  private final TextQueryAppendableCollection<ParquelToken> expressionTokens;
+  private final TextQueryAppendableCollection<TextQueryToken> expressionTokens;
   private final String expressionAsString;
 
-  public TextQueryQuotedTableExpression(TextQueryExpression parent, ParquelLexer lexer) {
+  public TextQueryQuotedTableExpression(TextQueryExpression parent, TextQueryLexer lexer) {
     super(parent, lexer, ParquelTableExpressionType.QUOTED);
 
     this.validateLexing(parent, lexer);
@@ -36,36 +36,36 @@ public class TextQueryQuotedTableExpression extends TextQueryTableExpression {
     return new ParquelAppendableCollection<ParquelExpression>(fqn);
   }*/
 
-  private void validateLexing(TextQueryExpression parent, ParquelLexer lexer) {
-    if (!lexer.currentIs(ParquelExpressionType.PUNCTUATION, ParquelPunctuationToken.SINGLE_QUOTE)) {
+  private void validateLexing(TextQueryExpression parent, TextQueryLexer lexer) {
+    if (!lexer.currentIs(TextQueryExpressionType.PUNCTUATION, TextQueryPunctuationToken.SINGLE_QUOTE)) {
       throw new ParquelException("Named table expressions must start with a single quote.");
     }
   }
 
-  private TextQueryAppendableCollection<ParquelToken> readExpression(ParquelLexer lexer) {
-    TextQueryAppendableCollection<ParquelToken> tokens = new TextQueryAppendableCollection<ParquelToken>();
+  private TextQueryAppendableCollection<TextQueryToken> readExpression(TextQueryLexer lexer) {
+    TextQueryAppendableCollection<TextQueryToken> tokens = new TextQueryAppendableCollection<TextQueryToken>();
 
     lexer.temporarilyIncludeWhitespaces();
-    lexer.readCurrentAndAdvance(ParquelExpressionType.PUNCTUATION, ParquelPunctuationToken.SINGLE_QUOTE);
-    while (!lexer.isEof() && !lexer.currentIs(ParquelExpressionType.PUNCTUATION, ParquelPunctuationToken.SINGLE_QUOTE)) {
+    lexer.readCurrentAndAdvance(TextQueryExpressionType.PUNCTUATION, TextQueryPunctuationToken.SINGLE_QUOTE);
+    while (!lexer.isEof() && !lexer.currentIs(TextQueryExpressionType.PUNCTUATION, TextQueryPunctuationToken.SINGLE_QUOTE)) {
       tokens.add(lexer.readCurrentAndAdvance());
     }
 
-    lexer.readCurrentAndAdvance(ParquelExpressionType.PUNCTUATION, ParquelPunctuationToken.SINGLE_QUOTE);
+    lexer.readCurrentAndAdvance(TextQueryExpressionType.PUNCTUATION, TextQueryPunctuationToken.SINGLE_QUOTE);
     lexer.revertToPreviousWhitespaceInclusionState();
     return tokens;
   }
 
-  private String convertExpressionToString(TextQueryAppendableCollection<ParquelToken> expressionTokens) {
+  private String convertExpressionToString(TextQueryAppendableCollection<TextQueryToken> expressionTokens) {
     StringBuilder builder = new StringBuilder();
-    for (ParquelToken token : expressionTokens) {
+    for (TextQueryToken token : expressionTokens) {
       builder.append(token.toString());
     }
 
     return builder.toString().trim();
   }
 
-  public static TextQueryQuotedTableExpression read(TextQueryExpression parent, ParquelLexer lexer) {
+  public static TextQueryQuotedTableExpression read(TextQueryExpression parent, TextQueryLexer lexer) {
     return new TextQueryQuotedTableExpression(parent, lexer);
   }
 

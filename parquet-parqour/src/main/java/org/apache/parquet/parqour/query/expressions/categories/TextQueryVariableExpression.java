@@ -1,11 +1,10 @@
 package org.apache.parquet.parqour.query.expressions.categories;
 
 import org.apache.parquet.parqour.query.backtracking.interfaces.ParquelBacktrackingRuleSet;
-import org.apache.parquet.parqour.query.backtracking.rules.ParquelFullyQualifiedNameExpressionBacktrackRule;
 import org.apache.parquet.parqour.query.backtracking.rules.ParquelNamedColumnExpressionBacktrackRule;
 import org.apache.parquet.parqour.query.backtracking.rules.ParquelNumericExpressionBacktrackRule;
 import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
-import org.apache.parquet.parqour.query.lexing.ParquelLexer;
+import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
 import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
 
 /**
@@ -16,7 +15,7 @@ public abstract class TextQueryVariableExpression extends TextQueryExpression {
     .add(new ParquelNumericExpressionBacktrackRule())
     .add(new ParquelNamedColumnExpressionBacktrackRule());
 
-  public TextQueryVariableExpression(TextQueryExpression parent, ParquelLexer lexer, ParquelExpressionType type) {
+  public TextQueryVariableExpression(TextQueryExpression parent, TextQueryLexer lexer, TextQueryExpressionType type) {
     super(parent, lexer, type);
   }
 
@@ -25,7 +24,7 @@ public abstract class TextQueryVariableExpression extends TextQueryExpression {
     return null;
   }
 
-  public static TextQueryVariableExpression read(TextQueryExpression parent, ParquelLexer lexer) {
+  public static TextQueryVariableExpression read(TextQueryExpression parent, TextQueryLexer lexer) {
     return rules.read(parent, lexer);
   }
 }

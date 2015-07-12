@@ -3,7 +3,7 @@ package org.apache.parquet.parqour.query.expressions;
 import org.apache.parquet.parqour.ingest.read.iterator.lamba.Predicate;
 import org.apache.parquet.parqour.ingest.read.iterator.lamba.Projection;
 import org.apache.parquet.parqour.query.collections.TextQueryCollection;
-import org.apache.parquet.parqour.query.expressions.categories.ParquelExpressionType;
+import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
 import org.apache.parquet.parqour.query.expressions.column.TextQueryColumnExpression;
 import org.apache.parquet.parqour.query.expressions.infix.TextQueryInfixExpression;
 import org.apache.parquet.parqour.query.expressions.column.TextQueryNamedColumnExpression;
@@ -13,7 +13,7 @@ import org.apache.parquet.parqour.query.expressions.tables.TextQueryNamedTableEx
 import org.apache.parquet.parqour.query.expressions.tables.TextQueryQuotedTableExpression;
 import org.apache.parquet.parqour.query.expressions.tables.TextQueryTableExpression;
 import org.apache.parquet.parqour.query.expressions.tables.ParquelTableExpressionType;
-import org.apache.parquet.parqour.query.lexing.ParquelLexer;
+import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
 import org.apache.parquet.parqour.query.expressions.pql.TextQueryFullyQualifiedNameExpression;
 import org.apache.parquet.parqour.query.expressions.pql.TextQuerySelectStatement;
 import org.apache.parquet.parqour.query.expressions.pql.TextQueryWhereExpression;
@@ -32,7 +32,7 @@ import static org.junit.Assert.assertTrue;
 public class TestTextQuery {
   @Test
   public void testRootExpression() {
-    ParquelLexer lexer = new ParquelLexer("select one, two, three from sometable", true);
+    TextQueryLexer lexer = new TextQueryLexer("select one, two, three from sometable", true);
     TextQueryTreeRootExpression root = new TextQueryTreeRootExpression(lexer);
 
     TextQueryCollection<TextQueryExpression> expressions = root.expressions();
@@ -41,7 +41,7 @@ public class TestTextQuery {
     assertTrue(expressions.all(new Predicate<TextQueryExpression>() {
       @Override
       public boolean test(TextQueryExpression expression) {
-        return expression.is(ParquelExpressionType.SELECT);
+        return expression.is(TextQueryExpressionType.SELECT);
       }
     }));
 
@@ -80,7 +80,7 @@ public class TestTextQuery {
 
   @Test
   public void testSelectExpression() {
-    ParquelLexer lexer = new ParquelLexer("select *, first, second, third, fourth from table1, table2", true);
+    TextQueryLexer lexer = new TextQueryLexer("select *, first, second, third, fourth from table1, table2", true);
     TextQueryTreeRootExpression root = new TextQueryTreeRootExpression(lexer);
 
     assertTrue(root.isSelectStatement());
@@ -128,7 +128,7 @@ public class TestTextQuery {
 
   @Test
   public void testAsFQNExpression() {
-    ParquelLexer lexer = new ParquelLexer("file.parq", true);
+    TextQueryLexer lexer = new TextQueryLexer("file.parq", true);
     TextQueryTreeRootExpression root = new TextQueryTreeRootExpression(lexer);
 
     assertTrue(root.isFqnExpression());
@@ -140,7 +140,7 @@ public class TestTextQuery {
   }
   @Test
   public void testFromFQNExpression() {
-    ParquelLexer lexer = new ParquelLexer("select one, two, three from sometable.parq", true);
+    TextQueryLexer lexer = new TextQueryLexer("select one, two, three from sometable.parq", true);
     TextQueryTreeRootExpression root = new TextQueryTreeRootExpression(lexer);
 
     TextQueryNamedTableExpression tableExpression = root.asSelectStatement()
@@ -157,7 +157,7 @@ public class TestTextQuery {
   public void testFromQuotedTableExpression() {
     for (String path : new String[] { "one.parq", "two three.parq", "four   five.parq", "relative/path/file.parq", "/absolute/path/item.parq" }) {
       String queryExpression = String.format("select * from '%s'", path);
-      ParquelLexer lexer = new ParquelLexer(queryExpression, true);
+      TextQueryLexer lexer = new TextQueryLexer(queryExpression, true);
       TextQueryTreeRootExpression root = new TextQueryTreeRootExpression(lexer);
 
       TextQueryTableExpression tableExpression = root.asSelectStatement()
@@ -180,7 +180,7 @@ public class TestTextQuery {
       for (String rhs : new String[] {"100", "four.five", "seven.eight.nine.ten", "some", "12", "10" }) {
         for (String operator : new String[]{ "=", "!=", "<", ">" }) {
           String statement = String.format("select * from something where %s %s %s", lhs, operator, rhs);
-          ParquelLexer lexer = new ParquelLexer(statement, true);
+          TextQueryLexer lexer = new TextQueryLexer(statement, true);
           TextQueryTreeRootExpression rootExpression = new TextQueryTreeRootExpression(lexer);
 
           TextQuerySelectStatement selectStatement = rootExpression.asSelectStatement();
@@ -203,9 +203,9 @@ public class TestTextQuery {
     assertEquals(rhs, infixExpression.rhs().toString());
   }
 
-  public ParquelExpressionType getLexedTypeForString(String string) {
-    if (Character.isAlphabetic(string.charAt(0))) return ParquelExpressionType.NAMED_COLUMN;
-    if (Character.isDigit(string.charAt(0))) return ParquelExpressionType.NUMERIC;
+  public TextQueryExpressionType getLexedTypeForString(String string) {
+    if (Character.isAlphabetic(string.charAt(0))) return TextQueryExpressionType.NAMED_COLUMN;
+    if (Character.isDigit(string.charAt(0))) return TextQueryExpressionType.NUMERIC;
 
     throw new NotImplementedException();
   }

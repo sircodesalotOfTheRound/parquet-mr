@@ -1,10 +1,10 @@
 package org.apache.parquet.parqour.query.expressions.pql;
 
 import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
-import org.apache.parquet.parqour.query.expressions.categories.ParquelExpressionType;
+import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
 import org.apache.parquet.parqour.query.expressions.categories.ParquelStatementExpression;
 import org.apache.parquet.parqour.query.expressions.tables.TextQueryTableSetExpression;
-import org.apache.parquet.parqour.query.lexing.ParquelLexer;
+import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
 import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
 
 /**
@@ -13,8 +13,8 @@ import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
 public class TextQueryFromExpression extends TextQueryKeywordExpression implements ParquelStatementExpression {
   private final TextQueryTableSetExpression tableSet;
 
-  public TextQueryFromExpression(TextQueryExpression parent, ParquelLexer lexer) {
-    super(parent, lexer, ParquelExpressionType.FROM);
+  public TextQueryFromExpression(TextQueryExpression parent, TextQueryLexer lexer) {
+    super(parent, lexer, TextQueryExpressionType.FROM);
 
     this.tableSet = readTables(lexer);
   }
@@ -29,16 +29,16 @@ public class TextQueryFromExpression extends TextQueryKeywordExpression implemen
     return new ParquelAppendableCollection<ParquelExpression>(tableSet);
   }*/
 
-  private TextQueryTableSetExpression readTables(ParquelLexer lexer) {
-    lexer.readCurrentAndAdvance(ParquelExpressionType.IDENTIFIER, FROM);
+  private TextQueryTableSetExpression readTables(TextQueryLexer lexer) {
+    lexer.readCurrentAndAdvance(TextQueryExpressionType.IDENTIFIER, FROM);
     return TextQueryTableSetExpression.read(this, lexer);
   }
 
-  public static boolean canParse(TextQueryExpression parent,  ParquelLexer lexer) {
-    return lexer.currentIs(ParquelExpressionType.IDENTIFIER, FROM);
+  public static boolean canParse(TextQueryExpression parent,  TextQueryLexer lexer) {
+    return lexer.currentIs(TextQueryExpressionType.IDENTIFIER, FROM);
   }
 
-  public static TextQueryFromExpression read(TextQueryExpression parent, ParquelLexer lexer) {
+  public static TextQueryFromExpression read(TextQueryExpression parent, TextQueryLexer lexer) {
     return new TextQueryFromExpression(parent, lexer);
   }
 

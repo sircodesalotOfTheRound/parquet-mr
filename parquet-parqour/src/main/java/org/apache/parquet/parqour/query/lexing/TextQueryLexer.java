@@ -2,15 +2,15 @@ package org.apache.parquet.parqour.query.lexing;
 
 
 import org.apache.parquet.parqour.exceptions.ParquelException;
-import org.apache.parquet.parqour.query.expressions.categories.ParquelExpressionType;
-import org.apache.parquet.parqour.query.tokens.ParquelToken;
+import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
+import org.apache.parquet.parqour.query.tokens.TextQueryToken;
 
 import java.util.Stack;
 
 /**
  * Created by sircodesalot on 15/4/2.
  */
-public class ParquelLexer {
+public class TextQueryLexer {
   private final String text;
   private final ParquelTokenList tokens;
   private boolean skipWhitespaces;
@@ -18,7 +18,7 @@ public class ParquelLexer {
   private Stack<Integer> undoStack;
   private Stack<Boolean> whitespaceStateStack;
 
-  public ParquelLexer(String text, boolean skipWhitespacesByDefault) {
+  public TextQueryLexer(String text, boolean skipWhitespacesByDefault) {
     this.text = text;
     this.skipWhitespaces = skipWhitespacesByDefault;
     this.tokens = new ParquelTokenList(text);
@@ -38,13 +38,13 @@ public class ParquelLexer {
     currentIndex += 1;
 
     if (skipWhitespaces) {
-      while (!isEof() && currentIs(ParquelExpressionType.WHITESPACE)) {
+      while (!isEof() && currentIs(TextQueryExpressionType.WHITESPACE)) {
         currentIndex += 1;
       }
     }
   }
 
-  public ParquelToken current() {
+  public TextQueryToken current() {
     return this.tokens.get(currentIndex);
   }
 
@@ -52,7 +52,7 @@ public class ParquelLexer {
     return this.currentIndex;
   }
 
-  public ParquelToken atIndex(int index) {
+  public TextQueryToken atIndex(int index) {
     return tokens.get(index);
   }
 
@@ -74,14 +74,14 @@ public class ParquelLexer {
     this.skipWhitespaces = this.whitespaceStateStack.pop();
   }
 
-  public ParquelToken readCurrentAndAdvance() {
-    ParquelToken current = this.current();
+  public TextQueryToken readCurrentAndAdvance() {
+    TextQueryToken current = this.current();
     this.advance();
 
     return current;
   }
 
-  public <T extends ParquelToken> T readCurrentAndAdvance(ParquelExpressionType type) {
+  public <T extends TextQueryToken> T readCurrentAndAdvance(TextQueryExpressionType type) {
     if (currentIs(type)) {
       return (T) readCurrentAndAdvance();
     } else {
@@ -89,7 +89,7 @@ public class ParquelLexer {
     }
   }
 
-  public <T extends ParquelToken> T readCurrentAndAdvanceMatchCase(ParquelExpressionType type, String representation) {
+  public <T extends TextQueryToken> T readCurrentAndAdvanceMatchCase(TextQueryExpressionType type, String representation) {
     if (currentIsMatchCase(type, representation)) {
       return (T) readCurrentAndAdvance();
     } else {
@@ -102,7 +102,7 @@ public class ParquelLexer {
     }
   }
 
-  public <T extends ParquelToken> T readCurrentAndAdvance(ParquelExpressionType type, String representation) {
+  public <T extends TextQueryToken> T readCurrentAndAdvance(TextQueryExpressionType type, String representation) {
     if (currentIs(type, representation)) {
       return (T) readCurrentAndAdvance();
     } else {
@@ -115,15 +115,15 @@ public class ParquelLexer {
     }
   }
 
-  public boolean currentIs(ParquelExpressionType type) {
+  public boolean currentIs(TextQueryExpressionType type) {
     return !this.isEof() && this.current().type() == type;
   }
 
-  public boolean currentIsMatchCase(ParquelExpressionType type, String representation) {
+  public boolean currentIsMatchCase(TextQueryExpressionType type, String representation) {
     return currentIs(type) && current().toString().equals(representation);
   }
 
-  public boolean currentIs(ParquelExpressionType type, String representation) {
+  public boolean currentIs(TextQueryExpressionType type, String representation) {
     return currentIs(type) && current().toString().equalsIgnoreCase(representation);
   }
 

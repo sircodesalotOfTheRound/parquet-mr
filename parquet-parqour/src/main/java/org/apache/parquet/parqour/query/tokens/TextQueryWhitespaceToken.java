@@ -1,18 +1,18 @@
 package org.apache.parquet.parqour.query.tokens;
 
 
-import org.apache.parquet.parqour.query.expressions.categories.ParquelExpressionType;
+import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
 import org.apache.parquet.parqour.query.lexing.ParquelCharacterStream;
 
 /**
  * Created by sircodesalot on 15/4/2.
  */
-public class ParquelWhitespaceToken extends ParquelToken {
+public class TextQueryWhitespaceToken extends TextQueryToken {
   private char whitespaceCharacter;
   private final int length;
 
-  private ParquelWhitespaceToken(ParquelCharacterStream stream) {
-    super(stream.position(), ParquelExpressionType.WHITESPACE);
+  private TextQueryWhitespaceToken(ParquelCharacterStream stream) {
+    super(stream.position(), TextQueryExpressionType.WHITESPACE);
     this.whitespaceCharacter = stream.current();
     this.length = parseWhitespaceLength(stream);
   }
@@ -29,8 +29,8 @@ public class ParquelWhitespaceToken extends ParquelToken {
     return length;
   }
 
-  public static ParquelWhitespaceToken read(ParquelCharacterStream stream) {
-    return new ParquelWhitespaceToken(stream);
+  public static TextQueryWhitespaceToken read(ParquelCharacterStream stream) {
+    return new TextQueryWhitespaceToken(stream);
   }
 
   public char whitespaceCharacter() { return whitespaceCharacter; }

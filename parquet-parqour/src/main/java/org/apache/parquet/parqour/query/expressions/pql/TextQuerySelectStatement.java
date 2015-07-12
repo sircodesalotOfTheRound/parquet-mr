@@ -1,10 +1,10 @@
 package org.apache.parquet.parqour.query.expressions.pql;
 
 import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
-import org.apache.parquet.parqour.query.expressions.categories.ParquelExpressionType;
+import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
 import org.apache.parquet.parqour.query.expressions.categories.ParquelStatementExpression;
 import org.apache.parquet.parqour.query.expressions.column.TextQueryColumnSetExpression;
-import org.apache.parquet.parqour.query.lexing.ParquelLexer;
+import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
 import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
 
 /**
@@ -15,8 +15,8 @@ public class TextQuerySelectStatement extends TextQueryKeywordExpression impleme
   private final TextQueryFromExpression from;
   private final TextQueryWhereExpression where;
 
-  public TextQuerySelectStatement(TextQueryExpression parent, ParquelLexer lexer) {
-    super(parent, lexer, ParquelExpressionType.SELECT);
+  public TextQuerySelectStatement(TextQueryExpression parent, TextQueryLexer lexer) {
+    super(parent, lexer, TextQueryExpressionType.SELECT);
 
     this.columns = readColumns(lexer);
     this.from = readTables(lexer);
@@ -33,11 +33,11 @@ public class TextQuerySelectStatement extends TextQueryKeywordExpression impleme
     return new ParquelAppendableCollection<ParquelExpression>(columns, from);
   }*/
 
-  private TextQueryColumnSetExpression readColumns(ParquelLexer lexer) {
+  private TextQueryColumnSetExpression readColumns(TextQueryLexer lexer) {
     return TextQueryColumnSetExpression.read(this, lexer);
   }
 
-  private TextQueryFromExpression readTables(ParquelLexer lexer) {
+  private TextQueryFromExpression readTables(TextQueryLexer lexer) {
     if (TextQueryFromExpression.canParse(this, lexer)) {
       return TextQueryFromExpression.read(this, lexer);
     } else {
@@ -45,7 +45,7 @@ public class TextQuerySelectStatement extends TextQueryKeywordExpression impleme
     }
   }
 
-  private TextQueryWhereExpression readPredicates(ParquelLexer lexer) {
+  private TextQueryWhereExpression readPredicates(TextQueryLexer lexer) {
     if (TextQueryWhereExpression.canParse(this, lexer)) {
       return TextQueryWhereExpression.read(this, lexer);
     } else {
@@ -62,7 +62,7 @@ public class TextQuerySelectStatement extends TextQueryKeywordExpression impleme
   }
 
 
-  public static TextQuerySelectStatement read(TextQueryExpression parent, ParquelLexer lexer) {
+  public static TextQuerySelectStatement read(TextQueryExpression parent, TextQueryLexer lexer) {
     return new TextQuerySelectStatement(parent, lexer);
   }
 

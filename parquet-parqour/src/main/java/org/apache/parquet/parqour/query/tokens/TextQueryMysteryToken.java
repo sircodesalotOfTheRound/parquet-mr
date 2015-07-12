@@ -1,22 +1,22 @@
 package org.apache.parquet.parqour.query.tokens;
 
 
-import org.apache.parquet.parqour.query.expressions.categories.ParquelExpressionType;
+import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
 import org.apache.parquet.parqour.query.lexing.ParquelCharacterStream;
 
 /**
  * In theory, this class should never be used.
  */
-public class ParquelMysteryToken extends ParquelToken {
+public class TextQueryMysteryToken extends TextQueryToken {
   private final char character;
 
-  private ParquelMysteryToken(ParquelCharacterStream stream) {
-    super(stream.position(), ParquelExpressionType.UNKNOWN);
+  private TextQueryMysteryToken(ParquelCharacterStream stream) {
+    super(stream.position(), TextQueryExpressionType.UNKNOWN);
     this.character = stream.readCurrentAndAdvance();
   }
 
-  public static ParquelMysteryToken read(ParquelCharacterStream stream) {
-    return new ParquelMysteryToken(stream);
+  public static TextQueryMysteryToken read(ParquelCharacterStream stream) {
+    return new TextQueryMysteryToken(stream);
   }
 
   @Override

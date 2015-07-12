@@ -1,19 +1,19 @@
 package org.apache.parquet.parqour.query.expressions.pql;
 
 import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
-import org.apache.parquet.parqour.query.lexing.ParquelLexer;
-import org.apache.parquet.parqour.query.tokens.ParquelToken;
-import org.apache.parquet.parqour.query.expressions.categories.ParquelExpressionType;
+import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
+import org.apache.parquet.parqour.query.tokens.TextQueryToken;
+import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
 import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
 
 /**
  * Created by sircodesalot on 15/4/2.
  */
 public class TextQueryUnknownExpression extends TextQueryExpression {
-  private final ParquelToken token;
+  private final TextQueryToken token;
 
-  public TextQueryUnknownExpression(TextQueryExpression parent, ParquelLexer lexer) {
-    super(parent, lexer, ParquelExpressionType.UNKNOWN);
+  public TextQueryUnknownExpression(TextQueryExpression parent, TextQueryLexer lexer) {
+    super(parent, lexer, TextQueryExpressionType.UNKNOWN);
 
     this.token = lexer.readCurrentAndAdvance();
   }
@@ -28,7 +28,7 @@ public class TextQueryUnknownExpression extends TextQueryExpression {
     return null;
   }*/
 
-  public ParquelToken token() {
+  public TextQueryToken token() {
     return this.token;
   }
 
@@ -37,7 +37,7 @@ public class TextQueryUnknownExpression extends TextQueryExpression {
     return this.token.toString();
   }
 
-  public static TextQueryExpression read(TextQueryExpression parent, ParquelLexer lexer) {
+  public static TextQueryExpression read(TextQueryExpression parent, TextQueryLexer lexer) {
     return new TextQueryUnknownExpression(parent, lexer);
   }
 

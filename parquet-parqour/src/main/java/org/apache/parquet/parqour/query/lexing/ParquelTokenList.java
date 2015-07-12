@@ -10,47 +10,47 @@ import java.util.List;
 /**
  * Created by sircodesalot on 15/4/2.
  */
-public class ParquelTokenList implements Iterable<ParquelToken> {
-  private final List<ParquelToken> tokens;
+public class ParquelTokenList implements Iterable<TextQueryToken> {
+  private final List<TextQueryToken> tokens;
 
   public ParquelTokenList(String statement) {
     this.tokens = generateFromString(statement);
   }
 
-  private List<ParquelToken> generateFromString(String text) {
+  private List<TextQueryToken> generateFromString(String text) {
     ParquelCharacterStream stream = new ParquelCharacterStream(text);
-    List<ParquelToken> tokens = new ArrayList<ParquelToken>();
+    List<TextQueryToken> tokens = new ArrayList<TextQueryToken>();
 
     while (!stream.isEof()) {
-      ParquelToken token = readToken(stream);
+      TextQueryToken token = readToken(stream);
       tokens.add(token);
     }
 
     return tokens;
   }
 
-  private ParquelToken readToken(ParquelCharacterStream stream) {
+  private TextQueryToken readToken(ParquelCharacterStream stream) {
     if (stream.currentIsAlpha()) {
-      return ParquelIdentifierToken.read(stream);
+      return TextQueryIdentifierToken.read(stream);
     } else if (stream.currentIsPunctuation()) {
-      return ParquelPunctuationToken.read(stream);
+      return TextQueryPunctuationToken.read(stream);
     } else if (stream.currentIsWhitespace()) {
-      return ParquelWhitespaceToken.read(stream);
+      return TextQueryWhitespaceToken.read(stream);
     } else if (stream.currentIsPunctuation()) {
-      return ParquelPunctuationToken.read(stream);
+      return TextQueryPunctuationToken.read(stream);
     } else if (stream.currentIsNumeric()) {
-      return ParquelNumericToken.read(stream);
+      return TextQueryNumericToken.read(stream);
     } else {
       // In practice, this should never be used.
-      return ParquelMysteryToken.read(stream);
+      return TextQueryMysteryToken.read(stream);
     }
   }
 
-  public Iterable<ParquelToken> tokens() {
+  public Iterable<TextQueryToken> tokens() {
     return this.tokens;
   }
 
-  public Iterator<ParquelToken> iterator() {
+  public Iterator<TextQueryToken> iterator() {
     return tokens.iterator();
   }
 
@@ -58,7 +58,7 @@ public class ParquelTokenList implements Iterable<ParquelToken> {
     return tokens.size();
   }
 
-  public ParquelToken get(int index) {
+  public TextQueryToken get(int index) {
     return tokens.get(index);
   }
 }

@@ -3,7 +3,7 @@ package org.apache.parquet.parqour.query.expressions.categories;
 /**
  * Created by sircodesalot on 6/28/15.
  */
-public enum ParquelExpressionType {
+public enum TextQueryExpressionType {
   DOT,
   COMMA,
 

@@ -1,13 +1,13 @@
 package org.apache.parquet.parqour.query.tokens;
 
 
-import org.apache.parquet.parqour.query.expressions.categories.ParquelExpressionType;
+import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
 import org.apache.parquet.parqour.query.lexing.ParquelCharacterStream;
 
 /**
  * Created by sircodesalot on 15/4/2.
  */
-public class ParquelPunctuationToken extends ParquelToken {
+public class TextQueryPunctuationToken extends TextQueryToken {
   public static final String COMMA = ",";
   public static final String OPEN_PARENS = "(";
   public static final String CLOSE_PARENS = ")";
@@ -25,8 +25,8 @@ public class ParquelPunctuationToken extends ParquelToken {
 
   private final String token;
 
-  private ParquelPunctuationToken(ParquelCharacterStream stream) {
-    super(stream.position(), ParquelExpressionType.PUNCTUATION);
+  private TextQueryPunctuationToken(ParquelCharacterStream stream) {
+    super(stream.position(), TextQueryExpressionType.PUNCTUATION);
     this.token = parseFromString(stream);
   }
 
@@ -43,8 +43,8 @@ public class ParquelPunctuationToken extends ParquelToken {
   }
 
 
-  public static ParquelPunctuationToken read(ParquelCharacterStream stream) {
-    return new ParquelPunctuationToken(stream);
+  public static TextQueryPunctuationToken read(ParquelCharacterStream stream) {
+    return new TextQueryPunctuationToken(stream);
   }
 
   @Override

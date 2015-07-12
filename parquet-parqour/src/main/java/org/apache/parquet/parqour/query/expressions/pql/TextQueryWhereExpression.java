@@ -1,9 +1,9 @@
 package org.apache.parquet.parqour.query.expressions.pql;
 
 import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
-import org.apache.parquet.parqour.query.expressions.categories.ParquelExpressionType;
+import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
 import org.apache.parquet.parqour.query.expressions.infix.TextQueryInfixExpression;
-import org.apache.parquet.parqour.query.lexing.ParquelLexer;
+import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
 import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
 
 /**
@@ -12,18 +12,18 @@ import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
 public class TextQueryWhereExpression extends TextQueryExpression {
   private final TextQueryInfixExpression expression;
 
-  private TextQueryWhereExpression(TextQueryExpression parent, ParquelLexer lexer) {
-    super(parent, lexer, ParquelExpressionType.WHERE);
+  private TextQueryWhereExpression(TextQueryExpression parent, TextQueryLexer lexer) {
+    super(parent, lexer, TextQueryExpressionType.WHERE);
 
-    lexer.readCurrentAndAdvance(ParquelExpressionType.IDENTIFIER, TextQueryKeywordExpression.WHERE);
+    lexer.readCurrentAndAdvance(TextQueryExpressionType.IDENTIFIER, TextQueryKeywordExpression.WHERE);
     this.expression = TextQueryInfixExpression.read(this, lexer);
   }
 
-  public static boolean canParse(TextQuerySelectStatement parent, ParquelLexer lexer) {
-    return lexer.currentIs(ParquelExpressionType.IDENTIFIER, TextQueryKeywordExpression.WHERE);
+  public static boolean canParse(TextQuerySelectStatement parent, TextQueryLexer lexer) {
+    return lexer.currentIs(TextQueryExpressionType.IDENTIFIER, TextQueryKeywordExpression.WHERE);
   }
 
-  public static TextQueryWhereExpression read(TextQueryExpression parent, ParquelLexer lexer) {
+  public static TextQueryWhereExpression read(TextQueryExpression parent, TextQueryLexer lexer) {
     return new TextQueryWhereExpression(parent, lexer);
   }
 

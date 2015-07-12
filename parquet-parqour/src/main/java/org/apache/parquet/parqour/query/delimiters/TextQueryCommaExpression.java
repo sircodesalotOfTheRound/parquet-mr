@@ -2,25 +2,25 @@ package org.apache.parquet.parqour.query.delimiters;
 
 import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
 import org.apache.parquet.parqour.query.expressions.categories.ParquelDelimiterExpression;
-import org.apache.parquet.parqour.query.expressions.categories.ParquelExpressionType;
-import org.apache.parquet.parqour.query.lexing.ParquelLexer;
-import org.apache.parquet.parqour.query.tokens.ParquelPunctuationToken;
+import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
+import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
+import org.apache.parquet.parqour.query.tokens.TextQueryPunctuationToken;
 import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
 
 /**
  * Created by sircodesalot on 15/4/9.
  */
 public class TextQueryCommaExpression extends TextQueryExpression implements ParquelDelimiterExpression {
-  private final ParquelPunctuationToken comma;
+  private final TextQueryPunctuationToken comma;
 
-  public TextQueryCommaExpression(TextQueryExpression parent, ParquelLexer lexer) {
-    super(parent, lexer, ParquelExpressionType.COMMA);
+  public TextQueryCommaExpression(TextQueryExpression parent, TextQueryLexer lexer) {
+    super(parent, lexer, TextQueryExpressionType.COMMA);
 
     this.comma = readComma(lexer);
   }
 
-  private ParquelPunctuationToken readComma(ParquelLexer lexer) {
-    return lexer.readCurrentAndAdvance(ParquelExpressionType.PUNCTUATION, ParquelPunctuationToken.COMMA);
+  private TextQueryPunctuationToken readComma(TextQueryLexer lexer) {
+    return lexer.readCurrentAndAdvance(TextQueryExpressionType.PUNCTUATION, TextQueryPunctuationToken.COMMA);
   }
 
   /*
@@ -34,11 +34,11 @@ public class TextQueryCommaExpression extends TextQueryExpression implements Par
     return ParquelCollection.EMPTY;
   }
 */
-  public static boolean canRead(TextQueryExpression parent, ParquelLexer lexer) {
-    return lexer.currentIs(ParquelExpressionType.PUNCTUATION, ParquelPunctuationToken.COMMA);
+  public static boolean canRead(TextQueryExpression parent, TextQueryLexer lexer) {
+    return lexer.currentIs(TextQueryExpressionType.PUNCTUATION, TextQueryPunctuationToken.COMMA);
   }
 
-  public static TextQueryCommaExpression read(TextQueryExpression parent, ParquelLexer lexer) {
+  public static TextQueryCommaExpression read(TextQueryExpression parent, TextQueryLexer lexer) {
     return new TextQueryCommaExpression(parent, lexer);
   }
 

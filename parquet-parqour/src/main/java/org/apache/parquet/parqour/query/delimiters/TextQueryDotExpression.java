@@ -2,25 +2,25 @@ package org.apache.parquet.parqour.query.delimiters;
 
 import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
 import org.apache.parquet.parqour.query.expressions.categories.ParquelDelimiterExpression;
-import org.apache.parquet.parqour.query.expressions.categories.ParquelExpressionType;
-import org.apache.parquet.parqour.query.lexing.ParquelLexer;
-import org.apache.parquet.parqour.query.tokens.ParquelPunctuationToken;
+import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
+import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
+import org.apache.parquet.parqour.query.tokens.TextQueryPunctuationToken;
 import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
 
 /**
  * Created by sircodesalot on 15/4/9.
  */
 public class TextQueryDotExpression extends TextQueryExpression implements ParquelDelimiterExpression {
-  private final ParquelPunctuationToken dot;
+  private final TextQueryPunctuationToken dot;
 
-  public TextQueryDotExpression(TextQueryExpression parent, ParquelLexer lexer) {
-    super(parent, lexer, ParquelExpressionType.DOT);
+  public TextQueryDotExpression(TextQueryExpression parent, TextQueryLexer lexer) {
+    super(parent, lexer, TextQueryExpressionType.DOT);
 
     this.dot = readComma(lexer);
   }
 
-  private ParquelPunctuationToken readComma(ParquelLexer lexer) {
-    return lexer.readCurrentAndAdvance(ParquelExpressionType.PUNCTUATION, ParquelPunctuationToken.DOT);
+  private TextQueryPunctuationToken readComma(TextQueryLexer lexer) {
+    return lexer.readCurrentAndAdvance(TextQueryExpressionType.PUNCTUATION, TextQueryPunctuationToken.DOT);
   }
 
 
@@ -34,11 +34,11 @@ public class TextQueryDotExpression extends TextQueryExpression implements Parqu
     return ParquelCollection.EMPTY;
   }*/
 
-  public static boolean canRead(TextQueryExpression parent, ParquelLexer lexer) {
-    return lexer.currentIs(ParquelExpressionType.PUNCTUATION, ParquelPunctuationToken.DOT);
+  public static boolean canRead(TextQueryExpression parent, TextQueryLexer lexer) {
+    return lexer.currentIs(TextQueryExpressionType.PUNCTUATION, TextQueryPunctuationToken.DOT);
   }
 
-  public static TextQueryDotExpression read(TextQueryExpression parent, ParquelLexer lexer) {
+  public static TextQueryDotExpression read(TextQueryExpression parent, TextQueryLexer lexer) {
     return new TextQueryDotExpression(parent, lexer);
   }
 

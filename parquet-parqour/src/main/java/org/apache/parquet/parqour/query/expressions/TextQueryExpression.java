@@ -1,22 +1,21 @@
 package org.apache.parquet.parqour.query.expressions;
 
-import org.apache.parquet.parqour.query.collections.TextQueryCollection;
-import org.apache.parquet.parqour.query.expressions.categories.ParquelExpressionType;
-import org.apache.parquet.parqour.query.lexing.ParquelLexer;
-import org.apache.parquet.parqour.query.tokens.ParquelToken;
+import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
+import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
+import org.apache.parquet.parqour.query.tokens.TextQueryToken;
 import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
 
 /**
  * Created by sircodesalot on 15/4/2.
  */
-public abstract class TextQueryExpression extends ParquelToken {
+public abstract class TextQueryExpression extends TextQueryToken {
 
-  private final ParquelLexer lexer;
-  private final ParquelExpressionType type;
+  private final TextQueryLexer lexer;
+  private final TextQueryExpressionType type;
   private TextQueryExpression parent;
 
 
-  public TextQueryExpression(TextQueryExpression parent, ParquelLexer lexer, ParquelExpressionType type) {
+  public TextQueryExpression(TextQueryExpression parent, TextQueryLexer lexer, TextQueryExpressionType type) {
     super(lexer.position(), type);
     this.parent = parent;
     this.lexer = lexer;

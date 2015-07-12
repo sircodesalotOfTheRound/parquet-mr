@@ -1,18 +1,18 @@
 package org.apache.parquet.parqour.query.backtracking.interfaces;
 
-import org.apache.parquet.parqour.query.expressions.categories.ParquelExpressionType;
+import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
 
 /**
  * Created by sircodesalot on 15/4/2.
  */
 public abstract class ParquelBacktrackRuleBase implements ParquelBacktrackRule {
-  private final ParquelExpressionType launchForTokensOfType;
+  private final TextQueryExpressionType launchForTokensOfType;
 
-  protected ParquelBacktrackRuleBase(ParquelExpressionType launchForTokensOfType) {
+  protected ParquelBacktrackRuleBase(TextQueryExpressionType launchForTokensOfType) {
     this.launchForTokensOfType = launchForTokensOfType;
   }
 
-  public ParquelExpressionType launchForTokensOfType() {
+  public TextQueryExpressionType launchForTokensOfType() {
     return this.launchForTokensOfType;
   }
 }

@@ -5,8 +5,8 @@ import org.apache.parquet.parqour.query.collections.TextQueryAppendableCollectio
 import org.apache.parquet.parqour.query.collections.TextQueryCollection;
 import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
 import org.apache.parquet.parqour.query.expressions.pql.TextQueryKeywordExpression;
-import org.apache.parquet.parqour.query.expressions.categories.ParquelExpressionType;
-import org.apache.parquet.parqour.query.lexing.ParquelLexer;
+import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
+import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
 import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
 
 /**
@@ -16,21 +16,21 @@ public class TextQueryColumnSetExpression extends TextQueryExpression {
   private final String COLUMNS = "(COLUMNS)";
   private final TextQueryCollection<TextQueryColumnExpression> columns;
 
-  public TextQueryColumnSetExpression(TextQueryExpression parent, ParquelLexer lexer) {
-    super(parent, lexer, ParquelExpressionType.COLUMN_SET);
+  public TextQueryColumnSetExpression(TextQueryExpression parent, TextQueryLexer lexer) {
+    super(parent, lexer, TextQueryExpressionType.COLUMN_SET);
     this.columns = readColumns(lexer);
   }
 
-  private TextQueryCollection<TextQueryColumnExpression> readColumns(ParquelLexer lexer) {
-    lexer.readCurrentAndAdvance(ParquelExpressionType.IDENTIFIER, TextQueryKeywordExpression.SELECT);
+  private TextQueryCollection<TextQueryColumnExpression> readColumns(TextQueryLexer lexer) {
+    lexer.readCurrentAndAdvance(TextQueryExpressionType.IDENTIFIER, TextQueryKeywordExpression.SELECT);
     TextQueryAppendableCollection<TextQueryColumnExpression> columns = new TextQueryAppendableCollection<TextQueryColumnExpression>();
 
     while (TextQueryColumnExpression.canParse(this, lexer)) {
       columns.add(TextQueryColumnExpression.read(this, lexer));
 
       // If the following isn't a comma, then drop out.
-      if (!lexer.isEof() && lexer.currentIs(ParquelExpressionType.PUNCTUATION, ",")) {
-        lexer.readCurrentAndAdvance(ParquelExpressionType.PUNCTUATION);
+      if (!lexer.isEof() && lexer.currentIs(TextQueryExpressionType.PUNCTUATION, ",")) {
+        lexer.readCurrentAndAdvance(TextQueryExpressionType.PUNCTUATION);
       } else {
         break;
       }
@@ -52,7 +52,7 @@ public class TextQueryColumnSetExpression extends TextQueryExpression {
     return this.columns;
   }
 
-  public static TextQueryColumnSetExpression read(TextQueryExpression parent, ParquelLexer lexer) {
+  public static TextQueryColumnSetExpression read(TextQueryExpression parent, TextQueryLexer lexer) {
     return new TextQueryColumnSetExpression(parent, lexer);
   }
 

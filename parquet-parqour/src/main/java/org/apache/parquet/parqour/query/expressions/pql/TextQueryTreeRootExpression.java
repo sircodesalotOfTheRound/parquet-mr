@@ -8,8 +8,8 @@ import org.apache.parquet.parqour.query.backtracking.rules.ParquelFullyQualified
 import org.apache.parquet.parqour.query.collections.TextQueryAppendableCollection;
 import org.apache.parquet.parqour.query.collections.TextQueryCollection;
 import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
-import org.apache.parquet.parqour.query.expressions.categories.ParquelExpressionType;
-import org.apache.parquet.parqour.query.lexing.ParquelLexer;
+import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
+import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
 import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
 
 /**
@@ -24,13 +24,13 @@ public class TextQueryTreeRootExpression extends TextQueryExpression {
 
   private final TextQueryCollection<TextQueryExpression> expressions;
 
-  public TextQueryTreeRootExpression(ParquelLexer lexer) {
-    super(null, lexer, ParquelExpressionType.ROOT);
+  public TextQueryTreeRootExpression(TextQueryLexer lexer) {
+    super(null, lexer, TextQueryExpressionType.ROOT);
 
     this.expressions = readExpressions(lexer);
   }
 
-  private TextQueryCollection<TextQueryExpression> readExpressions(ParquelLexer lexer) {
+  private TextQueryCollection<TextQueryExpression> readExpressions(TextQueryLexer lexer) {
     TextQueryAppendableCollection<TextQueryExpression> expressions = new TextQueryAppendableCollection<TextQueryExpression>();
     while (!lexer.isEof()) {
       TextQueryExpression expression = rules.read(this, lexer);
@@ -49,7 +49,7 @@ public class TextQueryTreeRootExpression extends TextQueryExpression {
     return this.expressions;
   }
 
-  public TextQueryExpression read(ParquelLexer lexer) {
+  public TextQueryExpression read(TextQueryLexer lexer) {
     return new TextQueryTreeRootExpression(lexer);
   }
 
@@ -57,7 +57,7 @@ public class TextQueryTreeRootExpression extends TextQueryExpression {
     return expressions.any(new Predicate<TextQueryExpression>() {
       @Override
       public boolean test(TextQueryExpression expression) {
-        return expression.is(ParquelExpressionType.SELECT);
+        return expression.is(TextQueryExpressionType.SELECT);
       }
     });
   }
@@ -66,7 +66,7 @@ public class TextQueryTreeRootExpression extends TextQueryExpression {
     return expressions.where(new Predicate<TextQueryExpression>() {
       @Override
       public boolean test(TextQueryExpression expression) {
-        return expression.is(ParquelExpressionType.SELECT);
+        return expression.is(TextQueryExpressionType.SELECT);
       }
     }).firstAs(TextQuerySelectStatement.class);
   }
@@ -75,7 +75,7 @@ public class TextQueryTreeRootExpression extends TextQueryExpression {
     return expressions.all(new Predicate<TextQueryExpression>() {
       @Override
       public boolean test(TextQueryExpression expression) {
-        return expression.is(ParquelExpressionType.FQN);
+        return expression.is(TextQueryExpressionType.FQN);
       }
     });
   }
@@ -88,7 +88,7 @@ public class TextQueryTreeRootExpression extends TextQueryExpression {
     return expressions.all(new Predicate<TextQueryExpression>() {
       @Override
       public boolean test(TextQueryExpression expression) {
-        return expression.is(ParquelExpressionType.SELECT);
+        return expression.is(TextQueryExpressionType.SELECT);
       }
     });
   }
@@ -99,7 +99,7 @@ public class TextQueryTreeRootExpression extends TextQueryExpression {
   }
 
   public static TextQueryTreeRootExpression fromString(String pql) {
-    ParquelLexer lexer = new ParquelLexer(pql, true);
+    TextQueryLexer lexer = new TextQueryLexer(pql, true);
     return new TextQueryTreeRootExpression(lexer);
   }
 

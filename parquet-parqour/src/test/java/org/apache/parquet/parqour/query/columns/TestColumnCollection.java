@@ -1,14 +1,12 @@
-package org.apache.parquet.parqour.analysis.subschema;
+package org.apache.parquet.parqour.query.columns;
 
 import org.apache.parquet.parqour.ingest.schema.SchemaIntersection;
 import org.apache.parquet.parqour.query.expressions.pql.TextQueryTreeRootExpression;
-import org.apache.parquet.parqour.query.lexing.ParquelLexer;
+import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
 import org.apache.parquet.parqour.query.visitor.TextQueryColumnCollectingVisitor;
-import org.apache.parquet.parqour.testtools.TestTools;
 import org.apache.parquet.schema.GroupType;
 import org.apache.parquet.schema.MessageType;
 import org.apache.parquet.schema.PrimitiveType;
-import org.apache.parquet.schema.Type;
 import org.junit.Test;
 
 import static junit.framework.TestCase.assertTrue;
@@ -100,7 +98,7 @@ public class TestColumnCollection {
   }
 
   private TextQueryColumnCollectingVisitor createColumnCollectorFromString(String expression) {
-    ParquelLexer lexer = new ParquelLexer(expression, true);
+    TextQueryLexer lexer = new TextQueryLexer(expression, true);
     TextQueryTreeRootExpression rootExpression = new TextQueryTreeRootExpression(lexer);
 
     return new TextQueryColumnCollectingVisitor(rootExpression);

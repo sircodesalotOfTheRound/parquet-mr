@@ -1,7 +1,7 @@
 package org.apache.parquet.parqour.query.tokens;
 
 
-import org.apache.parquet.parqour.query.expressions.categories.ParquelExpressionType;
+import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
 import org.apache.parquet.parqour.query.lexing.ParquelCharacterStream;
 
 import java.math.BigInteger;
@@ -9,11 +9,11 @@ import java.math.BigInteger;
 /**
  * Created by sircodesalot on 15/4/2.
  */
-public class ParquelNumericToken extends ParquelToken {
+public class TextQueryNumericToken extends TextQueryToken {
   private BigInteger value;
 
-  private ParquelNumericToken(ParquelCharacterStream stream) {
-    super(stream.position(), ParquelExpressionType.NUMERIC);
+  private TextQueryNumericToken(ParquelCharacterStream stream) {
+    super(stream.position(), TextQueryExpressionType.NUMERIC);
     this.value = parseValueFromString(stream);
   }
 
@@ -33,7 +33,7 @@ public class ParquelNumericToken extends ParquelToken {
     return value.toString();
   }
 
-  public static ParquelNumericToken read(ParquelCharacterStream stream) {
-    return new ParquelNumericToken(stream);
+  public static TextQueryNumericToken read(ParquelCharacterStream stream) {
+    return new TextQueryNumericToken(stream);
   }
 }
