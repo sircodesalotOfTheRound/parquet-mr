@@ -144,7 +144,19 @@ public abstract class ColumnIngestNodeBase<TFFReaderType extends FastForwardRead
     this.onPreReadFirstRecordOnPage();
   }
 
-  public abstract void onPreReadFirstRecordOnPage();
+  public final void onPreReadFirstRecordOnPage() {
+    if (currentRowNumber < totalRowCount - 1) {
+      this.currentEntryDefinitionLevel = definitionLevelReader.nextRelationshipLevel();
+      this.currentEntryRepetitionLevel = repetitionLevelReader.nextRelationshipLevel();
+
+      // Update the value if the definition level matches the value at this node.
+      if (currentEntryDefinitionLevel >= definitionLevelAtThisNode) {
+        this.updateValuesReaderValue();
+      }
+    }
+
+    currentEntryOnPage += 1;
+  }
 
   @Deprecated
   public void createRelationshipLink(int resultIndex) {

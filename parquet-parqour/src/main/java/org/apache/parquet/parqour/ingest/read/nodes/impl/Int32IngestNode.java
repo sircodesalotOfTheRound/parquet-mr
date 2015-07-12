@@ -43,21 +43,6 @@ public final class Int32IngestNode extends ColumnIngestNodeBase<Int32FastForward
     return cursor;
   }
 
-  @Override
-  public void onPreReadFirstRecordOnPage() {
-    if (currentRowNumber < totalRowCount - 1) {
-      this.currentEntryDefinitionLevel = definitionLevelReader.nextRelationshipLevel();
-      this.currentEntryRepetitionLevel = repetitionLevelReader.nextRelationshipLevel();
-
-      // Update the value if the definition level matches the value at this node.
-      if (currentEntryDefinitionLevel >= definitionLevelAtThisNode) {
-        this.currentValue = valuesReader.readi32();
-      }
-    }
-
-    currentEntryOnPage += 1;
-  }
-
   // Heavily inlined for performance.
   @Override
   public void read(int rowNumber) {
