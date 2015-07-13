@@ -32,7 +32,7 @@ public class GroupAggregateCursor extends AdvanceableCursor implements Iterable<
 
   private int size;
   private final int[] childColumnRowIndexes;
-  private int[][] childNodeLinks;
+  private Integer[][] childNodeLinks;
 
   private int totalResultSetsReported;
   private final AdvanceableCursor[] childCursorsByIndex;
@@ -47,7 +47,7 @@ public class GroupAggregateCursor extends AdvanceableCursor implements Iterable<
     this.rowCount = totalRowCount;
 
     this.childColumnRowIndexes = new int[childColumnCount];
-    this.childNodeLinks = new int[childColumnCount][totalRowCount];
+    this.childNodeLinks = new Integer[childColumnCount][totalRowCount];
     this.childCursors = new CursorHash();
 
     this.size = 0;
@@ -66,7 +66,7 @@ public class GroupAggregateCursor extends AdvanceableCursor implements Iterable<
   public int childNodeCount() { return this.childColumnCount; }
 
 
-  public int[] getlinksForChild(int index) {
+  public Integer[] getlinksForChild(int index) {
     return childNodeLinks[index];
   }
 
@@ -82,7 +82,7 @@ public class GroupAggregateCursor extends AdvanceableCursor implements Iterable<
     }
   }
 
-  public void setResultSetForChildIndex(int childColumnIndex, int[] items) {
+  public void setResultSetForChildIndex(int childColumnIndex, Integer[] items) {
     this.childNodeLinks[childColumnIndex] = items;
   }
 
@@ -200,7 +200,7 @@ public class GroupAggregateCursor extends AdvanceableCursor implements Iterable<
 
   @Override
   public Cursor field(int index) {
-    int[] linksForIndex = childNodeLinks[index];
+    Integer[] linksForIndex = childNodeLinks[index];
     if (linksForIndex[start] != linksForIndex[start + 1]) {
       return childCursorsByIndex[index];
     } else {

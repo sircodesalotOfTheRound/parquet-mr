@@ -85,7 +85,9 @@ public abstract class AggregatingIngestNode extends IngestNode {
   private GroupAggregateCursor generateAggregateCursor(int childColumnCount) {
     GroupAggregateCursor aggregate = new GroupAggregateCursor(name, childColumnCount, 1000);
     for (IngestNode child : this.children) {
-      int[] entries = new int[10000];
+
+      // TODO: Write expansion code.
+      Integer[] entries = new Integer[10000];
       aggregate.setResultSetForChildIndex(child.childColumnIndex(), entries);
       AdvanceableCursor childCursor = child.onLinkToParent(this, entries);
       aggregate.setChildCursor(child.childColumnIndex(), childCursor);
@@ -124,29 +126,22 @@ public abstract class AggregatingIngestNode extends IngestNode {
   // entry is not part of the new list. If the entry has a lower DL, than specified by the entry, this means that the item
   // is not defined, and therefore should be connected by using a 'null'  link. Everything in the interval between RL and DL
   // forms the content of the new list.
-  public final void setSchemaLink(int rowNumber, int repetitionLevel, int definitionLevel, int childLinkIndex, boolean childIsDefined) {
+  public final void setSchemaLink(int rowNumber, int repetitionLevel, int definitionLevel, int childLinkIndex) {
     if (currentRowNumber != rowNumber) {
       relationshipLinkWriteIndex = -1;
       currentRowNumber = rowNumber;
     }
 
-    boolean lastItemWasDefined = definitionLevel >= definitionLevelAtThisNode;
-
     // Continue upstream if the parent also has a smaller repetitionValue, and this is the schema reporting node.
     if (repetitionLevel <= parentRepetitionLevel) {
-      if (lastItemWasDefined) {
+      if (definitionLevel >= definitionLevelAtThisNode) {
         relationshipLinks[++relationshipLinkWriteIndex] = childLinkIndex;
       } else {
-        if (relationshipLinkWriteIndex < 0) {
-          relationshipLinks[++relationshipLinkWriteIndex] = childLinkIndex;
-        }
-
-        int lastRelationshipWriteIndex = relationshipLinkWriteIndex;
-        relationshipLinks[++relationshipLinkWriteIndex] = relationshipLinks[lastRelationshipWriteIndex];
+        relationshipLinks[++relationshipLinkWriteIndex] = null;
       }
 
       if (isSchemaReportingNode) {
-        parent.setSchemaLink(rowNumber, repetitionLevel, definitionLevel, relationshipLinkWriteIndex, lastItemWasDefined);
+        parent.setSchemaLink(rowNumber, repetitionLevel, definitionLevel, relationshipLinkWriteIndex);
       }
     }
   }
@@ -164,7 +159,7 @@ public abstract class AggregatingIngestNode extends IngestNode {
   public String path() { return this.path; }
 
   @Override
-  protected AdvanceableCursor onLinkToParent(AggregatingIngestNode parentNode, int[] relationships) {
+  protected AdvanceableCursor onLinkToParent(AggregatingIngestNode parentNode, Integer[] relationships) {
     this.relationshipLinks = relationships;
     return aggregate;
   }

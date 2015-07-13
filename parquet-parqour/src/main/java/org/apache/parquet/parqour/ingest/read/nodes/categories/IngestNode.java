@@ -38,7 +38,7 @@ public abstract class IngestNode {
   protected long currentRowNumber = 0;
 
   protected int relationshipLinkWriteIndex = -1;
-  protected int[] relationshipLinks;
+  protected Integer[] relationshipLinks;
 
 
   public IngestNode(SchemaInfo schemaInfo, AggregatingIngestNode parent, String path, Type schemaNode, IngestNodeCategory category, int childNodeIndex) {
@@ -98,7 +98,7 @@ public abstract class IngestNode {
     return this.parent != null;
   }
 
-  protected abstract AdvanceableCursor onLinkToParent(AggregatingIngestNode parentNode, int[] relationships);
+  protected abstract AdvanceableCursor onLinkToParent(AggregatingIngestNode parentNode, Integer[] relationships);
 
   public String name() { return this.name; }
   public int childColumnIndex() { return this.thisChildColumnIndex; }

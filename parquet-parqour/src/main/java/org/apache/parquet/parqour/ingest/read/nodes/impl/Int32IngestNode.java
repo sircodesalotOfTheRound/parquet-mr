@@ -38,7 +38,7 @@ public final class Int32IngestNode extends ColumnIngestNodeBase<Int32FastForward
   }
 
   @Override
-  protected AdvanceableCursor onLinkToParent(AggregatingIngestNode parentNode, int[] relationships) {
+  protected AdvanceableCursor onLinkToParent(AggregatingIngestNode parentNode, Integer[] relationships) {
     this.relationshipLinks = relationships;
     return cursor;
   }
@@ -64,31 +64,22 @@ public final class Int32IngestNode extends ColumnIngestNodeBase<Int32FastForward
       // If the value is defined, write the value. Else write null.
       if (isDefined) {
         rowVector[++writeIndex] = currentValue;
-        lastItemWasNull = false;
-      } else if (!lastItemWasNull) {
+      } else {
         rowVector[++writeIndex] = null;
-        lastItemWasNull = true;
       }
 
       // If the repetition level is lower than the parent node's repetition level, then link.
       if (currentEntryRepetitionLevel <= parentRepetitionLevel) {
-        if (isDefined) {
+        // TODO: Should this be if parent is defined??
+        //if (isDefined) {
           // Single entry represents the beginning of a new range (and ending of the previous).
           relationshipLinks[++relationshipLinkWriteIndex] = writeIndex;
 
-        } else {
-          // Write a null value (a link with delta = 0). If there is no previous value, make one.
-          if (relationshipLinkWriteIndex < 0) {
-            relationshipLinks[++relationshipLinkWriteIndex] = writeIndex;
-          }
-
-          // Write the previous value.
-          int lastRelationshipWriteIndex = relationshipLinkWriteIndex;
-          relationshipLinks[++relationshipLinkWriteIndex] = relationshipLinks[lastRelationshipWriteIndex];
-        }
+        //} else {
+        //}
 
         if (isSchemaReportingNode) {
-          parent.setSchemaLink(rowNumber, currentEntryRepetitionLevel, currentEntryDefinitionLevel, writeIndex, isDefined);
+          parent.setSchemaLink(rowNumber, currentEntryRepetitionLevel, currentEntryDefinitionLevel, writeIndex);
         }
       }
 
@@ -96,11 +87,11 @@ public final class Int32IngestNode extends ColumnIngestNodeBase<Int32FastForward
       if (currentEntryOnPage < totalItemsOnThisPage) {
         this.currentEntryOnPage += 1;
 
-        // (5a) If there is still content on this page, then update the relationship levels.
+        // (5a-1) If there is still content on this page, then update the relationship levels.
         this.currentEntryRepetitionLevel = repetitionLevelReader.nextRelationshipLevel();
         this.currentEntryDefinitionLevel = definitionLevelReader.nextRelationshipLevel();
 
-        // If we are defined at this node, then read the value.
+        // (5a-2) If we are defined at this node, then read the value.
         if (currentEntryDefinitionLevel >= definitionLevelAtThisNode) {
           this.currentValue = valuesReader.readi32();
         }
@@ -117,30 +108,14 @@ public final class Int32IngestNode extends ColumnIngestNodeBase<Int32FastForward
 
       }
 
-      // If we are starting a new list, then we shouldn't compact nulls.
-      if (currentEntryRepetitionLevel < repetitionLevelAtThisNode) {
-        lastItemWasNull = false;
-      }
-
     } while (currentEntryRepetitionLevel > 0);
 
-    // (6) Write the closing value of the list (one past the last item), then cap it off with a NO_RELATIONSHIP
-    // so we know where the link ends.
-
-    // (7) If this node is schema-definining, report upstream that this is the end of the record.
-    // If the last value was defined (either the beginning or end of a list), then cap the list.
-    // Else do nothing.
-
-      relationshipLinks[++relationshipLinkWriteIndex] = ++writeIndex;
+    relationshipLinks[++relationshipLinkWriteIndex] = ++writeIndex;
 
     if (isSchemaReportingNode) {
       parent.finishRow(writeIndex);
     }
 
-    // (7) Report results to the aggregate.
-    //parent.setResultsReported(thisChildColumnIndex, rowNumber);
-
-    // (8) Update the current row number.
     currentRowNumber++;
   }
 
