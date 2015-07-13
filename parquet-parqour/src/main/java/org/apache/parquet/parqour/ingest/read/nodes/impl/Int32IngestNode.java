@@ -52,11 +52,11 @@ public final class Int32IngestNode extends ColumnIngestNodeBase<Int32FastForward
 
     this.relationshipLinkWriteIndex = -1;
 
-    // Repeat until we reach the
+    // Repeat until we reach a node with repetitionLevel-0 (new row) or EOF.
     do {
-      // (2) If the current row number is not the same as the row number to be read, perform a fast forward.
+      // If the current row is behind the row we need to read:
       if (currentRowNumber < rowNumber) {
-        this.forwardToRowNumber(rowNumber);
+        this.fastForwardToRow(rowNumber);
       }
 
       // If this node is defined:
@@ -81,24 +81,24 @@ public final class Int32IngestNode extends ColumnIngestNodeBase<Int32FastForward
         }
       }
 
+      // If:
+      // (1) there are still items on this page:
+      // (2) there are no more items on this page, but there are rows left to read:
+      // (3) No more rows left to read:
       if (currentEntryOnPage < totalItemsOnThisPage) {
-        this.currentEntryOnPage += 1;
+        this.currentEntryOnPage++;
 
-        // (5a-1) If there is still content on this page, then update the relationship levels.
         this.currentEntryRepetitionLevel = repetitionLevelReader.nextRelationshipLevel();
         this.currentEntryDefinitionLevel = definitionLevelReader.nextRelationshipLevel();
 
-        // (5a-2) If we are defined at this node, then read the value.
+        // If we're defined at this node, update the value:
         if (currentEntryDefinitionLevel >= definitionLevelAtThisNode) {
           this.currentValue = valuesReader.readi32();
         }
-
       } else if (currentRowNumber < totalRowCount - 1) {
-        // (5b) Read the next page if there is more data to read.
         super.moveToNextPage();
 
       } else {
-        // (5c) No more values left to read, set all values to invalid numbers.
         this.currentEntryDefinitionLevel = 0;
         this.currentEntryRepetitionLevel = 0;
         this.currentValue = -1;
@@ -107,12 +107,12 @@ public final class Int32IngestNode extends ColumnIngestNodeBase<Int32FastForward
 
     } while (currentEntryRepetitionLevel > 0);
 
-    schemaLinksFromParentToChild[++relationshipLinkWriteIndex] = ++writeIndex;
-
+    // If this node reports schema:
     if (isSchemaReportingNode) {
       parent.finishRow(writeIndex);
     }
 
+    // Increment the row number:
     currentRowNumber++;
   }
 

@@ -58,7 +58,7 @@ public abstract class ColumnIngestNodeBase<TFFReaderType extends FastForwardRead
     if (this.parent() == null) throw new ReadNodeException("Record-reading ingest nodes nodes must have a parent.");
   }
 
-  protected void forwardToRowNumber(int rowNumber) {
+  protected void fastForwardToRow(int rowNumber) {
     if (canPerformTrueFastForwards) {
       performFastForwardTo(rowNumber);
     } else {
