@@ -64,12 +64,17 @@ public abstract class AdvanceableCursor implements Cursor {
     throw new DataIngestException("Invalid path");
   }
 
-  public RollableRecordSet<Integer> i32iter() {
+  public RollableRecordSet<Integer> i32Iter() {
     throw new DataIngestException("Invalid path");
   }
 
   @Override
-  public RollableRecordSet<Integer> i32iter(int index) {
+  public RollableRecordSet<Integer> i32Iter(int index) {
+    throw new DataIngestException("Invalid path");
+  }
+
+  @Override
+  public RollableRecordSet<Integer> i32Iter(String path) {
     throw new DataIngestException("Invalid path");
   }
 

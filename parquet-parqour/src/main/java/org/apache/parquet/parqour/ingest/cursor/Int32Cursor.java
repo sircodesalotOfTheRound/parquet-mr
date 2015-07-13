@@ -9,7 +9,7 @@ import java.util.Iterator;
 /**
  * Created by sircodesalot on 6/18/15.
  */
-public final class Int32Cursor extends AdvanceableCursor implements Iterable<Integer> {
+public final class Int32Cursor extends AdvanceableCursor {
   private final Integer[] array;
 
   private static class I32CursorIterator implements Iterator<Integer> {
@@ -54,15 +54,4 @@ public final class Int32Cursor extends AdvanceableCursor implements Iterable<Int
   public Object value() {
     return array[start];
   }
-
-  @Override
-  public Iterator<Integer> iterator() {
-    return new I32CursorIterator(array, this.start, this.end);
-  }
-
-  @Override
-  public RollableRecordSet<Integer> i32iter() {
-    return new RollableRecordSet<Integer>(this);
-  }
-
 }

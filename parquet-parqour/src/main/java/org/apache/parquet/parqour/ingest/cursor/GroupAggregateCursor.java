@@ -8,21 +8,23 @@ import org.apache.parquet.parqour.ingest.cursor.iterators.RecordSet;
 import org.apache.parquet.parqour.ingest.cursor.lookup.CursorHash;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 /**
  * An aggregate is a set of columns containing links to child records. For example, if we have a schema:
- *
- *   group somegroup {
- *     int32 first
- *     int32 second
- *   }
- *
- *   the job of the GroupAggregate is to link results returned by the 'first' and 'second' columns.
- *   In other words, rather than copying the results and returning them upstream, we instead just
- *   create an artificial pointer that connects to an index on the child nodes record-set array.
- *   This improves performance because we can pre-allocate lots of memory, and then just virtually
- *   connect the results without the overhead of many small allocations + collections.
+ * <p/>
+ * group somegroup {
+ * int32 first
+ * int32 second
+ * }
+ * <p/>
+ * the job of the GroupAggregate is to link results returned by the 'first' and 'second' columns.
+ * In other words, rather than copying the results and returning them upstream, we instead just
+ * create an artificial pointer that connects to an index on the child nodes record-set array.
+ * This improves performance because we can pre-allocate lots of memory, and then just virtually
+ * connect the results without the overhead of many small allocations + collections.
  */
 public class GroupAggregateCursor extends AdvanceableCursor implements Iterable<Cursor> {
   public static final int NO_RELATIONSHIP = -1;
@@ -39,6 +41,8 @@ public class GroupAggregateCursor extends AdvanceableCursor implements Iterable<
   private final CursorHash childCursors;
 
   private final boolean[] resultSetsReported;
+
+  private final Map<String, Integer> cursorIndexes = new HashMap<String, Integer>();
 
   public GroupAggregateCursor(String name, int childColumnCount, int totalRowCount) {
     super(name);
@@ -61,9 +65,17 @@ public class GroupAggregateCursor extends AdvanceableCursor implements Iterable<
     return childColumnRowIndexes[childColumnIndex];
   }
 
-  public int maxChildColumnSize() { return this.size; }
-  public int sizeForChildColumn() { return this.rowCount; }
-  public int childNodeCount() { return this.childColumnCount; }
+  public int maxChildColumnSize() {
+    return this.size;
+  }
+
+  public int sizeForChildColumn() {
+    return this.rowCount;
+  }
+
+  public int childNodeCount() {
+    return this.childColumnCount;
+  }
 
 
   public Integer[] getlinksForChild(int index) {
@@ -89,6 +101,7 @@ public class GroupAggregateCursor extends AdvanceableCursor implements Iterable<
   public void setChildCursor(int childColumnIndex, AdvanceableCursor cursor) {
     this.childCursors.add(cursor);
     this.childCursorsByIndex[childColumnIndex] = cursor;
+    this.cursorIndexes.put(cursor.name(), childColumnIndex);
   }
 
   public void setResultsReported(int childColumnIndex) {
@@ -104,7 +117,7 @@ public class GroupAggregateCursor extends AdvanceableCursor implements Iterable<
     return this.totalResultSetsReported == childCursorsByIndex.length;
   }
 
-  public int getLinkForChild(int childColumnIndex, int rowIndex)  {
+  public int getLinkForChild(int childColumnIndex, int rowIndex) {
     return childNodeLinks[childColumnIndex][rowIndex];
   }
 
@@ -118,19 +131,37 @@ public class GroupAggregateCursor extends AdvanceableCursor implements Iterable<
 
   @Override
   public Cursor field(String path) {
-    return childCursors.get(path);
+    int index = this.cursorIndexes.get(path);
+    if (childNodeLinks[index][start] != null) {
+      return childCursorsByIndex[index];
+    } else {
+      return null;
+    }
   }
 
 
+  @Override
+  public RollableRecordSet<Integer> i32Iter(String path) {
+    int index = this.cursorIndexes.get(path);
+    Integer offset = childNodeLinks[index][start];
 
+    if (offset != null) {
+      AdvanceableCursor cursor = childCursorsByIndex[index];
+      cursor.setRange(start, end);
+
+      return cursor.i32Iter();
+    } else {
+      return RollableRecordSet.EMPTY_I32;
+    }
+  }
 
   @Override
-  public RollableRecordSet<Integer> i32iter(int nodeIndex) {
+  public RollableRecordSet<Integer> i32Iter(int nodeIndex) {
     int start = childNodeLinks[nodeIndex][this.start];
     int end = childNodeLinks[nodeIndex][this.start + 1];
 
     childCursorsByIndex[nodeIndex].setRange(start, end);
-    return childCursorsByIndex[nodeIndex].i32iter();
+    return childCursorsByIndex[nodeIndex].i32Iter();
   }
 
   public RecordSet<Cursor> fieldIter(int nodeIndex) {
@@ -152,6 +183,7 @@ public class GroupAggregateCursor extends AdvanceableCursor implements Iterable<
     private final int end;
 
     private int index;
+
     public FieldIterator(AdvanceableCursor cursor, int start, int end) {
       this.cursor = cursor;
       this.start = start;

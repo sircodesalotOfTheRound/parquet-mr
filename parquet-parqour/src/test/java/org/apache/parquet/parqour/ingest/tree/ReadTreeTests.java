@@ -3,7 +3,7 @@ package org.apache.parquet.parqour.ingest.tree;
 import org.apache.parquet.parqour.ingest.read.nodes.IngestTree;
 import org.apache.parquet.parqour.ingest.read.nodes.categories.IngestNode;
 import org.apache.parquet.parqour.ingest.read.nodes.impl.GroupIngestNode;
-import org.apache.parquet.parqour.ingest.read.nodes.impl.Int32IngestNode;
+import org.apache.parquet.parqour.ingest.read.nodes.impl.i32.Int32NoRepeatIngestNode;
 import org.apache.parquet.parqour.testtools.TestTools;
 import org.junit.Test;
 import org.apache.parquet.schema.GroupType;
@@ -35,10 +35,10 @@ public class ReadTreeTests {
     IngestNode firstSubnode = tree.getIngestNodeByPath("grouping.first_subnode");
     IngestNode secondSubnode = tree.getIngestNodeByPath("grouping.second_subnode");
 
-    assertEquals(first.getClass(), Int32IngestNode.class);
-    assertEquals(second.getClass(), Int32IngestNode.class);
+    assertEquals(first.getClass(), Int32NoRepeatIngestNode.class);
+    assertEquals(second.getClass(), Int32NoRepeatIngestNode.class);
     assertEquals(grouping.getClass(), GroupIngestNode.class);
-    assertEquals(firstSubnode.getClass(), Int32IngestNode.class);
-    assertEquals(secondSubnode.getClass(), Int32IngestNode.class);
+    assertEquals(firstSubnode.getClass(), Int32NoRepeatIngestNode.class);
+    assertEquals(secondSubnode.getClass(), Int32NoRepeatIngestNode.class);
   }
 }

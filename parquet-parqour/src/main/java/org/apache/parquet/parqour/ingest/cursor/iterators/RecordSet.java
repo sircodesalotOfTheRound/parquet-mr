@@ -9,7 +9,34 @@ import java.util.*;
  * Created by sircodesalot on 7/5/15.
  */
 public class RecordSet<T> implements Iterable<T> {
+  //public static final RecordSet EMPTY = new RecordSet();
+
   private final Iterable<T> iterable;
+
+  public RecordSet() {
+    this.iterable = generateEmptyIterable();
+  }
+
+  private Iterable<T> generateEmptyIterable() {
+    final Iterator<T> emptyIterator = new Iterator<T>() {
+      @Override
+      public boolean hasNext() {
+        return false;
+      }
+
+      @Override
+      public T next() {
+        return null;
+      }
+    };
+
+    return new Iterable<T>() {
+      @Override
+      public Iterator<T> iterator() {
+        return emptyIterator;
+      }
+    };
+  }
 
   public RecordSet(Iterable<T> iterable) {
     this.iterable = iterable;

@@ -1,17 +1,15 @@
 package org.apache.parquet.parqour.ingest.read.nodes.categories;
 
-import org.apache.parquet.parqour.exceptions.DataIngestException;
 import org.apache.parquet.parqour.exceptions.ReadNodeException;
 import org.apache.parquet.parqour.ingest.ffreader.interfaces.FastForwardReader;
 import org.apache.parquet.parqour.ingest.ffreader.interfaces.RelationshipLevelFastForwardReader;
 import org.apache.parquet.parqour.ingest.paging.DataPageDecorator;
 import org.apache.parquet.parqour.ingest.paging.DiskInterfaceManager;
-import org.apache.parquet.parqour.ingest.read.nodes.impl.Int32IngestNode;
+import org.apache.parquet.parqour.ingest.read.nodes.impl.i32.Int32NoRepeatIngestNode;
 import org.apache.parquet.parqour.ingest.schema.SchemaInfo;
 import org.apache.parquet.column.ColumnDescriptor;
 import org.apache.parquet.hadoop.metadata.ColumnPath;
 import org.apache.parquet.schema.Type;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * Created by sircodesalot on 6/2/15.
@@ -165,11 +163,6 @@ public abstract class ColumnIngestNodeBase<TFFReaderType extends FastForwardRead
 
   protected void reportResults(int rowNumber) {
     parent.setResultsReported(rowNumber, this.thisChildColumnIndex);
-  }
-
-  public static ColumnIngestNodeBase determineReadNodeType(SchemaInfo schemaInfo, AggregatingIngestNode parent, ColumnDescriptor descriptor,
-                                                           Type schemaNode, DiskInterfaceManager diskInterfaceManager, int childIndex) {
-    return new Int32IngestNode(schemaInfo, parent, schemaNode, descriptor, diskInterfaceManager, childIndex);
   }
 
   public abstract void read(int rowNumber);

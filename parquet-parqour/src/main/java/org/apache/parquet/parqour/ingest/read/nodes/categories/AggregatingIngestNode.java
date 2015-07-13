@@ -3,10 +3,12 @@ package org.apache.parquet.parqour.ingest.read.nodes.categories;
 import org.apache.parquet.parqour.ingest.cursor.GroupAggregateCursor;
 import org.apache.parquet.parqour.ingest.cursor.iface.AdvanceableCursor;
 import org.apache.parquet.parqour.ingest.paging.DiskInterfaceManager;
+import org.apache.parquet.parqour.ingest.read.nodes.IngestNodeGenerator;
 import org.apache.parquet.parqour.ingest.read.nodes.IngestNodeSet;
 import org.apache.parquet.parqour.ingest.read.nodes.impl.GroupIngestNode;
 import org.apache.parquet.parqour.ingest.schema.SchemaInfo;
 import org.apache.parquet.schema.GroupType;
+import org.apache.parquet.schema.PrimitiveType;
 import org.apache.parquet.schema.Type;
 
 import java.util.ArrayList;
@@ -62,9 +64,9 @@ public abstract class AggregatingIngestNode extends IngestNode {
 
       if (child.isPrimitive()) {
         ColumnIngestNodeBase ingestNodeBase =
-          ColumnIngestNodeBase.determineReadNodeType(schemaInfo, this,
+          IngestNodeGenerator.generateIngestNode(schemaInfo, this,
             schemaInfo.getColumnDescriptorByPath(childPath),
-            child,
+            (PrimitiveType) child,
             diskInterfaceManager,
             childColumnIndex);
 
@@ -135,7 +137,7 @@ public abstract class AggregatingIngestNode extends IngestNode {
     // If we require a link from the parent:
     if (repetitionLevel <= parentRepetitionLevel) {
       // If the parent is defined:
-      if (definitionLevel >= parentDefinitionLevel) {
+      if (definitionLevel >= definitionLevelAtThisNode) {
         schemaLinksFromParentToChild[++relationshipLinkWriteIndex] = childLinkIndex;
       } else {
         schemaLinksFromParentToChild[++relationshipLinkWriteIndex] = null;

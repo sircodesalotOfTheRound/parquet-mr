@@ -1,4 +1,4 @@
-package org.apache.parquet.parqour.ingest.read.nodes.impl;
+package org.apache.parquet.parqour.ingest.read.nodes.impl.i32;
 
 import org.apache.parquet.parqour.ingest.cursor.iface.AdvanceableCursor;
 import org.apache.parquet.parqour.ingest.cursor.Int32Cursor;
@@ -13,7 +13,7 @@ import org.apache.parquet.schema.Type;
 /**
  * Created by sircodesalot on 6/11/15.
  */
-public final class Int32IngestNode extends ColumnIngestNodeBase<Int32FastForwardReader> {
+public final class Int32NoRepeatIngestNode extends ColumnIngestNodeBase<Int32FastForwardReader> {
   private int currentValue = 0;
 
   // TODO: Write expansion code.
@@ -21,12 +21,12 @@ public final class Int32IngestNode extends ColumnIngestNodeBase<Int32FastForward
 
   private final Int32Cursor cursor = new Int32Cursor(this.name, rowVector);
 
-  public Int32IngestNode(SchemaInfo schemaInfo,
-                         AggregatingIngestNode parent,
-                         Type schemaNode,
-                         ColumnDescriptor descriptor,
-                         DiskInterfaceManager diskInterfaceManager,
-                         int childIndex) {
+  public Int32NoRepeatIngestNode(SchemaInfo schemaInfo,
+                                 AggregatingIngestNode parent,
+                                 Type schemaNode,
+                                 ColumnDescriptor descriptor,
+                                 DiskInterfaceManager diskInterfaceManager,
+                                 int childIndex) {
 
     super(schemaInfo, parent, schemaNode, descriptor, diskInterfaceManager, childIndex);
 
@@ -46,10 +46,7 @@ public final class Int32IngestNode extends ColumnIngestNodeBase<Int32FastForward
   // Heavily inlined for performance.
   @Override
   public void read(int rowNumber) {
-    // (0) Initialize for writing new row.
-    boolean lastItemWasNull = false;
     int writeIndex = -1;
-
     this.relationshipLinkWriteIndex = -1;
 
     // Repeat until we reach a node with repetitionLevel-0 (new row) or EOF.
@@ -67,9 +64,9 @@ public final class Int32IngestNode extends ColumnIngestNodeBase<Int32FastForward
       }
 
       // If this node requires linking to it's parent:
-      if (currentEntryRepetitionLevel >= parentDefinitionLevel) {
-        // If the parent is defined:
-        if (currentEntryDefinitionLevel >= parentDefinitionLevel) {
+      if (currentEntryRepetitionLevel <= parentDefinitionLevel) {
+        // If this node is defined:
+        if (currentEntryDefinitionLevel >= definitionLevelAtThisNode) {
           schemaLinksFromParentToChild[++relationshipLinkWriteIndex] = writeIndex;
         } else {
           schemaLinksFromParentToChild[++relationshipLinkWriteIndex] = null;

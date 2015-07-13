@@ -2,7 +2,7 @@ package org.apache.parquet.parqour.ingest.cursor;
 
 import org.apache.parquet.parqour.ingest.paging.DiskInterfaceManager;
 import org.apache.parquet.parqour.ingest.read.nodes.IngestTree;
-import org.apache.parquet.parqour.ingest.read.nodes.impl.Int32IngestNode;
+import org.apache.parquet.parqour.ingest.read.nodes.impl.i32.Int32NoRepeatIngestNode;
 import org.apache.parquet.parqour.ingest.read.nodes.impl.RootIngestNode;
 import org.apache.parquet.parqour.ingest.schema.SchemaInfo;
 import org.apache.parquet.parqour.testtools.TestTools;
@@ -64,7 +64,7 @@ public class TestCursor {
         IngestTree ingestTree = new IngestTree(schemaInfo, diskInterfaceManager);
 
         RootIngestNode root = ingestTree.root();
-        Int32IngestNode oneXIngest = (Int32IngestNode) ingestTree.getIngestNodeByPath(ONE_X);
+        Int32NoRepeatIngestNode oneXIngest = (Int32NoRepeatIngestNode) ingestTree.getIngestNodeByPath(ONE_X);
 /*
         root.prepareForReading(TOTAL_ROWS);
         oneXIngest.prepareForContinuousRead();

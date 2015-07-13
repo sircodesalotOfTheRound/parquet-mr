@@ -17,7 +17,8 @@ public interface Cursor {
   Cursor field(int index);
   Cursor field(String path);
 
-  RollableRecordSet<Integer> i32iter(int index);
+  RollableRecordSet<Integer> i32Iter(int index);
+  RollableRecordSet<Integer> i32Iter(String path);
 
   RecordSet<Cursor> fieldIter(int index);
 }

@@ -7,7 +7,6 @@ import org.apache.parquet.parqour.testtools.ParquetConfiguration;
 import org.apache.parquet.parqour.testtools.TestTools;
 import org.apache.parquet.parqour.testtools.WriteTools;
 import org.apache.hadoop.fs.Path;
-import org.junit.Test;
 import org.apache.parquet.example.data.Group;
 import org.apache.parquet.example.data.simple.SimpleGroup;
 import org.apache.parquet.format.converter.ParquetMetadataConverter;
@@ -77,14 +76,14 @@ public class TestListOfLists {
             for (Cursor grouping : cursor.fieldIter(0)) {
 
               int firstRepeat = 0;
-              for (int value : grouping.i32iter(0)) {
+              for (int value : grouping.i32Iter(0)) {
                 assertEquals(totalRepeat + groupRepeat + firstRepeat, value);
                 firstRepeat++;
               }
               assertEquals(totalRepeat % 3 + 1, firstRepeat);
 
               int secondRepeat= 0;
-              for (int value : grouping.i32iter(1)) {
+              for (int value : grouping.i32Iter(1)) {
                 assertEquals((totalRepeat * 2) + groupRepeat + secondRepeat, value);
                 secondRepeat++;
               }

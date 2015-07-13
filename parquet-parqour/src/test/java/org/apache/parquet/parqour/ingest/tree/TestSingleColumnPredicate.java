@@ -2,7 +2,7 @@ package org.apache.parquet.parqour.ingest.tree;
 
 import org.apache.parquet.parqour.ingest.paging.DiskInterfaceManager;
 import org.apache.parquet.parqour.ingest.read.nodes.IngestTree;
-import org.apache.parquet.parqour.ingest.read.nodes.impl.Int32IngestNode;
+import org.apache.parquet.parqour.ingest.read.nodes.impl.i32.Int32NoRepeatIngestNode;
 import org.apache.parquet.parqour.ingest.schema.SchemaInfo;
 import org.apache.parquet.parqour.testtools.TestTools;
 import org.apache.parquet.parqour.testtools.UsesPersistence;
@@ -158,7 +158,7 @@ public class TestSingleColumnPredicate extends UsesPersistence {
   }
   */
 
-  interface ValidatePredicateCallback { boolean validate(int rowIndex, Int32IngestNode node); }
+  interface ValidatePredicateCallback { boolean validate(int rowIndex, Int32NoRepeatIngestNode node); }
   public void runTest(final FilterPredicate predicate, final ValidatePredicateCallback validationCallback) throws Exception {
     TestTools.repeat(1, new TestTools.RepeatCallback() {
       @Override
@@ -169,7 +169,7 @@ public class TestSingleColumnPredicate extends UsesPersistence {
         DiskInterfaceManager diskInterfaceManager = new DiskInterfaceManager(schemaInfo);
 
         IngestTree ingest = new IngestTree(schemaInfo, diskInterfaceManager);
-        Int32IngestNode countNode = (Int32IngestNode) ingest.getIngestNodeByPath(COUNT);
+        Int32NoRepeatIngestNode countNode = (Int32NoRepeatIngestNode) ingest.getIngestNodeByPath(COUNT);
 /*
         ingest.prepareForRead(TOTAL_ROWS);
         countNode.prepareForPredicateTesting();

@@ -1,30 +1,26 @@
 package org.apache.parquet.parqour.ingest.driver;
 
-import org.apache.parquet.column.ParquetProperties;
 import org.apache.parquet.parqour.ingest.cursor.iface.Cursor;
 import org.apache.parquet.parqour.ingest.read.iterator.Parqour;
 import org.apache.parquet.parqour.testtools.ParquetConfiguration;
 import org.apache.parquet.parqour.testtools.TestTools;
 import org.apache.parquet.parqour.testtools.WriteTools;
-import org.apache.hadoop.fs.Path;
+import org.apache.parquet.schema.GroupType;
 import org.apache.parquet.schema.MessageType;
 import org.junit.Test;
 import org.apache.parquet.example.data.Group;
 import org.apache.parquet.example.data.simple.SimpleGroup;
-import org.apache.parquet.hadoop.ParquetReader;
 import org.apache.parquet.hadoop.ParquetWriter;
-import org.apache.parquet.hadoop.example.GroupReadSupport;
-import org.apache.parquet.schema.GroupType;
 import org.apache.parquet.schema.PrimitiveType;
 
 import java.io.IOException;
 
+import static org.apache.parquet.schema.Type.Repetition.OPTIONAL;
+import static org.apache.parquet.schema.Type.Repetition.REPEATED;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.apache.parquet.schema.PrimitiveType.PrimitiveTypeName.INT32;
-import static org.apache.parquet.schema.Type.Repetition.OPTIONAL;
-import static org.apache.parquet.schema.Type.Repetition.REPEATED;
 import static org.apache.parquet.schema.Type.Repetition.REQUIRED;
 
 /**
@@ -33,28 +29,226 @@ import static org.apache.parquet.schema.Type.Repetition.REQUIRED;
 public class TestVariableSchemas {
   private static final int TOTAL_ROWS = TestTools.generateRandomInt(10000);
 
-  public static class SingleColumnSchema extends WriteTools.TestableParquetWriteContext {
+  public static class SingleRequiredColumnSchema extends WriteTools.TestableParquetWriteContext {
     private static MessageType SCHEMA = new MessageType("single_column",
-      new PrimitiveType(REQUIRED, INT32, "one"));
+      new PrimitiveType(REQUIRED, INT32, "single_required_column"));
 
-    public SingleColumnSchema(ParquetConfiguration configuration) {
+    public SingleRequiredColumnSchema(ParquetConfiguration configuration) {
       super(SCHEMA, configuration);
     }
 
     @Override
     public void write(ParquetWriter<Group> writer) throws IOException {
       for (int index = 0; index < TOTAL_ROWS; index++) {
-        Group schema = new SimpleGroup(SCHEMA);
-        schema.append("one", index);
+        Group instance = new SimpleGroup(SCHEMA);
+        instance.append("single_required_column", index);
 
-        writer.write(schema);
+        writer.write(instance);
+      }
+    }
+
+    public void test() {
+      Integer index = 0;
+      for (Cursor cursor : Parqour.query(TestTools.TEST_FILE_PATH)) {
+        assertEquals(index, cursor.i32("single_required_column"));
+        index++;
+      }
+    }
+  }
+
+  public static class SingleOptionalColumnSchema extends WriteTools.TestableParquetWriteContext {
+    private static MessageType SCHEMA = new MessageType("single_column",
+      new PrimitiveType(OPTIONAL, INT32, "optional_column"));
+
+    public SingleOptionalColumnSchema(ParquetConfiguration configuration) {
+      super(SCHEMA, configuration);
+    }
+
+    @Override
+    public void write(ParquetWriter<Group> writer) throws IOException {
+      for (int index = 0; index < TOTAL_ROWS; index++) {
+        Group instance = new SimpleGroup(SCHEMA);
+
+        if (index % 2 == 0) {
+          instance.append("optional_column", index * 2);
+        }
+
+        writer.write(instance);
+      }
+    }
+
+    public void test() {
+      Integer index = 0;
+      for (Cursor cursor : Parqour.query(TestTools.TEST_FILE_PATH)) {
+        if (index % 2 == 0) {
+          assertEquals((Integer) (index * 2), cursor.i32("optional_column"));
+        } else {
+          assertNull(cursor.i32("optional_column"));
+        }
+
+        index++;
+      }
+    }
+  }
+
+  public static class MultiplyNestedOptionalSchema extends WriteTools.TestableParquetWriteContext {
+    private static MessageType SCHEMA = new MessageType("single_column",
+      new GroupType(OPTIONAL, "first",
+        new GroupType(OPTIONAL, "second",
+          new GroupType(OPTIONAL, "third",
+            new GroupType(OPTIONAL, "fourth",
+              new PrimitiveType(OPTIONAL, INT32, "fifth"))))));
+
+    public MultiplyNestedOptionalSchema(ParquetConfiguration configuration) {
+      super(SCHEMA, configuration);
+    }
+
+    @Override
+    public void write(ParquetWriter<Group> writer) throws IOException {
+      for (int index = 0; index < TOTAL_ROWS; index++) {
+        Group instance = new SimpleGroup(SCHEMA);
+
+        if (index % 2 == 0) {
+          Group first = instance.addGroup("first");
+          if (index % 3 == 0) {
+            Group second = first.addGroup("second");
+            if (index % 4 == 0) {
+              Group third = second.addGroup("third");
+              if (index % 5 == 0) {
+                Group fourth = third.addGroup("fourth");
+                if (index % 6 == 0) {
+                  fourth.append("fifth", index);
+                }
+              }
+            }
+          }
+        }
+
+        writer.write(instance);
       }
     }
 
     public void test() {
       int index = 0;
       for (Cursor cursor : Parqour.query(TestTools.TEST_FILE_PATH)) {
-        assertEquals((Integer) index, cursor.i32("one"));
+        if (index % 2 == 0) {
+          Cursor first = cursor.field("first");
+          if (index % 3 == 0) {
+            Cursor second = first.field("second");
+            if (index % 4 == 0) {
+              Cursor third = second.field("third");
+              if (index % 5 == 0) {
+                Cursor fourth = third.field("fourth");
+                if (index % 6 == 0) {
+                  assertEquals((Integer) index, fourth.i32("fifth"));
+                } else {
+                  assertNull(fourth.i32("fifth"));
+                }
+              } else {
+                assertNull(third.field("fourth"));
+              }
+            } else {
+              assertNull(second.field("third"));
+            }
+          } else {
+            assertNull(first.field("second"));
+          }
+        } else {
+          assertNull(cursor.field("first"));
+        }
+
+        index++;
+      }
+    }
+  }
+
+
+  public static class FizzBuzzSchema extends WriteTools.TestableParquetWriteContext {
+    private static MessageType SCHEMA = new MessageType("single_column",
+      new GroupType(OPTIONAL, "fizz_buzz",
+        new PrimitiveType(OPTIONAL, INT32, "fizz"),
+        new PrimitiveType(OPTIONAL, INT32, "buzz")));
+
+    public FizzBuzzSchema(ParquetConfiguration configuration) {
+      super(SCHEMA, configuration);
+    }
+
+    @Override
+    public void write(ParquetWriter<Group> writer) throws IOException {
+      for (int index = 0; index < TOTAL_ROWS; index++) {
+        Group instance = new SimpleGroup(SCHEMA);
+
+        if (index % 3 == 0 || index % 5 == 0) {
+          Group optionalGroup = instance.addGroup("fizz_buzz");
+          if (index % 3 == 0) {
+            optionalGroup.add("fizz", index);
+          }
+
+          if (index % 5 == 0) {
+            optionalGroup.add("buzz", index);
+          }
+        }
+
+        writer.write(instance);
+      }
+    }
+
+    public void test() {
+      Integer index = 0;
+
+      for (Cursor cursor : Parqour.query(TestTools.TEST_FILE_PATH)) {
+        if (index % 3 == 0 || index % 5 == 0) {
+          if (index % 3 == 0) {
+            assertEquals(index, cursor.field("fizz_buzz").i32("fizz"));
+          } else {
+            assertNull(cursor.field("fizz_buzz").field("fizz"));
+          }
+
+          if (index % 5 == 0) {
+            assertEquals(index, cursor.field("fizz_buzz").i32("buzz"));
+          } else {
+            assertNull(cursor.field("fizz_buzz").field("buzz"));
+          }
+        } else {
+          assertNull(cursor.field("fizz_buzz"));
+        }
+
+        index++;
+      }
+    }
+  }
+
+  public static class SingleRepeatColumnSchema extends WriteTools.TestableParquetWriteContext {
+    private static MessageType SCHEMA = new MessageType("single_column",
+      new PrimitiveType(REPEATED, INT32, "repeat"));
+
+    public SingleRepeatColumnSchema(ParquetConfiguration configuration) {
+      super(SCHEMA, configuration);
+    }
+
+    @Override
+    public void write(ParquetWriter<Group> writer) throws IOException {
+      for (int index = 0; index < TOTAL_ROWS; index++) {
+        Group instance = new SimpleGroup(SCHEMA);
+
+        for (int repeat = 0; repeat < (index % 5); repeat++) {
+          instance.append("repeat", (index * 3) + repeat);
+        }
+
+        writer.write(instance);
+      }
+    }
+
+    public void test() {
+      Integer index = 0;
+
+      for (Cursor cursor : Parqour.query(TestTools.TEST_FILE_PATH)) {
+        int repeat = 0;
+        for (int value : cursor.i32Iter("repeat")) {
+          assertEquals((index * 3) + repeat, value);
+          repeat++;
+        }
+        assertEquals((index % 5), repeat);
         index++;
       }
     }
@@ -103,15 +297,34 @@ public class TestVariableSchemas {
           new PrimitiveType(REPEATED, INT32, "repeatC-5")))),
     new PrimitiveType(OPTIONAL, INT32, "last"));*/
 
-    public void generateTestData(WriteTools.ParquetWriteContext context) {
-      WriteTools.withParquetWriter(context);
-    }
+  public void generateTestData(WriteTools.ParquetWriteContext context) {
+    WriteTools.withParquetWriter(context);
+  }
 
-    @Test
-    public void testSingleColumnSchema() throws Exception {
-      WriteTools.generateDataAndTest(1, SingleColumnSchema.class);
-    }
+  @Test
+  public void testSingleRequiredColumnSchema() throws Exception {
+    WriteTools.generateDataAndTest(1, SingleRequiredColumnSchema.class);
+  }
 
+  @Test
+  public void testSingleOptionalColumn() throws Exception {
+    WriteTools.generateDataAndTest(1, SingleOptionalColumnSchema.class);
+  }
+
+  @Test
+  public void testMultiplyNestedSchema() throws Exception {
+    WriteTools.generateDataAndTest(1, MultiplyNestedOptionalSchema.class);
+  }
+
+  @Test
+  public void testFizzBuzzSchema() throws Exception {
+    WriteTools.generateDataAndTest(1, FizzBuzzSchema.class);
+  }
+
+  @Test
+  public void testSingleRepeatSchema() throws Exception {
+    WriteTools.generateDataAndTest(1, SingleRepeatColumnSchema.class);
+  }
 
 /*
       private final GroupType COUNTING_SCHEMA = new GroupType(REQUIRED, "multipliers",
