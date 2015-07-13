@@ -132,14 +132,16 @@ public abstract class AggregatingIngestNode extends IngestNode {
       currentRowNumber = rowNumber;
     }
 
-    // Continue upstream if the parent also has a smaller repetitionValue, and this is the schema reporting node.
+    // If we require a link from the parent:
     if (repetitionLevel <= parentRepetitionLevel) {
-      if (definitionLevel >= definitionLevelAtThisNode) {
-        relationshipLinks[++relationshipLinkWriteIndex] = childLinkIndex;
+      // If the parent is defined:
+      if (definitionLevel >= parentDefinitionLevel) {
+        schemaLinksFromParentToChild[++relationshipLinkWriteIndex] = childLinkIndex;
       } else {
-        relationshipLinks[++relationshipLinkWriteIndex] = null;
+        schemaLinksFromParentToChild[++relationshipLinkWriteIndex] = null;
       }
 
+      // If this node reports schema, then continue upstream:
       if (isSchemaReportingNode) {
         parent.setSchemaLink(rowNumber, repetitionLevel, definitionLevel, relationshipLinkWriteIndex);
       }
@@ -147,12 +149,9 @@ public abstract class AggregatingIngestNode extends IngestNode {
   }
 
   public void finishRow(int childLinkIndex) {
-    if (hasParent) {
-      relationshipLinks[++relationshipLinkWriteIndex] = childLinkIndex;
-
-      if (isSchemaReportingNode) {
-        parent.finishRow(++relationshipLinkWriteIndex);
-      }
+    // If this node reports schema, then continue upstream:
+    if (isSchemaReportingNode) {
+      parent.finishRow(relationshipLinkWriteIndex);
     }
   }
 
@@ -160,7 +159,7 @@ public abstract class AggregatingIngestNode extends IngestNode {
 
   @Override
   protected AdvanceableCursor onLinkToParent(AggregatingIngestNode parentNode, Integer[] relationships) {
-    this.relationshipLinks = relationships;
+    this.schemaLinksFromParentToChild = relationships;
     return aggregate;
   }
 

@@ -33,12 +33,13 @@ public abstract class IngestNode {
   protected final long totalRowCount;
 
   protected final int parentRepetitionLevel;
+  protected final int parentDefinitionLevel;
   protected final boolean hasParent;
 
   protected long currentRowNumber = 0;
 
   protected int relationshipLinkWriteIndex = -1;
-  protected Integer[] relationshipLinks;
+  protected Integer[] schemaLinksFromParentToChild;
 
 
   public IngestNode(SchemaInfo schemaInfo, AggregatingIngestNode parent, String path, Type schemaNode, IngestNodeCategory category, int childNodeIndex) {
@@ -57,6 +58,7 @@ public abstract class IngestNode {
     this.canPerformTrueFastForwards = determineCanPerformTrueFastForwarding(this);
     this.isSchemaReportingNode = determineIsSchemaReportingNode(childNodeIndex);
     this.parentRepetitionLevel = computeParentRepetitionLevel();
+    this.parentDefinitionLevel = computeParentDefinitionLevel();
   }
 
   // By definition, the schema beyond the first common parent should be equal. For example, if there are two columns, 'A' and 'B',
@@ -92,6 +94,10 @@ public abstract class IngestNode {
   // an impossibly low value, meaning it will never be captured into a list. This saves us having to perform parent-null tests.
   private int computeParentRepetitionLevel() {
     return this.hasParent() ? parent.repetitionLevelAtThisNode : Integer.MIN_VALUE;
+  }
+
+  private int computeParentDefinitionLevel() {
+    return this.hasParent() ? parent.definitionLevelAtThisNode : Integer.MAX_VALUE;
   }
 
   private boolean determineHasParent() {

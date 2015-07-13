@@ -39,7 +39,7 @@ public final class Int32IngestNode extends ColumnIngestNodeBase<Int32FastForward
 
   @Override
   protected AdvanceableCursor onLinkToParent(AggregatingIngestNode parentNode, Integer[] relationships) {
-    this.relationshipLinks = relationships;
+    this.schemaLinksFromParentToChild = relationships;
     return cursor;
   }
 
@@ -52,38 +52,35 @@ public final class Int32IngestNode extends ColumnIngestNodeBase<Int32FastForward
 
     this.relationshipLinkWriteIndex = -1;
 
-    // (1) Repeat until we reach a repetition-level of 'zero' (beginning of a new record).
+    // Repeat until we reach the
     do {
       // (2) If the current row number is not the same as the row number to be read, perform a fast forward.
       if (currentRowNumber < rowNumber) {
         this.forwardToRowNumber(rowNumber);
       }
 
-      boolean isDefined = currentEntryDefinitionLevel >= definitionLevelAtThisNode;
-
-      // If the value is defined, write the value. Else write null.
-      if (isDefined) {
+      // If this node is defined:
+      if (currentEntryDefinitionLevel >= definitionLevelAtThisNode) {
         rowVector[++writeIndex] = currentValue;
       } else {
         rowVector[++writeIndex] = null;
       }
 
-      // If the repetition level is lower than the parent node's repetition level, then link.
-      if (currentEntryRepetitionLevel <= parentRepetitionLevel) {
-        // TODO: Should this be if parent is defined??
-        //if (isDefined) {
-          // Single entry represents the beginning of a new range (and ending of the previous).
-          relationshipLinks[++relationshipLinkWriteIndex] = writeIndex;
+      // If this node requires linking to it's parent:
+      if (currentEntryRepetitionLevel >= parentDefinitionLevel) {
+        // If the parent is defined:
+        if (currentEntryDefinitionLevel >= parentDefinitionLevel) {
+          schemaLinksFromParentToChild[++relationshipLinkWriteIndex] = writeIndex;
+        } else {
+          schemaLinksFromParentToChild[++relationshipLinkWriteIndex] = null;
+        }
 
-        //} else {
-        //}
-
+        // Continue upstream if this node is schema-defining.
         if (isSchemaReportingNode) {
           parent.setSchemaLink(rowNumber, currentEntryRepetitionLevel, currentEntryDefinitionLevel, writeIndex);
         }
       }
 
-      // (5) Pre-read the content for the next row (if there is data to read).
       if (currentEntryOnPage < totalItemsOnThisPage) {
         this.currentEntryOnPage += 1;
 
@@ -110,7 +107,7 @@ public final class Int32IngestNode extends ColumnIngestNodeBase<Int32FastForward
 
     } while (currentEntryRepetitionLevel > 0);
 
-    relationshipLinks[++relationshipLinkWriteIndex] = ++writeIndex;
+    schemaLinksFromParentToChild[++relationshipLinkWriteIndex] = ++writeIndex;
 
     if (isSchemaReportingNode) {
       parent.finishRow(writeIndex);
