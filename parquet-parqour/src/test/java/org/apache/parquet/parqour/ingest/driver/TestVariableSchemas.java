@@ -1,11 +1,13 @@
 package org.apache.parquet.parqour.ingest.driver;
 
+import org.apache.parquet.column.ParquetProperties;
 import org.apache.parquet.parqour.ingest.cursor.iface.Cursor;
 import org.apache.parquet.parqour.ingest.read.iterator.Parqour;
 import org.apache.parquet.parqour.testtools.ParquetConfiguration;
 import org.apache.parquet.parqour.testtools.TestTools;
 import org.apache.parquet.parqour.testtools.WriteTools;
 import org.apache.hadoop.fs.Path;
+import org.apache.parquet.schema.MessageType;
 import org.junit.Test;
 import org.apache.parquet.example.data.Group;
 import org.apache.parquet.example.data.simple.SimpleGroup;
@@ -30,11 +32,37 @@ import static org.apache.parquet.schema.Type.Repetition.REQUIRED;
  */
 public class TestVariableSchemas {
   private static final int TOTAL_ROWS = TestTools.generateRandomInt(10000);
-  private static final int FIELD_NUMBER_TWO = 1;
 
-  private final GroupType COUNTING_SCHEMA = new GroupType(REQUIRED, "multipliers",
+  public static class SingleColumnSchema extends WriteTools.TestableParquetWriteContext {
+    private static MessageType SCHEMA = new MessageType("single_column",
+      new PrimitiveType(REQUIRED, INT32, "one"));
+
+    public SingleColumnSchema(ParquetConfiguration configuration) {
+      super(SCHEMA, configuration);
+    }
+
+    @Override
+    public void write(ParquetWriter<Group> writer) throws IOException {
+      for (int index = 0; index < TOTAL_ROWS; index++) {
+        Group schema = new SimpleGroup(SCHEMA);
+        schema.append("one", index);
+
+        writer.write(schema);
+      }
+    }
+
+    public void test() {
+      int index = 0;
+      for (Cursor cursor : Parqour.query(TestTools.TEST_FILE_PATH)) {
+        assertEquals((Integer) index, cursor.i32("one"));
+        index++;
+      }
+    }
+  }
+
+  /*private final GroupType COUNTING_SCHEMA = new GroupType(REQUIRED, "multipliers",
     new PrimitiveType(REQUIRED, INT32, "one"),
-    new PrimitiveType(OPTIONAL, INT32, "two"),
+    /*new PrimitiveType(OPTIONAL, INT32, "two"),
     new PrimitiveType(REPEATED, INT32, "three"),
     new GroupType(OPTIONAL, "fizz_buzz",
       new PrimitiveType(OPTIONAL, INT32, "fizz"),
@@ -73,10 +101,22 @@ public class TestVariableSchemas {
           new PrimitiveType(REPEATED, INT32, "repeatC-3"),
           new PrimitiveType(REPEATED, INT32, "repeatC-4"),
           new PrimitiveType(REPEATED, INT32, "repeatC-5")))),
-    new PrimitiveType(OPTIONAL, INT32, "last"));
+    new PrimitiveType(OPTIONAL, INT32, "last"));*/
 
-  public void generateTestData(ParquetConfiguration configuration) {
-    WriteTools.withParquetWriter(new WriteTools.ParquetWriteContext(COUNTING_SCHEMA, configuration.version(), 1, 10, configuration.useDictionary()) {
+    public void generateTestData(WriteTools.ParquetWriteContext context) {
+      WriteTools.withParquetWriter(context);
+    }
+
+    @Test
+    public void testSingleColumnSchema() throws Exception {
+      WriteTools.generateDataAndTest(1, SingleColumnSchema.class);
+    }
+
+
+/*
+      private final GroupType COUNTING_SCHEMA = new GroupType(REQUIRED, "multipliers",
+        new PrimitiveType(REQUIRED, INT32, "one"));
+
       @Override
       public void write(ParquetWriter<Group> writer) throws IOException {
         for (int index = 0; index < TOTAL_ROWS; index++) {
@@ -321,4 +361,5 @@ public class TestVariableSchemas {
 
     assertEquals(index % 5, repeatACount);
   }
+  */
 }

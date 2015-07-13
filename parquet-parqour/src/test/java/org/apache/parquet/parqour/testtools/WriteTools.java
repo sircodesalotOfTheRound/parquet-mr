@@ -58,6 +58,14 @@ public class WriteTools {
     }
   }
 
+  public static abstract class TestableParquetWriteContext extends ParquetWriteContext {
+    public TestableParquetWriteContext(GroupType schema, ParquetConfiguration configuration) {
+      super(schema, configuration.version(), 1, 1, configuration.useDictionary());
+    }
+
+    public abstract void test();
+  }
+
   public static void withParquetWriter(ParquetWriteContext context) {
     deleteTestData();
 
@@ -86,6 +94,21 @@ public class WriteTools {
       throw new DataIngestException("IO Exception");
     }
   }
+
+  public static <T extends TestableParquetWriteContext> void generateDataAndTest(int times, Class<T> forType) throws Exception {
+    for (final ParquetConfiguration configuration : TestTools.CONFIGURATIONS) {
+      final TestableParquetWriteContext context = (TestableParquetWriteContext)forType.getConstructors()[0].newInstance(configuration);
+      withParquetWriter(context);
+
+      TestTools.repeat(times, new TestTools.RepeatCallback() {
+        @Override
+        public void execute() throws Exception {
+          context.test();
+        }
+      });
+    }
+  }
+
 
   public static void deleteTestData() {
     File file = new File(TEST_FILE_PATH);
