@@ -143,13 +143,10 @@ public class GroupAggregateCursor extends AdvanceableCursor implements Iterable<
   @Override
   public RollableRecordSet<Integer> i32Iter(String path) {
     int index = this.cursorIndexes.get(path);
-    Integer offset = childNodeLinks[index][start];
+    Integer startOffset = childNodeLinks[index][start];
 
-    if (offset != null) {
-      AdvanceableCursor cursor = childCursorsByIndex[index];
-      cursor.setRange(start, end);
-
-      return cursor.i32Iter();
+    if (startOffset != null) {
+      return childCursorsByIndex[index].i32StartIteration(startOffset);
     } else {
       return RollableRecordSet.EMPTY_I32;
     }
