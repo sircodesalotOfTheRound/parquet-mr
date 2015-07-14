@@ -24,8 +24,6 @@ public class EvaluationPathAnalysis {
   private final Map<ColumnPredicate.LeafColumnPredicate, Integer> indexesForLeaves;
   private final PredicateTestWayPoint path;
   private final IngestTree tree;
-  private final IngestNodeSet nodesAssociatedWithAPredicate;
-  private final IngestNodeSet nodesNotAssociatedWithAPredicate;
 
   private final SkipChain noPredicateIngestPath;
 
@@ -33,13 +31,10 @@ public class EvaluationPathAnalysis {
     this.tree = tree;
     this.predicateLeaves = collectLeaves(predicate.predicateTree());
 
-    this.nodesAssociatedWithAPredicate = collectIngestNodesWithAPredicate(tree, predicateLeaves);
-    this.nodesNotAssociatedWithAPredicate = collectIngestNodesWithoutAPredicate(tree, nodesAssociatedWithAPredicate);
-
     this.indexesForLeaves = calculateIndexesForLeaves(predicateLeaves);
     this.path = calculatePath(predicate.predicateTree());
 
-    this.noPredicateIngestPath = new SkipChain(nodesNotAssociatedWithAPredicate);
+    this.noPredicateIngestPath = generateSkipChain(tree, predicateLeaves);
   }
 
   private IngestNodeSet collectIngestNodesWithAPredicate(IngestTree tree, Iterable<ColumnPredicate.LeafColumnPredicate> predicateLeaves) {
@@ -69,6 +64,13 @@ public class EvaluationPathAnalysis {
     }
 
     return nodesWithoutAPredicate;
+  }
+
+  private SkipChain generateSkipChain(IngestTree tree, List<ColumnPredicate.LeafColumnPredicate> predicateLeaves) {
+    IngestNodeSet nodesAssociatedWithAPredicate = collectIngestNodesWithAPredicate(tree, predicateLeaves);
+    IngestNodeSet nodesNotAssociatedWithAPredicate = collectIngestNodesWithoutAPredicate(tree, nodesAssociatedWithAPredicate);
+
+    return new SkipChain(nodesNotAssociatedWithAPredicate);
   }
 
   private List<ColumnPredicate.LeafColumnPredicate> collectLeaves(ColumnPredicate root) {
