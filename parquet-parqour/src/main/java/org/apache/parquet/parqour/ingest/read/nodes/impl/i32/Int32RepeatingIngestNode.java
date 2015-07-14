@@ -53,9 +53,7 @@ public final class Int32RepeatingIngestNode extends ColumnIngestNodeBase<Int32Fa
     int listHeaderIndex = -1;
     int numberOfItemsInList = 0;
 
-    // Repeat until we reach a node with repetitionLevel-0 (new row) or EOF.
     do {
-      // If the current row is behind the row we need to read:
       if (currentRowNumber < rowNumber) {
         this.fastForwardToRow(rowNumber);
       }
@@ -81,7 +79,6 @@ public final class Int32RepeatingIngestNode extends ColumnIngestNodeBase<Int32Fa
         this.currentLinkSiteIndex = writeIndex;
       }
 
-      // Do we need to expand the list?
       if (writeIndex >= ingestBufferLength) {
         this.expandIngestBuffer();
       }
@@ -97,13 +94,8 @@ public final class Int32RepeatingIngestNode extends ColumnIngestNodeBase<Int32Fa
         parent.linkSchema(this);
       }
 
-      // If:
-      // (1) there are still items on this page:
-      // (2) there are no more items on this page, but there are rows left to read:
-      // (3) No more rows left to read:
       if (currentEntryOnPage < totalItemsOnThisPage) {
         this.currentEntryOnPage++;
-
         this.currentEntryRepetitionLevel = repetitionLevelReader.nextRelationshipLevel();
         this.currentEntryDefinitionLevel = definitionLevelReader.nextRelationshipLevel();
 
@@ -118,22 +110,17 @@ public final class Int32RepeatingIngestNode extends ColumnIngestNodeBase<Int32Fa
         this.currentEntryDefinitionLevel = 0;
         this.currentEntryRepetitionLevel = 0;
         this.currentValue = -1;
-
       }
-
     } while (currentEntryRepetitionLevel > 0);
 
-    // Close out the list:
     if (numberOfItemsInList > 0) {
       ingestBuffer[listHeaderIndex] = numberOfItemsInList;
     }
 
-    // If this node reports schema:
     if (isSchemaReportingNode) {
       parent.finishRow();
     }
 
-    // Increment the row number:
     currentRowNumber++;
   }
 

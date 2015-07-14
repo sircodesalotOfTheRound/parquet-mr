@@ -289,6 +289,41 @@ public class TestVariableSchemas {
     }
   }
 
+  public static class LongListSchema extends WriteTools.TestableParquetWriteContext {
+    private static MessageType SCHEMA = new MessageType("group_repeat",
+      new PrimitiveType(REPEATED, INT32, "value"));
+
+    public LongListSchema(ParquetConfiguration configuration) {
+      super(SCHEMA, configuration);
+    }
+
+    @Override
+    public void write(ParquetWriter<Group> writer) throws IOException {
+      for (int index = 0; index < TOTAL_ROWS % 100; index++) {
+        Group instance = new SimpleGroup(SCHEMA);
+
+        for (int repeat = 0; repeat < 1000; repeat++) {
+          instance.append("value", index + repeat);
+        }
+
+        writer.write(instance);
+      }
+    }
+
+    public void test() {
+      Integer index = 0;
+
+      for (Cursor cursor : Parqour.query(TestTools.TEST_FILE_PATH)) {
+        int repeat = 0;
+        for (int value : cursor.i32Iter("value")) {
+          assertEquals(index + repeat, value);
+          repeat++;
+        }
+        index++;
+      }
+    }
+  }
+
   /*private final GroupType COUNTING_SCHEMA = new GroupType(REQUIRED, "multipliers",
     new PrimitiveType(REQUIRED, INT32, "one"),
     /*new PrimitiveType(OPTIONAL, INT32, "two"),
@@ -366,6 +401,10 @@ public class TestVariableSchemas {
     WriteTools.generateDataAndTest(1, GroupRepetitionSchema.class);
   }
 
+  @Test
+  public void testLongListSchema() throws Exception {
+    WriteTools.generateDataAndTest(1, LongListSchema.class);
+  }
 
 /*
       private final GroupType COUNTING_SCHEMA = new GroupType(REQUIRED, "multipliers",
