@@ -1,5 +1,6 @@
 package org.apache.parquet.parqour.ingest.paging;
 
+import org.apache.parquet.column.page.PageReadStore;
 import org.apache.parquet.parqour.exceptions.DataIngestException;
 import org.apache.parquet.parqour.ingest.schema.SchemaInfo;
 import org.apache.parquet.column.ColumnDescriptor;
@@ -42,8 +43,9 @@ public class DiskInterfaceManager {
       HashMap<ColumnDescriptor, LinkedList<RowGroup>> pageStoreByColumnMap
         = new HashMap<ColumnDescriptor, LinkedList<RowGroup>>();
 
-      RowGroup group = new RowGroup(diskReader.readNextRowGroup());
+      PageReadStore pageReadStore = diskReader.readNextRowGroup();
       for (ColumnDescriptor column : schemaInfo.columnDescriptors()) {
+        RowGroup group = new RowGroup(column, pageReadStore);
         LinkedList<RowGroup> pageList = new LinkedList<RowGroup>();
         pageList.add(group);
 
@@ -63,7 +65,7 @@ public class DiskInterfaceManager {
 
   public DataPageDecorator getNextPageForColumn(DataPageDecorator previousPage) {
     ColumnDescriptor columnDescriptor = previousPage.columnDescriptor();
-    return fastForwardToPageContainingRow(columnDescriptor, previousPage.finalRowNumber() + 1, previousPage.finalRowNumber() + 1);
+    return fastForwardToPageContainingRow(columnDescriptor, previousPage.finalEntryNumber() + 1, previousPage.finalEntryNumber() + 1);
   }
 
   private DataPageDecorator fastForwardToPageContainingRow(ColumnDescriptor column, int startingRowNumber, int rowNumber) {
@@ -74,21 +76,26 @@ public class DiskInterfaceManager {
         addRowGroupToAllColumns();
       }
 
-      RowGroup rowGroup = pageList.removeFirst();
-      PageReader pageReader = rowGroup.readPageForColumn(column);
-      onePastLastRowOnPage += pageReader.getTotalValueCount();
+      RowGroup rowGroup = pageList.getFirst();
+      PagePair pagePair = rowGroup.getNextPage();
+      onePastLastRowOnPage += pagePair.totalItems();
+
+      // If this row group is out of pages, then remove it.
+      if (!rowGroup.hasMorePages()) {
+        pageList.removeFirst();
+      }
 
       if (rowNumber < onePastLastRowOnPage) {
-        DictionaryPage dictionaryPage = pageReader.readDictionaryPage();
-        return new DataPageDecorator(pageReader.readPage(), dictionaryPage, column, startingRowNumber);
+        return new DataPageDecorator(pagePair.page(), pagePair.dictionaryPage(), column, startingRowNumber);
       }
     }
   }
 
   private void addRowGroupToAllColumns() {
     try {
-      RowGroup group = new RowGroup(this.diskReader.readNextRowGroup());
+      PageReadStore pageReadStore = this.diskReader.readNextRowGroup();
       for (ColumnDescriptor column : pageStoresByColumn.keySet()) {
+        RowGroup group = new RowGroup(column, pageReadStore);
         pageStoresByColumn.get(column).addLast(group);
       }
     } catch (IOException ex) {

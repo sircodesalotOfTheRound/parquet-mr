@@ -28,7 +28,7 @@ public class DataPageDecorator {
   public byte[] data() { return this.metadata.data(); }
   public DictionaryPage dictionaryPage() { return this.metadata.dictionaryPage(); }
   public int startingEntryNumber() { return this.metadata.startingEntryNumber(); }
-  public int finalRowNumber() { return this.metadata.finalEntryNumber(); }
+  public int finalEntryNumber() { return this.metadata.finalEntryNumber(); }
   public boolean containsRow(int rowNumber) { return this.metadata.entryNumber(rowNumber); }
   public DataPageMetadata metadata() { return this.metadata; }
 }
