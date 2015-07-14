@@ -102,10 +102,9 @@ public abstract class AggregatingIngestNode extends IngestNode {
       aggregate = new GroupAggregateCursor(name, childColumnCount, ingestBufferLength);
     }
 
-    int childIndex = 0;
     for (IngestNode child : this.children) {
       // TODO: Write expansion code.
-      aggregate.setResultSetForChildIndex(child.columnIndex(), schemaLinks[childIndex++]);
+      aggregate.setResultSetForChildIndex(child.columnIndex(), schemaLinks[child.columnIndex()]);
       AdvanceableCursor childCursor = child.onLinkToParent(this);
       aggregate.setChildCursor(child.columnIndex(), childCursor);
     }

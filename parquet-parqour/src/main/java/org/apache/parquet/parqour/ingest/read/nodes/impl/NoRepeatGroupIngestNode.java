@@ -26,11 +26,11 @@ public final class NoRepeatGroupIngestNode extends AggregatingIngestNode {
     this.currentEntryDefinitionLevel = child.currentEntryDefinitionLevel();
     this.currentLinkSiteIndex = ++relationshipLinkWriteIndex;
 
-    Integer[] schemaLinks = this.collectAggregate().getlinksForChild(child.columnIndex());
+    int childColumnIndex = child.columnIndex();
     if (currentEntryDefinitionLevel >= child.nodeDefinitionLevel()) {
-      schemaLinks[relationshipLinkWriteIndex] = child.currentLinkSiteIndex();
+      schemaLinks[childColumnIndex][relationshipLinkWriteIndex] = child.currentLinkSiteIndex();
     } else {
-      schemaLinks[relationshipLinkWriteIndex] = null;
+      schemaLinks[childColumnIndex][relationshipLinkWriteIndex] = null;
     }
 
     // If we require a link from the parent:

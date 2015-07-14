@@ -38,11 +38,10 @@ public final class RepeatingGroupIngestNode extends AggregatingIngestNode {
     boolean childLinkIsDefined = currentEntryDefinitionLevel >= child.nodeDefinitionLevel();
     boolean requiresNewList = currentEntryRepetitionLevel < repetitionLevelAtThisNode;
 
-    Integer[] schemaLinks = this.collectAggregate().getlinksForChild(child.columnIndex());
-
+    int childColumnIndex = child.columnIndex();
     if (childLinkIsDefined && requiresNewList) {
       if (numberOfItemsInList > 0) {
-        schemaLinks[listHeaderIndex] = numberOfItemsInList;
+        schemaLinks[childColumnIndex][listHeaderIndex] = numberOfItemsInList;
         numberOfItemsInList = 0;
       }
 
@@ -50,10 +49,10 @@ public final class RepeatingGroupIngestNode extends AggregatingIngestNode {
     }
 
     if (childLinkIsDefined) {
-      schemaLinks[++relationshipLinkWriteIndex] = child.currentLinkSiteIndex();
+      schemaLinks[childColumnIndex][++relationshipLinkWriteIndex] = child.currentLinkSiteIndex();
       this.numberOfItemsInList++;
     } else {
-      schemaLinks[++relationshipLinkWriteIndex] = null;
+      schemaLinks[childColumnIndex][++relationshipLinkWriteIndex] = null;
     }
 
     this.currentLinkSiteIndex = listHeaderIndex;
