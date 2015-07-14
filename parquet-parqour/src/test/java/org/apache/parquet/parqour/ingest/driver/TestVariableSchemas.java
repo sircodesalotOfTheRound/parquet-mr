@@ -254,6 +254,44 @@ public class TestVariableSchemas {
     }
   }
 
+  public static class GroupRepetitionSchema extends WriteTools.TestableParquetWriteContext {
+    private static MessageType SCHEMA = new MessageType("group_repeat",
+      new GroupType(REPEATED, "group-list",
+        new PrimitiveType(REQUIRED, INT32, "value")));
+
+    public GroupRepetitionSchema(ParquetConfiguration configuration) {
+      super(SCHEMA, configuration);
+    }
+
+    @Override
+    public void write(ParquetWriter<Group> writer) throws IOException {
+      for (int index = 0; index < TOTAL_ROWS; index++) {
+        Group instance = new SimpleGroup(SCHEMA);
+
+        for (int repeat = 0; repeat < (index % 5); repeat++) {
+          Group group = instance.addGroup("group-list");
+          group.add("value", index + repeat);
+        }
+
+        writer.write(instance);
+      }
+    }
+
+    public void test() {
+      Integer index = 0;
+
+      for (Cursor cursor : Parqour.query(TestTools.TEST_FILE_PATH)) {
+        int repeat = 0;
+        for (Cursor group : cursor.fieldIter("group-list")) {
+          assertEquals(index + repeat, (int)group.i32("value"));
+          repeat++;
+        }
+        assertEquals((index % 5), repeat);
+        index++;
+      }
+    }
+  }
+
   /*private final GroupType COUNTING_SCHEMA = new GroupType(REQUIRED, "multipliers",
     new PrimitiveType(REQUIRED, INT32, "one"),
     /*new PrimitiveType(OPTIONAL, INT32, "two"),
@@ -325,6 +363,12 @@ public class TestVariableSchemas {
   public void testSingleRepeatSchema() throws Exception {
     WriteTools.generateDataAndTest(1, SingleRepeatColumnSchema.class);
   }
+
+  @Test
+  public void testGroupRepetitionSchema() throws Exception {
+    WriteTools.generateDataAndTest(1, GroupRepetitionSchema.class);
+  }
+
 
 /*
       private final GroupType COUNTING_SCHEMA = new GroupType(REQUIRED, "multipliers",

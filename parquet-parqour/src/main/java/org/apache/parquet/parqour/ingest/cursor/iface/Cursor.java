@@ -21,4 +21,5 @@ public interface Cursor {
   RollableRecordSet<Integer> i32Iter(String path);
 
   RecordSet<Cursor> fieldIter(int index);
+  RecordSet<Cursor> fieldIter(String path);
 }

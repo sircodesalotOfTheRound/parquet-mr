@@ -1,7 +1,7 @@
 package org.apache.parquet.parqour.ingest.read.nodes.impl.i32;
 
 import org.apache.parquet.column.ColumnDescriptor;
-import org.apache.parquet.parqour.ingest.cursor.iterable.Int32IterableCursor;
+import org.apache.parquet.parqour.ingest.cursor.iterable.i32.Int32IterableCursor;
 import org.apache.parquet.parqour.ingest.cursor.iface.AdvanceableCursor;
 import org.apache.parquet.parqour.ingest.ffreader.interfaces.Int32FastForwardReader;
 import org.apache.parquet.parqour.ingest.paging.DiskInterfaceManager;
@@ -38,8 +38,7 @@ public final class Int32RepeatingIngestNode extends ColumnIngestNodeBase<Int32Fa
   }
 
   @Override
-  protected AdvanceableCursor onLinkToParent(AggregatingIngestNode parentNode, Integer[] relationships) {
-    this.schemaLinksFromParentToChild = relationships;
+  protected AdvanceableCursor onLinkToParent(AggregatingIngestNode parentNode) {
     return cursor;
   }
 
@@ -79,16 +78,7 @@ public final class Int32RepeatingIngestNode extends ColumnIngestNodeBase<Int32Fa
       }
 
       if (requiresSchemaLinkFromParent) {
-        if (isDefined) {
-          schemaLinksFromParentToChild[++relationshipLinkWriteIndex] = listHeaderIndex;
-        } else {
-          schemaLinksFromParentToChild[++relationshipLinkWriteIndex] = null;
-        }
-
-        // Continue upstream if this node is schema-defining.
-        if (isSchemaReportingNode) {
-          parent.setSchemaLink(rowNumber, currentEntryRepetitionLevel, currentEntryDefinitionLevel, writeIndex);
-        }
+        parent.linkSchema(this);
       }
 
       // If:
@@ -124,7 +114,7 @@ public final class Int32RepeatingIngestNode extends ColumnIngestNodeBase<Int32Fa
 
     // If this node reports schema:
     if (isSchemaReportingNode) {
-      parent.finishRow(writeIndex);
+      parent.finishRow();
     }
 
     // Increment the row number:

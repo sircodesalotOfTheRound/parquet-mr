@@ -58,7 +58,7 @@ public class TestIngestNodeInfo {
     }
 
     @Override
-    protected AdvanceableCursor onLinkToParent(AggregatingIngestNode parentNode, Integer[] relationships) {
+    protected AdvanceableCursor onLinkToParent(AggregatingIngestNode parentNode) {
       return mock(AdvanceableCursor.class);
     }
   }

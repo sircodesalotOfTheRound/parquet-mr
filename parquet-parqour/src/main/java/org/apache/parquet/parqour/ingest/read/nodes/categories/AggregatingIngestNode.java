@@ -2,10 +2,10 @@ package org.apache.parquet.parqour.ingest.read.nodes.categories;
 
 import org.apache.parquet.parqour.ingest.cursor.GroupAggregateCursor;
 import org.apache.parquet.parqour.ingest.cursor.iface.AdvanceableCursor;
+import org.apache.parquet.parqour.ingest.cursor.iterable.aggregation.GroupAggregateIterableCursor;
 import org.apache.parquet.parqour.ingest.paging.DiskInterfaceManager;
 import org.apache.parquet.parqour.ingest.read.nodes.IngestNodeGenerator;
 import org.apache.parquet.parqour.ingest.read.nodes.IngestNodeSet;
-import org.apache.parquet.parqour.ingest.read.nodes.impl.GroupIngestNode;
 import org.apache.parquet.parqour.ingest.schema.SchemaInfo;
 import org.apache.parquet.schema.GroupType;
 import org.apache.parquet.schema.PrimitiveType;
@@ -18,7 +18,6 @@ import java.util.List;
  * Created by sircodesalot on 6/4/15.
  */
 public abstract class AggregatingIngestNode extends IngestNode {
-  private static final int SCHEMA_DEFINING_CHILD = 0;
   private static final String EMPTY_PATH = "";
 
   private final String path;
@@ -72,12 +71,10 @@ public abstract class AggregatingIngestNode extends IngestNode {
 
         children.add(ingestNodeBase);
       } else {
-        children.add(new GroupIngestNode(schemaInfo,
-          this,
-          childPath,
-          (GroupType) child,
-          diskInterfaceManager,
-          childColumnIndex));
+        AggregatingIngestNode aggregationNode = IngestNodeGenerator.generateAggregationNode(schemaInfo,
+          this, childPath, (GroupType) child, diskInterfaceManager, childColumnIndex);
+
+        children.add(aggregationNode);
       }
     }
 
@@ -85,14 +82,21 @@ public abstract class AggregatingIngestNode extends IngestNode {
   }
 
   private GroupAggregateCursor generateAggregateCursor(int childColumnCount) {
-    GroupAggregateCursor aggregate = new GroupAggregateCursor(name, childColumnCount, 1000);
+    GroupAggregateCursor aggregate;
+    if (this.hasParent && this.repetitionType == Type.Repetition.REPEATED) {
+      // The root node is a special case because it always has a 'repeat' even though we
+      // don't treat it as though it does.
+      aggregate = new GroupAggregateIterableCursor(name, childColumnCount, 1000);
+    }  else {
+      aggregate = new GroupAggregateCursor(name, childColumnCount, 1000);
+    }
+
     for (IngestNode child : this.children) {
 
       // TODO: Write expansion code.
-      Integer[] entries = new Integer[10000];
-      aggregate.setResultSetForChildIndex(child.childColumnIndex(), entries);
-      AdvanceableCursor childCursor = child.onLinkToParent(this, entries);
-      aggregate.setChildCursor(child.childColumnIndex(), childCursor);
+      aggregate.setResultSetForChildIndex(child.columnIndex(), new Integer[1000]);
+      AdvanceableCursor childCursor = child.onLinkToParent(this);
+      aggregate.setChildCursor(child.columnIndex(), childCursor);
     }
 
     return aggregate;
@@ -108,7 +112,7 @@ public abstract class AggregatingIngestNode extends IngestNode {
     // If all results are available and we're not at the root, then report
     // the results upstream.
     if (parent != null && this.aggregate.allResultsReported()) {
-      parent.setResultsReported(thisChildColumnIndex, rowNumber);
+      parent.setResultsReported(columnIndex, rowNumber);
     }
   }
 
@@ -128,8 +132,12 @@ public abstract class AggregatingIngestNode extends IngestNode {
   // entry is not part of the new list. If the entry has a lower DL, than specified by the entry, this means that the item
   // is not defined, and therefore should be connected by using a 'null'  link. Everything in the interval between RL and DL
   // forms the content of the new list.
-  public final void setSchemaLink(int rowNumber, int repetitionLevel, int definitionLevel, int childLinkIndex) {
-    if (currentRowNumber != rowNumber) {
+  public abstract void linkSchema(IngestNode child);
+  public abstract void finishRow();
+  public abstract int determineWriteIndexForRelationshipList(int definitionLevel, int repetitionLevel, int childIndex, boolean childIsDefined);
+  public abstract void endSchemaRepetitionList();
+
+    /*if (currentRowNumber != rowNumber) {
       relationshipLinkWriteIndex = -1;
       currentRowNumber = rowNumber;
     }
@@ -149,7 +157,6 @@ public abstract class AggregatingIngestNode extends IngestNode {
       }
     }
   }
-
   public void finishRow(int childLinkIndex) {
     // If this node reports schema, then continue upstream:
     if (isSchemaReportingNode) {
@@ -157,11 +164,19 @@ public abstract class AggregatingIngestNode extends IngestNode {
     }
   }
 
+  public void defineNewSchemaRepetition() {
+
+  }
+
+  public void endSchemaRepetition() {
+
+  }
+  */
+
   public String path() { return this.path; }
 
   @Override
-  protected AdvanceableCursor onLinkToParent(AggregatingIngestNode parentNode, Integer[] relationships) {
-    this.schemaLinksFromParentToChild = relationships;
+  protected AdvanceableCursor onLinkToParent(AggregatingIngestNode parentNode) {
     return aggregate;
   }
 

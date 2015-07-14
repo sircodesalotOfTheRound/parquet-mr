@@ -38,16 +38,14 @@ public final class Int32NoRepeatIngestNode extends ColumnIngestNodeBase<Int32Fas
   }
 
   @Override
-  protected AdvanceableCursor onLinkToParent(AggregatingIngestNode parentNode, Integer[] relationships) {
-    this.schemaLinksFromParentToChild = relationships;
+  protected AdvanceableCursor onLinkToParent(AggregatingIngestNode parentNode) {
     return cursor;
   }
 
   // Heavily inlined for performance.
   @Override
   public void read(int rowNumber) {
-    int writeIndex = -1;
-    this.relationshipLinkWriteIndex = -1;
+    this.currentLinkSiteIndex = -1;
 
     // Repeat until we reach a node with repetitionLevel-0 (new row) or EOF.
     do {
@@ -58,24 +56,14 @@ public final class Int32NoRepeatIngestNode extends ColumnIngestNodeBase<Int32Fas
 
       // If this node is defined:
       if (currentEntryDefinitionLevel >= definitionLevelAtThisNode) {
-        rowVector[++writeIndex] = currentValue;
+        rowVector[++currentLinkSiteIndex] = currentValue;
       } else {
-        rowVector[++writeIndex] = null;
+        rowVector[++currentLinkSiteIndex] = null;
       }
 
       // If this node requires linking to it's parent:
       if (currentEntryRepetitionLevel <= parentDefinitionLevel) {
-        // If this node is defined:
-        if (currentEntryDefinitionLevel >= definitionLevelAtThisNode) {
-          schemaLinksFromParentToChild[++relationshipLinkWriteIndex] = writeIndex;
-        } else {
-          schemaLinksFromParentToChild[++relationshipLinkWriteIndex] = null;
-        }
-
-        // Continue upstream if this node is schema-defining.
-        if (isSchemaReportingNode) {
-          parent.setSchemaLink(rowNumber, currentEntryRepetitionLevel, currentEntryDefinitionLevel, writeIndex);
-        }
+        parent.linkSchema(this);
       }
 
       // If:
@@ -96,8 +84,7 @@ public final class Int32NoRepeatIngestNode extends ColumnIngestNodeBase<Int32Fas
         super.moveToNextPage();
 
       } else {
-        this.currentEntryDefinitionLevel = 0;
-        this.currentEntryRepetitionLevel = 0;
+        this.currentEntryDefinitionLevel = 0;this.currentEntryRepetitionLevel = 0;
         this.currentValue = -1;
 
       }
@@ -106,7 +93,7 @@ public final class Int32NoRepeatIngestNode extends ColumnIngestNodeBase<Int32Fas
 
     // If this node reports schema:
     if (isSchemaReportingNode) {
-      parent.finishRow(writeIndex);
+      parent.finishRow();
     }
 
     // Increment the row number:

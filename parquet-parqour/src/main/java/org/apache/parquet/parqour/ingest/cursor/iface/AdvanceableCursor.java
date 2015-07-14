@@ -80,11 +80,20 @@ public abstract class AdvanceableCursor implements Cursor {
   }
 
   @Override
+  public RecordSet<Cursor> fieldIter(String path) {
+    throw new DataIngestException("Invalid path");
+  }
+
+  @Override
   public RecordSet<Cursor> fieldIter(int index) {
     throw new DataIngestException("Invalid path");
   }
 
   public RecordSet<Cursor> fieldIter() {
+    throw new DataIngestException("Invalid path");
+  }
+
+  public RecordSet<Cursor> fieldStartIteration(int startOffset) {
     throw new DataIngestException("Invalid path");
   }
 

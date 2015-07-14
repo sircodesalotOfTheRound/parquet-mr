@@ -1,4 +1,4 @@
-package org.apache.parquet.parqour.ingest.cursor.iterable;
+package org.apache.parquet.parqour.ingest.cursor.iterable.i32;
 
 import org.apache.commons.collections.ResettableIterator;
 import org.apache.parquet.parqour.ingest.cursor.iterators.ResettableCursorIterator;

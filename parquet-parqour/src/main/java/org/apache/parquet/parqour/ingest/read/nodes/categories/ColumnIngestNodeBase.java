@@ -5,7 +5,6 @@ import org.apache.parquet.parqour.ingest.ffreader.interfaces.FastForwardReader;
 import org.apache.parquet.parqour.ingest.ffreader.interfaces.RelationshipLevelFastForwardReader;
 import org.apache.parquet.parqour.ingest.paging.DataPageDecorator;
 import org.apache.parquet.parqour.ingest.paging.DiskInterfaceManager;
-import org.apache.parquet.parqour.ingest.read.nodes.impl.i32.Int32NoRepeatIngestNode;
 import org.apache.parquet.parqour.ingest.schema.SchemaInfo;
 import org.apache.parquet.column.ColumnDescriptor;
 import org.apache.parquet.hadoop.metadata.ColumnPath;
@@ -19,8 +18,6 @@ public abstract class ColumnIngestNodeBase<TFFReaderType extends FastForwardRead
   protected final DiskInterfaceManager diskInterfaceManager;
   protected DataPageDecorator dataPage;
 
-  protected int currentEntryDefinitionLevel;
-  protected int currentEntryRepetitionLevel;
 
   protected RelationshipLevelFastForwardReader definitionLevelReader;
   protected RelationshipLevelFastForwardReader repetitionLevelReader;
@@ -156,13 +153,9 @@ public abstract class ColumnIngestNodeBase<TFFReaderType extends FastForwardRead
     currentEntryOnPage += 1;
   }
 
-  @Deprecated
-  public void createRelationshipLink(int resultIndex) {
-    //parent.onSchemaChanged(thisChildColumnIndex, currentEntryDefinitionLevel, currentEntryRepetitionLevel, resultIndex);
-  }
 
   protected void reportResults(int rowNumber) {
-    parent.setResultsReported(rowNumber, this.thisChildColumnIndex);
+    parent.setResultsReported(rowNumber, this.columnIndex);
   }
 
   public abstract void read(int rowNumber);

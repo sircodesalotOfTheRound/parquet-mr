@@ -8,13 +8,6 @@ import org.apache.parquet.schema.Type;
  * Created by sircodesalot on 6/2/15.
  */
 public abstract class IngestNode {
-  protected static final int NO_RELATIONSHIP = -1;
-
-  protected static final int NEITHER_DEFINITION_NOR_REPETITION = 0;
-  protected static final int DEFINITION_ONLY = 1;
-  protected static final int REPETITION_ONLY = 2;
-  protected static final int BOTH_DEFINITION_AND_REPETITION = 3;
-
   protected final SchemaInfo schemaInfo;
 
   protected final AggregatingIngestNode parent;
@@ -27,7 +20,7 @@ public abstract class IngestNode {
   protected final String path;
   protected final String name;
   protected final IngestNodeCategory category;
-  protected final int thisChildColumnIndex;
+  protected final int columnIndex;
   protected final boolean canPerformTrueFastForwards;
 
   protected final long totalRowCount;
@@ -35,12 +28,15 @@ public abstract class IngestNode {
   protected final int parentRepetitionLevel;
   protected final int parentDefinitionLevel;
   protected final boolean hasParent;
+  protected final boolean parentIsRepeating;
 
   protected long currentRowNumber = 0;
 
   protected int relationshipLinkWriteIndex = -1;
-  protected Integer[] schemaLinksFromParentToChild;
 
+  protected int currentEntryDefinitionLevel;
+  protected int currentEntryRepetitionLevel;
+  protected int currentLinkSiteIndex;
 
   public IngestNode(SchemaInfo schemaInfo, AggregatingIngestNode parent, String path, Type schemaNode, IngestNodeCategory category, int childNodeIndex) {
     this.schemaInfo = schemaInfo;
@@ -49,7 +45,7 @@ public abstract class IngestNode {
     this.name = schemaNode.getName();
     this.category = category;
     this.schemaNode = schemaNode;
-    this.thisChildColumnIndex = childNodeIndex;
+    this.columnIndex = childNodeIndex;
     this.hasParent = determineHasParent();
     this.totalRowCount = schemaInfo.totalRowCount();
     this.repetitionType = schemaNode.getRepetition();
@@ -59,6 +55,7 @@ public abstract class IngestNode {
     this.isSchemaReportingNode = determineIsSchemaReportingNode(childNodeIndex);
     this.parentRepetitionLevel = computeParentRepetitionLevel();
     this.parentDefinitionLevel = computeParentDefinitionLevel();
+    this.parentIsRepeating = determineIfParentIsRepeating();
   }
 
   // By definition, the schema beyond the first common parent should be equal. For example, if there are two columns, 'A' and 'B',
@@ -104,10 +101,20 @@ public abstract class IngestNode {
     return this.parent != null;
   }
 
-  protected abstract AdvanceableCursor onLinkToParent(AggregatingIngestNode parentNode, Integer[] relationships);
+  public boolean determineIfParentIsRepeating() {
+    // The root node is a special case. It is always listed as 'REPEAT' even though
+    // we don't treat it as though it does.
+    if (this.hasParent && this.parent.parent != null) {
+      return this.parent.repetitionType == Type.Repetition.REPEATED;
+    }
+
+    return false;
+  }
+
+  protected abstract AdvanceableCursor onLinkToParent(AggregatingIngestNode parentNode);
 
   public String name() { return this.name; }
-  public int childColumnIndex() { return this.thisChildColumnIndex; }
+  public int columnIndex() { return this.columnIndex; }
   public Type schemaNode() { return this.schemaNode; }
   public AggregatingIngestNode parent() { return this.parent; }
   public boolean hasParent() { return this.hasParent; }
@@ -117,6 +124,11 @@ public abstract class IngestNode {
   public IngestNodeCategory category() { return this.category; }
   public Type.Repetition repetitionType() { return schemaNode.getRepetition(); }
   public int repetitionLevel() { return this.repetitionLevelAtThisNode; }
-  public int maxDefinitionLevel() { return this.definitionLevelAtThisNode; }
+  public int nodeDefinitionLevel() { return this.definitionLevelAtThisNode; }
 
+  public final int currentEntryDefinitionLevel() { return this.currentEntryDefinitionLevel; }
+  public final int currentEntryRepetitionLevel() { return this.currentEntryRepetitionLevel; }
+  public final boolean isSchemaReportingNode() { return this.isSchemaReportingNode; }
+  public final int currentLinkSiteIndex() { return this.currentLinkSiteIndex; }
+  public final long currentRowNumber() { return this.currentRowNumber; }
 }

@@ -1,10 +1,11 @@
-package org.apache.parquet.parqour.ingest.cursor;
+package org.apache.parquet.parqour.ingest.cursor.iterable.aggregation;
 
 import org.apache.parquet.parqour.exceptions.DataIngestException;
+import org.apache.parquet.parqour.ingest.cursor.GroupAggregateCursor;
 import org.apache.parquet.parqour.ingest.cursor.iface.AdvanceableCursor;
 import org.apache.parquet.parqour.ingest.cursor.iface.Cursor;
-import org.apache.parquet.parqour.ingest.cursor.iterators.RollableRecordSet;
 import org.apache.parquet.parqour.ingest.cursor.iterators.RecordSet;
+import org.apache.parquet.parqour.ingest.cursor.iterators.RollableRecordSet;
 import org.apache.parquet.parqour.ingest.cursor.lookup.CursorHash;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
@@ -26,7 +27,9 @@ import java.util.Map;
  * This improves performance because we can pre-allocate lots of memory, and then just virtually
  * connect the results without the overhead of many small allocations + collections.
  */
-public class GroupAggregateCursor extends AdvanceableCursor implements Iterable<Cursor> {
+public class GroupAggregateIterableCursor extends GroupAggregateCursor implements Iterable<Cursor> {
+  public static final int NO_RELATIONSHIP = -1;
+
   private final int rowCount;
   private final int childColumnCount;
 
@@ -42,8 +45,8 @@ public class GroupAggregateCursor extends AdvanceableCursor implements Iterable<
 
   private final Map<String, Integer> cursorIndexes = new HashMap<String, Integer>();
 
-  public GroupAggregateCursor(String name, int childColumnCount, int totalRowCount) {
-    super(name);
+  public GroupAggregateIterableCursor(String name, int childColumnCount, int totalRowCount) {
+    super(name, childColumnCount, totalRowCount);
 
     this.childColumnCount = childColumnCount;
     this.rowCount = totalRowCount;
@@ -92,6 +95,7 @@ public class GroupAggregateCursor extends AdvanceableCursor implements Iterable<
     }
   }
 
+  @Deprecated
   public void setResultSetForChildIndex(int childColumnIndex, Integer[] items) {
     this.childNodeLinks[childColumnIndex] = items;
   }
@@ -159,6 +163,7 @@ public class GroupAggregateCursor extends AdvanceableCursor implements Iterable<
     return childCursorsByIndex[nodeIndex].i32Iter();
   }
 
+  @Override
   public RecordSet<Cursor> fieldIter(int nodeIndex) {
     int start = childNodeLinks[nodeIndex][this.start];
     int end = childNodeLinks[nodeIndex][this.start + 1];
@@ -180,41 +185,17 @@ public class GroupAggregateCursor extends AdvanceableCursor implements Iterable<
   }
 
   @Override
-  public Iterator<Cursor> iterator() {
-    return new FieldIterator(this, start, end);
+  public RecordSet<Cursor> fieldStartIteration(int startOffset) {
+    this.iterator = new GroupCursorIterator(getlinksForChild(0));
+    this.iterator.reset(startOffset);
+    return new RecordSet<Cursor>(this);
   }
 
-  private static class FieldIterator implements Iterator<Cursor> {
-    private final AdvanceableCursor cursor;
-    private final int start;
-    private final int end;
+  private GroupCursorIterator iterator;
 
-    private int index;
-
-    public FieldIterator(AdvanceableCursor cursor, int start, int end) {
-      this.cursor = cursor;
-      this.start = start;
-      this.end = end;
-
-      this.index = start;
-    }
-
-    @Override
-    public boolean hasNext() {
-      return index < end;
-    }
-
-    @Override
-    public Cursor next() {
-      cursor.setRange(index, index + 1);
-      index++;
-      return cursor;
-    }
-
-    @Override
-    public void remove() {
-      throw new NotImplementedException();
-    }
+  @Override
+  public Iterator<Cursor> iterator() {
+    return this.iterator();
   }
 
   @Override

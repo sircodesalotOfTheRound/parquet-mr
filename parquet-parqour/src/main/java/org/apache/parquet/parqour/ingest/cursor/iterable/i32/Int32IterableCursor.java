@@ -1,7 +1,6 @@
-package org.apache.parquet.parqour.ingest.cursor.iterable;
+package org.apache.parquet.parqour.ingest.cursor.iterable.i32;
 
 import org.apache.parquet.parqour.ingest.cursor.iface.AdvanceableCursor;
-import org.apache.parquet.parqour.ingest.cursor.iterators.IteratorReusingRollableRecordset;
 import org.apache.parquet.parqour.ingest.cursor.iterators.RollableRecordSet;
 
 import java.util.Iterator;
