@@ -45,6 +45,8 @@ public final class Int32NoRepeatIngestNode extends ColumnIngestNodeBase<Int32Fas
   // Heavily inlined for performance.
   @Override
   public void read(int rowNumber) {
+    if (currentRowNumber > rowNumber) return;
+
     this.currentLinkSiteIndex = -1;
 
     // Repeat until we reach a node with repetitionLevel-0 (new row) or EOF.

@@ -45,6 +45,8 @@ public final class Int32RepeatingIngestNode extends ColumnIngestNodeBase<Int32Fa
   // Heavily inlined for performance.
   @Override
   public void read(int rowNumber) {
+    if (currentRowNumber > rowNumber) return;
+
     int writeIndex = -1;
     int listHeaderIndex = -1;
     int numberOfItemsInList = 0;
