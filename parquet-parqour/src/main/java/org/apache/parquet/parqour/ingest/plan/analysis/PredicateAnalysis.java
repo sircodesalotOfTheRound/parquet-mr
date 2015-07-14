@@ -1,11 +1,11 @@
 package org.apache.parquet.parqour.ingest.plan.analysis;
 
+import org.apache.parquet.filter2.predicate.FilterPredicate;
 import org.apache.parquet.parqour.ingest.plan.predicates.ColumnPredicate;
 import org.apache.parquet.parqour.ingest.plan.predicates.builders.ColumnPredicateBuildable;
 import org.apache.parquet.parqour.ingest.plan.predicates.types.ColumnPredicateNodeCategory;
 import org.apache.parquet.parqour.ingest.read.nodes.IngestTree;
 import org.apache.parquet.parqour.ingest.schema.SchemaInfo;
-import org.apache.parquet.filter2.predicate.FilterPredicate;
 
 import java.util.*;
 

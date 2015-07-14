@@ -1,5 +1,10 @@
 package org.apache.parquet.parqour.ffreaders;
 
+import org.apache.parquet.column.ColumnDescriptor;
+import org.apache.parquet.column.ParquetProperties;
+import org.apache.parquet.example.data.Group;
+import org.apache.parquet.example.data.simple.SimpleGroup;
+import org.apache.parquet.hadoop.ParquetWriter;
 import org.apache.parquet.parqour.ingest.ffreader.interfaces.Int64FastForwardReader;
 import org.apache.parquet.parqour.ingest.ffreader.plain.PlainInt64FastForwardReader;
 import org.apache.parquet.parqour.ingest.paging.DataPageDecorator;
@@ -9,23 +14,15 @@ import org.apache.parquet.parqour.testtools.ParquetConfiguration;
 import org.apache.parquet.parqour.testtools.TestTools;
 import org.apache.parquet.parqour.testtools.UsesPersistence;
 import org.apache.parquet.parqour.testtools.WriteTools;
-import org.junit.Test;
-import org.apache.parquet.column.ColumnDescriptor;
-import org.apache.parquet.column.ParquetProperties;
-import org.apache.parquet.column.ValuesType;
-import org.apache.parquet.column.values.ValuesReader;
-import org.apache.parquet.example.data.Group;
-import org.apache.parquet.example.data.simple.SimpleGroup;
-import org.apache.parquet.hadoop.ParquetWriter;
 import org.apache.parquet.schema.GroupType;
 import org.apache.parquet.schema.PrimitiveType;
+import org.junit.Test;
 
 import java.io.IOException;
 
-import static org.junit.Assert.assertEquals;
-import static org.apache.parquet.schema.PrimitiveType.PrimitiveTypeName.INT32;
 import static org.apache.parquet.schema.PrimitiveType.PrimitiveTypeName.INT64;
 import static org.apache.parquet.schema.Type.Repetition.REQUIRED;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Created by sircodesalot on 6/13/15.

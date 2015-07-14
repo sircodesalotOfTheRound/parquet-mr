@@ -1,13 +1,13 @@
 package org.apache.parquet.parqour.ingest.plan.predicates.builders;
 
 
+import org.apache.parquet.column.ColumnDescriptor;
+import org.apache.parquet.filter2.predicate.Operators;
 import org.apache.parquet.parqour.exceptions.ColumnPredicateBuilderException;
 import org.apache.parquet.parqour.ingest.plan.predicates.ColumnPredicate;
 import org.apache.parquet.parqour.ingest.plan.predicates.leaf.udf.NegatedUserDefinedColumnPredicate;
 import org.apache.parquet.parqour.ingest.plan.predicates.leaf.udf.UserDefinedColumnPredicate;
 import org.apache.parquet.parqour.ingest.read.nodes.IngestTree;
-import org.apache.parquet.column.ColumnDescriptor;
-import org.apache.parquet.filter2.predicate.Operators;
 
 /**
  * Created by sircodesalot on 6/2/15.

@@ -2,7 +2,6 @@ package org.apache.parquet.parqour.ingest.read.iterator;
 
 import org.apache.parquet.parqour.exceptions.DataIngestException;
 import org.apache.parquet.parqour.ingest.cursor.iface.Cursor;
-import org.apache.parquet.parqour.ingest.read.driver.ParqourPredicateReadDriver;
 import org.apache.parquet.parqour.ingest.read.driver.ParqourReadDriver;
 import org.apache.parquet.parqour.ingest.read.iterator.filtering.ParqourFilterIterable;
 import org.apache.parquet.parqour.ingest.read.iterator.lamba.Predicate;

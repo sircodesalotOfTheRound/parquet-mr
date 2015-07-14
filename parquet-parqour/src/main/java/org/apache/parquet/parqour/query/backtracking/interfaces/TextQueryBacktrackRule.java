@@ -8,7 +8,7 @@ import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
 import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
 
-public interface ParquelBacktrackRule {
+public interface TextQueryBacktrackRule {
   TextQueryExpressionType launchForTokensOfType();
 
   boolean isMatch(TextQueryExpression parent, TextQueryLexer lexer);

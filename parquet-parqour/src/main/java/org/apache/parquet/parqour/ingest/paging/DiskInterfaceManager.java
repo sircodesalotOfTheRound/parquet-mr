@@ -1,13 +1,11 @@
 package org.apache.parquet.parqour.ingest.paging;
 
-import org.apache.parquet.column.page.PageReadStore;
-import org.apache.parquet.parqour.exceptions.DataIngestException;
-import org.apache.parquet.parqour.ingest.schema.SchemaInfo;
 import org.apache.parquet.column.ColumnDescriptor;
-import org.apache.parquet.column.page.DictionaryPage;
-import org.apache.parquet.column.page.PageReader;
+import org.apache.parquet.column.page.PageReadStore;
 import org.apache.parquet.hadoop.ParquetFileReader;
 import org.apache.parquet.hadoop.metadata.BlockMetaData;
+import org.apache.parquet.parqour.exceptions.DataIngestException;
+import org.apache.parquet.parqour.ingest.schema.SchemaInfo;
 
 import java.io.IOException;
 import java.util.HashMap;

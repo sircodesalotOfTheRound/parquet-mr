@@ -1,9 +1,9 @@
 package org.apache.parquet.parqour.query.expressions.tables;
 
-import org.apache.parquet.parqour.exceptions.ParquelException;
+import org.apache.parquet.parqour.exceptions.TextQueryException;
 import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
-import org.apache.parquet.parqour.query.expressions.pql.TextQueryFullyQualifiedNameExpression;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
+import org.apache.parquet.parqour.query.expressions.pql.TextQueryFullyQualifiedNameExpression;
 import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
 import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
 
@@ -33,9 +33,9 @@ public class TextQueryNamedTableExpression extends TextQueryTableExpression {
 
   private void validateLexing(TextQueryExpression parent, TextQueryLexer lexer) {
     if (!lexer.currentIs(TextQueryExpressionType.IDENTIFIER)) {
-      throw new ParquelException("Named table expressions must read ");
+      throw new TextQueryException("Named table expressions must read ");
     } else if (!parent.is(TextQueryExpressionType.TABLE_SET)) {
-      throw new ParquelException("Parent of ParquelTableExpression must be ParquelTableSetExpression");
+      throw new TextQueryException("Parent of ParquelTableExpression must be ParquelTableSetExpression");
     }
   }
 

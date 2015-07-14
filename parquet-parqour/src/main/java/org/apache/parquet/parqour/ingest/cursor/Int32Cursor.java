@@ -1,7 +1,6 @@
 package org.apache.parquet.parqour.ingest.cursor;
 
 import org.apache.parquet.parqour.ingest.cursor.iface.AdvanceableCursor;
-import org.apache.parquet.parqour.ingest.cursor.iterators.RollableRecordSet;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.Iterator;

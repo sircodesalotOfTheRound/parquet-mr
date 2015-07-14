@@ -1,11 +1,11 @@
 package org.apache.parquet.parqour.ingest.plan.predicates.builders.leaf.sys;
 
+import org.apache.parquet.column.ColumnDescriptor;
 import org.apache.parquet.parqour.ingest.plan.predicates.ColumnPredicate;
 import org.apache.parquet.parqour.ingest.plan.predicates.builders.ColumnPredicateBuildable;
 import org.apache.parquet.parqour.ingest.plan.predicates.leaf.sys.GreaterThanOrEqualsColumnPredicate;
 import org.apache.parquet.parqour.ingest.plan.predicates.leaf.sys.LessThanColumnPredicate;
 import org.apache.parquet.parqour.ingest.read.nodes.IngestTree;
-import org.apache.parquet.column.ColumnDescriptor;
 
 /**
 * Created by sircodesalot on 6/2/15.

@@ -1,14 +1,6 @@
 package org.apache.parquet.parqour.ingest.cursor;
 
-import org.apache.parquet.parqour.ingest.paging.DiskInterfaceManager;
-import org.apache.parquet.parqour.ingest.read.nodes.IngestTree;
-import org.apache.parquet.parqour.ingest.read.nodes.impl.i32.Int32NoRepeatIngestNode;
-import org.apache.parquet.parqour.ingest.read.nodes.impl.RootIngestNode;
-import org.apache.parquet.parqour.ingest.schema.SchemaInfo;
-import org.apache.parquet.parqour.testtools.TestTools;
-import org.apache.parquet.parqour.testtools.WriteTools;
 import org.apache.hadoop.fs.Path;
-import org.junit.Test;
 import org.apache.parquet.column.ParquetProperties;
 import org.apache.parquet.example.data.Group;
 import org.apache.parquet.example.data.simple.SimpleGroup;
@@ -16,8 +8,16 @@ import org.apache.parquet.format.converter.ParquetMetadataConverter;
 import org.apache.parquet.hadoop.ParquetFileReader;
 import org.apache.parquet.hadoop.ParquetWriter;
 import org.apache.parquet.hadoop.metadata.ParquetMetadata;
+import org.apache.parquet.parqour.ingest.paging.DiskInterfaceManager;
+import org.apache.parquet.parqour.ingest.read.nodes.IngestTree;
+import org.apache.parquet.parqour.ingest.read.nodes.impl.RootIngestNode;
+import org.apache.parquet.parqour.ingest.read.nodes.impl.i32.Int32NoRepeatIngestNode;
+import org.apache.parquet.parqour.ingest.schema.SchemaInfo;
+import org.apache.parquet.parqour.testtools.TestTools;
+import org.apache.parquet.parqour.testtools.WriteTools;
 import org.apache.parquet.schema.GroupType;
 import org.apache.parquet.schema.PrimitiveType;
+import org.junit.Test;
 
 import java.io.IOException;
 

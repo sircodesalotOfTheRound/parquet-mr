@@ -1,5 +1,6 @@
 package org.apache.parquet.parqour.ingest.ffreader;
 
+import org.apache.parquet.column.ValuesType;
 import org.apache.parquet.parqour.ingest.ffreader.delta.DeltaByteArrayBinaryFastForwardReader;
 import org.apache.parquet.parqour.ingest.ffreader.delta.DeltaPackedIntegerFastForwardReader;
 import org.apache.parquet.parqour.ingest.ffreader.dictionary.*;
@@ -9,7 +10,6 @@ import org.apache.parquet.parqour.ingest.ffreader.packed.rle.RLEBitPackedHybridF
 import org.apache.parquet.parqour.ingest.ffreader.packed.rle.RLEBooleanFastForwardReader;
 import org.apache.parquet.parqour.ingest.ffreader.plain.*;
 import org.apache.parquet.parqour.ingest.paging.DataPageMetadata;
-import org.apache.parquet.column.ValuesType;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**

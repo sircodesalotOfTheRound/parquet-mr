@@ -1,6 +1,6 @@
 package org.apache.parquet.parqour.query.expressions.tables;
 
-import org.apache.parquet.parqour.exceptions.ParquelException;
+import org.apache.parquet.parqour.exceptions.TextQueryException;
 import org.apache.parquet.parqour.query.collections.TextQueryAppendableCollection;
 import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
@@ -38,7 +38,7 @@ public class TextQueryQuotedTableExpression extends TextQueryTableExpression {
 
   private void validateLexing(TextQueryExpression parent, TextQueryLexer lexer) {
     if (!lexer.currentIs(TextQueryExpressionType.PUNCTUATION, TextQueryPunctuationToken.SINGLE_QUOTE)) {
-      throw new ParquelException("Named table expressions must start with a single quote.");
+      throw new TextQueryException("Named table expressions must start with a single quote.");
     }
   }
 

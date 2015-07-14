@@ -1,6 +1,5 @@
 package org.apache.parquet.parqour.ingest.paging;
 
-import org.apache.parquet.parqour.exceptions.DataIngestException;
 import org.apache.parquet.column.ColumnDescriptor;
 import org.apache.parquet.column.Encoding;
 import org.apache.parquet.column.ValuesType;
@@ -8,6 +7,7 @@ import org.apache.parquet.column.page.DataPage;
 import org.apache.parquet.column.page.DataPageV1;
 import org.apache.parquet.column.page.DataPageV2;
 import org.apache.parquet.column.page.DictionaryPage;
+import org.apache.parquet.parqour.exceptions.DataIngestException;
 import org.apache.parquet.schema.PrimitiveType;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 

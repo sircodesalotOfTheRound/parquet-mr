@@ -1,12 +1,12 @@
 package org.apache.parquet.parqour.ingest.ffreader.dictionary;
 
+import org.apache.parquet.column.ValuesType;
+import org.apache.parquet.column.page.DictionaryPage;
 import org.apache.parquet.parqour.exceptions.DataIngestException;
 import org.apache.parquet.parqour.ingest.ffreader.FastForwardReaderBase;
 import org.apache.parquet.parqour.ingest.ffreader.interfaces.Int32FastForwardReader;
 import org.apache.parquet.parqour.ingest.ffreader.segments.PackedEncodingSegmentReader;
 import org.apache.parquet.parqour.ingest.paging.DataPageMetadata;
-import org.apache.parquet.column.ValuesType;
-import org.apache.parquet.column.page.DictionaryPage;
 
 import java.io.IOException;
 

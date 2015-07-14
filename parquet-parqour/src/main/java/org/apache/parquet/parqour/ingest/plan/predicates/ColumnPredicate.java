@@ -1,14 +1,14 @@
 package org.apache.parquet.parqour.ingest.plan.predicates;
 
+import org.apache.parquet.column.ColumnDescriptor;
+import org.apache.parquet.filter2.predicate.Operators;
+import org.apache.parquet.filter2.predicate.UserDefinedPredicate;
+import org.apache.parquet.hadoop.metadata.ColumnPath;
 import org.apache.parquet.parqour.ingest.plan.predicates.builders.ColumnPredicateBuildable;
 import org.apache.parquet.parqour.ingest.plan.predicates.traversal.TraversalInfo;
 import org.apache.parquet.parqour.ingest.plan.predicates.types.ColumnPredicateNodeCategory;
 import org.apache.parquet.parqour.ingest.plan.predicates.types.ColumnPredicateType;
 import org.apache.parquet.parqour.ingest.read.nodes.IngestTree;
-import org.apache.parquet.column.ColumnDescriptor;
-import org.apache.parquet.filter2.predicate.Operators;
-import org.apache.parquet.filter2.predicate.UserDefinedPredicate;
-import org.apache.parquet.hadoop.metadata.ColumnPath;
 
 /**
  * Created by sircodesalot on 6/2/15.

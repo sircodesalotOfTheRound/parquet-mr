@@ -1,7 +1,7 @@
 package org.apache.parquet.parqour.ingest.ffreader;
 
-import org.apache.parquet.parqour.ingest.paging.DataPageMetadata;
 import org.apache.parquet.column.ValuesType;
+import org.apache.parquet.parqour.ingest.paging.DataPageMetadata;
 
 /**
  * Created by sircodesalot on 6/21/15.

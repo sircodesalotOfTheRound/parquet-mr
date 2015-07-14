@@ -1,16 +1,16 @@
 package org.apache.parquet.parqour.predicates;
 
+import org.apache.parquet.column.ColumnDescriptor;
 import org.apache.parquet.parqour.ingest.plan.predicates.ColumnPredicate;
 import org.apache.parquet.parqour.ingest.plan.predicates.builders.leaf.sys.*;
 import org.apache.parquet.parqour.ingest.plan.predicates.builders.logic.AndColumnPredicateBuilder;
 import org.apache.parquet.parqour.ingest.plan.predicates.builders.logic.OrColumnPredicateBuilder;
 import org.apache.parquet.parqour.ingest.read.nodes.IngestTree;
 import org.apache.parquet.parqour.testtools.TestTools;
-import org.junit.Test;
-import org.apache.parquet.column.ColumnDescriptor;
 import org.apache.parquet.schema.MessageType;
 import org.apache.parquet.schema.PrimitiveType;
 import org.apache.parquet.schema.Type;
+import org.junit.Test;
 
 import java.util.ArrayDeque;
 import java.util.HashSet;

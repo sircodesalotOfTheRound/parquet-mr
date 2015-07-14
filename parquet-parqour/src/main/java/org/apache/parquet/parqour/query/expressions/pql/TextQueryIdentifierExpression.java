@@ -1,11 +1,11 @@
 package org.apache.parquet.parqour.query.expressions.pql;
 
-import org.apache.parquet.parqour.exceptions.ParquelException;
+import org.apache.parquet.parqour.exceptions.TextQueryException;
 import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
 import org.apache.parquet.parqour.query.expressions.categories.ParquelMemberExpression;
+import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
 import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
 import org.apache.parquet.parqour.query.tokens.TextQueryIdentifierToken;
-import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
 import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
 
 /**
@@ -28,7 +28,7 @@ public class TextQueryIdentifierExpression extends TextQueryExpression implement
 
   private TextQueryIdentifierToken readIdentifier(TextQueryLexer lexer) {
     if (!lexer.currentIs(TextQueryExpressionType.IDENTIFIER)) {
-      throw new ParquelException("Identifiers must start with Identifier tokens. Found %s", lexer.current());
+      throw new TextQueryException("Identifiers must start with Identifier tokens. Found %s", lexer.current());
     }
 
     return lexer.readCurrentAndAdvance(TextQueryExpressionType.IDENTIFIER);

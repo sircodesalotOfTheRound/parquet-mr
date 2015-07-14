@@ -2,7 +2,7 @@ package org.apache.parquet.parqour.ingest.read.nodes.categories;
 
 import org.apache.parquet.parqour.ingest.cursor.GroupAggregateCursor;
 import org.apache.parquet.parqour.ingest.cursor.iface.AdvanceableCursor;
-import org.apache.parquet.parqour.ingest.cursor.iterable.aggregation.GroupAggregateIterableCursor;
+import org.apache.parquet.parqour.ingest.cursor.iterable.field.GroupAggregateIterableCursor;
 import org.apache.parquet.parqour.ingest.paging.DiskInterfaceManager;
 import org.apache.parquet.parqour.ingest.read.nodes.IngestNodeGenerator;
 import org.apache.parquet.parqour.ingest.read.nodes.IngestNodeSet;

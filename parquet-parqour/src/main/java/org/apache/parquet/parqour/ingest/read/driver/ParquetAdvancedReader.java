@@ -1,11 +1,11 @@
 package org.apache.parquet.parqour.ingest.read.driver;
 
 
-import org.apache.parquet.parqour.ingest.schema.SchemaInfo;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.parquet.filter2.predicate.FilterPredicate;
 import org.apache.parquet.hadoop.metadata.ParquetMetadata;
+import org.apache.parquet.parqour.ingest.schema.SchemaInfo;
 import org.apache.parquet.schema.GroupType;
 
 /**

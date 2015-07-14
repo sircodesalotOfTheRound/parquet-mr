@@ -1,10 +1,10 @@
 package org.apache.parquet.parqour.query.expressions.pql;
 
 import org.apache.parquet.parqour.ingest.read.iterator.lamba.Predicate;
-import org.apache.parquet.parqour.query.backtracking.ParquelSelectStatementBacktrackRule;
-import org.apache.parquet.parqour.query.backtracking.interfaces.ParquelBacktrackingRuleSet;
-import org.apache.parquet.parqour.query.backtracking.rules.ParquelFromExpressionBacktrackRule;
-import org.apache.parquet.parqour.query.backtracking.rules.ParquelFullyQualifiedNameExpressionBacktrackRule;
+import org.apache.parquet.parqour.query.backtracking.rules.TextQuerySelectStatementBacktrackRule;
+import org.apache.parquet.parqour.query.backtracking.interfaces.TextQueryBacktrackingRuleSet;
+import org.apache.parquet.parqour.query.backtracking.rules.TextQueryFromExpressionBacktrackRule;
+import org.apache.parquet.parqour.query.backtracking.rules.TextQueryFullyQualifiedNameExpressionBacktrackRule;
 import org.apache.parquet.parqour.query.collections.TextQueryAppendableCollection;
 import org.apache.parquet.parqour.query.collections.TextQueryCollection;
 import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
@@ -17,10 +17,10 @@ import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
  */
 public class TextQueryTreeRootExpression extends TextQueryExpression {
   private static final String ROOT = "(ROOT)";
-  private static final ParquelBacktrackingRuleSet<TextQueryExpression> rules = new ParquelBacktrackingRuleSet<TextQueryExpression>()
-    .add(new ParquelFullyQualifiedNameExpressionBacktrackRule())
-    .add(new ParquelSelectStatementBacktrackRule())
-    .add(new ParquelFromExpressionBacktrackRule());
+  private static final TextQueryBacktrackingRuleSet<TextQueryExpression> rules = new TextQueryBacktrackingRuleSet<TextQueryExpression>()
+    .add(new TextQueryFullyQualifiedNameExpressionBacktrackRule())
+    .add(new TextQuerySelectStatementBacktrackRule())
+    .add(new TextQueryFromExpressionBacktrackRule());
 
   private final TextQueryCollection<TextQueryExpression> expressions;
 

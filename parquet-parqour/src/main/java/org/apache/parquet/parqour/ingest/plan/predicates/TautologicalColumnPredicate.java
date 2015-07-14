@@ -1,9 +1,9 @@
 package org.apache.parquet.parqour.ingest.plan.predicates;
 
+import org.apache.parquet.column.ColumnDescriptor;
 import org.apache.parquet.parqour.ingest.plan.predicates.traversal.TraversalInfo;
 import org.apache.parquet.parqour.ingest.plan.predicates.types.ColumnPredicateNodeCategory;
 import org.apache.parquet.parqour.ingest.plan.predicates.types.ColumnPredicateType;
-import org.apache.parquet.column.ColumnDescriptor;
 import org.apache.parquet.schema.PrimitiveType;
 
 /**

@@ -1,6 +1,6 @@
 package org.apache.parquet.parqour.query.lexing;
 
-import org.apache.parquet.parqour.exceptions.ParquelException;
+import org.apache.parquet.parqour.exceptions.TextQueryException;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -47,7 +47,7 @@ public class ParquelCharacterStream {
 
   public void advance() {
     if (isEof()) {
-      throw new ParquelException("Attempt to advance past the end of file");
+      throw new TextQueryException("Attempt to advance past the end of file");
     }
 
     // If the last character was a newline, then increment the line number.

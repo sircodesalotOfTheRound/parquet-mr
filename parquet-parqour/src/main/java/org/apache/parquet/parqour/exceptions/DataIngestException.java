@@ -1,9 +1,9 @@
 package org.apache.parquet.parqour.exceptions;
 
 /**
- * Created by sircodesalot on 6/9/15.
+ * General Ingest Failure.
  */
-public class DataIngestException extends ParquetAdvancedReaderException {
+public class DataIngestException extends ParqourException {
   public DataIngestException(String format, Object... args) {
     super (format, args);
   }

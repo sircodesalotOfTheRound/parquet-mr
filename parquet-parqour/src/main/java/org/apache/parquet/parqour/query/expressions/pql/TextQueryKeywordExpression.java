@@ -1,7 +1,7 @@
 package org.apache.parquet.parqour.query.expressions.pql;
 
 
-import org.apache.parquet.parqour.exceptions.ParquelException;
+import org.apache.parquet.parqour.exceptions.TextQueryException;
 import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
 import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
@@ -41,7 +41,7 @@ public abstract class TextQueryKeywordExpression extends TextQueryExpression {
 
   private TextQueryIdentifierToken readToken(TextQueryLexer lexer) {
     if (!isKeyword(lexer)) {
-      throw new ParquelException("Keyword expressions must be keywords");
+      throw new TextQueryException("Keyword expressions must be keywords");
     }
 
     return (TextQueryIdentifierToken)lexer.current();

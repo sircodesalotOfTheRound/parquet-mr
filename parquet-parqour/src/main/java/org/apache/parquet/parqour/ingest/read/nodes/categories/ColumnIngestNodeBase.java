@@ -1,13 +1,13 @@
 package org.apache.parquet.parqour.ingest.read.nodes.categories;
 
-import org.apache.parquet.parqour.exceptions.ReadNodeException;
+import org.apache.parquet.column.ColumnDescriptor;
+import org.apache.parquet.hadoop.metadata.ColumnPath;
+import org.apache.parquet.parqour.exceptions.DataIngestException;
 import org.apache.parquet.parqour.ingest.ffreader.interfaces.FastForwardReader;
 import org.apache.parquet.parqour.ingest.ffreader.interfaces.RelationshipLevelFastForwardReader;
 import org.apache.parquet.parqour.ingest.paging.DataPageDecorator;
 import org.apache.parquet.parqour.ingest.paging.DiskInterfaceManager;
 import org.apache.parquet.parqour.ingest.schema.SchemaInfo;
-import org.apache.parquet.column.ColumnDescriptor;
-import org.apache.parquet.hadoop.metadata.ColumnPath;
 import org.apache.parquet.schema.Type;
 
 /**
@@ -50,7 +50,7 @@ public abstract class ColumnIngestNodeBase<TFFReaderType extends FastForwardRead
 
 
   public void validateNode() {
-    if (this.parent() == null) throw new ReadNodeException("Record-reading ingest nodes nodes must have a parent.");
+    if (this.parent() == null) throw new DataIngestException("Record-reading ingest nodes nodes must have a parent.");
   }
 
   protected void fastForwardToRow(int rowNumber) {

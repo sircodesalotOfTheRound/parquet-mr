@@ -1,7 +1,7 @@
 package org.apache.parquet.parqour.ingest.cursor.iface;
 
-import org.apache.parquet.parqour.ingest.cursor.iterators.RollableRecordSet;
 import org.apache.parquet.parqour.ingest.cursor.iterators.RecordSet;
+import org.apache.parquet.parqour.ingest.cursor.iterators.RollableRecordSet;
 
 /**
  * Created by sircodesalot on 6/18/15.

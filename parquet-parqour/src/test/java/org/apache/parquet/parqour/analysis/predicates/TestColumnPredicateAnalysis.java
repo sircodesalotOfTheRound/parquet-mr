@@ -1,4 +1,10 @@
 package org.apache.parquet.parqour.analysis.predicates;
+
+import org.apache.parquet.column.ColumnDescriptor;
+import org.apache.parquet.filter2.predicate.FilterPredicate;
+import org.apache.parquet.filter2.predicate.Operators;
+import org.apache.parquet.filter2.predicate.Statistics;
+import org.apache.parquet.filter2.predicate.UserDefinedPredicate;
 import org.apache.parquet.parqour.ingest.plan.analysis.PredicateAnalysis;
 import org.apache.parquet.parqour.ingest.plan.predicates.ColumnPredicate;
 import org.apache.parquet.parqour.ingest.plan.predicates.leaf.sys.*;
@@ -8,12 +14,6 @@ import org.apache.parquet.parqour.ingest.plan.predicates.logic.AndColumnPredicat
 import org.apache.parquet.parqour.ingest.plan.predicates.logic.OrColumnPredicate;
 import org.apache.parquet.parqour.ingest.read.nodes.IngestTree;
 import org.apache.parquet.parqour.testtools.TestTools;
-import org.apache.parquet.column.ColumnDescriptor;
-import org.apache.parquet.example.data.Group;
-import org.apache.parquet.example.data.simple.SimpleGroup;
-import org.apache.parquet.filter2.predicate.*;
-import org.apache.parquet.hadoop.ParquetWriter;
-import org.apache.parquet.schema.GroupType;
 import org.apache.parquet.schema.MessageType;
 import org.apache.parquet.schema.PrimitiveType;
 import org.apache.parquet.schema.Type;
@@ -25,11 +25,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static org.apache.parquet.filter2.predicate.FilterApi.*;
-import static org.apache.parquet.schema.PrimitiveType.PrimitiveTypeName.INT32;
-import static org.apache.parquet.schema.Type.Repetition.REQUIRED;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * Created by sircodesalot on 6/2/15.

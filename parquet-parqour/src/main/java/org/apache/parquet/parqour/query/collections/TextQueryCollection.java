@@ -1,7 +1,7 @@
 package org.apache.parquet.parqour.query.collections;
 
-import org.apache.parquet.parqour.ingest.read.iterator.lamba.Projection;
 import org.apache.parquet.parqour.ingest.read.iterator.lamba.Predicate;
+import org.apache.parquet.parqour.ingest.read.iterator.lamba.Projection;
 import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
 
 import java.util.ArrayList;

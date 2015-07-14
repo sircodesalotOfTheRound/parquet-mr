@@ -1,9 +1,9 @@
 package org.apache.parquet.parqour.ingest.paging;
 
-import org.apache.parquet.parqour.ingest.ffreader.interfaces.FastForwardReader;
 import org.apache.parquet.column.ColumnDescriptor;
 import org.apache.parquet.column.page.DataPage;
 import org.apache.parquet.column.page.DictionaryPage;
+import org.apache.parquet.parqour.ingest.ffreader.interfaces.FastForwardReader;
 
 /**
 * Created by sircodesalot on 6/3/15.

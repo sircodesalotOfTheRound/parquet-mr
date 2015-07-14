@@ -1,13 +1,7 @@
 package org.apache.parquet.parqour.ingest.read.driver;
 
-import org.apache.parquet.parqour.ingest.cursor.iface.Cursor;
-import org.apache.parquet.parqour.ingest.paging.DiskInterfaceManager;
-import org.apache.parquet.parqour.ingest.plan.analysis.PredicateAnalysis;
-import org.apache.parquet.parqour.ingest.plan.evaluation.EvaluationPathAnalysis;
-import org.apache.parquet.parqour.ingest.plan.evaluation.skipchain.SkipChain;
 import org.apache.parquet.parqour.ingest.plan.evaluation.waypoints.PredicateTestWayPoint;
 import org.apache.parquet.parqour.ingest.plan.evaluation.waypoints.WayPoint;
-import org.apache.parquet.parqour.ingest.read.nodes.IngestTree;
 import org.apache.parquet.parqour.ingest.schema.SchemaInfo;
 
 /**

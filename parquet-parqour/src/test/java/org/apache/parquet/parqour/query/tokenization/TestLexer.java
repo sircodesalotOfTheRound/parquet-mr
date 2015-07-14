@@ -1,7 +1,7 @@
 package org.apache.parquet.parqour.query.tokenization;
 
-import org.apache.parquet.parqour.query.expressions.pql.TextQueryKeywordExpression;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
+import org.apache.parquet.parqour.query.expressions.pql.TextQueryKeywordExpression;
 import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
 import org.apache.parquet.parqour.query.tokens.TextQueryToken;
 import org.junit.Test;

@@ -1,16 +1,16 @@
 package org.apache.parquet.parqour.ingest.plan.analysis;
 
+import org.apache.parquet.column.ColumnDescriptor;
+import org.apache.parquet.filter2.predicate.FilterPredicate;
+import org.apache.parquet.filter2.predicate.Operators;
+import org.apache.parquet.filter2.predicate.UserDefinedPredicate;
+import org.apache.parquet.hadoop.metadata.ColumnPath;
 import org.apache.parquet.parqour.ingest.plan.predicates.builders.ColumnPredicateBuildable;
 import org.apache.parquet.parqour.ingest.plan.predicates.builders.leaf.sys.*;
 import org.apache.parquet.parqour.ingest.plan.predicates.builders.logic.AndColumnPredicateBuilder;
 import org.apache.parquet.parqour.ingest.plan.predicates.builders.logic.OrColumnPredicateBuilder;
 import org.apache.parquet.parqour.ingest.read.nodes.IngestTree;
 import org.apache.parquet.parqour.ingest.schema.SchemaInfo;
-import org.apache.parquet.column.ColumnDescriptor;
-import org.apache.parquet.filter2.predicate.FilterPredicate;
-import org.apache.parquet.filter2.predicate.Operators;
-import org.apache.parquet.filter2.predicate.UserDefinedPredicate;
-import org.apache.parquet.hadoop.metadata.ColumnPath;
 import org.apache.parquet.schema.MessageType;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 

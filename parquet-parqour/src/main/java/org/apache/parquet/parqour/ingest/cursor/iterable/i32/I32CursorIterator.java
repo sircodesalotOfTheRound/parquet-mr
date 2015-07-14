@@ -1,10 +1,7 @@
 package org.apache.parquet.parqour.ingest.cursor.iterable.i32;
 
-import org.apache.commons.collections.ResettableIterator;
 import org.apache.parquet.parqour.ingest.cursor.iterators.ResettableCursorIterator;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
-import java.util.Iterator;
 
 /**
  * Created by sircodesalot on 7/13/15.

@@ -1,6 +1,6 @@
 package org.apache.parquet.parqour.query.backtracking.interfaces;
 
-import org.apache.parquet.parqour.exceptions.ParquelException;
+import org.apache.parquet.parqour.exceptions.TextQueryException;
 import org.apache.parquet.parqour.query.collections.OneToManyMap;
 import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
@@ -9,21 +9,21 @@ import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
 /**
  * Created by sircodesalot on 15/4/2.
  */
-public class ParquelBacktrackingRuleSet<TExpressionType> {
-  private final OneToManyMap<TextQueryExpressionType, ParquelBacktrackRule> rules;
+public class TextQueryBacktrackingRuleSet<TExpressionType> {
+  private final OneToManyMap<TextQueryExpressionType, TextQueryBacktrackRule> rules;
 
-  public ParquelBacktrackingRuleSet() {
-    this.rules = new OneToManyMap<TextQueryExpressionType, ParquelBacktrackRule>();
+  public TextQueryBacktrackingRuleSet() {
+    this.rules = new OneToManyMap<TextQueryExpressionType, TextQueryBacktrackRule>();
   }
 
-  public ParquelBacktrackingRuleSet<TExpressionType> add(ParquelBacktrackRule rule) {
+  public TextQueryBacktrackingRuleSet<TExpressionType> add(TextQueryBacktrackRule rule) {
     rules.add(rule.launchForTokensOfType(), rule);
     return this;
   }
 
   public TExpressionType read(TextQueryExpression parent, TextQueryLexer lexer) {
     if (lexer.isEof()) {
-      throw new ParquelException("Attempt to read past end of stream");
+      throw new TextQueryException("Attempt to read past end of stream");
     }
 
     // Try to find a backtrack rule that matches the current token.
@@ -42,7 +42,7 @@ public class ParquelBacktrackingRuleSet<TExpressionType> {
     if (!rules.containsKey(typeOfCurrentToken)) {
       return false;
     } else {
-      for (ParquelBacktrackRule rule : this.rules.get(typeOfCurrentToken)) {
+      for (TextQueryBacktrackRule rule : this.rules.get(typeOfCurrentToken)) {
         if (rule.isMatch(parent, lexer)) {
           return true;
         }
@@ -57,7 +57,7 @@ public class ParquelBacktrackingRuleSet<TExpressionType> {
     if (!canParse(parent, lexer)) {
       return null;
     }
-    for (ParquelBacktrackRule rule : this.rules.get(type)) {
+    for (TextQueryBacktrackRule rule : this.rules.get(type)) {
       if (rule.isMatch(parent, lexer)) {
         return (TExpressionType)rule.read(parent, lexer);
       }

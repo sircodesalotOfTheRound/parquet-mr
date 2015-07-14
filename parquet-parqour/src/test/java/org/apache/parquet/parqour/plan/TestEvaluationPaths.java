@@ -1,5 +1,7 @@
 package org.apache.parquet.parqour.plan;
 
+import org.apache.parquet.filter2.predicate.FilterPredicate;
+import org.apache.parquet.filter2.predicate.Operators;
 import org.apache.parquet.parqour.ingest.plan.analysis.PredicateAnalysis;
 import org.apache.parquet.parqour.ingest.plan.evaluation.EvaluationPathAnalysis;
 import org.apache.parquet.parqour.ingest.plan.evaluation.skipchain.SkipChain;
@@ -7,15 +9,13 @@ import org.apache.parquet.parqour.ingest.plan.evaluation.waypoints.PredicateTest
 import org.apache.parquet.parqour.ingest.plan.evaluation.waypoints.WayPoint;
 import org.apache.parquet.parqour.ingest.read.nodes.IngestTree;
 import org.apache.parquet.parqour.testtools.TestTools;
-import org.junit.Test;
-import org.apache.parquet.filter2.predicate.FilterPredicate;
-import org.apache.parquet.filter2.predicate.Operators;
 import org.apache.parquet.schema.MessageType;
 import org.apache.parquet.schema.PrimitiveType;
 import org.apache.parquet.schema.Type;
+import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
 import static org.apache.parquet.filter2.predicate.FilterApi.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Created by sircodesalot on 6/8/15.

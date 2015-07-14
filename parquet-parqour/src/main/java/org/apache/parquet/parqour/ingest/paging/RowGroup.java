@@ -1,13 +1,11 @@
 package org.apache.parquet.parqour.ingest.paging;
 
+import org.apache.parquet.column.ColumnDescriptor;
 import org.apache.parquet.column.page.DataPage;
 import org.apache.parquet.column.page.DictionaryPage;
-import org.apache.parquet.parqour.exceptions.DataIngestException;
-import org.apache.parquet.column.ColumnDescriptor;
 import org.apache.parquet.column.page.PageReadStore;
 import org.apache.parquet.column.page.PageReader;
-
-import java.util.Map;
+import org.apache.parquet.parqour.exceptions.DataIngestException;
 
 /**
  * Alias for PageReadStore because I have to keep checking what that name means.
@@ -25,6 +23,7 @@ public class RowGroup {
 
   private PagePair readNextPagePair() {
     PageReader pageReader = group.getPageReader(forColumn);
+
     long totalItems = pageReader.getTotalValueCount();
     DataPage page = pageReader.readPage();
     DictionaryPage dictionaryPage = pageReader.readDictionaryPage();

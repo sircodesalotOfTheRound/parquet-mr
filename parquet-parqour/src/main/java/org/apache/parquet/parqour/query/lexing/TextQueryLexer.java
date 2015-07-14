@@ -1,7 +1,7 @@
 package org.apache.parquet.parqour.query.lexing;
 
 
-import org.apache.parquet.parqour.exceptions.ParquelException;
+import org.apache.parquet.parqour.exceptions.TextQueryException;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
 import org.apache.parquet.parqour.query.tokens.TextQueryToken;
 
@@ -32,7 +32,7 @@ public class TextQueryLexer {
 
   public void advance() {
     if (isEof()) {
-      throw new ParquelException("Attempt to advance past end of file");
+      throw new TextQueryException("Attempt to advance past end of file");
     }
 
     currentIndex += 1;
@@ -85,7 +85,7 @@ public class TextQueryLexer {
     if (currentIs(type)) {
       return (T) readCurrentAndAdvance();
     } else {
-      throw new ParquelException("%s Expected '%s', found '%s'", this.position(), type, this.current().getClass());
+      throw new TextQueryException("%s Expected '%s', found '%s'", this.position(), type, this.current().getClass());
     }
   }
 
@@ -93,7 +93,7 @@ public class TextQueryLexer {
     if (currentIsMatchCase(type, representation)) {
       return (T) readCurrentAndAdvance();
     } else {
-      throw new ParquelException("%s Expected ('%s' : %s), found ('%s' : %s)",
+      throw new TextQueryException("%s Expected ('%s' : %s), found ('%s' : %s)",
         this.position(),
         representation,
         type,
@@ -106,7 +106,7 @@ public class TextQueryLexer {
     if (currentIs(type, representation)) {
       return (T) readCurrentAndAdvance();
     } else {
-      throw new ParquelException("%s Expected ('%s' : %s), found ('%s' : %s)",
+      throw new TextQueryException("%s Expected ('%s' : %s), found ('%s' : %s)",
         this.position(),
         representation,
         type,

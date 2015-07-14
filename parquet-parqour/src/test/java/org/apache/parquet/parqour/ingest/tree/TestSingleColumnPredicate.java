@@ -1,14 +1,6 @@
 package org.apache.parquet.parqour.ingest.tree;
 
-import org.apache.parquet.parqour.ingest.paging.DiskInterfaceManager;
-import org.apache.parquet.parqour.ingest.read.nodes.IngestTree;
-import org.apache.parquet.parqour.ingest.read.nodes.impl.i32.Int32NoRepeatIngestNode;
-import org.apache.parquet.parqour.ingest.schema.SchemaInfo;
-import org.apache.parquet.parqour.testtools.TestTools;
-import org.apache.parquet.parqour.testtools.UsesPersistence;
-import org.apache.parquet.parqour.testtools.WriteTools;
 import org.apache.hadoop.fs.Path;
-import org.junit.Before;
 import org.apache.parquet.column.ParquetProperties;
 import org.apache.parquet.example.data.Group;
 import org.apache.parquet.example.data.simple.SimpleGroup;
@@ -19,15 +11,23 @@ import org.apache.parquet.format.converter.ParquetMetadataConverter;
 import org.apache.parquet.hadoop.ParquetFileReader;
 import org.apache.parquet.hadoop.ParquetWriter;
 import org.apache.parquet.hadoop.metadata.ParquetMetadata;
+import org.apache.parquet.parqour.ingest.paging.DiskInterfaceManager;
+import org.apache.parquet.parqour.ingest.read.nodes.IngestTree;
+import org.apache.parquet.parqour.ingest.read.nodes.impl.i32.Int32NoRepeatIngestNode;
+import org.apache.parquet.parqour.ingest.schema.SchemaInfo;
+import org.apache.parquet.parqour.testtools.TestTools;
+import org.apache.parquet.parqour.testtools.UsesPersistence;
+import org.apache.parquet.parqour.testtools.WriteTools;
 import org.apache.parquet.schema.GroupType;
 import org.apache.parquet.schema.PrimitiveType;
+import org.junit.Before;
 
 import java.io.IOException;
 
-import static org.apache.parquet.parqour.testtools.TestTools.EMPTY_CONFIGURATION;
-import static org.apache.parquet.parqour.testtools.TestTools.TEST_FILE_PATH;
 import static org.apache.parquet.column.ParquetProperties.WriterVersion.PARQUET_1_0;
 import static org.apache.parquet.filter2.predicate.FilterApi.*;
+import static org.apache.parquet.parqour.testtools.TestTools.EMPTY_CONFIGURATION;
+import static org.apache.parquet.parqour.testtools.TestTools.TEST_FILE_PATH;
 import static org.apache.parquet.schema.PrimitiveType.PrimitiveTypeName.INT32;
 import static org.apache.parquet.schema.Type.Repetition.REQUIRED;
 

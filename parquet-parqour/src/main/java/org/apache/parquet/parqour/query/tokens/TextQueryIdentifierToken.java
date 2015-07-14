@@ -1,7 +1,7 @@
 package org.apache.parquet.parqour.query.tokens;
 
 
-import org.apache.parquet.parqour.exceptions.ParquelException;
+import org.apache.parquet.parqour.exceptions.TextQueryException;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
 import org.apache.parquet.parqour.query.lexing.ParquelCharacterStream;
 
@@ -18,7 +18,7 @@ public class TextQueryIdentifierToken extends TextQueryToken {
 
   private String parseIdentifier(ParquelCharacterStream stream) {
     if (!stream.currentIsAlpha()) {
-      throw new ParquelException("First character of identifier must be alpha.");
+      throw new TextQueryException("First character of identifier must be alpha.");
     }
 
     StringBuilder builder = new StringBuilder();

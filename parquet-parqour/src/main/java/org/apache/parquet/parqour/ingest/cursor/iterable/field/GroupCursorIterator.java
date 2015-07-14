@@ -1,4 +1,4 @@
-package org.apache.parquet.parqour.ingest.cursor.iterable.aggregation;
+package org.apache.parquet.parqour.ingest.cursor.iterable.field;
 
 import org.apache.parquet.parqour.ingest.cursor.iface.AdvanceableCursor;
 import org.apache.parquet.parqour.ingest.cursor.iface.Cursor;

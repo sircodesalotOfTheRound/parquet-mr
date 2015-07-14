@@ -1,8 +1,8 @@
 package org.apache.parquet.parqour.query.expressions.column;
 
-import org.apache.parquet.parqour.query.backtracking.interfaces.ParquelBacktrackingRuleSet;
-import org.apache.parquet.parqour.query.backtracking.rules.ParquelNamedColumnExpressionBacktrackRule;
-import org.apache.parquet.parqour.query.backtracking.rules.ParquelWildcardExpressionBacktrackRule;
+import org.apache.parquet.parqour.query.backtracking.interfaces.TextQueryBacktrackingRuleSet;
+import org.apache.parquet.parqour.query.backtracking.rules.TextQueryNamedColumnExpressionBacktrackRule;
+import org.apache.parquet.parqour.query.backtracking.rules.TextQueryWildcardExpressionBacktrackRule;
 import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryVariableExpression;
@@ -12,9 +12,9 @@ import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
  * Created by sircodesalot on 15/4/3.
  */
 public abstract class TextQueryColumnExpression extends TextQueryVariableExpression {
-  private static final ParquelBacktrackingRuleSet<TextQueryColumnExpression> rules = new ParquelBacktrackingRuleSet<TextQueryColumnExpression>()
-    .add(new ParquelNamedColumnExpressionBacktrackRule())
-    .add(new ParquelWildcardExpressionBacktrackRule());
+  private static final TextQueryBacktrackingRuleSet<TextQueryColumnExpression> rules = new TextQueryBacktrackingRuleSet<TextQueryColumnExpression>()
+    .add(new TextQueryNamedColumnExpressionBacktrackRule())
+    .add(new TextQueryWildcardExpressionBacktrackRule());
 
   public TextQueryColumnExpression(TextQueryExpression parent, TextQueryLexer lexer, TextQueryExpressionType type) {
     super(parent, lexer, type);

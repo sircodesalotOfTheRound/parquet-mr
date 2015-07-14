@@ -1,10 +1,10 @@
 package org.apache.parquet.parqour.ingest.ffreader.packed.rle;
 
+import org.apache.parquet.column.ValuesType;
 import org.apache.parquet.parqour.ingest.ffreader.FastForwardReaderBase;
 import org.apache.parquet.parqour.ingest.ffreader.interfaces.RelationshipLevelFastForwardReader;
 import org.apache.parquet.parqour.ingest.ffreader.segments.PackedEncodingSegmentReader;
 import org.apache.parquet.parqour.ingest.paging.DataPageMetadata;
-import org.apache.parquet.column.ValuesType;
 
 /**
  * Created by sircodesalot on 6/13/15.

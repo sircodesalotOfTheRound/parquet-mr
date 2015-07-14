@@ -1,17 +1,17 @@
 package org.apache.parquet.parqour.query.backtracking.rules;
 
-import org.apache.parquet.parqour.query.backtracking.interfaces.ParquelBacktrackRuleBase;
+import org.apache.parquet.parqour.query.backtracking.interfaces.TextQueryBacktrackRuleBase;
 import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
+import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
 import org.apache.parquet.parqour.query.expressions.pql.TextQueryFromExpression;
 import org.apache.parquet.parqour.query.expressions.pql.TextQueryKeywordExpression;
-import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
 import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
 
 /**
  * Created by sircodesalot on 15/4/2.
  */
-public class ParquelFromExpressionBacktrackRule extends ParquelBacktrackRuleBase {
-  public ParquelFromExpressionBacktrackRule() {
+public class TextQueryFromExpressionBacktrackRule extends TextQueryBacktrackRuleBase {
+  public TextQueryFromExpressionBacktrackRule() {
     super(TextQueryExpressionType.IDENTIFIER);
   }
 

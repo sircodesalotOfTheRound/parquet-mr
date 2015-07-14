@@ -2,18 +2,18 @@ package org.apache.parquet.parqour.analysis.subschema;
 
 import org.apache.parquet.parqour.ingest.read.iterator.lamba.Projection;
 import org.apache.parquet.parqour.ingest.schema.SchemaIntersection;
-import org.apache.parquet.parqour.query.expressions.pql.TextQueryTreeRootExpression;
 import org.apache.parquet.parqour.query.expressions.column.TextQueryNamedColumnExpression;
+import org.apache.parquet.parqour.query.expressions.pql.TextQueryTreeRootExpression;
 import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
-import org.junit.Test;
 import org.apache.parquet.schema.GroupType;
 import org.apache.parquet.schema.MessageType;
 import org.apache.parquet.schema.PrimitiveType;
+import org.junit.Test;
 
 import static org.apache.parquet.parqour.testtools.TestTools.CONTACTS_SCHEMA;
-import static org.junit.Assert.assertEquals;
 import static org.apache.parquet.schema.PrimitiveType.PrimitiveTypeName.BINARY;
 import static org.apache.parquet.schema.Type.Repetition.REQUIRED;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Created by sircodesalot on 6/21/15.

@@ -1,9 +1,9 @@
 package org.apache.parquet.parqour.exceptions;
 
 /**
- * Created by sircodesalot on 6/2/15.
+ * An Exception thrown when trying to build the filter-predicate.
  */
-public class ColumnPredicateBuilderException extends ParquetAdvancedReaderException {
+public class ColumnPredicateBuilderException extends ParqourException {
   public ColumnPredicateBuilderException(String format, Object... args) {
     super(format, args);
   }

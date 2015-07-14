@@ -1,9 +1,9 @@
 package org.apache.parquet.parqour.query.expressions.column;
 
-import org.apache.parquet.parqour.exceptions.ParquelException;
+import org.apache.parquet.parqour.exceptions.TextQueryException;
 import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
-import org.apache.parquet.parqour.query.expressions.pql.TextQueryFullyQualifiedNameExpression;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
+import org.apache.parquet.parqour.query.expressions.pql.TextQueryFullyQualifiedNameExpression;
 import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
 import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
 
@@ -21,7 +21,7 @@ public class TextQueryNamedColumnExpression extends TextQueryColumnExpression {
 
   private TextQueryFullyQualifiedNameExpression readFqn(TextQueryLexer lexer) {
     if (!lexer.currentIs(TextQueryExpressionType.IDENTIFIER)) {
-      throw new ParquelException("Identifier Expressions must be located on identifiers");
+      throw new TextQueryException("Identifier Expressions must be located on identifiers");
     }
 
     return TextQueryFullyQualifiedNameExpression.read(this, lexer);

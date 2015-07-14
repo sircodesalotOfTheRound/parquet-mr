@@ -1,7 +1,7 @@
 package org.apache.parquet.parqour.ingest.plan.analysis;
 
-import org.apache.parquet.parqour.ingest.plan.predicates.ColumnPredicate;
 import org.apache.parquet.column.ColumnDescriptor;
+import org.apache.parquet.parqour.ingest.plan.predicates.ColumnPredicate;
 
 import java.util.*;
 

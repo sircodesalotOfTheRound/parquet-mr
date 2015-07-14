@@ -1,6 +1,5 @@
 package org.apache.parquet.parqour.testtools;
 
-import org.apache.parquet.parqour.exceptions.DataIngestException;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.parquet.column.ParquetProperties;
@@ -8,6 +7,7 @@ import org.apache.parquet.example.data.Group;
 import org.apache.parquet.hadoop.ParquetWriter;
 import org.apache.parquet.hadoop.example.GroupWriteSupport;
 import org.apache.parquet.hadoop.metadata.CompressionCodecName;
+import org.apache.parquet.parqour.exceptions.DataIngestException;
 import org.apache.parquet.schema.GroupType;
 import org.apache.parquet.schema.MessageType;
 

@@ -1,14 +1,14 @@
 package org.apache.parquet.parqour.query.expressions.pql;
 
-import org.apache.parquet.parqour.query.backtracking.interfaces.ParquelBacktrackingRuleSet;
-import org.apache.parquet.parqour.query.backtracking.rules.ParquelIdentifierExpressionBacktrackRule;
-import org.apache.parquet.parqour.query.backtracking.rules.ParquelWildcardExpressionBacktrackRule;
+import org.apache.parquet.parqour.query.backtracking.interfaces.TextQueryBacktrackingRuleSet;
+import org.apache.parquet.parqour.query.backtracking.rules.TextQueryIdentifierExpressionBacktrackRule;
+import org.apache.parquet.parqour.query.backtracking.rules.TextQueryWildcardExpressionBacktrackRule;
 import org.apache.parquet.parqour.query.collections.TextQueryAppendableCollection;
 import org.apache.parquet.parqour.query.collections.TextQueryCollection;
 import org.apache.parquet.parqour.query.delimiters.TextQueryDotExpression;
 import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
-import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
 import org.apache.parquet.parqour.query.expressions.categories.ParquelMemberExpression;
+import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryVariableExpression;
 import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
 import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
@@ -17,9 +17,9 @@ import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
  * Created by sircodesalot on 15/4/9.
  */
 public class TextQueryFullyQualifiedNameExpression extends TextQueryVariableExpression {
-  private static final ParquelBacktrackingRuleSet<ParquelMemberExpression> memberTypeRules = new ParquelBacktrackingRuleSet<ParquelMemberExpression>()
-    .add(new ParquelIdentifierExpressionBacktrackRule())
-    .add(new ParquelWildcardExpressionBacktrackRule());
+  private static final TextQueryBacktrackingRuleSet<ParquelMemberExpression> memberTypeRules = new TextQueryBacktrackingRuleSet<ParquelMemberExpression>()
+    .add(new TextQueryIdentifierExpressionBacktrackRule())
+    .add(new TextQueryWildcardExpressionBacktrackRule());
 
   private final TextQueryCollection<ParquelMemberExpression> members;
   private final String representation;

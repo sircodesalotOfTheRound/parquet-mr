@@ -1,4 +1,4 @@
-package org.apache.parquet.parqour.ingest.cursor.iterable.aggregation;
+package org.apache.parquet.parqour.ingest.cursor.iterable.field;
 
 import org.apache.parquet.parqour.exceptions.DataIngestException;
 import org.apache.parquet.parqour.ingest.cursor.GroupAggregateCursor;

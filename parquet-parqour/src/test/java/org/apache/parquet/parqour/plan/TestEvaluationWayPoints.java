@@ -1,5 +1,6 @@
 package org.apache.parquet.parqour.plan;
 
+import org.apache.parquet.column.ColumnDescriptor;
 import org.apache.parquet.parqour.ingest.plan.evaluation.skipchain.SkipChain;
 import org.apache.parquet.parqour.ingest.plan.evaluation.waypoints.PredicateTestWayPoint;
 import org.apache.parquet.parqour.ingest.plan.evaluation.waypoints.SkipChainWayPoint;
@@ -10,7 +11,6 @@ import org.apache.parquet.parqour.ingest.plan.predicates.leaf.sys.EqualsColumnPr
 import org.apache.parquet.parqour.ingest.read.nodes.IngestTree;
 import org.apache.parquet.parqour.testtools.TestTools;
 import org.junit.Test;
-import org.apache.parquet.column.ColumnDescriptor;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;

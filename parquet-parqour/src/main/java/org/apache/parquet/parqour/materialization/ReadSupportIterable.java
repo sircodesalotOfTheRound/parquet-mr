@@ -1,9 +1,9 @@
 package org.apache.parquet.parqour.materialization;
 
+import org.apache.parquet.hadoop.api.ReadSupport;
 import org.apache.parquet.parqour.ingest.cursor.iface.Cursor;
 import org.apache.parquet.parqour.ingest.read.iterator.Parqour;
 import org.apache.parquet.parqour.ingest.schema.SchemaInfo;
-import org.apache.parquet.hadoop.api.ReadSupport;
 
 import java.util.Iterator;
 

@@ -1,6 +1,6 @@
 package org.apache.parquet.parqour.query.tokenization;
 
-import org.apache.parquet.parqour.exceptions.ParquelException;
+import org.apache.parquet.parqour.exceptions.TextQueryException;
 import org.apache.parquet.parqour.query.lexing.ParquelCharacterStream;
 import org.junit.Test;
 
@@ -33,7 +33,7 @@ public class TestParquelCharacterStream {
       } else if (tokenizer.currentIsWhitespace()) {
         currentType = WHITESPACE;
       } else {
-        throw new ParquelException("Invalid letter type for this test");
+        throw new TextQueryException("Invalid letter type for this test");
       }
 
       int countOfThisTokenType;
@@ -72,7 +72,7 @@ public class TestParquelCharacterStream {
     assert(reader.readCurrentAndAdvance() == 't');
   }
 
-  @Test(expected=ParquelException.class)
+  @Test(expected=TextQueryException.class)
   public void advancePastEndOfLine() {
     ParquelCharacterStream stream = new ParquelCharacterStream("select");
     for (int index = 0; index <= "select".length(); index++) {
