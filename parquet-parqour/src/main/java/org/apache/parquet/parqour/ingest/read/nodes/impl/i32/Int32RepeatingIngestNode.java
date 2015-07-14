@@ -16,10 +16,9 @@ import org.apache.parquet.schema.Type;
 public final class Int32RepeatingIngestNode extends ColumnIngestNodeBase<Int32FastForwardReader> {
   private int currentValue = 0;
 
-  // TODO: Write expansion code.
-  private Integer[] rowVector = new Integer[100000];
-
-  private final Int32IterableCursor cursor = new Int32IterableCursor(this.name, rowVector);
+  private int ingestBufferLength;
+  private Integer[] ingestBuffer;
+  private final Int32IterableCursor cursor;
 
   public Int32RepeatingIngestNode(SchemaInfo schemaInfo,
                                   AggregatingIngestNode parent,
@@ -30,6 +29,9 @@ public final class Int32RepeatingIngestNode extends ColumnIngestNodeBase<Int32Fa
 
     super(schemaInfo, parent, schemaNode, descriptor, diskInterfaceManager, childIndex);
 
+    this.ingestBufferLength = 100;
+    this.ingestBuffer = new Integer[ingestBufferLength];
+    this.cursor = new Int32IterableCursor(name, ingestBuffer);
   }
 
   @Override
@@ -47,10 +49,9 @@ public final class Int32RepeatingIngestNode extends ColumnIngestNodeBase<Int32Fa
   public void read(int rowNumber) {
     if (currentRowNumber > rowNumber) return;
 
-    int writeIndex = -1;
+    int writeIndex = 0;
     int listHeaderIndex = -1;
     int numberOfItemsInList = 0;
-    this.relationshipLinkWriteIndex = -1;
 
     // Repeat until we reach a node with repetitionLevel-0 (new row) or EOF.
     do {
@@ -63,20 +64,33 @@ public final class Int32RepeatingIngestNode extends ColumnIngestNodeBase<Int32Fa
       boolean requiresNewList = currentEntryRepetitionLevel < repetitionLevelAtThisNode;
 
       // Manage list creation:
-      if (isDefined && requiresNewList) {
-        if (numberOfItemsInList > 0) {
-          rowVector[listHeaderIndex] = numberOfItemsInList;
-          numberOfItemsInList = 0;
+      if (isDefined) {
+        if (requiresNewList) {
+          if (numberOfItemsInList > 0) {
+            ingestBuffer[listHeaderIndex] = numberOfItemsInList;
+            numberOfItemsInList = 0;
+          }
+
+          listHeaderIndex = writeIndex++;
         }
 
-        listHeaderIndex = ++writeIndex;
+        // If the current item is defined, then set the link site to the head of the list.
+        this.currentLinkSiteIndex = listHeaderIndex;
+      } else {
+        // If the current item is not defined, then set the link site to the value itself.
+        this.currentLinkSiteIndex = writeIndex;
+      }
+
+      // Do we need to expand the list?
+      if (writeIndex >= ingestBufferLength) {
+        this.expandIngestBuffer();
       }
 
       if (isDefined) {
-        rowVector[++writeIndex] = currentValue;
+        ingestBuffer[writeIndex++] = currentValue;
         numberOfItemsInList++;
       } else {
-        rowVector[++writeIndex] = null;
+        ingestBuffer[writeIndex++] = null;
       }
 
       if (requiresNewList) {
@@ -111,7 +125,7 @@ public final class Int32RepeatingIngestNode extends ColumnIngestNodeBase<Int32Fa
 
     // Close out the list:
     if (numberOfItemsInList > 0) {
-      rowVector[listHeaderIndex] = numberOfItemsInList;
+      ingestBuffer[listHeaderIndex] = numberOfItemsInList;
     }
 
     // If this node reports schema:
@@ -123,4 +137,14 @@ public final class Int32RepeatingIngestNode extends ColumnIngestNodeBase<Int32Fa
     currentRowNumber++;
   }
 
+  @Override
+  public final void expandIngestBuffer() {
+    int newIngestBufferLength = this.ingestBufferLength * 2;
+    Integer[] newIngestBuffer = new Integer[newIngestBufferLength];
+    System.arraycopy(this.ingestBuffer, 0, newIngestBuffer, 0, ingestBufferLength);
+
+    this.ingestBuffer = newIngestBuffer;
+    this.ingestBufferLength = newIngestBufferLength;
+    this.cursor.setArray(newIngestBuffer);
+  }
 }

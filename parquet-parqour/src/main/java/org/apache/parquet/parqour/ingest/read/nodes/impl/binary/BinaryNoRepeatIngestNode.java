@@ -39,6 +39,11 @@ public final class BinaryNoRepeatIngestNode extends ColumnIngestNodeBase<Int32Fa
   }
 
   @Override
+  protected void expandIngestBuffer() {
+
+  }
+
+  @Override
   protected AdvanceableCursor onLinkToParent(AggregatingIngestNode parentNode) {
     return cursor;
   }

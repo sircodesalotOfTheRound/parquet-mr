@@ -17,6 +17,10 @@ public final class Int32IterableCursor extends AdvanceableCursor implements Iter
     this.iterator = new I32CursorIterator(array);
   }
 
+  public void setArray(Integer[] array) {
+    this.iterator.setArray(array);
+  }
+
   @Override
   public Object value() {
     return this.recordSet.roll();

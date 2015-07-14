@@ -7,12 +7,16 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
  * Created by sircodesalot on 7/13/15.
  */
 public class I32CursorIterator extends ResettableCursorIterator<Integer> {
-  private final Integer[] array;
+  private Integer[] array;
   private int end;
 
   private int index;
 
   public I32CursorIterator(Integer[] array) {
+    this.array = array;
+  }
+
+  public void setArray(Integer[] array) {
     this.array = array;
   }
 

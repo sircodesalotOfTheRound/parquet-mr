@@ -9,10 +9,10 @@ import java.util.Iterator;
  * Created by sircodesalot on 6/18/15.
  */
 public final class Int32Cursor extends AdvanceableCursor {
-  private final Integer[] array;
+  private Integer[] array;
 
   private static class I32CursorIterator implements Iterator<Integer> {
-    private final Integer[] array;
+    private Integer[] array;
     private final int end;
 
     private int index;
@@ -21,6 +21,10 @@ public final class Int32Cursor extends AdvanceableCursor {
       this.index = start;
       this.end = end;
 
+    }
+
+    public void setArray(Integer[] array) {
+      this.array = array;
     }
 
     @Override
@@ -41,6 +45,11 @@ public final class Int32Cursor extends AdvanceableCursor {
 
   public Int32Cursor(String name, Integer[] array) {
     super(name);
+    this.array = array;
+  }
+
+
+  public void setArray(Integer[] array) {
     this.array = array;
   }
 

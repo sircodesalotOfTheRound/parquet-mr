@@ -27,7 +27,7 @@ import static org.junit.Assert.assertEquals;
  */
 public class TestBooleanFFReaders extends UsesPersistence {
   private static int TOTAL = TestTools.generateRandomInt(50000);
-  private static int MODULO = TestTools.generateRandomInt(1000);
+  private static int MODULO = TestTools.generateRandomInt(1000) + 1;
   private static String COLUMN_NAME = "truefalse";
 
   public static class SingleBitWriteContext extends WriteTools.ParquetWriteContext {

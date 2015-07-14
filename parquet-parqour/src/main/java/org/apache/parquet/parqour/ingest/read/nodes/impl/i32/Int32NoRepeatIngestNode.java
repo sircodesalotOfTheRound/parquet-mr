@@ -16,10 +16,9 @@ import org.apache.parquet.schema.Type;
 public final class Int32NoRepeatIngestNode extends ColumnIngestNodeBase<Int32FastForwardReader> {
   private int currentValue = 0;
 
-  // TODO: Write expansion code.
-  private Integer[] rowVector = new Integer[100000];
-
-  private final Int32Cursor cursor = new Int32Cursor(this.name, rowVector);
+  private int ingestBufferLength;
+  private Integer[] ingestBuffer;
+  private final Int32Cursor cursor;
 
   public Int32NoRepeatIngestNode(SchemaInfo schemaInfo,
                                  AggregatingIngestNode parent,
@@ -30,12 +29,16 @@ public final class Int32NoRepeatIngestNode extends ColumnIngestNodeBase<Int32Fas
 
     super(schemaInfo, parent, schemaNode, descriptor, diskInterfaceManager, childIndex);
 
+    this.ingestBufferLength = 100;
+    this.ingestBuffer = new Integer[ingestBufferLength];
+    this.cursor = new Int32Cursor(name, ingestBuffer);
   }
 
   @Override
   protected void updateValuesReaderValue() {
     this.currentValue = valuesReader.readi32();
   }
+
 
   @Override
   protected AdvanceableCursor onLinkToParent(AggregatingIngestNode parentNode) {
@@ -47,7 +50,7 @@ public final class Int32NoRepeatIngestNode extends ColumnIngestNodeBase<Int32Fas
   public void read(int rowNumber) {
     if (currentRowNumber > rowNumber) return;
 
-    this.currentLinkSiteIndex = -1;
+    this.currentLinkSiteIndex = 0;
 
     // Repeat until we reach a node with repetitionLevel-0 (new row) or EOF.
     do {
@@ -58,9 +61,9 @@ public final class Int32NoRepeatIngestNode extends ColumnIngestNodeBase<Int32Fas
 
       // If this node is defined:
       if (currentEntryDefinitionLevel >= definitionLevelAtThisNode) {
-        rowVector[++currentLinkSiteIndex] = currentValue;
+        ingestBuffer[currentLinkSiteIndex++] = currentValue;
       } else {
-        rowVector[++currentLinkSiteIndex] = null;
+        ingestBuffer[currentLinkSiteIndex++] = null;
       }
 
       // If this node requires linking to it's parent:
@@ -102,4 +105,14 @@ public final class Int32NoRepeatIngestNode extends ColumnIngestNodeBase<Int32Fas
     currentRowNumber++;
   }
 
+  @Override
+  protected final void expandIngestBuffer() {
+    int newIngestBufferLength = this.ingestBufferLength * 2;
+    Integer[] newIngestBuffer = new Integer[newIngestBufferLength];
+    System.arraycopy(this.ingestBuffer, 0, newIngestBuffer, 0, ingestBufferLength);
+
+    this.ingestBuffer = newIngestBuffer;
+    this.ingestBufferLength = newIngestBufferLength;
+    this.cursor.setArray(newIngestBuffer);
+  }
 }
