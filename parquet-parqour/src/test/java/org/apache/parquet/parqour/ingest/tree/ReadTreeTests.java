@@ -9,6 +9,7 @@ import org.junit.Test;
 import org.apache.parquet.schema.GroupType;
 import org.apache.parquet.schema.PrimitiveType;
 
+import static org.apache.parquet.schema.PrimitiveType.PrimitiveTypeName.INT32;
 import static org.junit.Assert.assertEquals;
 import static org.apache.parquet.schema.PrimitiveType.PrimitiveTypeName.BINARY;
 import static org.apache.parquet.schema.Type.Repetition.REQUIRED;
@@ -20,11 +21,11 @@ public class ReadTreeTests {
   @Test
   public void simpleNodeTree() {
     GroupType schema = new GroupType(REQUIRED, "root",
-      new PrimitiveType(REQUIRED, BINARY, "first"),
-      new PrimitiveType(REQUIRED, BINARY, "second"),
+      new PrimitiveType(REQUIRED, INT32, "first"),
+      new PrimitiveType(REQUIRED, INT32, "second"),
       new GroupType(REQUIRED, "grouping",
-        new PrimitiveType(REQUIRED, BINARY, "first_subnode"),
-        new PrimitiveType(REQUIRED, BINARY, "second_subnode"))
+        new PrimitiveType(REQUIRED, INT32, "first_subnode"),
+        new PrimitiveType(REQUIRED, INT32, "second_subnode"))
     );
 
     IngestTree tree = TestTools.generateIngestTreeFromSchema(schema);

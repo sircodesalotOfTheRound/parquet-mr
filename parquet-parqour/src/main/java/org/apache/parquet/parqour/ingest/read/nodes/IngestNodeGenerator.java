@@ -6,6 +6,7 @@ import org.apache.parquet.parqour.ingest.read.nodes.categories.AggregatingIngest
 import org.apache.parquet.parqour.ingest.read.nodes.categories.ColumnIngestNodeBase;
 import org.apache.parquet.parqour.ingest.read.nodes.impl.NoRepeatGroupIngestNode;
 import org.apache.parquet.parqour.ingest.read.nodes.impl.RepeatingGroupIngestNode;
+import org.apache.parquet.parqour.ingest.read.nodes.impl.binary.BinaryNoRepeatIngestNode;
 import org.apache.parquet.parqour.ingest.read.nodes.impl.i32.Int32NoRepeatIngestNode;
 import org.apache.parquet.parqour.ingest.read.nodes.impl.i32.Int32RepeatingIngestNode;
 import org.apache.parquet.parqour.ingest.schema.SchemaInfo;
@@ -18,46 +19,49 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
  */
 public class IngestNodeGenerator {
   public static AggregatingIngestNode generateAggregationNode(SchemaInfo schemaInfo, AggregatingIngestNode parent, String path, GroupType schemaNode,
-                                                        DiskInterfaceManager diskInterfaceManager, int childIndex) {
+                                                        DiskInterfaceManager diskInterfaceManager, int columnIndex) {
     switch (schemaNode.getRepetition()) {
       case REQUIRED:
       case OPTIONAL:
-        return new NoRepeatGroupIngestNode(schemaInfo, parent, path, schemaNode, diskInterfaceManager, childIndex);
+        return new NoRepeatGroupIngestNode(schemaInfo, parent, path, schemaNode, diskInterfaceManager, columnIndex);
       case REPEATED:
-        return new RepeatingGroupIngestNode(schemaInfo, parent, path, schemaNode, diskInterfaceManager, childIndex);
+        return new RepeatingGroupIngestNode(schemaInfo, parent, path, schemaNode, diskInterfaceManager, columnIndex);
     }
 
     throw new NotImplementedException();
   }
 
   public static ColumnIngestNodeBase generateIngestNode(SchemaInfo schemaInfo, AggregatingIngestNode parent, ColumnDescriptor descriptor,
-                                                           PrimitiveType schemaNode, DiskInterfaceManager diskInterfaceManager, int childIndex) {
+                                                           PrimitiveType schemaNode, DiskInterfaceManager diskInterfaceManager, int columnIndex) {
     switch (schemaNode.getRepetition()) {
       case REQUIRED:
       case OPTIONAL:
-        return generateNoRepeatIngestNode(schemaInfo, parent, descriptor, schemaNode, diskInterfaceManager, childIndex);
+        return generateNoRepeatIngestNode(schemaInfo, parent, descriptor, schemaNode, diskInterfaceManager, columnIndex);
       case REPEATED:
-        return generateRepeatingIngestNode(schemaInfo, parent, descriptor, schemaNode, diskInterfaceManager, childIndex);
+        return generateRepeatingIngestNode(schemaInfo, parent, descriptor, schemaNode, diskInterfaceManager, columnIndex);
     }
 
     throw new NotImplementedException();
   }
 
   private static ColumnIngestNodeBase generateNoRepeatIngestNode(SchemaInfo schemaInfo, AggregatingIngestNode parent, ColumnDescriptor descriptor,
-                                                        PrimitiveType schemaNode, DiskInterfaceManager diskInterfaceManager, int childIndex) {
+                                                        PrimitiveType schemaNode, DiskInterfaceManager diskInterfaceManager, int columnIndex) {
     switch (schemaNode.getPrimitiveTypeName()) {
       case INT32:
-        return new Int32NoRepeatIngestNode(schemaInfo, parent, schemaNode, descriptor, diskInterfaceManager, childIndex);
+        return new Int32NoRepeatIngestNode(schemaInfo, parent, schemaNode, descriptor, diskInterfaceManager, columnIndex);
+
+      case BINARY:
+        return new BinaryNoRepeatIngestNode(schemaInfo, parent, schemaNode, descriptor, diskInterfaceManager, columnIndex);
     }
 
     throw new NotImplementedException();
   }
 
   private static ColumnIngestNodeBase generateRepeatingIngestNode(SchemaInfo schemaInfo, AggregatingIngestNode parent, ColumnDescriptor descriptor,
-                                                                 PrimitiveType schemaNode, DiskInterfaceManager diskInterfaceManager, int childIndex) {
+                                                                 PrimitiveType schemaNode, DiskInterfaceManager diskInterfaceManager, int columnIndex) {
     switch (schemaNode.getPrimitiveTypeName()) {
       case INT32:
-        return new Int32RepeatingIngestNode(schemaInfo, parent, schemaNode, descriptor, diskInterfaceManager, childIndex);
+        return new Int32RepeatingIngestNode(schemaInfo, parent, schemaNode, descriptor, diskInterfaceManager, columnIndex);
     }
 
     throw new NotImplementedException();
