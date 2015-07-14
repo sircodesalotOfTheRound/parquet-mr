@@ -11,17 +11,14 @@ public abstract class AdvanceableCursor implements Cursor {
   private final String name;
 
   protected int start = 0;
-  protected int end = 1;
 
   public AdvanceableCursor(String name) {
     this.name = name;
     this.start = 0;
-    this.end = 1;
   }
 
-  public AdvanceableCursor setRange(int start, int end) {
+  public AdvanceableCursor advanceTo(int start) {
     this.start = start;
-    this.end = end;
     return this;
   }
 
@@ -93,7 +90,7 @@ public abstract class AdvanceableCursor implements Cursor {
     throw new DataIngestException("Invalid path");
   }
 
-  public RecordSet<Cursor> fieldStartIteration(int startOffset) {
+  public RecordSet<Cursor> fieldStartIteration(int columIndex, int startOffset) {
     throw new DataIngestException("Invalid path");
   }
 

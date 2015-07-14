@@ -58,10 +58,10 @@ public final class Int32RepeatingIngestNode extends ColumnIngestNodeBase<Int32Fa
       }
 
       boolean isDefined = currentEntryDefinitionLevel >= definitionLevelAtThisNode;
-      boolean requiresSchemaLinkFromParent = currentEntryRepetitionLevel <= parentRepetitionLevel;
+      boolean requiresNewList = currentEntryRepetitionLevel < repetitionLevelAtThisNode;
 
       // Manage list creation:
-      if (isDefined && requiresSchemaLinkFromParent) {
+      if (isDefined && requiresNewList) {
         if (numberOfItemsInList > 0) {
           rowVector[listHeaderIndex] = numberOfItemsInList;
           numberOfItemsInList = 0;
@@ -77,7 +77,7 @@ public final class Int32RepeatingIngestNode extends ColumnIngestNodeBase<Int32Fa
         rowVector[++writeIndex] = null;
       }
 
-      if (requiresSchemaLinkFromParent) {
+      if (requiresNewList) {
         parent.linkSchema(this);
       }
 

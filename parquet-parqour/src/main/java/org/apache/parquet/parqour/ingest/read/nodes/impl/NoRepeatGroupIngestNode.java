@@ -1,6 +1,5 @@
 package org.apache.parquet.parqour.ingest.read.nodes.impl;
 
-import org.apache.parquet.parqour.exceptions.DataIngestException;
 import org.apache.parquet.parqour.ingest.paging.DiskInterfaceManager;
 import org.apache.parquet.parqour.ingest.read.nodes.categories.AggregatingIngestNode;
 import org.apache.parquet.parqour.ingest.read.nodes.categories.IngestNode;
@@ -51,13 +50,4 @@ public final class NoRepeatGroupIngestNode extends AggregatingIngestNode {
     }
   }
 
-  @Override
-  public int determineWriteIndexForRelationshipList(int definitionLevel, int repetitionLevel, int childIndex, boolean isDefined) {
-    throw new DataIngestException("Non-repeating group nodes should not define repeating lists.");
-  }
-
-  @Override
-  public void endSchemaRepetitionList() {
-    throw new DataIngestException("Non-repeating group nodes should not define repeating lists.");
-  }
 }

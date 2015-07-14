@@ -152,28 +152,34 @@ public class GroupAggregateCursor extends AdvanceableCursor implements Iterable<
 
   @Override
   public RollableRecordSet<Integer> i32Iter(int nodeIndex) {
+    if (true) {
+      throw new NotImplementedException();
+    }
     int start = childNodeLinks[nodeIndex][this.start];
-    int end = childNodeLinks[nodeIndex][this.start + 1];
 
-    childCursorsByIndex[nodeIndex].setRange(start, end);
+    childCursorsByIndex[nodeIndex].advanceTo(start);
     return childCursorsByIndex[nodeIndex].i32Iter();
   }
 
   public RecordSet<Cursor> fieldIter(int nodeIndex) {
+    if (true) {
+      throw new NotImplementedException();
+    }
+
     int start = childNodeLinks[nodeIndex][this.start];
     int end = childNodeLinks[nodeIndex][this.start + 1];
 
-    childCursorsByIndex[nodeIndex].setRange(start, end);
+    childCursorsByIndex[nodeIndex].advanceTo(start);
     return childCursorsByIndex[nodeIndex].fieldIter();
   }
 
   @Override
   public RecordSet<Cursor> fieldIter(String path) {
-    int index = this.cursorIndexes.get(path);
-    Integer startOffset = childNodeLinks[index][start];
+    int columnIndex = this.cursorIndexes.get(path);
+    Integer startOffset = childNodeLinks[columnIndex][start];
 
     if (startOffset != null) {
-      return childCursorsByIndex[index].fieldStartIteration(startOffset);
+      return childCursorsByIndex[columnIndex].fieldStartIteration(columnIndex, startOffset);
     } else {
       return RollableRecordSet.EMPTY_CURSOR_RECORDSET;
     }
@@ -181,7 +187,8 @@ public class GroupAggregateCursor extends AdvanceableCursor implements Iterable<
 
   @Override
   public Iterator<Cursor> iterator() {
-    return new FieldIterator(this, start, end);
+    throw new NotImplementedException();
+    //return new FieldIterator(this, start);
   }
 
   private static class FieldIterator implements Iterator<Cursor> {
@@ -206,7 +213,7 @@ public class GroupAggregateCursor extends AdvanceableCursor implements Iterable<
 
     @Override
     public Cursor next() {
-      cursor.setRange(index, index + 1);
+      cursor.advanceTo(index);
       index++;
       return cursor;
     }

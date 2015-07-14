@@ -134,10 +134,8 @@ public abstract class AggregatingIngestNode extends IngestNode {
   // forms the content of the new list.
   public abstract void linkSchema(IngestNode child);
   public abstract void finishRow();
-  public abstract int determineWriteIndexForRelationshipList(int definitionLevel, int repetitionLevel, int childIndex, boolean childIsDefined);
-  public abstract void endSchemaRepetitionList();
 
-    /*if (currentRowNumber != rowNumber) {
+  /*if (currentRowNumber != rowNumber) {
       relationshipLinkWriteIndex = -1;
       currentRowNumber = rowNumber;
     }

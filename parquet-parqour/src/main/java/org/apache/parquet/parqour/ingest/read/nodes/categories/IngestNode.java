@@ -123,7 +123,7 @@ public abstract class IngestNode {
   public boolean canPerformTrueFastForwards() { return this.canPerformTrueFastForwards; }
   public IngestNodeCategory category() { return this.category; }
   public Type.Repetition repetitionType() { return schemaNode.getRepetition(); }
-  public int repetitionLevel() { return this.repetitionLevelAtThisNode; }
+  public int nodeRepetitionLevel() { return this.repetitionLevelAtThisNode; }
   public int nodeDefinitionLevel() { return this.definitionLevelAtThisNode; }
 
   public final int currentEntryDefinitionLevel() { return this.currentEntryDefinitionLevel; }

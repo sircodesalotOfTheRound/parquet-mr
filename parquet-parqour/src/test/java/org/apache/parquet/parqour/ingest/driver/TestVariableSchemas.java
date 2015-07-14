@@ -27,7 +27,7 @@ import static org.apache.parquet.schema.Type.Repetition.REQUIRED;
  * Created by sircodesalot on 6/22/15.
  */
 public class TestVariableSchemas {
-  private static final int TOTAL_ROWS = TestTools.generateRandomInt(10000);
+  private static final int TOTAL_ROWS = TestTools.generateRandomInt(1000000);
 
   public static class SingleRequiredColumnSchema extends WriteTools.TestableParquetWriteContext {
     private static MessageType SCHEMA = new MessageType("single_column",
@@ -283,7 +283,7 @@ public class TestVariableSchemas {
       for (Cursor cursor : Parqour.query(TestTools.TEST_FILE_PATH)) {
         int repeat = 0;
         for (Cursor group : cursor.fieldIter("group-list")) {
-          assertEquals(index + repeat, (int)group.i32("value"));
+          assertEquals(index + repeat, group.i32("value") + repeat);
           repeat++;
         }
         assertEquals((index % 5), repeat);
