@@ -27,7 +27,6 @@ public class SkipChain {
 
   public SkipChain(Iterable<IngestNode> ingestNodes) {
     for (IngestNode ingestNode : ingestNodes) {
-      // Todo: remove this cast.
       SkipChainWayPoint wayPoint = new SkipChainWayPoint((ColumnIngestNodeBase) ingestNode);
       if (begin == null) {
         begin = end = wayPoint;

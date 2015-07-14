@@ -38,6 +38,7 @@ public class EvaluationPathAnalysis {
 
     this.indexesForLeaves = calculateIndexesForLeaves(predicateLeaves);
     this.path = calculatePath(predicate.predicateTree());
+
     this.noPredicateIngestPath = new SkipChain(nodesNotAssociatedWithAPredicate);
   }
 

@@ -121,7 +121,6 @@ public abstract class PackedEncodingSegmentReader {
   }
 
   private static int readHeader(byte[] data, int offset) {
-    // Todo: clean this up.
     int value = 0;
     int i = 0;
     int aByte;
