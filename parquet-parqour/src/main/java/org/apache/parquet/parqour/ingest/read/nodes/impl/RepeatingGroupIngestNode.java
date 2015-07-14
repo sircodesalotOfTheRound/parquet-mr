@@ -11,6 +11,7 @@ import org.apache.parquet.schema.GroupType;
  */
 public final class RepeatingGroupIngestNode extends AggregatingIngestNode {
 
+  // Todo: Make these an array, not a single item.
   private int listHeaderIndex;
   private int numberOfItemsInList;
 

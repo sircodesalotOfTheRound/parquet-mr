@@ -20,11 +20,11 @@ public final class RootIngestNode extends AggregatingIngestNode {
       relationshipLinkWriteIndex = -1;
     }
 
-    Integer[] schemaLinks = this.collectAggregate().getlinksForChild(child.columnIndex());
+    int columnIndex = child.columnIndex();
     if (child.currentEntryDefinitionLevel() >= child.nodeDefinitionLevel()) {
-      schemaLinks[++relationshipLinkWriteIndex] = child.currentLinkSiteIndex();
+      schemaLinks[columnIndex][++relationshipLinkWriteIndex] = child.currentLinkSiteIndex();
     } else {
-      schemaLinks[++relationshipLinkWriteIndex] = null;
+      schemaLinks[columnIndex][++relationshipLinkWriteIndex] = null;
     }
   }
 

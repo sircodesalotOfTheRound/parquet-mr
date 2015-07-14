@@ -16,7 +16,6 @@ import org.apache.parquet.schema.Type;
 public final class Int32RepeatingIngestNode extends ColumnIngestNodeBase<Int32FastForwardReader> {
   private int currentValue = 0;
 
-  private int ingestBufferLength;
   private Integer[] ingestBuffer;
   private final Int32IterableCursor cursor;
 
@@ -126,7 +125,7 @@ public final class Int32RepeatingIngestNode extends ColumnIngestNodeBase<Int32Fa
 
   @Override
   public final void expandIngestBuffer() {
-    int newIngestBufferLength = this.ingestBufferLength * 2;
+    int newIngestBufferLength = super.ingestBufferLength * 2;
     Integer[] newIngestBuffer = new Integer[newIngestBufferLength];
     System.arraycopy(this.ingestBuffer, 0, newIngestBuffer, 0, ingestBufferLength);
 

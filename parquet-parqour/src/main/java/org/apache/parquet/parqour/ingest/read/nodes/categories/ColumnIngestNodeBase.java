@@ -154,7 +154,6 @@ public abstract class ColumnIngestNodeBase<TFFReaderType extends FastForwardRead
   }
 
 
-  protected abstract void expandIngestBuffer();
   protected void reportResults(int rowNumber) {
     parent.setResultsReported(rowNumber, this.columnIndex);
   }

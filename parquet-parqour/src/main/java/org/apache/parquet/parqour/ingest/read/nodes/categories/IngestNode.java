@@ -39,6 +39,8 @@ public abstract class IngestNode {
   protected int currentEntryRepetitionLevel;
   protected int currentLinkSiteIndex;
 
+  protected int ingestBufferLength;
+
   public IngestNode(SchemaInfo schemaInfo, AggregatingIngestNode parent, String path, Type schemaNode, IngestNodeCategory category, int childNodeIndex) {
     this.schemaInfo = schemaInfo;
     this.parent = parent;
@@ -113,6 +115,7 @@ public abstract class IngestNode {
   }
 
   protected abstract AdvanceableCursor onLinkToParent(AggregatingIngestNode parentNode);
+  protected abstract void expandIngestBuffer();
 
   public String name() { return this.name; }
   public int columnIndex() { return this.columnIndex; }

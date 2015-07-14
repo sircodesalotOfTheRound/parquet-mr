@@ -49,5 +49,4 @@ public final class NoRepeatGroupIngestNode extends AggregatingIngestNode {
       parent.finishRow();
     }
   }
-
 }

@@ -61,5 +61,10 @@ public class TestIngestNodeInfo {
     protected AdvanceableCursor onLinkToParent(AggregatingIngestNode parentNode) {
       return mock(AdvanceableCursor.class);
     }
+
+    @Override
+    protected void expandIngestBuffer() {
+
+    }
   }
 }

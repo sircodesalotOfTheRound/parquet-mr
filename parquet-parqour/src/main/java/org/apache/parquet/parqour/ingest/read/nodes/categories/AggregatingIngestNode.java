@@ -27,6 +27,8 @@ public abstract class AggregatingIngestNode extends IngestNode {
   private final int childColumnCount;
   private final GroupAggregateCursor aggregate;
 
+  protected Integer[][] schemaLinks;
+
   protected AggregatingIngestNode(SchemaInfo schemaInfo, Type schemaNode, DiskInterfaceManager diskInterfaceManager) {
     super(schemaInfo, null, "", schemaNode, IngestNodeCategory.AGGREGATOR, -1);
 
@@ -36,7 +38,9 @@ public abstract class AggregatingIngestNode extends IngestNode {
     this.children = collectChildren(groupSchema, EMPTY_PATH);
     this.childColumnCount = children.size();
 
-    this.aggregate = generateAggregateCursor(childColumnCount);
+    this.ingestBufferLength = 100;
+    this.schemaLinks = generateSchemaLinks(childColumnCount, ingestBufferLength );
+    this.aggregate = generateAggregateCursor(schemaLinks, ingestBufferLength );
   }
 
   public AggregatingIngestNode(SchemaInfo schemaInfo, AggregatingIngestNode parent,
@@ -50,7 +54,9 @@ public abstract class AggregatingIngestNode extends IngestNode {
     this.diskInterfaceManager = diskInterfaceManager;
     this.children = collectChildren(groupSchema, fqn);
     this.childColumnCount = children.size();
-    this.aggregate = generateAggregateCursor(childColumnCount);
+    this.ingestBufferLength = 100;
+    this.schemaLinks = generateSchemaLinks(childColumnCount, ingestBufferLength );
+    this.aggregate = generateAggregateCursor(schemaLinks, ingestBufferLength );
   }
 
   private IngestNodeSet collectChildren(GroupType node, String parentPath) {
@@ -81,20 +87,24 @@ public abstract class AggregatingIngestNode extends IngestNode {
     return new IngestNodeSet(children);
   }
 
-  private GroupAggregateCursor generateAggregateCursor(int childColumnCount) {
+  private Integer[][] generateSchemaLinks(int childColumnCount, int ingestBufferLength) {
+    return new Integer[childColumnCount][ingestBufferLength];
+  }
+
+  private GroupAggregateCursor generateAggregateCursor(Integer[][] schemaLinks, int ingestBufferLength) {
     GroupAggregateCursor aggregate;
     if (this.hasParent && this.repetitionType == Type.Repetition.REPEATED) {
       // The root node is a special case because it always has a 'repeat' even though we
       // don't treat it as though it does.
-      aggregate = new GroupAggregateIterableCursor(name, childColumnCount, 1000);
+      aggregate = new GroupAggregateIterableCursor(name, childColumnCount, ingestBufferLength);
     }  else {
-      aggregate = new GroupAggregateCursor(name, childColumnCount, 1000);
+      aggregate = new GroupAggregateCursor(name, childColumnCount, ingestBufferLength);
     }
 
+    int childIndex = 0;
     for (IngestNode child : this.children) {
-
       // TODO: Write expansion code.
-      aggregate.setResultSetForChildIndex(child.columnIndex(), new Integer[1000]);
+      aggregate.setResultSetForChildIndex(child.columnIndex(), schemaLinks[childIndex++]);
       AdvanceableCursor childCursor = child.onLinkToParent(this);
       aggregate.setChildCursor(child.columnIndex(), childCursor);
     }
@@ -135,41 +145,21 @@ public abstract class AggregatingIngestNode extends IngestNode {
   public abstract void linkSchema(IngestNode child);
   public abstract void finishRow();
 
-  /*if (currentRowNumber != rowNumber) {
-      relationshipLinkWriteIndex = -1;
-      currentRowNumber = rowNumber;
+  @Override
+  protected void expandIngestBuffer() {
+    int newIngestBufferLength = this.ingestBufferLength * 2;
+
+    for (int index = 0; index < childColumnCount; index++) {
+      Integer[] newChildColumnIngestBuffer = new Integer[newIngestBufferLength];
+      System.arraycopy(schemaLinks[index], 0, newChildColumnIngestBuffer, 0, ingestBufferLength);
+      schemaLinks[index] = newChildColumnIngestBuffer;
     }
 
-    // If we require a link from the parent:
-    if (repetitionLevel <= parentRepetitionLevel) {
-      // If the parent is defined:
-      if (definitionLevel >= definitionLevelAtThisNode) {
-        schemaLinksFromParentToChild[++relationshipLinkWriteIndex] = childLinkIndex;
-      } else {
-        schemaLinksFromParentToChild[++relationshipLinkWriteIndex] = null;
-      }
+    this.ingestBufferLength = newIngestBufferLength;
 
-      // If this node reports schema, then continue upstream:
-      if (isSchemaReportingNode) {
-        parent.setSchemaLink(rowNumber, repetitionLevel, definitionLevel, relationshipLinkWriteIndex);
-      }
-    }
+    // Todo: move this code into the cursor.
+    //this.aggregate.setArray(newIngestBuffer);
   }
-  public void finishRow(int childLinkIndex) {
-    // If this node reports schema, then continue upstream:
-    if (isSchemaReportingNode) {
-      parent.finishRow(relationshipLinkWriteIndex);
-    }
-  }
-
-  public void defineNewSchemaRepetition() {
-
-  }
-
-  public void endSchemaRepetition() {
-
-  }
-  */
 
   public String path() { return this.path; }
 
