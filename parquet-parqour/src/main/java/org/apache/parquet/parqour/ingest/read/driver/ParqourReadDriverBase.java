@@ -11,7 +11,7 @@ import org.apache.parquet.parqour.ingest.schema.SchemaInfo;
 /**
  * Created by sircodesalot on 7/10/15.
  */
-public abstract class ParqourReadDriver {
+public abstract class ParqourReadDriverBase {
   protected final SchemaInfo schemaInfo;
   protected final DiskInterfaceManager diskInterfaceManager;
   protected final IngestTree ingestTree;
@@ -22,7 +22,7 @@ public abstract class ParqourReadDriver {
   protected final long rowCount;
   protected long rowNumber;
 
-  public ParqourReadDriver(SchemaInfo schemaInfo) {
+  public ParqourReadDriverBase(SchemaInfo schemaInfo) {
     this.schemaInfo = schemaInfo;
     this.diskInterfaceManager = new DiskInterfaceManager(schemaInfo);
     this.ingestTree = new IngestTree(schemaInfo, diskInterfaceManager);
@@ -42,7 +42,7 @@ public abstract class ParqourReadDriver {
     return ingestTree.root().collectAggregate();
   }
 
-  public static ParqourReadDriver determineReadDriverFromSchemaInfo(SchemaInfo schemaInfo) {
+  public static ParqourReadDriverBase determineReadDriverFromSchemaInfo(SchemaInfo schemaInfo) {
     if (schemaInfo.hasPredicate()) {
       return new ParqourPredicateReadDriver(schemaInfo);
     } else {

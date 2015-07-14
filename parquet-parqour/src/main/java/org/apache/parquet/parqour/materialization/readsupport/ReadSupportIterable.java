@@ -1,4 +1,4 @@
-package org.apache.parquet.parqour.materialization;
+package org.apache.parquet.parqour.materialization.readsupport;
 
 import org.apache.parquet.hadoop.api.ReadSupport;
 import org.apache.parquet.parqour.ingest.cursor.iface.Cursor;
@@ -21,6 +21,6 @@ public class ReadSupportIterable<T> extends Parqour<T> {
 
   @Override
   public Iterator<T> iterator() {
-    return new MaterializingIterator<T>(materializer, iterable.iterator());
+    return new ReadSupportMaterializingIterator<T>(materializer, iterable.iterator());
   }
 }

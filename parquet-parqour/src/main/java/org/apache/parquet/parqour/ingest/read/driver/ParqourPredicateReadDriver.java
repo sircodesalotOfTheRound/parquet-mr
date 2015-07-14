@@ -7,7 +7,7 @@ import org.apache.parquet.parqour.ingest.schema.SchemaInfo;
 /**
  * Created by sircodesalot on 6/9/15.
  */
-public class ParqourPredicateReadDriver extends ParqourReadDriver {
+public class ParqourPredicateReadDriver extends ParqourReadDriverBase {
   private final PredicateTestWayPoint predicatePathStartPoint;
 
   public ParqourPredicateReadDriver(SchemaInfo schemaInfo) {

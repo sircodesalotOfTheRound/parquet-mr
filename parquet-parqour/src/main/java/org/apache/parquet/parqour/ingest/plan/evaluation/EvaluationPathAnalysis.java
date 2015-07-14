@@ -24,7 +24,6 @@ public class EvaluationPathAnalysis {
   private final Map<ColumnPredicate.LeafColumnPredicate, Integer> indexesForLeaves;
   private final PredicateTestWayPoint path;
   private final IngestTree tree;
-  private final IngestNodePartition ingestNodeGraphPartition;
   private final IngestNodeSet nodesAssociatedWithAPredicate;
   private final IngestNodeSet nodesNotAssociatedWithAPredicate;
 
@@ -39,8 +38,6 @@ public class EvaluationPathAnalysis {
 
     this.indexesForLeaves = calculateIndexesForLeaves(predicateLeaves);
     this.path = calculatePath(predicate.predicateTree());
-
-    this.ingestNodeGraphPartition = new IngestNodePartition(tree, predicateLeaves);
     this.noPredicateIngestPath = new SkipChain(nodesNotAssociatedWithAPredicate);
   }
 
@@ -193,10 +190,5 @@ public class EvaluationPathAnalysis {
   public PredicateTestWayPoint path() { return path; }
   public Iterable<ColumnPredicate.LeafColumnPredicate> leaves() { return this.predicateLeaves; }
 
-  @Deprecated
-  public IngestNodeSet ingestNodesWithPredicates() { return this.ingestNodeGraphPartition.ingestNodesWithPredicates(); }
-
-  @Deprecated
-  public IngestNodeSet ingestNodesWithoutPredicates() { return this.ingestNodeGraphPartition.ingestNodesWithoutPredicates(); }
   public SkipChain finalCommitIngestPath() { return this.noPredicateIngestPath; }
 }

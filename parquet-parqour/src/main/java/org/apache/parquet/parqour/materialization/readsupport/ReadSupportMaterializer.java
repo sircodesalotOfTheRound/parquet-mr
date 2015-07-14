@@ -1,4 +1,4 @@
-package org.apache.parquet.parqour.materialization;
+package org.apache.parquet.parqour.materialization.readsupport;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.parquet.hadoop.api.InitContext;

@@ -2,12 +2,12 @@ package org.apache.parquet.parqour.ingest.read.iterator;
 
 import org.apache.parquet.parqour.exceptions.DataIngestException;
 import org.apache.parquet.parqour.ingest.cursor.iface.Cursor;
-import org.apache.parquet.parqour.ingest.read.driver.ParqourReadDriver;
+import org.apache.parquet.parqour.ingest.read.driver.ParqourReadDriverBase;
 import org.apache.parquet.parqour.ingest.read.iterator.filtering.ParqourFilterIterable;
 import org.apache.parquet.parqour.ingest.read.iterator.lamba.Predicate;
 import org.apache.parquet.parqour.ingest.read.iterator.lamba.Projection;
 import org.apache.parquet.parqour.ingest.schema.SchemaInfo;
-import org.apache.parquet.parqour.materialization.LambdaMaterializer;
+import org.apache.parquet.parqour.materialization.lambda.LambdaMaterializer;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.Iterator;
@@ -18,13 +18,13 @@ import java.util.Iterator;
 public class ParqourRecordset extends Parqour<Cursor> {
   public static class ParqourCursorIterator implements Iterator<Cursor> {
     private final SchemaInfo schemaInfo;
-    private final ParqourReadDriver driver;
+    private final ParqourReadDriverBase driver;
     private final Cursor cursor;
     private boolean itemAvailable;
 
     public ParqourCursorIterator(SchemaInfo schemaInfo) {
       this.schemaInfo = schemaInfo;
-      this.driver = ParqourReadDriver.determineReadDriverFromSchemaInfo(schemaInfo);
+      this.driver = ParqourReadDriverBase.determineReadDriverFromSchemaInfo(schemaInfo);
       this.cursor = driver.cursor();
 
       this.itemAvailable = false;

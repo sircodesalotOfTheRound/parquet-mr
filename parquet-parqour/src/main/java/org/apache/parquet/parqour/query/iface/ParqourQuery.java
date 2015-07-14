@@ -12,7 +12,7 @@ import org.apache.parquet.parqour.ingest.read.iterator.Parqour;
 import org.apache.parquet.parqour.ingest.read.iterator.filtering.ParqourQueryFilterIterable;
 import org.apache.parquet.parqour.ingest.read.iterator.lamba.Predicate;
 import org.apache.parquet.parqour.ingest.schema.SchemaInfo;
-import org.apache.parquet.parqour.materialization.ReadSupportIterable;
+import org.apache.parquet.parqour.materialization.readsupport.ReadSupportIterable;
 import org.apache.parquet.parqour.query.expressions.pql.TextQueryTreeRootExpression;
 import org.apache.parquet.schema.MessageType;
 

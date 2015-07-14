@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Created by sircodesalot on 7/10/15.
  */
-public class ParqourNoPredicateReadDriver extends ParqourReadDriver {
+public class ParqourNoPredicateReadDriver extends ParqourReadDriverBase {
   private final ColumnIngestNodeBase[] columnIngestNodes;
 
   public ParqourNoPredicateReadDriver(SchemaInfo schemaInfo) {

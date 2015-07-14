@@ -1,4 +1,4 @@
-package org.apache.parquet.parqour.materialization;
+package org.apache.parquet.parqour.materialization.readsupport;
 
 import org.apache.parquet.parqour.ingest.cursor.iface.Cursor;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
@@ -8,11 +8,11 @@ import java.util.Iterator;
 /**
  * Created by sircodesalot on 7/4/15.
  */
-public class MaterializingIterator<T> implements Iterator<T> {
+public class ReadSupportMaterializingIterator<T> implements Iterator<T> {
   private final Iterator<Cursor> iterator;
   private final ReadSupportMaterializer<T> materializer;
 
-  public MaterializingIterator(ReadSupportMaterializer<T> materializer, Iterator<Cursor> iterator) {
+  public ReadSupportMaterializingIterator(ReadSupportMaterializer<T> materializer, Iterator<Cursor> iterator) {
     this.materializer = materializer;
     this.iterator = iterator;
   }

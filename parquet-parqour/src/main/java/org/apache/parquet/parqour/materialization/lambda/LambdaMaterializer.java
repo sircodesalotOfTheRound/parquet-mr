@@ -1,4 +1,4 @@
-package org.apache.parquet.parqour.materialization;
+package org.apache.parquet.parqour.materialization.lambda;
 
 import org.apache.parquet.parqour.ingest.read.iterator.Parqour;
 import org.apache.parquet.parqour.ingest.read.iterator.lamba.Projection;
