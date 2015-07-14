@@ -14,7 +14,7 @@ public final class PredicateTestWayPoint extends WayPoint {
   public static final PredicateTestWayPoint SUCCESS = new PredicateTestWayPoint("SUCCESS", WayPointCategory.SUCCESS);
   public static final PredicateTestWayPoint FAILURE = new PredicateTestWayPoint("FAILURE", WayPointCategory.FAILURE);
 
-  private final ColumnPredicate.LeafColumnPredicate leafNode;
+  private final ColumnPredicate.LeafColumnPredicate predicateLeafNode;
   private final PredicateTestWayPoint successPath;
   private final PredicateTestWayPoint failurePath;
   private final String representation;
@@ -22,40 +22,52 @@ public final class PredicateTestWayPoint extends WayPoint {
   private final SkipChain successSkipChain;
   private final SkipChain failureSkipChain;
 
-  private final IngestNodeSet dependentIngestNodes;
+  private final ColumnIngestNodeBase[] dependentIngestNodes;
 
   protected PredicateTestWayPoint(String representation, WayPointCategory category) {
     super(category);
-    this.leafNode = null;
+    this.predicateLeafNode = null;
     this.successPath = this;
     this.failurePath = this;
     this.representation = representation;
 
-    this.dependentIngestNodes = new IngestNodeSet();
+    this.dependentIngestNodes = new ColumnIngestNodeBase[0];
     this.successSkipChain = new SkipChain();
     this.failureSkipChain = new SkipChain();
   }
 
-  public PredicateTestWayPoint(IngestTree tree, ColumnPredicate.LeafColumnPredicate leafNode, PredicateTestWayPoint successPath, PredicateTestWayPoint failurePath) {
-    this(tree, leafNode, successPath, failurePath, new SkipChain(), new SkipChain());
+  public PredicateTestWayPoint(IngestTree tree, ColumnPredicate.LeafColumnPredicate predicateLeafNode, PredicateTestWayPoint successPath, PredicateTestWayPoint failurePath) {
+    this(tree, predicateLeafNode, successPath, failurePath, new SkipChain(), new SkipChain());
   }
 
-  public PredicateTestWayPoint(IngestTree tree, ColumnPredicate.LeafColumnPredicate leafNode, PredicateTestWayPoint successPath, PredicateTestWayPoint failurePath,
+  public PredicateTestWayPoint(IngestTree tree, ColumnPredicate.LeafColumnPredicate predicateLeafNode, PredicateTestWayPoint successPath, PredicateTestWayPoint failurePath,
                                SkipChain successSkipChain, SkipChain failureSkipChain) {
     super(WayPointCategory.TEST);
 
-    this.leafNode = leafNode;
+    this.predicateLeafNode = predicateLeafNode;
     this.successPath = successPath;
     this.failurePath = failurePath;
-    this.representation = leafNode.columnPath().toDotString();
+    this.representation = predicateLeafNode.columnPath().toDotString();
 
     this.successSkipChain = successSkipChain;
     this.failureSkipChain = failureSkipChain;
 
-    this.dependentIngestNodes = tree.collectIngestNodeDependenciesForPaths(leafNode.columnPathString());
+    this.dependentIngestNodes = collectIngestNodeDependencies(tree);
   }
 
-  public ColumnPredicate.LeafColumnPredicate leafNode() { return this.leafNode; }
+  private ColumnIngestNodeBase[] collectIngestNodeDependencies(IngestTree tree) {
+    IngestNodeSet ingestNodeSet = tree.collectIngestNodeDependenciesForPaths(predicateLeafNode.columnPathString());
+    ColumnIngestNodeBase[] dependentIngestNodes = new ColumnIngestNodeBase[ingestNodeSet.size()];
+
+    int index = 0;
+    for (IngestNode ingestNode : ingestNodeSet) {
+      dependentIngestNodes[index++] = (ColumnIngestNodeBase)ingestNode;
+    }
+
+    return dependentIngestNodes;
+  }
+
+  public ColumnPredicate.LeafColumnPredicate leafNode() { return this.predicateLeafNode; }
   public PredicateTestWayPoint successPath() { return this.successPath; }
   public PredicateTestWayPoint failurePath() { return this.failurePath; }
 
@@ -72,13 +84,12 @@ public final class PredicateTestWayPoint extends WayPoint {
 
   public boolean execute(int rowNumber) {
     // First make sure all dependencies have been read.
-    for (IngestNode dependency : dependentIngestNodes) {
-      // Todo: remove this cast.
-      ((ColumnIngestNodeBase)dependency).read(rowNumber);
+    for (ColumnIngestNodeBase dependentIngestNode : dependentIngestNodes) {
+      dependentIngestNode.read(rowNumber);
     }
 
     // Here is where the testing would happen.
-    return leafNode.test(null);
+    return predicateLeafNode.test(null);
   }
 
   @Override
