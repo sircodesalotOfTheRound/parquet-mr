@@ -28,6 +28,7 @@ public abstract class AggregatingIngestNode extends IngestNode {
   private final GroupAggregateCursor aggregate;
 
   protected Integer[][] schemaLinks;
+  protected int relationshipLinkWriteIndex = -1;
 
   protected AggregatingIngestNode(SchemaInfo schemaInfo, Type schemaNode, DiskInterfaceManager diskInterfaceManager) {
     super(schemaInfo, null, "", schemaNode, IngestNodeCategory.AGGREGATOR, -1);
@@ -62,11 +63,11 @@ public abstract class AggregatingIngestNode extends IngestNode {
   private IngestNodeSet collectChildren(GroupType node, String parentPath) {
     List<IngestNode> children = new ArrayList<IngestNode>();
 
-
     for (int childColumnIndex = 0; childColumnIndex < node.getFields().size(); childColumnIndex++) {
       Type child = node.getFields().get(childColumnIndex);
       String childPath = SchemaInfo.computePath(parentPath, child.getName());
 
+      // Todo: the shape of this code is odd. Clean up.
       if (child.isPrimitive()) {
         ColumnIngestNodeBase ingestNodeBase =
           IngestNodeGenerator.generateIngestNode(schemaInfo, this,

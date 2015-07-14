@@ -32,8 +32,6 @@ public abstract class IngestNode {
 
   protected long currentRowNumber = 0;
 
-  // TODO: This is an aggregation node concept only.
-  protected int relationshipLinkWriteIndex = -1;
 
   protected int currentEntryDefinitionLevel;
   protected int currentEntryRepetitionLevel;
