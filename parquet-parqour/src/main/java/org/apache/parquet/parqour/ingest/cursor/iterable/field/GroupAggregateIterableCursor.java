@@ -25,7 +25,6 @@ import java.util.Map;
  * connect the results without the overhead of many small allocations + collections.
  */
 public class GroupAggregateIterableCursor extends GroupAggregateCursor implements Iterable<Cursor> {
-  private final int fieldCount;
   private Integer[][] schemaLinks;
 
   private final AdvanceableCursor[] childCursorsByIndex;
@@ -36,7 +35,6 @@ public class GroupAggregateIterableCursor extends GroupAggregateCursor implement
   public GroupAggregateIterableCursor(String name, int columnIndex, AdvanceableCursor[] childCursors, Integer[][] schemaLinks) {
     super(name, columnIndex, childCursors, schemaLinks);
 
-    this.fieldCount = schemaLinks.length;
     this.schemaLinks = schemaLinks;
     this.childCursors = new CursorHash();
 
