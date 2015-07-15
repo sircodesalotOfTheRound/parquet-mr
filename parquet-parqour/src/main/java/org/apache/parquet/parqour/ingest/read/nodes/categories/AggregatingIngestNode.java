@@ -1,5 +1,6 @@
 package org.apache.parquet.parqour.ingest.read.nodes.categories;
 
+import org.apache.parquet.column.ColumnDescriptor;
 import org.apache.parquet.parqour.ingest.cursor.GroupAggregateCursor;
 import org.apache.parquet.parqour.ingest.cursor.iface.AdvanceableCursor;
 import org.apache.parquet.parqour.ingest.cursor.iterable.field.GroupAggregateIterableCursor;
@@ -67,22 +68,19 @@ public abstract class AggregatingIngestNode extends IngestNode {
       Type child = node.getFields().get(childColumnIndex);
       String childPath = SchemaInfo.computePath(parentPath, child.getName());
 
-      // Todo: the shape of this code is odd. Clean up.
+      IngestNode newIngestNode;
       if (child.isPrimitive()) {
-        ColumnIngestNodeBase ingestNodeBase =
+        ColumnDescriptor columnDescriptor = schemaInfo.getColumnDescriptorByPath(childPath);
+        newIngestNode =
           IngestNodeGenerator.generateIngestNode(schemaInfo, this,
-            schemaInfo.getColumnDescriptorByPath(childPath),
-            (PrimitiveType) child,
-            diskInterfaceManager,
-            childColumnIndex);
+            columnDescriptor, child.asPrimitiveType(), diskInterfaceManager, childColumnIndex);
 
-        children.add(ingestNodeBase);
       } else {
-        AggregatingIngestNode aggregationNode = IngestNodeGenerator.generateAggregationNode(schemaInfo,
-          this, childPath, (GroupType) child, diskInterfaceManager, childColumnIndex);
-
-        children.add(aggregationNode);
+        newIngestNode = IngestNodeGenerator.generateAggregationNode(schemaInfo, this,
+          childPath, child.asGroupType(), diskInterfaceManager, childColumnIndex);
       }
+
+      children.add(newIngestNode);
     }
 
     return new IngestNodeSet(children);
