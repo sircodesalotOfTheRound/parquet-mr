@@ -11,27 +11,27 @@ import org.apache.parquet.schema.GroupType;
  */
 public final class NoRepeatGroupIngestNode extends AggregatingIngestNode {
 
+  private int schemaLinkWriteIndex = 0;
   public NoRepeatGroupIngestNode(SchemaInfo schemaInfo, AggregatingIngestNode aggregatingIngestNode, String childPath, GroupType child, DiskInterfaceManager diskInterfaceManager, int childColumnIndex) {
     super(schemaInfo, aggregatingIngestNode, childPath, child, diskInterfaceManager, childColumnIndex);
-
   }
 
   @Override
   public final void linkSchema(IngestNode child) {
     if (currentRowNumber != child.currentRowNumber()) {
       currentRowNumber = child.currentRowNumber();
-      relationshipLinkWriteIndex = 0;
+      schemaLinkWriteIndex = 0;
     }
 
     this.currentEntryRepetitionLevel = child.currentEntryRepetitionLevel();
     this.currentEntryDefinitionLevel = child.currentEntryDefinitionLevel();
-    this.currentLinkSiteIndex = relationshipLinkWriteIndex;
+    this.currentLinkSiteIndex = schemaLinkWriteIndex;
 
     int childColumnIndex = child.columnIndex();
     if (currentEntryDefinitionLevel >= child.nodeDefinitionLevel()) {
-      schemaLinks[childColumnIndex][relationshipLinkWriteIndex++] = child.currentLinkSiteIndex();
+      schemaLinks[childColumnIndex][schemaLinkWriteIndex++] = child.currentLinkSiteIndex();
     } else {
-      schemaLinks[childColumnIndex][relationshipLinkWriteIndex++] = null;
+      schemaLinks[childColumnIndex][schemaLinkWriteIndex++] = null;
     }
 
     // If we require a link from the parent:

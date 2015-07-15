@@ -15,17 +15,21 @@ public final class RootIngestNode extends AggregatingIngestNode {
 
   @Override
   public final void linkSchema(IngestNode child) {
+    int childColumnIndex = child.columnIndex();
+    int schemaLinkWriteIndex = schemaLinkWriteIndexForColumn[childColumnIndex];
+
     if (currentRowNumber != child.currentRowNumber()) {
       currentRowNumber = child.currentRowNumber();
-      relationshipLinkWriteIndex = 0;
+      schemaLinkWriteIndex = 0;
     }
 
-    int columnIndex = child.columnIndex();
     if (child.currentEntryDefinitionLevel() >= child.nodeDefinitionLevel()) {
-      schemaLinks[columnIndex][relationshipLinkWriteIndex] = child.currentLinkSiteIndex();
+      schemaLinks[childColumnIndex][schemaLinkWriteIndex] = child.currentLinkSiteIndex();
     } else {
-      schemaLinks[columnIndex][relationshipLinkWriteIndex] = null;
+      schemaLinks[childColumnIndex][schemaLinkWriteIndex] = null;
     }
+
+    this.schemaLinkWriteIndexForColumn[childColumnIndex] = schemaLinkWriteIndex;
   }
 
   @Override

@@ -24,12 +24,15 @@ public final class RepeatingGroupIngestNode extends AggregatingIngestNode {
 
   @Override
   public final void linkSchema(IngestNode child) {
-    if (currentRowNumber != child.currentRowNumber()) {
-      this.relationshipLinkWriteIndex = 0;
-      this.currentRowNumber = child.currentRowNumber();
+    int childColumnIndex = child.columnIndex();
+    int schemaLinkWriteIndex = schemaLinkWriteIndexForColumn[childColumnIndex];
 
+    if (currentRowNumber != child.currentRowNumber()) {
+      this.currentRowNumber = child.currentRowNumber();
       this.listHeaderIndex = -1;
       this.numberOfItemsInList = 0;
+
+      schemaLinkWriteIndex = 0;
     }
 
     this.currentEntryRepetitionLevel = child.currentEntryRepetitionLevel();
@@ -38,21 +41,20 @@ public final class RepeatingGroupIngestNode extends AggregatingIngestNode {
     boolean childLinkIsDefined = currentEntryDefinitionLevel >= child.nodeDefinitionLevel();
     boolean requiresNewList = currentEntryRepetitionLevel < repetitionLevelAtThisNode;
 
-    int childColumnIndex = child.columnIndex();
     if (childLinkIsDefined && requiresNewList) {
       if (numberOfItemsInList > 0) {
         schemaLinks[childColumnIndex][listHeaderIndex] = numberOfItemsInList;
         numberOfItemsInList = 0;
       }
 
-      listHeaderIndex = relationshipLinkWriteIndex++;
+      listHeaderIndex = schemaLinkWriteIndex++;
     }
 
     if (childLinkIsDefined) {
-      schemaLinks[childColumnIndex][relationshipLinkWriteIndex++] = child.currentLinkSiteIndex();
+      schemaLinks[childColumnIndex][schemaLinkWriteIndex++] = child.currentLinkSiteIndex();
       this.numberOfItemsInList++;
     } else {
-      schemaLinks[childColumnIndex][relationshipLinkWriteIndex++] = null;
+      schemaLinks[childColumnIndex][schemaLinkWriteIndex++] = null;
     }
 
     this.currentLinkSiteIndex = listHeaderIndex;
@@ -64,6 +66,8 @@ public final class RepeatingGroupIngestNode extends AggregatingIngestNode {
         parent.linkSchema(this);
       }
     }
+
+    this.schemaLinkWriteIndexForColumn[childColumnIndex] = schemaLinkWriteIndex;
   }
 
   @Override
