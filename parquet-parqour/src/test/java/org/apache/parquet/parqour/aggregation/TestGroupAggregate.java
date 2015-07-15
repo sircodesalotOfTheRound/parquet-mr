@@ -9,12 +9,14 @@ import static org.junit.Assert.assertEquals;
 /**
  * Created by sircodesalot on 6/16/15.
  */
+@Deprecated
 public class TestGroupAggregate {
   private static int TOTAL_SIZE = TestTools.generateRandomInt(1000000);
 
   @Test
+  @Deprecated
   public void testColumnAggregateList() {
-    int numberOfChildColumns = 3;
+    /*int numberOfChildColumns = 3;
     int numberOfRows = TOTAL_SIZE;
     GroupAggregateCursor aggregate = new GroupAggregateCursor("simple_cursor", numberOfChildColumns, numberOfRows);
 
@@ -40,6 +42,6 @@ public class TestGroupAggregate {
           assertEquals(multiplier, aggregate.getLinkForChild(columnIndex, rowIndex));
         }
       }
-    }
+    }*/
   }
 }

@@ -9,7 +9,6 @@ import org.apache.parquet.parqour.ingest.read.nodes.IngestNodeGenerator;
 import org.apache.parquet.parqour.ingest.read.nodes.IngestNodeSet;
 import org.apache.parquet.parqour.ingest.schema.SchemaInfo;
 import org.apache.parquet.schema.GroupType;
-import org.apache.parquet.schema.PrimitiveType;
 import org.apache.parquet.schema.Type;
 
 import java.util.ArrayList;
@@ -42,7 +41,7 @@ public abstract class AggregatingIngestNode extends IngestNode {
 
     this.ingestBufferLength = 100;
     this.schemaLinks = generateSchemaLinks(childColumnCount, ingestBufferLength );
-    this.aggregate = generateAggregateCursor(schemaLinks, ingestBufferLength );
+    this.aggregate = generateAggregateCursor(children, schemaLinks);
   }
 
   public AggregatingIngestNode(SchemaInfo schemaInfo, AggregatingIngestNode parent,
@@ -58,7 +57,7 @@ public abstract class AggregatingIngestNode extends IngestNode {
     this.childColumnCount = children.size();
     this.ingestBufferLength = 100;
     this.schemaLinks = generateSchemaLinks(childColumnCount, ingestBufferLength );
-    this.aggregate = generateAggregateCursor(schemaLinks, ingestBufferLength );
+    this.aggregate = generateAggregateCursor(children, schemaLinks);
   }
 
   private IngestNodeSet collectChildren(GroupType node, String parentPath) {
@@ -90,19 +89,20 @@ public abstract class AggregatingIngestNode extends IngestNode {
     return new Integer[childColumnCount][ingestBufferLength];
   }
 
-  private GroupAggregateCursor generateAggregateCursor(Integer[][] schemaLinks, int ingestBufferLength) {
+  private GroupAggregateCursor generateAggregateCursor(IngestNodeSet children, Integer[][] schemaLinks) {
+    // The root node is a special case because it's always defined as REPEAT even though we don't treat it as such.
     GroupAggregateCursor aggregate;
     if (this.hasParent && this.repetitionType == Type.Repetition.REPEATED) {
-      // The root node is a special case because it always has a 'repeat' even though we
-      // don't treat it as though it does.
-      aggregate = new GroupAggregateIterableCursor(name, childColumnCount, ingestBufferLength);
+      aggregate = new GroupAggregateIterableCursor(name, schemaLinks);
     }  else {
-      aggregate = new GroupAggregateCursor(name, childColumnCount, ingestBufferLength);
+      aggregate = new GroupAggregateCursor(name, schemaLinks);
     }
 
-    for (IngestNode child : this.children) {
-      // TODO: Write expansion code.
-      aggregate.setResultSetForChildIndex(child.columnIndex(), schemaLinks[child.columnIndex()]);
+    return linkChildren(aggregate, children);
+  }
+
+  private GroupAggregateCursor linkChildren(GroupAggregateCursor aggregate, IngestNodeSet children) {
+    for (IngestNode child : children) {
       AdvanceableCursor childCursor = child.onLinkToParent(this);
       aggregate.setChildCursor(child.columnIndex(), childCursor);
     }
@@ -110,23 +110,6 @@ public abstract class AggregatingIngestNode extends IngestNode {
     return aggregate;
   }
 
-  public void setResultsReported(int childColumnIndex, int rowNumber) {
-    if (super.currentRowNumber != rowNumber) {
-      this.aggregate.clear();
-      this.currentRowNumber = rowNumber;
-    }
-
-    this.aggregate.setResultsReported(childColumnIndex);
-    // If all results are available and we're not at the root, then report
-    // the results upstream.
-    if (parent != null && this.aggregate.allResultsReported()) {
-      parent.setResultsReported(columnIndex, rowNumber);
-    }
-  }
-
-  public GroupAggregateCursor collectAggregate() {
-    return this.aggregate;
-  }
 
   // Return an immutable iterator.
   public Iterable<IngestNode> children() {
@@ -150,7 +133,8 @@ public abstract class AggregatingIngestNode extends IngestNode {
     for (int index = 0; index < childColumnCount; index++) {
       Integer[] newChildColumnIngestBuffer = new Integer[newIngestBufferLength];
       System.arraycopy(schemaLinks[index], 0, newChildColumnIngestBuffer, 0, ingestBufferLength);
-      schemaLinks[index] = newChildColumnIngestBuffer;
+
+      this.schemaLinks[index] = newChildColumnIngestBuffer;
     }
 
     this.ingestBufferLength = newIngestBufferLength;
@@ -159,11 +143,11 @@ public abstract class AggregatingIngestNode extends IngestNode {
     //this.aggregate.setArray(newIngestBuffer);
   }
 
-  public String path() { return this.path; }
-
   @Override
   protected AdvanceableCursor onLinkToParent(AggregatingIngestNode parentNode) {
     return aggregate;
   }
 
+  public String path() { return this.path; }
+  public GroupAggregateCursor cursor() { return this.aggregate; }
 }

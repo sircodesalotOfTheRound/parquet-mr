@@ -18,7 +18,7 @@ public final class EqualsColumnPredicate extends ColumnPredicate.SystemDefinedPr
 
   @Override
   public boolean test(Comparable comparable) {
-    Object entry = ingestTree.root().collectAggregate().i32(columnPathString());
+    Object entry = ingestTree.root().cursor().i32(columnPathString());
     return entry.equals(value());
   }
 }

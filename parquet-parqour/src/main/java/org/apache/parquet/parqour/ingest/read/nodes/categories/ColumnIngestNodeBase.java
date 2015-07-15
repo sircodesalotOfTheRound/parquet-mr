@@ -16,19 +16,20 @@ import org.apache.parquet.schema.Type;
 public abstract class ColumnIngestNodeBase<TFFReaderType extends FastForwardReader> extends IngestNode {
   protected final ColumnDescriptor columnDescriptor;
   protected final DiskInterfaceManager diskInterfaceManager;
-  protected DataPageDecorator dataPage;
 
+  protected DataPageDecorator dataPage;
 
   protected RelationshipLevelFastForwardReader definitionLevelReader;
   protected RelationshipLevelFastForwardReader repetitionLevelReader;
   protected TFFReaderType valuesReader;
 
-  protected int currentEntryOnPage;
+  protected long currentEntryOnPage;
   protected long totalItemsOnThisPage;
 
   public ColumnIngestNodeBase(SchemaInfo schemaInfo, AggregatingIngestNode parent,
                               Type schemaNode, ColumnDescriptor columnDescriptor,
                               DiskInterfaceManager diskInterfaceManager, int childIndex) {
+
     super(schemaInfo, parent, ColumnPath.get(columnDescriptor.getPath()).toDotString(),
       schemaNode, IngestNodeCategory.DATA_INGEST, childIndex);
 
@@ -48,14 +49,15 @@ public abstract class ColumnIngestNodeBase<TFFReaderType extends FastForwardRead
     return page;
   }
 
-
   public void validateNode() {
-    if (this.parent() == null) throw new DataIngestException("Record-reading ingest nodes nodes must have a parent.");
+    if (!this.hasParent) {
+      throw new DataIngestException("Record-reading ingest nodes nodes must have a parent.");
+    }
   }
 
   protected void fastForwardToRow(int rowNumber) {
     if (canPerformTrueFastForwards) {
-      performFastForwardTo(rowNumber);
+      this.performFastForwardTo(rowNumber);
     } else {
       this.performSlowForwardTo(rowNumber);
     }
@@ -63,14 +65,15 @@ public abstract class ColumnIngestNodeBase<TFFReaderType extends FastForwardRead
 
   private void performFastForwardTo(int rowNumber) {
     if (currentRowNumber != rowNumber) {
-      moveToPageContainingRowNumber(rowNumber);
+      this.moveToPageContainingRowNumber(rowNumber);
 
-      definitionLevelReader.fastForwardTo(rowNumber);
-      repetitionLevelReader.fastForwardTo(rowNumber);
-      valuesReader.fastForwardTo(rowNumber);
+      this.definitionLevelReader.fastForwardTo(rowNumber);
+      this.repetitionLevelReader.fastForwardTo(rowNumber);
+      this.valuesReader.fastForwardTo(rowNumber);
 
       this.onPreReadFirstRecordOnPage();
-      currentEntryOnPage = rowNumber - dataPage.startingEntryNumber();
+
+      this.currentEntryOnPage = (rowNumber - dataPage.startingEntryNumber());
     }
   }
 
@@ -81,7 +84,7 @@ public abstract class ColumnIngestNodeBase<TFFReaderType extends FastForwardRead
     this.onPageRead(dataPage);
   }
 
-  protected final void moveToPageContainingRowNumber(int rowNumber) {
+  private void moveToPageContainingRowNumber(int rowNumber) {
     while (!this.dataPage.containsRow(rowNumber)) {
       this.dataPage = diskInterfaceManager.getNextPageForColumn(dataPage);
     }
@@ -90,7 +93,7 @@ public abstract class ColumnIngestNodeBase<TFFReaderType extends FastForwardRead
     this.onPageRead(dataPage);
   }
 
-  protected final void performSlowForwardTo(long rowNumber) {
+  private void performSlowForwardTo(long rowNumber) {
     int valuesEntryNumber = 0;
     while (currentRowNumber != rowNumber) {
       // If there are no more items on this page, move to the next.
@@ -130,7 +133,7 @@ public abstract class ColumnIngestNodeBase<TFFReaderType extends FastForwardRead
 
   protected abstract void updateValuesReaderValue();
 
-  public void onPageRead(DataPageDecorator page) {
+  private void onPageRead(DataPageDecorator page) {
     this.definitionLevelReader = page.definitionLevelReader();
     this.repetitionLevelReader = page.repetitionLevelReader();
     this.valuesReader = page.valuesReader();
@@ -150,12 +153,7 @@ public abstract class ColumnIngestNodeBase<TFFReaderType extends FastForwardRead
       }
     }
 
-    currentEntryOnPage += 1;
-  }
-
-
-  protected void reportResults(int rowNumber) {
-    parent.setResultsReported(rowNumber, this.columnIndex);
+    currentEntryOnPage++;
   }
 
   public abstract void read(int rowNumber);

@@ -70,7 +70,7 @@ public final class RepeatingGroupIngestNode extends AggregatingIngestNode {
   public void finishRow() {
     if (numberOfItemsInList > 0) {
       // Todo: make this not fixed.
-      Integer[] schemaLinks = this.collectAggregate().getlinksForChild(0);
+      Integer[] schemaLinks = this.cursor().getlinksForChild(0);
       schemaLinks[listHeaderIndex] = numberOfItemsInList;
     }
 

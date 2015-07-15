@@ -39,7 +39,7 @@ public abstract class ParqourReadDriverBase {
   public abstract boolean readNext();
 
   public Cursor cursor() {
-    return ingestTree.root().collectAggregate();
+    return ingestTree.root().cursor();
   }
 
   public static ParqourReadDriverBase determineReadDriverFromSchemaInfo(SchemaInfo schemaInfo) {
