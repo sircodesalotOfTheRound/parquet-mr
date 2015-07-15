@@ -5,6 +5,8 @@ import org.apache.parquet.parqour.ingest.read.nodes.categories.AggregatingIngest
 import org.apache.parquet.parqour.ingest.read.nodes.categories.IngestNode;
 import org.apache.parquet.parqour.ingest.schema.SchemaInfo;
 
+import java.util.Arrays;
+
 /**
  * Created by sircodesalot on 6/2/15.
  */
@@ -20,6 +22,8 @@ public final class RootIngestNode extends AggregatingIngestNode {
 
     if (currentRowNumber != child.currentRowNumber()) {
       currentRowNumber = child.currentRowNumber();
+
+      Arrays.fill(schemaLinkWriteIndexForColumn, 0);
       schemaLinkWriteIndex = 0;
     }
 

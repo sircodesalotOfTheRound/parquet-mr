@@ -6,20 +6,25 @@ import org.apache.parquet.parqour.ingest.read.nodes.categories.IngestNode;
 import org.apache.parquet.parqour.ingest.schema.SchemaInfo;
 import org.apache.parquet.schema.GroupType;
 
+import java.util.Arrays;
+
 /**
  * Created by sircodesalot on 6/2/15.
  */
 public final class NoRepeatGroupIngestNode extends AggregatingIngestNode {
 
-  private int schemaLinkWriteIndex = 0;
   public NoRepeatGroupIngestNode(SchemaInfo schemaInfo, AggregatingIngestNode aggregatingIngestNode, String childPath, GroupType child, DiskInterfaceManager diskInterfaceManager, int childColumnIndex) {
     super(schemaInfo, aggregatingIngestNode, childPath, child, diskInterfaceManager, childColumnIndex);
   }
 
   @Override
   public final void linkSchema(IngestNode child) {
+    int childColumnIndex = child.columnIndex();
+    int schemaLinkWriteIndex = schemaLinkWriteIndexForColumn[childColumnIndex];
     if (currentRowNumber != child.currentRowNumber()) {
       currentRowNumber = child.currentRowNumber();
+
+      Arrays.fill(schemaLinkWriteIndexForColumn, 0);
       schemaLinkWriteIndex = 0;
     }
 
@@ -27,7 +32,6 @@ public final class NoRepeatGroupIngestNode extends AggregatingIngestNode {
     this.currentEntryDefinitionLevel = child.currentEntryDefinitionLevel();
     this.currentLinkSiteIndex = schemaLinkWriteIndex;
 
-    int childColumnIndex = child.columnIndex();
     if (currentEntryDefinitionLevel >= child.nodeDefinitionLevel()) {
       schemaLinks[childColumnIndex][schemaLinkWriteIndex++] = child.currentLinkSiteIndex();
     } else {
@@ -41,6 +45,8 @@ public final class NoRepeatGroupIngestNode extends AggregatingIngestNode {
         parent.linkSchema(this);
       }
     }
+
+    schemaLinkWriteIndexForColumn[childColumnIndex] = schemaLinkWriteIndex;
   }
 
   @Override

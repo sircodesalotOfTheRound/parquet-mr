@@ -6,6 +6,8 @@ import org.apache.parquet.parqour.ingest.read.nodes.categories.IngestNode;
 import org.apache.parquet.parqour.ingest.schema.SchemaInfo;
 import org.apache.parquet.schema.GroupType;
 
+import java.util.Arrays;
+
 /**
  * Created by sircodesalot on 6/2/15.
  */
@@ -32,6 +34,7 @@ public final class RepeatingGroupIngestNode extends AggregatingIngestNode {
       this.listHeaderIndex = -1;
       this.numberOfItemsInList = 0;
 
+      Arrays.fill(schemaLinkWriteIndexForColumn, 0);
       schemaLinkWriteIndex = 0;
     }
 
