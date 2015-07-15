@@ -13,24 +13,25 @@ public final class NoRepeatGroupIngestNode extends AggregatingIngestNode {
 
   public NoRepeatGroupIngestNode(SchemaInfo schemaInfo, AggregatingIngestNode aggregatingIngestNode, String childPath, GroupType child, DiskInterfaceManager diskInterfaceManager, int childColumnIndex) {
     super(schemaInfo, aggregatingIngestNode, childPath, child, diskInterfaceManager, childColumnIndex);
+
   }
 
   @Override
   public final void linkSchema(IngestNode child) {
     if (currentRowNumber != child.currentRowNumber()) {
       currentRowNumber = child.currentRowNumber();
-      relationshipLinkWriteIndex = -1;
+      relationshipLinkWriteIndex = 0;
     }
 
     this.currentEntryRepetitionLevel = child.currentEntryRepetitionLevel();
     this.currentEntryDefinitionLevel = child.currentEntryDefinitionLevel();
-    this.currentLinkSiteIndex = ++relationshipLinkWriteIndex;
+    this.currentLinkSiteIndex = relationshipLinkWriteIndex;
 
     int childColumnIndex = child.columnIndex();
     if (currentEntryDefinitionLevel >= child.nodeDefinitionLevel()) {
-      schemaLinks[childColumnIndex][relationshipLinkWriteIndex] = child.currentLinkSiteIndex();
+      schemaLinks[childColumnIndex][relationshipLinkWriteIndex++] = child.currentLinkSiteIndex();
     } else {
-      schemaLinks[childColumnIndex][relationshipLinkWriteIndex] = null;
+      schemaLinks[childColumnIndex][relationshipLinkWriteIndex++] = null;
     }
 
     // If we require a link from the parent:

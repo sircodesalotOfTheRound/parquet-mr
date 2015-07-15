@@ -25,7 +25,7 @@ public final class RepeatingGroupIngestNode extends AggregatingIngestNode {
   @Override
   public final void linkSchema(IngestNode child) {
     if (currentRowNumber != child.currentRowNumber()) {
-      this.relationshipLinkWriteIndex = -1;
+      this.relationshipLinkWriteIndex = 0;
       this.currentRowNumber = child.currentRowNumber();
 
       this.listHeaderIndex = -1;
@@ -45,14 +45,14 @@ public final class RepeatingGroupIngestNode extends AggregatingIngestNode {
         numberOfItemsInList = 0;
       }
 
-      listHeaderIndex = ++relationshipLinkWriteIndex;
+      listHeaderIndex = relationshipLinkWriteIndex++;
     }
 
     if (childLinkIsDefined) {
-      schemaLinks[childColumnIndex][++relationshipLinkWriteIndex] = child.currentLinkSiteIndex();
+      schemaLinks[childColumnIndex][relationshipLinkWriteIndex++] = child.currentLinkSiteIndex();
       this.numberOfItemsInList++;
     } else {
-      schemaLinks[childColumnIndex][++relationshipLinkWriteIndex] = null;
+      schemaLinks[childColumnIndex][relationshipLinkWriteIndex++] = null;
     }
 
     this.currentLinkSiteIndex = listHeaderIndex;

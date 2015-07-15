@@ -27,7 +27,7 @@ public abstract class AggregatingIngestNode extends IngestNode {
   private final GroupAggregateCursor aggregate;
 
   protected Integer[][] schemaLinks;
-  protected int relationshipLinkWriteIndex = -1;
+  protected int relationshipLinkWriteIndex;
 
   protected AggregatingIngestNode(SchemaInfo schemaInfo, Type schemaNode, DiskInterfaceManager diskInterfaceManager) {
     super(schemaInfo, null, "", schemaNode, IngestNodeCategory.AGGREGATOR, -1);
@@ -38,6 +38,7 @@ public abstract class AggregatingIngestNode extends IngestNode {
     this.children = collectChildren(groupSchema);
     this.childColumnCount = children.size();
 
+    this.relationshipLinkWriteIndex = 0;
     this.ingestBufferLength = 100;
     this.schemaLinks = generateSchemaLinks(childColumnCount, ingestBufferLength );
     this.aggregate = generateAggregateCursor(children, schemaLinks);
