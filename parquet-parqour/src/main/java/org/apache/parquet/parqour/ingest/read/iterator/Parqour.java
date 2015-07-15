@@ -7,6 +7,10 @@ import org.apache.parquet.parqour.ingest.read.iterator.paging.ParqourPageset;
 import org.apache.parquet.parqour.materialization.lambda.LambdaMaterializer;
 import org.apache.parquet.parqour.query.expressions.pql.TextQueryTreeRootExpression;
 import org.apache.parquet.parqour.query.iface.ParqourQuery;
+import org.apache.parquet.parqour.query.iface.ParqourQuerySetup;
+import org.apache.parquet.parqour.query.udf.SingleParameterUdf;
+import org.apache.parquet.parqour.query.udf.ThreeParameterUdf;
+import org.apache.parquet.parqour.query.udf.TwoParameterUdf;
 
 /**
  * Created by sircodesalot on 6/27/15.
@@ -17,6 +21,18 @@ public abstract class Parqour<T> implements Iterable<T> {
   public static ParqourQuery query(String pql) {
     TextQueryTreeRootExpression expression = TextQueryTreeRootExpression.fromString(pql);
     return ParqourQuery.fromRootExpression(expression);
+  }
+
+  public static <U> ParqourQuerySetup udf(SingleParameterUdf<U> function) {
+    return new ParqourQuerySetup().udf(function);
+  }
+
+  public static <U> ParqourQuerySetup udf(TwoParameterUdf<U> function) {
+    return new ParqourQuerySetup().udf(function);
+  }
+
+  public static <U> ParqourQuerySetup udf(ThreeParameterUdf<U> function) {
+    return new ParqourQuerySetup().udf(function);
   }
 
   public <U> Parqour<U> materialize(Projection<T, U> projection) {
