@@ -2,17 +2,17 @@ package org.apache.parquet.parqour.ingest.plan.evaluation.waypoints;
 
 import org.apache.parquet.parqour.ingest.plan.predicates.ColumnPredicate;
 import org.apache.parquet.parqour.ingest.read.nodes.IngestTree;
-import org.apache.parquet.parqour.ingest.read.nodes.categories.ColumnIngestNodeBase;
+import org.apache.parquet.parqour.ingest.read.nodes.categories.PrimitiveIngestNodeBase;
 import org.apache.parquet.parqour.ingest.read.nodes.categories.IngestNode;
 
 /**
  * Created by sircodesalot on 6/21/15.
  */
 public class SkipChainWayPoint extends WayPoint {
-  private final ColumnIngestNodeBase ingestNode;
+  private final PrimitiveIngestNodeBase ingestNode;
   private SkipChainWayPoint next;
 
-  public SkipChainWayPoint(ColumnIngestNodeBase ingestNode) {
+  public SkipChainWayPoint(PrimitiveIngestNodeBase ingestNode) {
     super (WayPointCategory.READ);
 
     this.ingestNode = ingestNode;
@@ -22,7 +22,7 @@ public class SkipChainWayPoint extends WayPoint {
   public SkipChainWayPoint(IngestTree tree, ColumnPredicate.LeafColumnPredicate leafNode) {
     super(WayPointCategory.READ);
 
-    this.ingestNode = (ColumnIngestNodeBase)tree.getIngestNodeByPath(leafNode.columnPathString());
+    this.ingestNode = (PrimitiveIngestNodeBase)tree.getIngestNodeByPath(leafNode.columnPathString());
     this.next = null;
   }
 

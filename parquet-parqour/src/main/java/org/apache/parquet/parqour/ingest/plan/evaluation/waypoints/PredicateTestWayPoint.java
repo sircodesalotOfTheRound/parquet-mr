@@ -4,7 +4,7 @@ import org.apache.parquet.parqour.ingest.plan.evaluation.skipchain.SkipChain;
 import org.apache.parquet.parqour.ingest.plan.predicates.ColumnPredicate;
 import org.apache.parquet.parqour.ingest.read.nodes.IngestNodeSet;
 import org.apache.parquet.parqour.ingest.read.nodes.IngestTree;
-import org.apache.parquet.parqour.ingest.read.nodes.categories.ColumnIngestNodeBase;
+import org.apache.parquet.parqour.ingest.read.nodes.categories.PrimitiveIngestNodeBase;
 import org.apache.parquet.parqour.ingest.read.nodes.categories.IngestNode;
 
 /**
@@ -22,7 +22,7 @@ public final class PredicateTestWayPoint extends WayPoint {
   private final SkipChain successSkipChain;
   private final SkipChain failureSkipChain;
 
-  private final ColumnIngestNodeBase[] dependentIngestNodes;
+  private final PrimitiveIngestNodeBase[] dependentIngestNodes;
 
   protected PredicateTestWayPoint(String representation, WayPointCategory category) {
     super(category);
@@ -31,7 +31,7 @@ public final class PredicateTestWayPoint extends WayPoint {
     this.failurePath = this;
     this.representation = representation;
 
-    this.dependentIngestNodes = new ColumnIngestNodeBase[0];
+    this.dependentIngestNodes = new PrimitiveIngestNodeBase[0];
     this.successSkipChain = new SkipChain();
     this.failureSkipChain = new SkipChain();
   }
@@ -55,13 +55,13 @@ public final class PredicateTestWayPoint extends WayPoint {
     this.dependentIngestNodes = collectIngestNodeDependencies(tree);
   }
 
-  private ColumnIngestNodeBase[] collectIngestNodeDependencies(IngestTree tree) {
+  private PrimitiveIngestNodeBase[] collectIngestNodeDependencies(IngestTree tree) {
     IngestNodeSet ingestNodeSet = tree.collectIngestNodeDependenciesForPaths(predicateLeafNode.columnPathString());
-    ColumnIngestNodeBase[] dependentIngestNodes = new ColumnIngestNodeBase[ingestNodeSet.size()];
+    PrimitiveIngestNodeBase[] dependentIngestNodes = new PrimitiveIngestNodeBase[ingestNodeSet.size()];
 
     int index = 0;
     for (IngestNode ingestNode : ingestNodeSet) {
-      dependentIngestNodes[index++] = (ColumnIngestNodeBase)ingestNode;
+      dependentIngestNodes[index++] = (PrimitiveIngestNodeBase)ingestNode;
     }
 
     return dependentIngestNodes;
@@ -84,7 +84,7 @@ public final class PredicateTestWayPoint extends WayPoint {
 
   public boolean execute(int rowNumber) {
     // First make sure all dependencies have been read.
-    for (ColumnIngestNodeBase dependentIngestNode : dependentIngestNodes) {
+    for (PrimitiveIngestNodeBase dependentIngestNode : dependentIngestNodes) {
       dependentIngestNode.read(rowNumber);
     }
 

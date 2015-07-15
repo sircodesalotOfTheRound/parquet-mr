@@ -4,7 +4,7 @@ import org.apache.parquet.parqour.ingest.plan.evaluation.waypoints.SkipChainWayP
 import org.apache.parquet.parqour.ingest.plan.evaluation.waypoints.WayPoint;
 import org.apache.parquet.parqour.ingest.plan.predicates.ColumnPredicate;
 import org.apache.parquet.parqour.ingest.read.nodes.IngestTree;
-import org.apache.parquet.parqour.ingest.read.nodes.categories.ColumnIngestNodeBase;
+import org.apache.parquet.parqour.ingest.read.nodes.categories.PrimitiveIngestNodeBase;
 import org.apache.parquet.parqour.ingest.read.nodes.categories.IngestNode;
 
 /**
@@ -27,7 +27,7 @@ public class SkipChain {
 
   public SkipChain(Iterable<IngestNode> ingestNodes) {
     for (IngestNode ingestNode : ingestNodes) {
-      SkipChainWayPoint wayPoint = new SkipChainWayPoint((ColumnIngestNodeBase) ingestNode);
+      SkipChainWayPoint wayPoint = new SkipChainWayPoint((PrimitiveIngestNodeBase) ingestNode);
       if (begin == null) {
         begin = end = wayPoint;
       } else {

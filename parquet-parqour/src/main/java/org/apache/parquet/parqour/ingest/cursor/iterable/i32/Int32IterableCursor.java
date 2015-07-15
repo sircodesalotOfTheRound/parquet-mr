@@ -12,8 +12,8 @@ public final class Int32IterableCursor extends AdvanceableCursor implements Iter
   private final RollableRecordSet<Integer> recordSet = new RollableRecordSet<Integer>(this);
   private final I32CursorIterator iterator;
 
-  public Int32IterableCursor(String name, Integer[] array) {
-    super(name);
+  public Int32IterableCursor(String name, int columnIndex, Integer[] array) {
+    super(name, columnIndex);
     this.iterator = new I32CursorIterator(array);
   }
 

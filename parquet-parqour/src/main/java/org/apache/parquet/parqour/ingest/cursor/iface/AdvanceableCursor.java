@@ -9,16 +9,19 @@ import org.apache.parquet.parqour.ingest.cursor.iterators.RollableRecordSet;
  */
 public abstract class AdvanceableCursor implements Cursor {
   private final String name;
+  private final int columnIndex;
 
-  protected int start = 0;
+  protected int index = 0;
 
-  public AdvanceableCursor(String name) {
-    this.name = name;
-    this.start = 0;
+  public AdvanceableCursor(String name, int columnIndex) {
+    this. name = name;
+    this.columnIndex = columnIndex;
+
+    this.index= 0;
   }
 
-  public AdvanceableCursor advanceTo(int start) {
-    this.start = start;
+  public AdvanceableCursor advanceTo(int index) {
+    this.index = index;
     return this;
   }
 
@@ -95,4 +98,5 @@ public abstract class AdvanceableCursor implements Cursor {
   }
 
   public String name() { return this.name; }
+  public int columnIndex() { return this.columnIndex; }
 }

@@ -33,43 +33,36 @@ public class GroupAggregateCursor extends AdvanceableCursor implements Iterable<
   private final AdvanceableCursor[] childCursorsByIndex;
   private final CursorHash childCursors;
 
-
   private final Map<String, Integer> cursorIndexes = new HashMap<String, Integer>();
 
-  public GroupAggregateCursor(String name, Integer[][] schemaLinks) {
-    super(name);
+  public GroupAggregateCursor(String name, int columnIndex, AdvanceableCursor[] childCursors, Integer[][] schemaLinks) {
+    super(name, columnIndex);
 
     this.fieldCount = schemaLinks.length;
     this.schemaLinks = schemaLinks;
     this.childCursors = new CursorHash();
 
-    this.childCursorsByIndex = new AdvanceableCursor[fieldCount];
+    this.childCursorsByIndex = applyChildCursors(childCursors);
   }
 
-  public Integer[] getlinksForChild(int index) {
-    return schemaLinks[index];
+  private AdvanceableCursor[] applyChildCursors(AdvanceableCursor[] childCursors) {
+    for (AdvanceableCursor childCursor : childCursors) {
+      this.childCursors.add(childCursor);
+      this.cursorIndexes.put(childCursor.name(), childCursor.columnIndex());
+    }
+
+    return childCursors;
   }
 
-  @Deprecated
-  public void setResultSetForChildIndex(int childColumnIndex, Integer[] items) {
-    this.schemaLinks[childColumnIndex] = items;
+  public void setSchemaLinks(Integer[][] schemaLinks) {
+    this.schemaLinks = schemaLinks;
   }
-
-  public void setChildCursor(int childColumnIndex, AdvanceableCursor cursor) {
-    this.childCursors.add(cursor);
-    this.childCursorsByIndex[childColumnIndex] = cursor;
-    this.cursorIndexes.put(cursor.name(), childColumnIndex);
-  }
-
-  //////////////////////////////////
-  // Cursor actions:
-  //////////////////////////////////
 
   @Override
   public Cursor field(String path) {
-    int index = this.cursorIndexes.get(path);
-    if (schemaLinks[index][start] != null) {
-      return childCursorsByIndex[index];
+    int columnIndex = this.cursorIndexes.get(path);
+    if (schemaLinks[columnIndex][index] != null) {
+      return childCursorsByIndex[columnIndex];
     } else {
       return null;
     }
@@ -79,7 +72,7 @@ public class GroupAggregateCursor extends AdvanceableCursor implements Iterable<
   @Override
   public RollableRecordSet<Integer> i32Iter(String path) {
     int index = this.cursorIndexes.get(path);
-    Integer startOffset = schemaLinks[index][start];
+    Integer startOffset = schemaLinks[index][index];
 
     if (startOffset != null) {
       return childCursorsByIndex[index].i32StartIteration(startOffset);
@@ -93,7 +86,7 @@ public class GroupAggregateCursor extends AdvanceableCursor implements Iterable<
     if (true) {
       throw new NotImplementedException();
     }
-    int start = schemaLinks[nodeIndex][this.start];
+    int start = schemaLinks[nodeIndex][this.index];
 
     childCursorsByIndex[nodeIndex].advanceTo(start);
     return childCursorsByIndex[nodeIndex].i32Iter();
@@ -104,8 +97,7 @@ public class GroupAggregateCursor extends AdvanceableCursor implements Iterable<
       throw new NotImplementedException();
     }
 
-    int start = schemaLinks[nodeIndex][this.start];
-    int end = schemaLinks[nodeIndex][this.start + 1];
+    int start = schemaLinks[nodeIndex][this.index];
 
     childCursorsByIndex[nodeIndex].advanceTo(start);
     return childCursorsByIndex[nodeIndex].fieldIter();
@@ -114,7 +106,7 @@ public class GroupAggregateCursor extends AdvanceableCursor implements Iterable<
   @Override
   public RecordSet<Cursor> fieldIter(String path) {
     int columnIndex = this.cursorIndexes.get(path);
-    Integer startOffset = schemaLinks[columnIndex][start];
+    Integer startOffset = schemaLinks[columnIndex][index];
 
     if (startOffset != null) {
       return childCursorsByIndex[columnIndex].fieldStartIteration(columnIndex, startOffset);
@@ -151,7 +143,7 @@ public class GroupAggregateCursor extends AdvanceableCursor implements Iterable<
   @Override
   public Cursor field(int index) {
     Integer[] linksForIndex = schemaLinks[index];
-    if (linksForIndex[start] != linksForIndex[start + 1]) {
+    if (linksForIndex[index] != linksForIndex[index + 1]) {
       return childCursorsByIndex[index];
     } else {
       return null;

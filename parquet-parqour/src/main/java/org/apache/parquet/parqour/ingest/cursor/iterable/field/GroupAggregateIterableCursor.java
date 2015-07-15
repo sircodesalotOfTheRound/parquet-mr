@@ -31,42 +31,30 @@ public class GroupAggregateIterableCursor extends GroupAggregateCursor implement
   private final AdvanceableCursor[] childCursorsByIndex;
   private final CursorHash childCursors;
 
-
   private final Map<String, Integer> cursorIndexes = new HashMap<String, Integer>();
 
-  public GroupAggregateIterableCursor(String name, Integer[][] schemaLinks) {
-    super(name, schemaLinks);
+  public GroupAggregateIterableCursor(String name, int columnIndex, AdvanceableCursor[] childCursors, Integer[][] schemaLinks) {
+    super(name, columnIndex, childCursors, schemaLinks);
 
     this.fieldCount = schemaLinks.length;
     this.schemaLinks = schemaLinks;
     this.childCursors = new CursorHash();
 
-    this.childCursorsByIndex = new AdvanceableCursor[fieldCount];
+    this.childCursorsByIndex = applyChildCursors(childCursors);
   }
 
-  public Integer[] getlinksForChild(int index) {
-    return schemaLinks[index];
+  private AdvanceableCursor[] applyChildCursors(AdvanceableCursor[] childCursors) {
+    for (AdvanceableCursor childCursor : childCursors) {
+      this.childCursors.add(childCursor);
+      this.cursorIndexes.put(childCursor.name(), childCursor.columnIndex());
+    }
+
+    return childCursors;
   }
-
-  @Deprecated
-  public void setResultSetForChildIndex(int childColumnIndex, Integer[] items) {
-    this.schemaLinks[childColumnIndex] = items;
-  }
-
-  public void setChildCursor(int childColumnIndex, AdvanceableCursor cursor) {
-    this.childCursors.add(cursor);
-    this.childCursorsByIndex[childColumnIndex] = cursor;
-    this.cursorIndexes.put(cursor.name(), childColumnIndex);
-  }
-
-  //////////////////////////////////
-  // Cursor actions:
-  //////////////////////////////////
-
 
   @Override
   public RecordSet<Cursor> fieldStartIteration(int columnIndex, int startOffset) {
-    this.iterator = new GroupCursorIterator(this, getlinksForChild(columnIndex));
+    this.iterator = new GroupCursorIterator(this, schemaLinks[columnIndex]);
     this.iterator.reset(startOffset);
     return new RecordSet<Cursor>(this);
   }

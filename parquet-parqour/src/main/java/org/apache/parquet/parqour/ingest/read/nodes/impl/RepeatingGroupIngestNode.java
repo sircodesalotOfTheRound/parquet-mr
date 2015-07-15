@@ -70,8 +70,8 @@ public final class RepeatingGroupIngestNode extends AggregatingIngestNode {
   public void finishRow() {
     if (numberOfItemsInList > 0) {
       // Todo: make this not fixed.
-      Integer[] schemaLinks = this.cursor().getlinksForChild(0);
-      schemaLinks[listHeaderIndex] = numberOfItemsInList;
+      int REPLACE_THIS_WITH_ACTUAL_CHILD_NUMBER = 0;
+      this.schemaLinks[REPLACE_THIS_WITH_ACTUAL_CHILD_NUMBER][listHeaderIndex] = numberOfItemsInList;
     }
 
     // If this node reports schema, then continue upstream:

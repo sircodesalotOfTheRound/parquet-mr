@@ -6,14 +6,14 @@ import org.apache.parquet.parqour.ingest.cursor.iface.AdvanceableCursor;
 import org.apache.parquet.parqour.ingest.ffreader.interfaces.Int32FastForwardReader;
 import org.apache.parquet.parqour.ingest.paging.DiskInterfaceManager;
 import org.apache.parquet.parqour.ingest.read.nodes.categories.AggregatingIngestNode;
-import org.apache.parquet.parqour.ingest.read.nodes.categories.ColumnIngestNodeBase;
+import org.apache.parquet.parqour.ingest.read.nodes.categories.PrimitiveIngestNodeBase;
 import org.apache.parquet.parqour.ingest.schema.SchemaInfo;
 import org.apache.parquet.schema.Type;
 
 /**
  * Created by sircodesalot on 6/11/15.
  */
-public final class Int32NoRepeatIngestNode extends ColumnIngestNodeBase<Int32FastForwardReader> {
+public final class Int32NoRepeatIngestNode extends PrimitiveIngestNodeBase<Int32FastForwardReader> {
   private int currentValue = 0;
 
   private Integer[] ingestBuffer;
@@ -30,7 +30,7 @@ public final class Int32NoRepeatIngestNode extends ColumnIngestNodeBase<Int32Fas
 
     this.ingestBufferLength = 100;
     this.ingestBuffer = new Integer[ingestBufferLength];
-    this.cursor = new Int32Cursor(name, ingestBuffer);
+    this.cursor = new Int32Cursor(name, columnIndex, ingestBuffer);
   }
 
   @Override

@@ -13,7 +13,7 @@ import org.apache.parquet.schema.Type;
 /**
  * Created by sircodesalot on 6/2/15.
  */
-public abstract class ColumnIngestNodeBase<TFFReaderType extends FastForwardReader> extends IngestNode {
+public abstract class PrimitiveIngestNodeBase<TFFReaderType extends FastForwardReader> extends IngestNode {
   protected final ColumnDescriptor columnDescriptor;
   protected final DiskInterfaceManager diskInterfaceManager;
 
@@ -26,9 +26,9 @@ public abstract class ColumnIngestNodeBase<TFFReaderType extends FastForwardRead
   protected long currentEntryOnPage;
   protected long totalItemsOnThisPage;
 
-  public ColumnIngestNodeBase(SchemaInfo schemaInfo, AggregatingIngestNode parent,
-                              Type schemaNode, ColumnDescriptor columnDescriptor,
-                              DiskInterfaceManager diskInterfaceManager, int childIndex) {
+  public PrimitiveIngestNodeBase(SchemaInfo schemaInfo, AggregatingIngestNode parent,
+                                 Type schemaNode, ColumnDescriptor columnDescriptor,
+                                 DiskInterfaceManager diskInterfaceManager, int childIndex) {
 
     super(schemaInfo, parent, ColumnPath.get(columnDescriptor.getPath()).toDotString(),
       schemaNode, IngestNodeCategory.DATA_INGEST, childIndex);

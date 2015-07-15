@@ -11,43 +11,10 @@ import java.util.Iterator;
 public final class Int32Cursor extends AdvanceableCursor {
   private Integer[] array;
 
-  private static class I32CursorIterator implements Iterator<Integer> {
-    private Integer[] array;
-    private final int end;
-
-    private int index;
-    public I32CursorIterator(Integer[] array, int start, int end) {
-      this.array = array;
-      this.index = start;
-      this.end = end;
-
-    }
-
-    public void setArray(Integer[] array) {
-      this.array = array;
-    }
-
-    @Override
-    public boolean hasNext() {
-      return index < end;
-    }
-
-    @Override
-    public Integer next() {
-      return array[index++];
-    }
-
-    @Override
-    public void remove() {
-      throw new NotImplementedException();
-    }
-  }
-
-  public Int32Cursor(String name, Integer[] array) {
-    super(name);
+  public Int32Cursor(String name, int columnIndex, Integer[] array) {
+    super(name, columnIndex);
     this.array = array;
   }
-
 
   public void setArray(Integer[] array) {
     this.array = array;
@@ -55,11 +22,11 @@ public final class Int32Cursor extends AdvanceableCursor {
 
   @Override
   public Integer i32() {
-    return array[start];
+    return array[index];
   }
 
   @Override
   public Object value() {
-    return array[start];
+    return array[index];
   }
 }
