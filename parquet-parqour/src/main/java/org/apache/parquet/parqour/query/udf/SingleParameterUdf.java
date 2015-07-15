@@ -5,6 +5,10 @@ import org.apache.parquet.parqour.ingest.cursor.iface.Cursor;
 /**
  * Created by sircodesalot on 7/15/15.
  */
-public interface SingleParameterUdf<T> extends ParqourUdf {
-  T apply(Cursor cursor);
+public abstract class SingleParameterUdf<T> extends ParqourUdf {
+  public SingleParameterUdf() {
+    super(UdfParameterLength.ONE);
+  }
+
+  public abstract T apply(Cursor cursor);
 }

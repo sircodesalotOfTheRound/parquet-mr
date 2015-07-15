@@ -11,6 +11,7 @@ import org.apache.parquet.parqour.query.iface.ParqourQuerySetup;
 import org.apache.parquet.parqour.query.udf.SingleParameterUdf;
 import org.apache.parquet.parqour.query.udf.ThreeParameterUdf;
 import org.apache.parquet.parqour.query.udf.TwoParameterUdf;
+import org.apache.parquet.parqour.query.udf.ZeroParameterUdf;
 
 /**
  * Created by sircodesalot on 6/27/15.
@@ -23,16 +24,20 @@ public abstract class Parqour<T> implements Iterable<T> {
     return ParqourQuery.fromRootExpression(expression);
   }
 
-  public static <U> ParqourQuerySetup udf(SingleParameterUdf<U> function) {
-    return new ParqourQuerySetup().udf(function);
+  public static <U> ParqourQuerySetup udf(String name, ZeroParameterUdf<U> function) {
+    return new ParqourQuerySetup().udf(name, function);
   }
 
-  public static <U> ParqourQuerySetup udf(TwoParameterUdf<U> function) {
-    return new ParqourQuerySetup().udf(function);
+  public static <U> ParqourQuerySetup udf(String name, SingleParameterUdf<U> function) {
+    return new ParqourQuerySetup().udf(name, function);
   }
 
-  public static <U> ParqourQuerySetup udf(ThreeParameterUdf<U> function) {
-    return new ParqourQuerySetup().udf(function);
+  public static <U> ParqourQuerySetup udf(String name, TwoParameterUdf<U> function) {
+    return new ParqourQuerySetup().udf(name, function);
+  }
+
+  public static <U> ParqourQuerySetup udf(String name, ThreeParameterUdf<U> function) {
+    return new ParqourQuerySetup().udf(name, function);
   }
 
   public <U> Parqour<U> materialize(Projection<T, U> projection) {
