@@ -67,7 +67,7 @@ public final class RepeatingGroupIngestNode extends AggregatingIngestNode {
   }
 
   @Override
-  public void finishRow() {
+  public void finishRow(IngestNode child) {
     if (numberOfItemsInList > 0) {
       // Todo: make this not fixed.
       int REPLACE_THIS_WITH_ACTUAL_CHILD_NUMBER = 0;
@@ -75,8 +75,8 @@ public final class RepeatingGroupIngestNode extends AggregatingIngestNode {
     }
 
     // If this node reports schema, then continue upstream:
-    if (isSchemaReportingNode) {
-      parent.finishRow();
+    if (child.isSchemaReportingNode()) {
+      parent.finishRow(this);
     }
   }
 

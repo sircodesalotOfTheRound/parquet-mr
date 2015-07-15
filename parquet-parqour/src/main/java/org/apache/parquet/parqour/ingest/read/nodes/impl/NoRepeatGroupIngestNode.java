@@ -43,10 +43,10 @@ public final class NoRepeatGroupIngestNode extends AggregatingIngestNode {
   }
 
   @Override
-  public void finishRow() {
+  public void finishRow(IngestNode child) {
     // If this node reports schema, then continue upstream:
-    if (isSchemaReportingNode) {
-      parent.finishRow();
+    if (child.isSchemaReportingNode()) {
+      parent.finishRow(this);
     }
   }
 }

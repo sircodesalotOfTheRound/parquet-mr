@@ -29,7 +29,7 @@ public final class RootIngestNode extends AggregatingIngestNode {
   }
 
   @Override
-  public void finishRow() {
+  public void finishRow(IngestNode child) {
     /* NO-OP */
   }
 

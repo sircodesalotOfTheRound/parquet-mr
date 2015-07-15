@@ -116,10 +116,7 @@ public final class Int32RepeatingIngestNode extends PrimitiveIngestNodeBase<Int3
       ingestBuffer[listHeaderIndex] = numberOfItemsInList;
     }
 
-    if (isSchemaReportingNode) {
-      parent.finishRow();
-    }
-
+    parent.finishRow(this);
     currentRowNumber++;
   }
 
