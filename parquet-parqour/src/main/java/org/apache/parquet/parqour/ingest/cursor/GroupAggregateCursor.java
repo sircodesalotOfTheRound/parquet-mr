@@ -26,7 +26,7 @@ import java.util.Map;
  * This improves performance because we can pre-allocate lots of memory, and then just virtually
  * connect the results without the overhead of many small allocations + collections.
  */
-public class GroupAggregateCursor extends AdvanceableCursor implements Iterable<Cursor> {
+public class GroupAggregateCursor extends AdvanceableCursor {
   private Integer[][] schemaLinks;
 
   private final AdvanceableCursor[] childCursorsByIndex;
@@ -57,48 +57,14 @@ public class GroupAggregateCursor extends AdvanceableCursor implements Iterable<
   }
 
   @Override
-  public Cursor field(String path) {
-    int columnIndex = this.cursorIndexes.get(path);
-    if (schemaLinks[columnIndex][index] != null) {
-      return childCursorsByIndex[columnIndex];
-    } else {
-      return null;
-    }
-  }
-
-
-  @Override
-  public RollableRecordSet<Integer> i32Iter(String path) {
-    int index = this.cursorIndexes.get(path);
-    Integer startOffset = schemaLinks[index][index];
+  public RecordSet<Cursor> fieldIter(int columnIndex) {
+    Integer startOffset = schemaLinks[columnIndex][index];
 
     if (startOffset != null) {
-      return childCursorsByIndex[index].i32StartIteration(startOffset);
+      return childCursorsByIndex[columnIndex].fieldStartIteration(columnIndex, startOffset);
     } else {
-      return RollableRecordSet.EMPTY_I32_RECORDSET;
+      return RollableRecordSet.EMPTY_CURSOR_RECORDSET;
     }
-  }
-
-  @Override
-  public RollableRecordSet<Integer> i32Iter(int nodeIndex) {
-    if (true) {
-      throw new NotImplementedException();
-    }
-    int start = schemaLinks[nodeIndex][this.index];
-
-    childCursorsByIndex[nodeIndex].advanceTo(start);
-    return childCursorsByIndex[nodeIndex].i32Iter();
-  }
-
-  public RecordSet<Cursor> fieldIter(int nodeIndex) {
-    if (true) {
-      throw new NotImplementedException();
-    }
-
-    int start = schemaLinks[nodeIndex][this.index];
-
-    childCursorsByIndex[nodeIndex].advanceTo(start);
-    return childCursorsByIndex[nodeIndex].fieldIter();
   }
 
   @Override
@@ -114,16 +80,6 @@ public class GroupAggregateCursor extends AdvanceableCursor implements Iterable<
   }
 
   @Override
-  public Iterator<Cursor> iterator() {
-    throw new NotImplementedException();
-  }
-
-  @Override
-  public RecordSet<Cursor> fieldIter() {
-    return new RecordSet<Cursor>(this);
-  }
-
-  @Override
   public Integer i32(String path) {
     return childCursors.get(path).i32();
   }
@@ -134,18 +90,56 @@ public class GroupAggregateCursor extends AdvanceableCursor implements Iterable<
   }
 
   @Override
-  public Object value(String path) {
-    return childCursors.get(path).value();
+  public RollableRecordSet<Integer> i32Iter(int columnIndex) {
+    Integer startOffset = schemaLinks[columnIndex][index];
+
+    if (startOffset != null) {
+      return childCursorsByIndex[columnIndex].i32StartIteration(startOffset);
+    } else {
+      return RollableRecordSet.EMPTY_I32_RECORDSET;
+    }
   }
 
   @Override
-  public Cursor field(int index) {
-    Integer[] linksForIndex = schemaLinks[index];
-    if (linksForIndex[index] != linksForIndex[index + 1]) {
-      return childCursorsByIndex[index];
+  public RollableRecordSet<Integer> i32Iter(String path) {
+    int columnIndex = this.cursorIndexes.get(path);
+    Integer startOffset = schemaLinks[columnIndex][index];
+
+    if (startOffset != null) {
+      return childCursorsByIndex[columnIndex].i32StartIteration(startOffset);
+    } else {
+      return RollableRecordSet.EMPTY_I32_RECORDSET;
+    }
+  }
+
+
+  @Override
+  public Cursor field(int columnIndex) {
+    if (schemaLinks[columnIndex][index] != null) {
+      return childCursorsByIndex[columnIndex];
     } else {
       return null;
     }
+  }
+
+  @Override
+  public Cursor field(String path) {
+    int columnIndex = this.cursorIndexes.get(path);
+    if (schemaLinks[columnIndex][index] != null) {
+      return childCursorsByIndex[columnIndex];
+    } else {
+      return null;
+    }
+  }
+
+  @Override
+  public Object value(int columnIndex) {
+    return childCursorsByIndex[columnIndex].value();
+  }
+
+  @Override
+  public Object value(String path) {
+    return childCursors.get(path).value();
   }
 
   @Override

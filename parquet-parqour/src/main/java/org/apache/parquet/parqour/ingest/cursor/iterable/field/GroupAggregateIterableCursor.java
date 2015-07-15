@@ -1,10 +1,13 @@
 package org.apache.parquet.parqour.ingest.cursor.iterable.field;
 
+import org.apache.hadoop.fs.viewfs.NotInMountpointException;
 import org.apache.parquet.parqour.ingest.cursor.GroupAggregateCursor;
 import org.apache.parquet.parqour.ingest.cursor.iface.AdvanceableCursor;
 import org.apache.parquet.parqour.ingest.cursor.iface.Cursor;
 import org.apache.parquet.parqour.ingest.cursor.iterators.RecordSet;
+import org.apache.parquet.parqour.ingest.cursor.iterators.RollableRecordSet;
 import org.apache.parquet.parqour.ingest.cursor.lookup.CursorHash;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -66,7 +69,31 @@ public class GroupAggregateIterableCursor extends GroupAggregateCursor implement
 
   @Override
   public RecordSet<Cursor> fieldIter() {
-    return new RecordSet<Cursor>(this);
+    // Todo: Ask parent for location.
+    throw new NotImplementedException();
+  }
+
+  @Override
+  public RecordSet<Cursor> fieldIter(int columnIndex) {
+    Integer startOffset = schemaLinks[columnIndex][index];
+
+    if (startOffset != null) {
+      return childCursorsByIndex[columnIndex].fieldStartIteration(columnIndex, startOffset);
+    } else {
+      return RollableRecordSet.EMPTY_CURSOR_RECORDSET;
+    }
+  }
+
+  @Override
+  public RecordSet<Cursor> fieldIter(String path) {
+    int columnIndex = this.cursorIndexes.get(path);
+    Integer startOffset = schemaLinks[columnIndex][index];
+
+    if (startOffset != null) {
+      return childCursorsByIndex[columnIndex].fieldStartIteration(columnIndex, startOffset);
+    } else {
+      return RollableRecordSet.EMPTY_CURSOR_RECORDSET;
+    }
   }
 
   @Override
@@ -80,7 +107,61 @@ public class GroupAggregateIterableCursor extends GroupAggregateCursor implement
   }
 
   @Override
+  public RollableRecordSet<Integer> i32Iter(int columnIndex) {
+    Integer startOffset = schemaLinks[columnIndex][index];
+
+    if (startOffset != null) {
+      return childCursorsByIndex[columnIndex].i32StartIteration(startOffset);
+    } else {
+      return RollableRecordSet.EMPTY_I32_RECORDSET;
+    }
+  }
+
+  @Override
+  public RollableRecordSet<Integer> i32Iter(String path) {
+    int columnIndex = this.cursorIndexes.get(path);
+    Integer startOffset = schemaLinks[columnIndex][index];
+
+    if (startOffset != null) {
+      return childCursorsByIndex[columnIndex].i32StartIteration(startOffset);
+    } else {
+      return RollableRecordSet.EMPTY_I32_RECORDSET;
+    }
+  }
+
+
+  @Override
+  public Cursor field(int columnIndex) {
+    if (schemaLinks[columnIndex][index] != null) {
+      return childCursorsByIndex[columnIndex];
+    } else {
+      return null;
+    }
+  }
+
+  @Override
+  public Cursor field(String path) {
+    int columnIndex = this.cursorIndexes.get(path);
+    if (schemaLinks[columnIndex][index] != null) {
+      return childCursorsByIndex[columnIndex];
+    } else {
+      return null;
+    }
+  }
+
+  @Override
+  public Object value(int columnIndex) {
+    return childCursorsByIndex[columnIndex].value();
+  }
+
+  @Override
   public Object value(String path) {
     return childCursors.get(path).value();
   }
+
+  @Override
+  public Object value() {
+    return this;
+  }
 }
+

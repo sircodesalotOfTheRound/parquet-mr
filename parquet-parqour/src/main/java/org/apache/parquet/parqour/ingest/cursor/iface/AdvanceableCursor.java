@@ -46,6 +46,11 @@ public abstract class AdvanceableCursor implements Cursor {
   }
 
   @Override
+  public Object value(int columnIndex) {
+    throw new DataIngestException("Invalid path");
+  }
+
+  @Override
   public Object value(String path) {
     throw new DataIngestException("Invalid path");
   }
