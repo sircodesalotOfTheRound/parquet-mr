@@ -55,7 +55,7 @@ public final class Int32NoRepeatIngestNode extends PrimitiveIngestNodeBase<Int32
         this.fastForwardToRow(rowNumber);
       }
 
-      if (currentEntryDefinitionLevel >= definitionLevelAtThisNode) {
+      if (currentEntryDefinitionLevel == definitionLevelAtThisNode) {
         ingestBuffer[currentLinkSiteIndex++] = currentValue;
       } else {
         ingestBuffer[currentLinkSiteIndex++] = null;

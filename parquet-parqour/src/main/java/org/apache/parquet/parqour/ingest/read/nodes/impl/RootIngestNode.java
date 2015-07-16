@@ -28,9 +28,9 @@ public final class RootIngestNode extends AggregatingIngestNode {
     }
 
     if (child.currentEntryDefinitionLevel() >= child.nodeDefinitionLevel()) {
-      schemaLinks[childColumnIndex][schemaLinkWriteIndex] = child.currentLinkSiteIndex();
+      schemaLinks[childColumnIndex][schemaLinkWriteIndex++] = child.currentLinkSiteIndex();
     } else {
-      schemaLinks[childColumnIndex][schemaLinkWriteIndex] = null;
+      schemaLinks[childColumnIndex][schemaLinkWriteIndex++] = null;
     }
 
     this.schemaLinkWriteIndexForColumn[childColumnIndex] = schemaLinkWriteIndex;

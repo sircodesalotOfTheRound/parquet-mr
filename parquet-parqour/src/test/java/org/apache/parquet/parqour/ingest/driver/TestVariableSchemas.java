@@ -289,6 +289,67 @@ public class TestVariableSchemas {
     }
   }
 
+  public static class MultipleRepeatingColumnPrimitiveColumnSchema extends WriteTools.TestableParquetWriteContext {
+    private static MessageType SCHEMA = new MessageType("group_repeat",
+      new PrimitiveType(REPEATED, INT32, "first"),
+      new PrimitiveType(REPEATED, INT32, "second"),
+      new PrimitiveType(REPEATED, INT32, "third"));
+
+    public MultipleRepeatingColumnPrimitiveColumnSchema(ParquetConfiguration configuration) {
+      super(SCHEMA, configuration);
+    }
+
+    @Override
+    public void write(ParquetWriter<Group> writer) throws IOException {
+      for (int index = 0; index < TOTAL_ROWS; index++) {
+        Group instance = new SimpleGroup(SCHEMA);
+
+        for (int firstRepeat = 0; firstRepeat < (index % 2); firstRepeat++) {
+          instance.add("first", index + firstRepeat);
+        }
+
+        for (int secondRepeat = 0; secondRepeat < (index % 3); secondRepeat++) {
+          instance.add("second", index + secondRepeat);
+        }
+
+        for (int thirdRepeat = 0; thirdRepeat < (index % 5); thirdRepeat++) {
+          instance.add("third", index + thirdRepeat);
+        }
+
+        writer.write(instance);
+      }
+    }
+
+    public void test() {
+      Integer index = 0;
+
+      for (Cursor cursor : Parqour.query(TestTools.TEST_FILE_PATH)) {
+        int repeat = 0;
+        for (Integer value : cursor.i32Iter("first")) {
+          assertEquals(index + repeat, (int)value);
+          repeat++;
+        }
+        assertEquals((index % 2), repeat);
+
+        repeat = 0;
+        for (Integer value : cursor.i32Iter("second")) {
+          assertEquals(index + repeat, (int)value);
+          repeat++;
+        }
+        assertEquals((index % 3), repeat);
+
+        repeat =  0;
+        for (Integer value : cursor.i32Iter("third")) {
+          assertEquals(index + repeat, (int)value);
+          repeat++;
+        }
+        assertEquals((index % 5), repeat);
+
+        index++;
+      }
+    }
+  }
+
   public static class LongListSchema extends WriteTools.TestableParquetWriteContext {
     private static MessageType SCHEMA = new MessageType("group_repeat",
       new PrimitiveType(REPEATED, INT32, "value"));
@@ -404,6 +465,11 @@ public class TestVariableSchemas {
   @Test
   public void testLongListSchema() throws Exception {
     WriteTools.generateDataAndTest(1, LongListSchema.class);
+  }
+
+  @Test
+  public void testMultiplePrimitiveRepeatingColumnSchema() throws Exception {
+    WriteTools.generateDataAndTest(1, MultipleRepeatingColumnPrimitiveColumnSchema.class);
   }
 
 /*

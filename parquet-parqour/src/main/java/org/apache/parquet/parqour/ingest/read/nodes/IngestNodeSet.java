@@ -58,7 +58,6 @@ public class IngestNodeSet implements Iterable<IngestNode> {
   }
 
   public boolean containsPath(String path) { return this.ingestNodesByPath.containsKey(path); }
-  public Iterable<IngestNode> ingestNodes() { return this.ingestNodes; }
   public int size() { return this.ingestNodesByPath.size(); }
 
   @Override

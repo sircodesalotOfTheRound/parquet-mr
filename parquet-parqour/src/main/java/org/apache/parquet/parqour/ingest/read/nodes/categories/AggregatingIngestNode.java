@@ -94,13 +94,13 @@ public abstract class AggregatingIngestNode extends IngestNode {
   }
 
   private AdvanceableCursor[] linkChildren(IngestNodeSet children) {
-    List<AdvanceableCursor> childCursors = new ArrayList<AdvanceableCursor>();
+    AdvanceableCursor[] childCursors = new AdvanceableCursor[children.size()];
 
     for (IngestNode child : children) {
-      childCursors.add(child.onLinkToParent(this));
+      childCursors[child.columnIndex()] = child.onLinkToParent(this);
     }
 
-    return childCursors.toArray(new AdvanceableCursor[childCursors.size()]);
+    return childCursors;
   }
 
 

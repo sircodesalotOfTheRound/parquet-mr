@@ -57,7 +57,7 @@ public final class Int32RepeatingIngestNode extends PrimitiveIngestNodeBase<Int3
         this.fastForwardToRow(rowNumber);
       }
 
-      boolean isDefined = currentEntryDefinitionLevel >= definitionLevelAtThisNode;
+      boolean isDefined = currentEntryDefinitionLevel == definitionLevelAtThisNode;
       boolean requiresNewList = currentEntryRepetitionLevel < repetitionLevelAtThisNode;
 
       // Manage list creation:
