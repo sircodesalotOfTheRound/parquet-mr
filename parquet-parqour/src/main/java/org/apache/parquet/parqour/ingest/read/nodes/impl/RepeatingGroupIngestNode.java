@@ -44,23 +44,24 @@ public final class RepeatingGroupIngestNode extends AggregatingIngestNode {
     boolean childLinkIsDefined = currentEntryDefinitionLevel >= child.nodeDefinitionLevel();
     boolean requiresNewList = currentEntryRepetitionLevel < repetitionLevelAtThisNode;
 
-    if (childLinkIsDefined && requiresNewList) {
+    if (requiresNewList) {
       if (numberOfItemsInList > 0) {
         schemaLinks[childColumnIndex][listHeaderIndex] = numberOfItemsInList;
         numberOfItemsInList = 0;
       }
 
-      listHeaderIndex = schemaLinkWriteIndex++;
+      this.listHeaderIndex = schemaLinkWriteIndex++;
+      this.currentLinkSiteIndex = listHeaderIndex;
     }
 
-    if (childLinkIsDefined) {
-      schemaLinks[childColumnIndex][schemaLinkWriteIndex++] = child.currentLinkSiteIndex();
-      this.numberOfItemsInList++;
+    this.schemaLinks[childColumnIndex][schemaLinkWriteIndex++] = child.currentLinkSiteIndex();
+    /*if (childLinkIsDefined) {
+      this.schemaLinks[childColumnIndex][schemaLinkWriteIndex++] = child.currentLinkSiteIndex();
     } else {
-      schemaLinks[childColumnIndex][schemaLinkWriteIndex++] = null;
-    }
+      this.schemaLinks[childColumnIndex][schemaLinkWriteIndex++] = null;
+    }*/
 
-    this.currentLinkSiteIndex = listHeaderIndex;
+    this.numberOfItemsInList++;
 
     // If we require a link from the parent:
     if (child.currentEntryRepetitionLevel() <= parentRepetitionLevel) {

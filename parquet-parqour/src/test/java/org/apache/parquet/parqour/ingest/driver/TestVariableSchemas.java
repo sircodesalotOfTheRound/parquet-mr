@@ -385,6 +385,45 @@ public class TestVariableSchemas {
     }
   }
 
+  public static class SingleNestedRepeatSchema extends WriteTools.TestableParquetWriteContext {
+    private static MessageType SCHEMA = new MessageType("group_repeat",
+      new GroupType(REPEATED, "first_repeat",
+        new PrimitiveType(REPEATED, INT32, "second_repeat")));
+
+    public SingleNestedRepeatSchema(ParquetConfiguration configuration) {
+      super(SCHEMA, configuration);
+    }
+
+    @Override
+    public void write(ParquetWriter<Group> writer) throws IOException {
+      for (int index = 0; index < TOTAL_ROWS; index++) {
+        Group instance = new SimpleGroup(SCHEMA);
+
+        for (int firstRepeat = 0; firstRepeat < (index % 5); firstRepeat++) {
+          Group first = instance.addGroup("first_repeat");
+          for (int secondRepeat = 0; secondRepeat < (index % 3); secondRepeat++) {
+            first.append("second_repeat", index + secondRepeat);
+          }
+        }
+        writer.write(instance);
+      }
+    }
+
+    public void test() {
+      Integer index = 0;
+
+      for (Cursor cursor : Parqour.query(TestTools.TEST_FILE_PATH)) {
+        int repeat = 0;
+        for (Cursor field : cursor.fieldIter("first_repeat")) {
+
+          repeat++;
+        }
+        assertEquals(index % 5, repeat);
+        index++;
+      }
+    }
+  }
+
   /*private final GroupType COUNTING_SCHEMA = new GroupType(REQUIRED, "multipliers",
     new PrimitiveType(REQUIRED, INT32, "one"),
     /*new PrimitiveType(OPTIONAL, INT32, "two"),
@@ -470,6 +509,11 @@ public class TestVariableSchemas {
   @Test
   public void testMultiplePrimitiveRepeatingColumnSchema() throws Exception {
     WriteTools.generateDataAndTest(1, MultipleRepeatingColumnPrimitiveColumnSchema.class);
+  }
+
+  @Test
+  public void testSingleNestedRepeatSchema() throws Exception {
+    WriteTools.generateDataAndTest(1, SingleNestedRepeatSchema.class);
   }
 
 /*
