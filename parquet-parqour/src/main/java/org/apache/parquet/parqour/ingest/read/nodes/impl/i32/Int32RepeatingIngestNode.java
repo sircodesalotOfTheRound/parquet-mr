@@ -110,7 +110,7 @@ public final class Int32RepeatingIngestNode extends PrimitiveIngestNodeBase<Int3
         this.currentEntryRepetitionLevel = 0;
         this.currentValue = -1;
       }
-    } while (currentEntryRepetitionLevel > 0);
+    } while (currentEntryRepetitionLevel != NEW_RECORD);
 
     if (numberOfItemsInList > 0) {
       ingestBuffer[listHeaderIndex] = numberOfItemsInList;

@@ -14,6 +14,8 @@ import org.apache.parquet.schema.Type;
  * Created by sircodesalot on 6/2/15.
  */
 public abstract class PrimitiveIngestNodeBase<TFFReaderType extends FastForwardReader> extends IngestNode {
+  protected static final int NEW_RECORD = 0;
+
   protected final ColumnDescriptor columnDescriptor;
   protected final DiskInterfaceManager diskInterfaceManager;
 
@@ -114,7 +116,7 @@ public abstract class PrimitiveIngestNodeBase<TFFReaderType extends FastForwardR
       }
 
       // Move the row number forward if we reach a repetition level of ZERO, since ZERO means 'new record'.
-      if (currentEntryRepetitionLevel == 0) {
+      if (currentEntryRepetitionLevel == NEW_RECORD) {
         currentRowNumber++;
       }
 
