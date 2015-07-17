@@ -65,6 +65,7 @@ public class TestLambdaMaterialization extends UsesPersistence {
           SchemaInfo schemaInfo = new SchemaInfo(EMPTY_CONFIGURATION, new Path(TEST_FILE_PATH), metadata, COUNTING_SCHEMA);
 
           Parqour<Record> records = new ParqourRecordset(schemaInfo)
+            //.materialize(Record::new) Java-8 style lambda
             .materialize(new Projection<Cursor, Record>() {
               @Override
               public Record apply(Cursor cursor) {
