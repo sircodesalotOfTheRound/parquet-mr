@@ -9,8 +9,6 @@ import java.util.*;
  * Created by sircodesalot on 7/5/15.
  */
 public class RecordSet<T> implements Iterable<T> {
-  //public static final RecordSet EMPTY = new RecordSet();
-
   private final Iterable<T> iterable;
 
   public RecordSet() {
@@ -46,7 +44,7 @@ public class RecordSet<T> implements Iterable<T> {
     return new RecordsetFilterIterable<T>(this, predicate);
   }
 
-  public final <U extends Comparable<U>> RecordSet<T> sort(final Projection<T, U> onProperty) {
+  public final <U extends Comparable<U>> RecordSet<T> sortBy(final Projection<T, U> onProperty) {
     List<T> collection = new ArrayList<T>();
     for (T item : this) {
       collection.add(item);
@@ -64,12 +62,12 @@ public class RecordSet<T> implements Iterable<T> {
     return new RecordSet<T>(collection);
   }
 
-  public final <U> U reduce(U collector, Reducer<T> reducer) {
+  public final <U> U reduce(U aggregate, Reducer<T, U> reducer) {
     for (T item : this) {
-      reducer.nextItem(item);
+      reducer.nextItem(aggregate, item);
     }
 
-    return collector;
+    return aggregate;
   }
 
   public final <U> Iterable<U> roll(Projection<T, U> projection) {
