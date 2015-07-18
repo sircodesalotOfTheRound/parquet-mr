@@ -38,12 +38,9 @@ public final class NoRepeatGroupIngestNode extends AggregatingIngestNode {
       schemaLinks[childColumnIndex][schemaLinkWriteIndex++] = null;
     }
 
-    // If we require a link from the parent:
-    if (currentEntryRepetitionLevel <= parentRepetitionLevel) {
-      // If this node reports schema, then continue upstream:
-      if (child.isSchemaReportingNode()) {
-        parent.linkSchema(this);
-      }
+    // If this node reports schema, then continue upstream:
+    if (child.isSchemaReportingNode()) {
+      parent.linkSchema(this);
     }
 
     schemaLinkWriteIndexForColumn[childColumnIndex] = schemaLinkWriteIndex;

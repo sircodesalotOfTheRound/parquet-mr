@@ -61,9 +61,7 @@ public final class Int32NoRepeatIngestNode extends PrimitiveIngestNodeBase<Int32
         ingestBuffer[currentLinkSiteIndex++] = null;
       }
 
-      if (currentEntryRepetitionLevel <= parentDefinitionLevel) {
-        parent.linkSchema(this);
-      }
+      parent.linkSchema(this);
 
       if (currentEntryOnPage < totalItemsOnThisPage) {
         this.currentEntryOnPage++;
