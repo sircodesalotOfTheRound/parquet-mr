@@ -55,6 +55,10 @@ public final class Int32NoRepeatIngestNode extends PrimitiveIngestNodeBase<Int32
         this.fastForwardToRow(rowNumber);
       }
 
+      if (currentLinkSiteIndex >= ingestBufferLength) {
+        this.expandIngestBuffer();
+      }
+
       if (currentEntryDefinitionLevel == definitionLevelAtThisNode) {
         ingestBuffer[currentLinkSiteIndex++] = currentValue;
       } else {
@@ -75,7 +79,8 @@ public final class Int32NoRepeatIngestNode extends PrimitiveIngestNodeBase<Int32
       } else if (currentRowNumber < totalRowCount - 1) {
         super.moveToNextPage();
       } else {
-        this.currentEntryDefinitionLevel = 0;this.currentEntryRepetitionLevel = 0;
+        this.currentEntryDefinitionLevel = 0;
+        this.currentEntryRepetitionLevel = 0;
         this.currentValue = -1;
       }
 

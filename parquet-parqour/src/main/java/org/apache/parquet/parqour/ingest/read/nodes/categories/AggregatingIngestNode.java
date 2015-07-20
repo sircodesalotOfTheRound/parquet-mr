@@ -117,6 +117,8 @@ public abstract class AggregatingIngestNode extends IngestNode {
   // is not defined, and therefore should be connected by using a 'null'  link. Everything in the interval between RL and DL
   // forms the content of the new list.
   public abstract void linkSchema(IngestNode child);
+
+  @Deprecated
   public abstract void finishRow(IngestNode child);
 
   @Override

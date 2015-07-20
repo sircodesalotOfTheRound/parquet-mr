@@ -49,8 +49,6 @@ public final class Int32RepeatingIngestNode extends PrimitiveIngestNodeBase<Int3
     if (currentRowNumber > rowNumber) return;
 
     int writeIndex = 0;
-    int listHeaderIndex = -1;
-    int numberOfItemsInList = 0;
 
     do {
       if (currentRowNumber < rowNumber) {
@@ -60,37 +58,23 @@ public final class Int32RepeatingIngestNode extends PrimitiveIngestNodeBase<Int3
       boolean isDefined = currentEntryDefinitionLevel == definitionLevelAtThisNode;
       boolean requiresNewList = currentEntryRepetitionLevel < repetitionLevelAtThisNode;
 
-      // Manage list creation:
-      if (isDefined) {
-        if (requiresNewList) {
-          if (numberOfItemsInList > 0) {
-            ingestBuffer[listHeaderIndex] = numberOfItemsInList;
-            numberOfItemsInList = 0;
-          }
+      if (requiresNewList) {
+        // Create a new list-header at 'currentLinkSiteIndex'.
+        this.currentLinkSiteIndex = writeIndex++;
+        parent.linkSchema(this);
 
-          listHeaderIndex = writeIndex++;
-        }
-
-        // If the current item is defined, then set the link site to the head of the list.
-        this.currentLinkSiteIndex = listHeaderIndex;
-      } else {
-        // If the current item is not defined, then set the link site to the value itself.
-        this.currentLinkSiteIndex = writeIndex;
+        // Set the list-header to 'zero'.
+        ingestBuffer[currentLinkSiteIndex] = 0;
       }
 
       if (writeIndex >= ingestBufferLength) {
         this.expandIngestBuffer();
       }
 
+      // If the value is defined, then write it and increment the list-header.
       if (isDefined) {
         ingestBuffer[writeIndex++] = currentValue;
-        numberOfItemsInList++;
-      } else {
-        ingestBuffer[writeIndex++] = null;
-      }
-
-      if (requiresNewList) {
-        parent.linkSchema(this);
+        ingestBuffer[currentLinkSiteIndex]++;
       }
 
       if (currentEntryOnPage < totalItemsOnThisPage) {
@@ -111,10 +95,6 @@ public final class Int32RepeatingIngestNode extends PrimitiveIngestNodeBase<Int3
         this.currentValue = -1;
       }
     } while (currentEntryRepetitionLevel != NEW_RECORD);
-
-    if (numberOfItemsInList > 0) {
-      ingestBuffer[listHeaderIndex] = numberOfItemsInList;
-    }
 
     parent.finishRow(this);
     currentRowNumber++;
