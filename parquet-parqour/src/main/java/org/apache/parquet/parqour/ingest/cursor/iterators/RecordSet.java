@@ -2,6 +2,7 @@ package org.apache.parquet.parqour.ingest.cursor.iterators;
 
 import org.apache.parquet.parqour.ingest.read.iterator.lamba.Predicate;
 import org.apache.parquet.parqour.ingest.read.iterator.lamba.Projection;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.*;
 
@@ -77,6 +78,11 @@ public class RecordSet<T> implements Iterable<T> {
     }
 
     return items;
+  }
+
+  // Todo: make this abstract and implement.
+  public int count() {
+    throw new NotImplementedException();
   }
 
   @Override
