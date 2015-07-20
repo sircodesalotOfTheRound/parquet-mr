@@ -64,7 +64,7 @@ public class RecordSet<T> implements Iterable<T> {
 
   public final <U> U reduce(U aggregate, Reducer<T, U> reducer) {
     for (T item : this) {
-      reducer.nextItem(aggregate, item);
+      aggregate = reducer.nextItem(aggregate, item);
     }
 
     return aggregate;
