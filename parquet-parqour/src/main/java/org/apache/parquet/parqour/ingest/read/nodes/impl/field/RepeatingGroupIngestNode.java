@@ -1,4 +1,4 @@
-package org.apache.parquet.parqour.ingest.read.nodes.impl;
+package org.apache.parquet.parqour.ingest.read.nodes.impl.field;
 
 import org.apache.parquet.parqour.ingest.paging.DiskInterfaceManager;
 import org.apache.parquet.parqour.ingest.read.nodes.categories.AggregatingIngestNode;
@@ -11,7 +11,7 @@ import java.util.Arrays;
 /**
  * Created by sircodesalot on 6/2/15.
  */
-public final class RepeatingGroupIngestNode extends AggregatingIngestNode {
+public final class RepeatingGroupIngestNode extends GroupIngestNode {
 
   // Todo: Make these an array, not a single item.
   private int listHeaderIndex;

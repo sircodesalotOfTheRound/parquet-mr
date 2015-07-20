@@ -1,7 +1,7 @@
 package org.apache.parquet.parqour.ingest.read.nodes.impl.i32;
 
 import org.apache.parquet.column.ColumnDescriptor;
-import org.apache.parquet.parqour.ingest.cursor.Int32Cursor;
+import org.apache.parquet.parqour.ingest.cursor.noniterable.Int32Cursor;
 import org.apache.parquet.parqour.ingest.cursor.iface.AdvanceableCursor;
 import org.apache.parquet.parqour.ingest.ffreader.interfaces.Int32FastForwardReader;
 import org.apache.parquet.parqour.ingest.paging.DiskInterfaceManager;

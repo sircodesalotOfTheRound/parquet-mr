@@ -1,6 +1,5 @@
 package org.apache.parquet.parqour.aggregation;
 
-import org.apache.parquet.parqour.ingest.cursor.GroupAggregateCursor;
 import org.apache.parquet.parqour.testtools.TestTools;
 import org.junit.Test;
 

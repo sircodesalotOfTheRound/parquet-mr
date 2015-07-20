@@ -2,7 +2,7 @@ package org.apache.parquet.parqour.ingest.tree;
 
 import org.apache.parquet.parqour.ingest.read.nodes.IngestTree;
 import org.apache.parquet.parqour.ingest.read.nodes.categories.IngestNode;
-import org.apache.parquet.parqour.ingest.read.nodes.impl.NoRepeatGroupIngestNode;
+import org.apache.parquet.parqour.ingest.read.nodes.impl.field.NoRepeatGroupIngestNode;
 import org.apache.parquet.parqour.ingest.read.nodes.impl.i32.Int32NoRepeatIngestNode;
 import org.apache.parquet.parqour.testtools.TestTools;
 import org.apache.parquet.schema.GroupType;

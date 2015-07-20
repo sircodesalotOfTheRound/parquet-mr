@@ -1,4 +1,4 @@
-package org.apache.parquet.parqour.ingest.cursor;
+package org.apache.parquet.parqour.ingest.cursor.noniterable;
 
 import org.apache.parquet.parqour.ingest.cursor.iface.AdvanceableCursor;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;

@@ -1,8 +1,7 @@
 package org.apache.parquet.parqour.ingest.read.nodes.categories;
 
-import org.apache.parquet.parqour.ingest.cursor.GroupAggregateCursor;
+import org.apache.parquet.parqour.ingest.cursor.noniterable.GroupCursor;
 import org.apache.parquet.parqour.ingest.cursor.iface.AdvanceableCursor;
-import org.apache.parquet.parqour.ingest.cursor.iterable.field.GroupAggregateIterableCursor;
 import org.apache.parquet.parqour.ingest.paging.DiskInterfaceManager;
 import org.apache.parquet.parqour.ingest.read.nodes.IngestNodeGenerator;
 import org.apache.parquet.parqour.ingest.read.nodes.IngestNodeSet;
@@ -19,14 +18,12 @@ import java.util.List;
 public abstract class AggregatingIngestNode extends IngestNode {
   private static final String EMPTY_PATH = "";
 
-  private final String path;
-  private final GroupType groupSchema;
-  private final IngestNodeSet children;
-  private final DiskInterfaceManager diskInterfaceManager;
-  private final int childColumnCount;
-  private final GroupAggregateCursor aggregate;
+  protected final String path;
+  protected final GroupType groupSchema;
+  protected final IngestNodeSet children;
+  protected final DiskInterfaceManager diskInterfaceManager;
+  protected final int childColumnCount;
 
-  protected Integer[][] schemaLinks;
   protected int schemaLinkWriteIndexForColumn[];
 
   protected AggregatingIngestNode(SchemaInfo schemaInfo, Type schemaNode, DiskInterfaceManager diskInterfaceManager) {
@@ -40,8 +37,6 @@ public abstract class AggregatingIngestNode extends IngestNode {
 
     this.schemaLinkWriteIndexForColumn = new int[childColumnCount];
     this.ingestBufferLength = 100;
-    this.schemaLinks = generateSchemaLinks(childColumnCount, ingestBufferLength );
-    this.aggregate = generateAggregateCursor(children, schemaLinks);
   }
 
   public AggregatingIngestNode(SchemaInfo schemaInfo, AggregatingIngestNode parent,
@@ -56,8 +51,6 @@ public abstract class AggregatingIngestNode extends IngestNode {
     this.children = collectChildren(groupSchema);
     this.childColumnCount = children.size();
     this.ingestBufferLength = 100;
-    this.schemaLinks = generateSchemaLinks(childColumnCount, ingestBufferLength );
-    this.aggregate = generateAggregateCursor(children, schemaLinks);
     this.schemaLinkWriteIndexForColumn = new int[childColumnCount];
   }
 
@@ -75,25 +68,7 @@ public abstract class AggregatingIngestNode extends IngestNode {
     return new IngestNodeSet(children);
   }
 
-  private Integer[][] generateSchemaLinks(int childColumnCount, int ingestBufferLength) {
-    return new Integer[childColumnCount][ingestBufferLength];
-  }
-
-  private GroupAggregateCursor generateAggregateCursor(IngestNodeSet children, Integer[][] schemaLinks) {
-    AdvanceableCursor[] childCursors = linkChildren(children);
-
-    // The root node is a special case because it's always defined as REPEAT even though we don't treat it as such.
-    GroupAggregateCursor aggregate;
-    if (this.hasParent && this.repetitionType == Type.Repetition.REPEATED) {
-      aggregate = new GroupAggregateIterableCursor(name, columnIndex, childCursors, schemaLinks);
-    }  else {
-      aggregate = new GroupAggregateCursor(name, columnIndex, childCursors, schemaLinks);
-    }
-
-    return aggregate;
-  }
-
-  private AdvanceableCursor[] linkChildren(IngestNodeSet children) {
+  protected AdvanceableCursor[] linkChildren(IngestNodeSet children) {
     AdvanceableCursor[] childCursors = new AdvanceableCursor[children.size()];
 
     for (IngestNode child : children) {
@@ -105,6 +80,8 @@ public abstract class AggregatingIngestNode extends IngestNode {
 
 
   // Return an immutable iterator.
+  // Todo: Remove this.
+  @Deprecated
   public Iterable<IngestNode> children() {
     return children;
   }
@@ -121,26 +98,5 @@ public abstract class AggregatingIngestNode extends IngestNode {
   @Deprecated
   public abstract void finishRow(IngestNode child);
 
-  @Override
-  protected void expandIngestBuffer() {
-    int newIngestBufferLength = this.ingestBufferLength * 2;
-
-    for (int index = 0; index < childColumnCount; index++) {
-      Integer[] newChildColumnIngestBuffer = new Integer[newIngestBufferLength];
-      System.arraycopy(schemaLinks[index], 0, newChildColumnIngestBuffer, 0, ingestBufferLength);
-
-      this.schemaLinks[index] = newChildColumnIngestBuffer;
-    }
-
-    this.ingestBufferLength = newIngestBufferLength;
-    this.aggregate.setSchemaLinks(schemaLinks);
-  }
-
-  @Override
-  protected AdvanceableCursor onLinkToParent(AggregatingIngestNode parentNode) {
-    return aggregate;
-  }
-
   public String path() { return this.path; }
-  public GroupAggregateCursor cursor() { return this.aggregate; }
 }

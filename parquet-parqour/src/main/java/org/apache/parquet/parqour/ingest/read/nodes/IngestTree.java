@@ -5,7 +5,7 @@ import org.apache.parquet.parqour.ingest.paging.DiskInterfaceManager;
 import org.apache.parquet.parqour.ingest.read.nodes.categories.AggregatingIngestNode;
 import org.apache.parquet.parqour.ingest.read.nodes.categories.IngestNode;
 import org.apache.parquet.parqour.ingest.read.nodes.categories.IngestNodeCategory;
-import org.apache.parquet.parqour.ingest.read.nodes.impl.RootIngestNode;
+import org.apache.parquet.parqour.ingest.read.nodes.impl.field.RootIngestNode;
 import org.apache.parquet.parqour.ingest.schema.SchemaInfo;
 
 import java.util.*;
