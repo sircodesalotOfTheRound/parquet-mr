@@ -15,13 +15,12 @@ public final class RepeatingGroupIngestNode extends GroupIngestNode {
 
   // Todo: Make these an array, not a single item.
   private int listHeaderIndex;
-  private int numberOfItemsInList;
+  //private int numberOfItemsInList;
 
   public RepeatingGroupIngestNode(SchemaInfo schemaInfo, AggregatingIngestNode aggregatingIngestNode, String childPath, GroupType child, DiskInterfaceManager diskInterfaceManager, int childColumnIndex) {
     super(schemaInfo, aggregatingIngestNode, childPath, child, diskInterfaceManager, childColumnIndex);
 
     this.listHeaderIndex = -1;
-    this.numberOfItemsInList = 0;
   }
 
   @Override
@@ -32,7 +31,6 @@ public final class RepeatingGroupIngestNode extends GroupIngestNode {
     if (currentRowNumber != child.currentRowNumber()) {
       this.currentRowNumber = child.currentRowNumber();
       this.listHeaderIndex = -1;
-      this.numberOfItemsInList = 0;
 
       Arrays.fill(schemaLinkWriteIndexForColumn, 0);
       schemaLinkWriteIndex = 0;
@@ -45,42 +43,33 @@ public final class RepeatingGroupIngestNode extends GroupIngestNode {
     boolean requiresNewList = currentEntryRepetitionLevel < repetitionLevelAtThisNode;
 
     if (requiresNewList) {
-      if (numberOfItemsInList > 0) {
-        schemaLinks[childColumnIndex][listHeaderIndex] = numberOfItemsInList;
-        numberOfItemsInList = 0;
-      }
-
       this.listHeaderIndex = schemaLinkWriteIndex++;
       this.currentLinkSiteIndex = listHeaderIndex;
-    }
 
-    this.schemaLinks[childColumnIndex][schemaLinkWriteIndex++] = child.currentLinkSiteIndex();
-    /*if (childLinkIsDefined) {
-      this.schemaLinks[childColumnIndex][schemaLinkWriteIndex++] = child.currentLinkSiteIndex();
-    } else {
-      this.schemaLinks[childColumnIndex][schemaLinkWriteIndex++] = null;
-    }*/
+      schemaLinks[childColumnIndex][listHeaderIndex] = 0;
 
-    this.numberOfItemsInList++;
-
-    // If we require a link from the parent:
-    if (child.currentEntryRepetitionLevel() <= parentRepetitionLevel) {
-      // If this node reports schema, then continue upstream:
-      if (isSchemaReportingNode) {
+      if (child.isSchemaReportingNode()) {
         parent.linkSchema(this);
       }
     }
 
+    if (childLinkIsDefined) {
+      this.schemaLinks[childColumnIndex][schemaLinkWriteIndex++] = child.currentLinkSiteIndex();
+    } else {
+      this.schemaLinks[childColumnIndex][schemaLinkWriteIndex++] = null;
+    }
+
+    schemaLinks[childColumnIndex][listHeaderIndex]++;
     this.schemaLinkWriteIndexForColumn[childColumnIndex] = schemaLinkWriteIndex;
   }
 
   @Override
   public void finishRow(IngestNode child) {
-    if (numberOfItemsInList > 0) {
+    /*if (numberOfItemsInList > 0) {
       // Todo: make this not fixed.
       int REPLACE_THIS_WITH_ACTUAL_CHILD_NUMBER = 0;
       this.schemaLinks[REPLACE_THIS_WITH_ACTUAL_CHILD_NUMBER][listHeaderIndex] = numberOfItemsInList;
-    }
+    }*/
 
     // If this node reports schema, then continue upstream:
     if (child.isSchemaReportingNode()) {

@@ -52,10 +52,6 @@ public class RootCursor extends AdvanceableCursor {
     return childCursors;
   }
 
-  public void setSchemaLinks(Integer[] schemaLinks) {
-    this.schemaLinks = schemaLinks;
-  }
-
   @Override
   public RecordSet<Cursor> fieldIter(int columnIndex) {
     Integer startOffset = schemaLinks[columnIndex];
