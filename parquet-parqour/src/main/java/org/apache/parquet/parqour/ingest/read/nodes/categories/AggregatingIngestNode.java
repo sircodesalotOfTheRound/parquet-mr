@@ -95,8 +95,5 @@ public abstract class AggregatingIngestNode extends IngestNode {
   // forms the content of the new list.
   public abstract void linkSchema(IngestNode child);
 
-  @Deprecated
-  public abstract void finishRow(IngestNode child);
-
   public String path() { return this.path; }
 }

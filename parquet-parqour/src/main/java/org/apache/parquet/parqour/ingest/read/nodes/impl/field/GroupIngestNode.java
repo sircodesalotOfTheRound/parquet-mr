@@ -34,7 +34,7 @@ public abstract class GroupIngestNode extends AggregatingIngestNode {
   private GroupCursor generateAggregateCursor(IngestNodeSet children, Integer[][] schemaLinks) {
     AdvanceableCursor[] childCursors = linkChildren(children);
 
-    // The root node is a special case because it's always defined as REPEAT even though we don't treat it as such.
+    // The root node is a special case because it's always defined as REPEAT even though we treat it as REQUIRED.
     GroupCursor aggregate;
     if (this.hasParent && this.repetitionType == Type.Repetition.REPEATED) {
       aggregate = new GroupIterableCursor(name, columnIndex, childCursors, schemaLinks);

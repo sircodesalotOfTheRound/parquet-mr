@@ -45,12 +45,4 @@ public final class NoRepeatGroupIngestNode extends GroupIngestNode {
 
     schemaLinkWriteIndexForColumn[childColumnIndex] = schemaLinkWriteIndex;
   }
-
-  @Override
-  public void finishRow(IngestNode child) {
-    // If this node reports schema, then continue upstream:
-    if (child.isSchemaReportingNode()) {
-      parent.finishRow(this);
-    }
-  }
 }

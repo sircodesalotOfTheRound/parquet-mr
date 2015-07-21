@@ -88,7 +88,6 @@ public final class Int32NoRepeatIngestNode extends PrimitiveIngestNodeBase<Int32
 
     } while (currentEntryRepetitionLevel != NEW_RECORD);
 
-    parent.finishRow(this);
     currentRowNumber++;
   }
 

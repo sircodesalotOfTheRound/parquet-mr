@@ -62,19 +62,4 @@ public final class RepeatingGroupIngestNode extends GroupIngestNode {
     schemaLinks[childColumnIndex][listHeaderIndex]++;
     this.schemaLinkWriteIndexForColumn[childColumnIndex] = schemaLinkWriteIndex;
   }
-
-  @Override
-  public void finishRow(IngestNode child) {
-    /*if (numberOfItemsInList > 0) {
-      // Todo: make this not fixed.
-      int REPLACE_THIS_WITH_ACTUAL_CHILD_NUMBER = 0;
-      this.schemaLinks[REPLACE_THIS_WITH_ACTUAL_CHILD_NUMBER][listHeaderIndex] = numberOfItemsInList;
-    }*/
-
-    // If this node reports schema, then continue upstream:
-    if (child.isSchemaReportingNode()) {
-      parent.finishRow(this);
-    }
-  }
-
 }

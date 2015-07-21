@@ -41,11 +41,6 @@ public final class RootIngestNode extends AggregatingIngestNode {
   public final Cursor cursor() { return this.cursor; }
 
   @Override
-  public void finishRow(IngestNode child) {
-    /* NO-OP */
-  }
-
-  @Override
   protected AdvanceableCursor onLinkToParent(AggregatingIngestNode parentNode) {
     return null;
   }
