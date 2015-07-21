@@ -1,8 +1,8 @@
 package org.apache.parquet.parqour.ingest.cursor.iface;
 
 import org.apache.parquet.parqour.exceptions.DataIngestException;
-import org.apache.parquet.parqour.ingest.cursor.iterators.RecordSet;
-import org.apache.parquet.parqour.ingest.cursor.iterators.RollableRecordSet;
+import org.apache.parquet.parqour.ingest.recordsets.FieldEntries;
+import org.apache.parquet.parqour.ingest.cursor.iterators.RollableFieldEntries;
 
 /**
  * Created by sircodesalot on 6/19/15.
@@ -66,39 +66,39 @@ public abstract class AdvanceableCursor implements Cursor {
   }
 
   @Deprecated
-  public RollableRecordSet<Integer> i32Iter() {
+  public RollableFieldEntries<Integer> i32Iter() {
     throw new DataIngestException("Invalid path");
   }
 
   @Override
-  public RollableRecordSet<Integer> i32Iter(int index) {
+  public RollableFieldEntries<Integer> i32Iter(int index) {
     throw new DataIngestException("Invalid path");
   }
 
-  public RollableRecordSet<Integer> i32StartIteration(int startOffset) {
-    throw new DataIngestException("Invalid path");
-  }
-
-  @Override
-  public RollableRecordSet<Integer> i32Iter(String path) {
+  public RollableFieldEntries<Integer> i32StartIteration(int startOffset) {
     throw new DataIngestException("Invalid path");
   }
 
   @Override
-  public RecordSet<Cursor> fieldIter(String path) {
+  public RollableFieldEntries<Integer> i32Iter(String path) {
     throw new DataIngestException("Invalid path");
   }
 
   @Override
-  public RecordSet<Cursor> fieldIter(int index) {
+  public FieldEntries<Cursor> fieldIter(String path) {
     throw new DataIngestException("Invalid path");
   }
 
-  public RecordSet<Cursor> fieldIter() {
+  @Override
+  public FieldEntries<Cursor> fieldIter(int index) {
     throw new DataIngestException("Invalid path");
   }
 
-  public RecordSet<Cursor> fieldStartIteration(int columIndex, int startOffset) {
+  public FieldEntries<Cursor> fieldIter() {
+    throw new DataIngestException("Invalid path");
+  }
+
+  public FieldEntries<Cursor> fieldStartIteration(int columIndex, int startOffset) {
     throw new DataIngestException("Invalid path");
   }
 

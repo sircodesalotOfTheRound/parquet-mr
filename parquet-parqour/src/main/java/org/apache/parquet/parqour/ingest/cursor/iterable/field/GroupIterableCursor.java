@@ -3,8 +3,8 @@ package org.apache.parquet.parqour.ingest.cursor.iterable.field;
 import org.apache.parquet.parqour.ingest.cursor.noniterable.GroupCursor;
 import org.apache.parquet.parqour.ingest.cursor.iface.AdvanceableCursor;
 import org.apache.parquet.parqour.ingest.cursor.iface.Cursor;
-import org.apache.parquet.parqour.ingest.cursor.iterators.RecordSet;
-import org.apache.parquet.parqour.ingest.cursor.iterators.RollableRecordSet;
+import org.apache.parquet.parqour.ingest.recordsets.FieldEntries;
+import org.apache.parquet.parqour.ingest.cursor.iterators.RollableFieldEntries;
 import org.apache.parquet.parqour.ingest.cursor.lookup.CursorHash;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
@@ -53,10 +53,10 @@ public class GroupIterableCursor extends GroupCursor implements Iterable<Cursor>
   }
 
   @Override
-  public RecordSet<Cursor> fieldStartIteration(int columnIndex, int startOffset) {
+  public FieldEntries<Cursor> fieldStartIteration(int columnIndex, int startOffset) {
     this.iterator = new GroupCursorIterator(name(), childCursorsByIndex, schemaLinks);
     this.iterator.reset(startOffset);
-    return new RecordSet<Cursor>(this);
+    return new FieldEntries<Cursor>(this);
   }
 
   private GroupCursorIterator iterator;
@@ -67,31 +67,31 @@ public class GroupIterableCursor extends GroupCursor implements Iterable<Cursor>
   }
 
   @Override
-  public RecordSet<Cursor> fieldIter() {
+  public FieldEntries<Cursor> fieldIter() {
     // Todo: Ask parent for location.
     throw new NotImplementedException();
   }
 
   @Override
-  public RecordSet<Cursor> fieldIter(int columnIndex) {
+  public FieldEntries<Cursor> fieldIter(int columnIndex) {
     Integer startOffset = schemaLinks[columnIndex][index];
 
     if (startOffset != null) {
       return childCursorsByIndex[columnIndex].fieldStartIteration(columnIndex, startOffset);
     } else {
-      return RollableRecordSet.EMPTY_CURSOR_RECORDSET;
+      return RollableFieldEntries.EMPTY_CURSOR_RECORDSET;
     }
   }
 
   @Override
-  public RecordSet<Cursor> fieldIter(String path) {
+  public FieldEntries<Cursor> fieldIter(String path) {
     int columnIndex = this.cursorIndexes.get(path);
     Integer startOffset = schemaLinks[columnIndex][index];
 
     if (startOffset != null) {
       return childCursorsByIndex[columnIndex].fieldStartIteration(columnIndex, startOffset);
     } else {
-      return RollableRecordSet.EMPTY_CURSOR_RECORDSET;
+      return RollableFieldEntries.EMPTY_CURSOR_RECORDSET;
     }
   }
 
@@ -106,25 +106,25 @@ public class GroupIterableCursor extends GroupCursor implements Iterable<Cursor>
   }
 
   @Override
-  public RollableRecordSet<Integer> i32Iter(int columnIndex) {
+  public RollableFieldEntries<Integer> i32Iter(int columnIndex) {
     Integer startOffset = schemaLinks[columnIndex][index];
 
     if (startOffset != null) {
       return childCursorsByIndex[columnIndex].i32StartIteration(startOffset);
     } else {
-      return RollableRecordSet.EMPTY_I32_RECORDSET;
+      return RollableFieldEntries.EMPTY_I32_RECORDSET;
     }
   }
 
   @Override
-  public RollableRecordSet<Integer> i32Iter(String path) {
+  public RollableFieldEntries<Integer> i32Iter(String path) {
     int columnIndex = this.cursorIndexes.get(path);
     Integer startOffset = schemaLinks[columnIndex][index];
 
     if (startOffset != null) {
       return childCursorsByIndex[columnIndex].i32StartIteration(startOffset);
     } else {
-      return RollableRecordSet.EMPTY_I32_RECORDSET;
+      return RollableFieldEntries.EMPTY_I32_RECORDSET;
     }
   }
 

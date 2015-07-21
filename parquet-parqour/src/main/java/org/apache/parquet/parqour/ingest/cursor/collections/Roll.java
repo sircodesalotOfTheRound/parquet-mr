@@ -1,6 +1,6 @@
 package org.apache.parquet.parqour.ingest.cursor.collections;
 
-import org.apache.parquet.parqour.ingest.cursor.iterators.RollableRecordSet;
+import org.apache.parquet.parqour.ingest.cursor.iterators.RollableFieldEntries;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Created by sircodesalot on 7/5/15.
  */
-public class Roll<T> extends RollableRecordSet<T> {
+public class Roll<T> extends RollableFieldEntries<T> {
   private final List<T> items;
 
   public Roll(Iterable<T> iterable) {

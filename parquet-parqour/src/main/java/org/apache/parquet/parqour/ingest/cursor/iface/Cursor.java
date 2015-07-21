@@ -1,7 +1,7 @@
 package org.apache.parquet.parqour.ingest.cursor.iface;
 
-import org.apache.parquet.parqour.ingest.cursor.iterators.RecordSet;
-import org.apache.parquet.parqour.ingest.cursor.iterators.RollableRecordSet;
+import org.apache.parquet.parqour.ingest.recordsets.FieldEntries;
+import org.apache.parquet.parqour.ingest.cursor.iterators.RollableFieldEntries;
 
 /**
  * Created by sircodesalot on 6/18/15.
@@ -18,10 +18,10 @@ public interface Cursor {
   Cursor field(int columnIndex);
   Cursor field(String path);
 
-  RollableRecordSet<Integer> i32Iter(int columnIndex);
-  RollableRecordSet<Integer> i32Iter(String path);
+  RollableFieldEntries<Integer> i32Iter(int columnIndex);
+  RollableFieldEntries<Integer> i32Iter(String path);
 
-  RecordSet<Cursor> fieldIter();
-  RecordSet<Cursor> fieldIter(int columnIndex);
-  RecordSet<Cursor> fieldIter(String path);
+  FieldEntries<Cursor> fieldIter();
+  FieldEntries<Cursor> fieldIter(int columnIndex);
+  FieldEntries<Cursor> fieldIter(String path);
 }

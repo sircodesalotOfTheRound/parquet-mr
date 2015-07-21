@@ -1,7 +1,8 @@
-package org.apache.parquet.parqour.ingest.cursor.iterators;
+package org.apache.parquet.parqour.ingest.recordsets.transforms;
 
 
 import org.apache.parquet.parqour.ingest.read.iterator.lamba.Predicate;
+import org.apache.parquet.parqour.ingest.recordsets.FieldEntries;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.Iterator;
@@ -9,11 +10,11 @@ import java.util.Iterator;
 /**
  * Created by sircodesalot on 14-5-30.
  */
-public class RecordsetFilterIterable<T> extends RecordSet<T> {
+public class FieldEntryFilterTransform<T> extends FieldEntries<T> {
   private final Predicate<T> predicate;
 
-  public RecordsetFilterIterable(RecordSet<T> recordSet, Predicate<T> predicate) {
-    super(recordSet);
+  public FieldEntryFilterTransform(FieldEntries<T> fieldEntries, Predicate<T> predicate) {
+    super(fieldEntries);
     this.predicate = predicate;
   }
 

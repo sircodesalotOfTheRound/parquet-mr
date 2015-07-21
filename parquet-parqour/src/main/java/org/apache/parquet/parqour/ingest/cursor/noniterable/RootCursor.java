@@ -2,8 +2,8 @@ package org.apache.parquet.parqour.ingest.cursor.noniterable;
 
 import org.apache.parquet.parqour.ingest.cursor.iface.AdvanceableCursor;
 import org.apache.parquet.parqour.ingest.cursor.iface.Cursor;
-import org.apache.parquet.parqour.ingest.cursor.iterators.RecordSet;
-import org.apache.parquet.parqour.ingest.cursor.iterators.RollableRecordSet;
+import org.apache.parquet.parqour.ingest.recordsets.FieldEntries;
+import org.apache.parquet.parqour.ingest.cursor.iterators.RollableFieldEntries;
 import org.apache.parquet.parqour.ingest.cursor.lookup.CursorHash;
 
 import java.util.HashMap;
@@ -53,25 +53,25 @@ public class RootCursor extends AdvanceableCursor {
   }
 
   @Override
-  public RecordSet<Cursor> fieldIter(int columnIndex) {
+  public FieldEntries<Cursor> fieldIter(int columnIndex) {
     Integer startOffset = schemaLinks[columnIndex];
 
     if (startOffset != null) {
       return childCursorsByIndex[columnIndex].fieldStartIteration(columnIndex, startOffset);
     } else {
-      return RollableRecordSet.EMPTY_CURSOR_RECORDSET;
+      return RollableFieldEntries.EMPTY_CURSOR_RECORDSET;
     }
   }
 
   @Override
-  public RecordSet<Cursor> fieldIter(String path) {
+  public FieldEntries<Cursor> fieldIter(String path) {
     int columnIndex = this.cursorIndexes.get(path);
     Integer startOffset = schemaLinks[columnIndex];
 
     if (startOffset != null) {
       return childCursorsByIndex[columnIndex].fieldStartIteration(columnIndex, startOffset);
     } else {
-      return RollableRecordSet.EMPTY_CURSOR_RECORDSET;
+      return RollableFieldEntries.EMPTY_CURSOR_RECORDSET;
     }
   }
 
@@ -86,25 +86,25 @@ public class RootCursor extends AdvanceableCursor {
   }
 
   @Override
-  public RollableRecordSet<Integer> i32Iter(int columnIndex) {
+  public RollableFieldEntries<Integer> i32Iter(int columnIndex) {
     Integer startOffset = schemaLinks[columnIndex];
 
     if (startOffset != null) {
       return childCursorsByIndex[columnIndex].i32StartIteration(startOffset);
     } else {
-      return RollableRecordSet.EMPTY_I32_RECORDSET;
+      return RollableFieldEntries.EMPTY_I32_RECORDSET;
     }
   }
 
   @Override
-  public RollableRecordSet<Integer> i32Iter(String path) {
+  public RollableFieldEntries<Integer> i32Iter(String path) {
     int columnIndex = this.cursorIndexes.get(path);
     Integer startOffset = schemaLinks[columnIndex];
 
     if (startOffset != null) {
       return childCursorsByIndex[columnIndex].i32StartIteration(startOffset);
     } else {
-      return RollableRecordSet.EMPTY_I32_RECORDSET;
+      return RollableFieldEntries.EMPTY_I32_RECORDSET;
     }
   }
 

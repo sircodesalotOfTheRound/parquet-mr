@@ -1,7 +1,11 @@
-package org.apache.parquet.parqour.ingest.cursor.iterators;
+package org.apache.parquet.parqour.ingest.recordsets;
 
+import org.apache.parquet.parqour.ingest.cursor.collections.Roll;
+import org.apache.parquet.parqour.ingest.recordsets.transforms.FieldEntryProjectionTransform;
+import org.apache.parquet.parqour.ingest.recordsets.transforms.FieldEntryReducerTransform;
 import org.apache.parquet.parqour.ingest.read.iterator.lamba.Predicate;
 import org.apache.parquet.parqour.ingest.read.iterator.lamba.Projection;
+import org.apache.parquet.parqour.ingest.recordsets.transforms.FieldEntryFilterTransform;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.*;
@@ -9,10 +13,10 @@ import java.util.*;
 /**
  * Created by sircodesalot on 7/5/15.
  */
-public class RecordSet<T> implements Iterable<T> {
+public class FieldEntries<T> implements Iterable<T> {
   private final Iterable<T> iterable;
 
-  public RecordSet() {
+  public FieldEntries() {
     this.iterable = generateEmptyIterable();
   }
 
@@ -37,15 +41,15 @@ public class RecordSet<T> implements Iterable<T> {
     };
   }
 
-  public RecordSet(Iterable<T> iterable) {
+  public FieldEntries(Iterable<T> iterable) {
     this.iterable = iterable;
   }
 
-  public final RecordSet<T> filter(Predicate<T> predicate) {
-    return new RecordsetFilterIterable<T>(this, predicate);
+  public final FieldEntries<T> filter(Predicate<T> predicate) {
+    return new FieldEntryFilterTransform<T>(this, predicate);
   }
 
-  public final <U extends Comparable<U>> RecordSet<T> sortBy(final Projection<T, U> onProperty) {
+  public final <U extends Comparable<U>> FieldEntries<T> sortBy(final Projection<T, U> onProperty) {
     List<T> collection = new ArrayList<T>();
     for (T item : this) {
       collection.add(item);
@@ -60,10 +64,10 @@ public class RecordSet<T> implements Iterable<T> {
       }
     });
 
-    return new RecordSet<T>(collection);
+    return new FieldEntries<T>(collection);
   }
 
-  public final <U> U reduce(U aggregate, Reducer<T, U> reducer) {
+  public final <U> U reduce(U aggregate, FieldEntryReducerTransform<T, U> reducer) {
     for (T item : this) {
       aggregate = reducer.nextItem(aggregate, item);
     }
@@ -71,13 +75,23 @@ public class RecordSet<T> implements Iterable<T> {
     return aggregate;
   }
 
-  public final <U> Iterable<U> roll(Projection<T, U> projection) {
-    List<U> items = new ArrayList<U>();
-    for (T item : this) {
-      items.add(projection.apply(item));
-    }
+  public final <U> FieldEntries<U> project(Projection<T, U> projection) {
+    return new FieldEntryProjectionTransform<T, U>(this, projection);
+  }
 
-    return items;
+  public final <U> FieldEntries<T> distinctWhere(final Projection<T, U> onProperty) {
+    final Set<U> seenItems = new HashSet<U>();
+    return this.filter(new Predicate<T>() {
+      @Override
+      public boolean test(T item) {
+        U projectedValue = onProperty.apply(item);
+        return seenItems.add(projectedValue);
+      }
+    });
+  }
+
+  public final <U> Roll<U> roll(Projection<T, U> projection) {
+    return new Roll<U>(this.project(projection));
   }
 
   // Todo: make this abstract and implement.
