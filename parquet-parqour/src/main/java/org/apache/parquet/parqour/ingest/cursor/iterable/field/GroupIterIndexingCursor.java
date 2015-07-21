@@ -31,6 +31,7 @@ public class GroupIterIndexingCursor extends AdvanceableCursor {
 
   @Override
   public Integer i32(String path) {
+    // TODO: Likely this will be called repeatedly by the same string. Look into optimizations.
     int columnIndex = cursorIndexes.get(path);
     int schemaLinkToChild = schemaLinks[columnIndex][index];
     return childCursors[columnIndex].advanceTo(schemaLinkToChild).i32();
