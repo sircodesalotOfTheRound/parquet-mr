@@ -48,7 +48,7 @@ public final class Int32NoRepeatIngestNode extends PrimitiveIngestNodeBase<Int32
   public void read(int rowNumber) {
     if (currentRowNumber > rowNumber) return;
 
-    this.currentLinkSiteIndex = 0;
+    this.currentLinkSiteIndex = -1;
 
     do {
       if (currentRowNumber < rowNumber) {
@@ -60,9 +60,9 @@ public final class Int32NoRepeatIngestNode extends PrimitiveIngestNodeBase<Int32
       }
 
       if (currentEntryDefinitionLevel == definitionLevelAtThisNode) {
-        ingestBuffer[currentLinkSiteIndex++] = currentValue;
+        ingestBuffer[++currentLinkSiteIndex] = currentValue;
       } else {
-        ingestBuffer[currentLinkSiteIndex++] = null;
+        ingestBuffer[++currentLinkSiteIndex] = null;
       }
 
       parent.linkSchema(this);

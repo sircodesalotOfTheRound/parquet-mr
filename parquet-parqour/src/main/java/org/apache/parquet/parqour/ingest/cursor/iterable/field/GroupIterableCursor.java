@@ -54,7 +54,7 @@ public class GroupIterableCursor extends GroupCursor implements Iterable<Cursor>
 
   @Override
   public RecordSet<Cursor> fieldStartIteration(int columnIndex, int startOffset) {
-    this.iterator = new GroupCursorIterator(this, schemaLinks[columnIndex]);
+    this.iterator = new GroupCursorIterator(name(), childCursorsByIndex, schemaLinks);
     this.iterator.reset(startOffset);
     return new RecordSet<Cursor>(this);
   }

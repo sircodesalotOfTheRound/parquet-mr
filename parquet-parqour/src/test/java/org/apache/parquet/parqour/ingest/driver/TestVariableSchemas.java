@@ -280,7 +280,7 @@ public class TestVariableSchemas {
       for (Cursor cursor : Parqour.query(TestTools.TEST_FILE_PATH)) {
         int repeat = 0;
         for (Cursor group : cursor.fieldIter("group-list")) {
-          assertEquals(index + repeat, group.i32("value") + repeat);
+          assertEquals(index + repeat, (int)group.i32("value"));
           repeat++;
         }
         assertEquals((index % 5), repeat);

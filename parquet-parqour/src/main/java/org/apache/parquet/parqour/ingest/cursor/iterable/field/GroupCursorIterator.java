@@ -9,15 +9,17 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
  * Created by sircodesalot on 7/13/15.
  */
 public class GroupCursorIterator extends ResettableCursorIterator<Cursor> {
-  private final Integer[] array;
-  private final AdvanceableCursor cursor;
+  private static final int FIRST_CHILD_COLUMN = 0;
+
+  private final Integer[][] array;
+  private final GroupIterIndexingCursor cursor;
   private int end;
 
   private int index;
 
-  public GroupCursorIterator(AdvanceableCursor cursor, Integer[] array) {
-    this.cursor = cursor;
-    this.array = array;
+  public GroupCursorIterator(String name, AdvanceableCursor[] children, Integer[][] schemaLinks) {
+    this.cursor = new GroupIterIndexingCursor(name, children, schemaLinks);
+    this.array = schemaLinks;
   }
 
   @Override
@@ -27,8 +29,7 @@ public class GroupCursorIterator extends ResettableCursorIterator<Cursor> {
 
   @Override
   public Cursor next() {
-    int next = array[index++];
-    return this.cursor.advanceTo(next);
+    return cursor.advanceTo(index++);
   }
 
   @Override
@@ -39,6 +40,6 @@ public class GroupCursorIterator extends ResettableCursorIterator<Cursor> {
   @Override
   public void reset(int start) {
     this.index = start + 1;
-    this.end = index + array[start];
+    this.end = index + array[FIRST_CHILD_COLUMN][start];
   }
 }
