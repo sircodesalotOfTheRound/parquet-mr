@@ -1,14 +1,12 @@
 package org.apache.parquet.parqour.ingest.read.nodes.impl.field;
 
-import org.apache.parquet.parqour.ingest.cursor.noniterable.GroupCursor;
 import org.apache.parquet.parqour.ingest.cursor.iface.AdvanceableCursor;
-import org.apache.parquet.parqour.ingest.cursor.iterable.field.GroupIterableCursor;
+import org.apache.parquet.parqour.ingest.cursor.noniterable.GroupCursor;
 import org.apache.parquet.parqour.ingest.paging.DiskInterfaceManager;
 import org.apache.parquet.parqour.ingest.read.nodes.IngestNodeSet;
 import org.apache.parquet.parqour.ingest.read.nodes.categories.AggregatingIngestNode;
 import org.apache.parquet.parqour.ingest.schema.SchemaInfo;
 import org.apache.parquet.schema.GroupType;
-import org.apache.parquet.schema.Type;
 
 import java.util.Arrays;
 
@@ -28,24 +26,11 @@ public abstract class GroupIngestNode extends AggregatingIngestNode {
     this.aggregate = generateAggregateCursor(children, schemaLinks);
   }
 
-
   private Integer[][] generateSchemaLinks(int childColumnCount, int ingestBufferLength) {
     return new Integer[childColumnCount][ingestBufferLength];
   }
 
-  private GroupCursor generateAggregateCursor(IngestNodeSet children, Integer[][] schemaLinks) {
-    AdvanceableCursor[] childCursors = linkChildren(children);
-
-    // The root node is a special case because it's always defined as REPEAT even though we treat it as REQUIRED.
-    GroupCursor aggregate;
-    if (this.hasParent && this.repetitionType == Type.Repetition.REPEATED) {
-      aggregate = new GroupIterableCursor(name, columnIndex, childCursors, schemaLinks);
-    }  else {
-      aggregate = new GroupCursor(name, columnIndex, childCursors, schemaLinks);
-    }
-
-    return aggregate;
-  }
+  protected abstract GroupCursor generateAggregateCursor(IngestNodeSet children, Integer[][] schemaLinks);
 
   @Override
   protected void expandIngestBuffer() {

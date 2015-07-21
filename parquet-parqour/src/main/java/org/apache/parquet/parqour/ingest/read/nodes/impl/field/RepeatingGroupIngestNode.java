@@ -1,6 +1,10 @@
 package org.apache.parquet.parqour.ingest.read.nodes.impl.field;
 
+import org.apache.parquet.parqour.ingest.cursor.iface.AdvanceableCursor;
+import org.apache.parquet.parqour.ingest.cursor.iterable.field.GroupIterableCursor;
+import org.apache.parquet.parqour.ingest.cursor.noniterable.GroupCursor;
 import org.apache.parquet.parqour.ingest.paging.DiskInterfaceManager;
+import org.apache.parquet.parqour.ingest.read.nodes.IngestNodeSet;
 import org.apache.parquet.parqour.ingest.read.nodes.categories.AggregatingIngestNode;
 import org.apache.parquet.parqour.ingest.read.nodes.categories.IngestNode;
 import org.apache.parquet.parqour.ingest.schema.SchemaInfo;
@@ -15,12 +19,17 @@ public final class RepeatingGroupIngestNode extends GroupIngestNode {
 
   // Todo: Make these an array, not a single item.
   private int listHeaderIndex;
-  //private int numberOfItemsInList;
 
   public RepeatingGroupIngestNode(SchemaInfo schemaInfo, AggregatingIngestNode aggregatingIngestNode, String childPath, GroupType child, DiskInterfaceManager diskInterfaceManager, int childColumnIndex) {
     super(schemaInfo, aggregatingIngestNode, childPath, child, diskInterfaceManager, childColumnIndex);
 
     this.listHeaderIndex = -1;
+  }
+
+  @Override
+  protected GroupCursor generateAggregateCursor(IngestNodeSet children, Integer[][] schemaLinks) {
+    AdvanceableCursor[] childCursors = linkChildren(children);
+    return new GroupIterableCursor(name, columnIndex, childCursors, schemaLinks);
   }
 
   @Override
