@@ -1,11 +1,11 @@
-package org.apache.parquet.parqour.ingest.recordsets;
+package org.apache.parquet.parqour.ingest.entrysets;
 
-import org.apache.parquet.parqour.ingest.cursor.collections.Roll;
-import org.apache.parquet.parqour.ingest.recordsets.transforms.FieldEntryProjectionTransform;
-import org.apache.parquet.parqour.ingest.recordsets.transforms.FieldEntryReducerTransform;
+import org.apache.parquet.parqour.ingest.entrysets.collections.Roll;
+import org.apache.parquet.parqour.ingest.entrysets.transforms.FieldEntryProjectionTransform;
+import org.apache.parquet.parqour.ingest.entrysets.transforms.FieldEntryReducerTransform;
 import org.apache.parquet.parqour.ingest.read.iterator.lamba.Predicate;
 import org.apache.parquet.parqour.ingest.read.iterator.lamba.Projection;
-import org.apache.parquet.parqour.ingest.recordsets.transforms.FieldEntryFilterTransform;
+import org.apache.parquet.parqour.ingest.entrysets.transforms.FieldEntryFilterTransform;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.*;
@@ -75,23 +75,26 @@ public class FieldEntries<T> implements Iterable<T> {
     return aggregate;
   }
 
-  public final <U> FieldEntries<U> project(Projection<T, U> projection) {
+  public final <U> FieldEntries<U> map(Projection<T, U> projection) {
     return new FieldEntryProjectionTransform<T, U>(this, projection);
   }
 
   public final <U> FieldEntries<T> distinctWhere(final Projection<T, U> onProperty) {
-    final Set<U> seenItems = new HashSet<U>();
     return this.filter(new Predicate<T>() {
+      private final Set<U> seenItems = new HashSet<U>();
+
       @Override
       public boolean test(T item) {
         U projectedValue = onProperty.apply(item);
+
+        // Set<U>.add returns false if item has already been seen.
         return seenItems.add(projectedValue);
       }
     });
   }
 
   public final <U> Roll<U> roll(Projection<T, U> projection) {
-    return new Roll<U>(this.project(projection));
+    return new Roll<U>(this.map(projection));
   }
 
   // Todo: make this abstract and implement.

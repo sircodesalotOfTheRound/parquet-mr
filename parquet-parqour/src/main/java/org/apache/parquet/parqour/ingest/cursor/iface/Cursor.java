@@ -1,6 +1,6 @@
 package org.apache.parquet.parqour.ingest.cursor.iface;
 
-import org.apache.parquet.parqour.ingest.recordsets.FieldEntries;
+import org.apache.parquet.parqour.ingest.entrysets.FieldEntries;
 import org.apache.parquet.parqour.ingest.cursor.iterators.RollableFieldEntries;
 
 /**

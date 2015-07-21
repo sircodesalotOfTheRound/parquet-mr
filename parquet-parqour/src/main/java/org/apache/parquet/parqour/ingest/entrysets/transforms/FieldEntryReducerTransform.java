@@ -1,4 +1,4 @@
-package org.apache.parquet.parqour.ingest.recordsets.transforms;
+package org.apache.parquet.parqour.ingest.entrysets.transforms;
 
 /**
  * Created by sircodesalot on 7/5/15.

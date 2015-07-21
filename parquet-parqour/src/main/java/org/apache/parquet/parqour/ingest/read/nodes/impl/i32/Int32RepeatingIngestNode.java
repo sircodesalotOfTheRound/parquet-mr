@@ -10,6 +10,8 @@ import org.apache.parquet.parqour.ingest.read.nodes.categories.PrimitiveIngestNo
 import org.apache.parquet.parqour.ingest.schema.SchemaInfo;
 import org.apache.parquet.schema.Type;
 
+import java.util.Arrays;
+
 /**
  * Created by sircodesalot on 6/11/15.
  */
@@ -102,12 +104,8 @@ public final class Int32RepeatingIngestNode extends PrimitiveIngestNodeBase<Int3
 
   @Override
   public final void expandIngestBuffer() {
-    int newIngestBufferLength = super.ingestBufferLength * 2;
-    Integer[] newIngestBuffer = new Integer[newIngestBufferLength];
-    System.arraycopy(this.ingestBuffer, 0, newIngestBuffer, 0, ingestBufferLength);
-
-    this.ingestBuffer = newIngestBuffer;
-    this.ingestBufferLength = newIngestBufferLength;
-    this.cursor.setArray(newIngestBuffer);
+    this.ingestBuffer = Arrays.copyOf(ingestBuffer, ingestBufferLength * 2);
+    this.ingestBufferLength = ingestBuffer.length;
+    this.cursor.setArray(ingestBuffer);
   }
 }

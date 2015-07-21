@@ -1,8 +1,8 @@
-package org.apache.parquet.parqour.ingest.recordsets.transforms;
+package org.apache.parquet.parqour.ingest.entrysets.transforms;
 
 
 import org.apache.parquet.parqour.ingest.read.iterator.lamba.Predicate;
-import org.apache.parquet.parqour.ingest.recordsets.FieldEntries;
+import org.apache.parquet.parqour.ingest.entrysets.FieldEntries;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.Iterator;

@@ -2,7 +2,7 @@ package org.apache.parquet.parqour.ingest.cursor.noniterable;
 
 import org.apache.parquet.parqour.ingest.cursor.iface.AdvanceableCursor;
 import org.apache.parquet.parqour.ingest.cursor.iface.Cursor;
-import org.apache.parquet.parqour.ingest.recordsets.FieldEntries;
+import org.apache.parquet.parqour.ingest.entrysets.FieldEntries;
 import org.apache.parquet.parqour.ingest.cursor.iterators.RollableFieldEntries;
 import org.apache.parquet.parqour.ingest.cursor.lookup.CursorHash;
 
