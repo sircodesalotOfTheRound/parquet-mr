@@ -7,6 +7,7 @@ import org.apache.parquet.parqour.ingest.paging.DiskInterfaceManager;
 import org.apache.parquet.parqour.ingest.read.nodes.categories.AggregatingIngestNode;
 import org.apache.parquet.parqour.ingest.read.nodes.categories.IngestNode;
 import org.apache.parquet.parqour.ingest.schema.SchemaInfo;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.Arrays;
 
@@ -42,11 +43,11 @@ public final class RootIngestNode extends AggregatingIngestNode {
 
   @Override
   protected AdvanceableCursor onLinkToParent(AggregatingIngestNode parentNode) {
-    return null;
+    throw new NotImplementedException();
   }
 
   @Override
   protected void expandIngestBuffer() {
-    /* NO-OP */
+    throw new NotImplementedException();
   }
 }

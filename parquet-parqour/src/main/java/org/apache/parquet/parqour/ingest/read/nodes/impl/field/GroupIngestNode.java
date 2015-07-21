@@ -10,6 +10,8 @@ import org.apache.parquet.parqour.ingest.schema.SchemaInfo;
 import org.apache.parquet.schema.GroupType;
 import org.apache.parquet.schema.Type;
 
+import java.util.Arrays;
+
 /**
  * Created by sircodesalot on 7/20/15.
  */
@@ -47,16 +49,11 @@ public abstract class GroupIngestNode extends AggregatingIngestNode {
 
   @Override
   protected void expandIngestBuffer() {
-    int newIngestBufferLength = this.ingestBufferLength * 2;
-
     for (int index = 0; index < childColumnCount; index++) {
-      Integer[] newChildColumnIngestBuffer = new Integer[newIngestBufferLength];
-      System.arraycopy(schemaLinks[index], 0, newChildColumnIngestBuffer, 0, ingestBufferLength);
-
-      this.schemaLinks[index] = newChildColumnIngestBuffer;
+      schemaLinks[index] = Arrays.copyOf(schemaLinks[index], ingestBufferLength * 2);
     }
 
-    this.ingestBufferLength = newIngestBufferLength;
+    this.ingestBufferLength *= 2;
     this.aggregate.setSchemaLinks(schemaLinks);
   }
 
