@@ -10,9 +10,9 @@ public class RollIterator<T> implements Iterator<T> {
   private final int length;
   private final Object[] items;
 
-  public RollIterator(Object[] items) {
+  public RollIterator(Object[] items, int length) {
     this.items = items;
-    this.length = items.length;
+    this.length = length;
   }
 
   @Override
