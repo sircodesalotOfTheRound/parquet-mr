@@ -413,12 +413,17 @@ public class TestVariableSchemas {
       Integer index = 0;
 
       for (Cursor cursor : Parqour.query(TestTools.TEST_FILE_PATH)) {
-        int repeat = 0;
-        for (Cursor field : cursor.fieldIter("first_repeat")) {
-
-          repeat++;
+        int firstRepeat = 0;
+        for (Cursor first : cursor.fieldIter("first_repeat")) {
+          int secondRepeat = 0;
+          for (int value : first.i32Iter("second_repeat")) {
+            assertEquals(index + secondRepeat, value);
+            secondRepeat++;
+          }
+          assertEquals(index % 3, secondRepeat);
+          firstRepeat++;
         }
-        assertEquals(index % 5, repeat);
+        assertEquals(index % 5, firstRepeat);
         index++;
       }
     }

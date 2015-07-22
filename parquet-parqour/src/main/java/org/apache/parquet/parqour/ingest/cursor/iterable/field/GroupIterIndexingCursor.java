@@ -1,6 +1,7 @@
 package org.apache.parquet.parqour.ingest.cursor.iterable.field;
 
 import org.apache.parquet.parqour.ingest.cursor.iface.AdvanceableCursor;
+import org.apache.parquet.parqour.ingest.cursor.iterators.RollableFieldEntries;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,5 +36,16 @@ public class GroupIterIndexingCursor extends AdvanceableCursor {
     int columnIndex = cursorIndexes.get(path);
     int schemaLinkToChild = schemaLinks[columnIndex][index];
     return childCursors[columnIndex].advanceTo(schemaLinkToChild).i32();
+  }
+
+  @Override
+  public RollableFieldEntries<Integer> i32Iter(String path) {
+    int columnIndex = cursorIndexes.get(path);
+    Integer schemaLinkToChild = schemaLinks[columnIndex][index];
+    if (schemaLinkToChild != null) {
+      return childCursors[columnIndex].i32StartIteration(schemaLinkToChild);
+    } else {
+      return RollableFieldEntries.EMPTY_I32_RECORDSET;
+    }
   }
 }
