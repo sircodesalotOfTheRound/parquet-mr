@@ -1,7 +1,9 @@
 package org.apache.parquet.parqour.ingest.cursor.iterable.field;
 
 import org.apache.parquet.parqour.ingest.cursor.iface.AdvanceableCursor;
+import org.apache.parquet.parqour.ingest.cursor.iface.Cursor;
 import org.apache.parquet.parqour.ingest.cursor.iterators.RollableFieldEntries;
+import org.apache.parquet.parqour.ingest.entrysets.FieldEntries;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -46,6 +48,19 @@ public class GroupIterIndexingCursor extends AdvanceableCursor {
       return childCursors[columnIndex].i32StartIteration(schemaLinkToChild);
     } else {
       return RollableFieldEntries.EMPTY_I32_RECORDSET;
+    }
+  }
+
+
+  @Override
+  public FieldEntries<Cursor> fieldIter(String path) {
+    int columnIndex = this.cursorIndexes.get(path);
+    Integer startOffset = schemaLinks[columnIndex][index];
+
+    if (startOffset != null) {
+      return childCursors[columnIndex].fieldStartIteration(columnIndex, startOffset);
+    } else {
+      return RollableFieldEntries.EMPTY_CURSOR_RECORDSET;
     }
   }
 }

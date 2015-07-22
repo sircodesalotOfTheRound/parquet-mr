@@ -24,7 +24,7 @@ import static org.junit.Assert.assertNull;
  * Created by sircodesalot on 6/22/15.
  */
 public class TestVariableSchemas {
-  private static final int TOTAL_ROWS = TestTools.generateRandomInt(1000000);
+  private static final int TOTAL_ROWS = TestTools.generateRandomInt(100000);
 
   public static class SingleRequiredColumnSchema extends WriteTools.TestableParquetWriteContext {
     private static MessageType SCHEMA = new MessageType("single_column",
@@ -388,7 +388,8 @@ public class TestVariableSchemas {
   public static class SingleNestedRepeatSchema extends WriteTools.TestableParquetWriteContext {
     private static MessageType SCHEMA = new MessageType("group_repeat",
       new GroupType(REPEATED, "first_repeat",
-        new PrimitiveType(REPEATED, INT32, "second_repeat")));
+        new GroupType(REPEATED, "second_repeat",
+          new PrimitiveType(REPEATED, INT32, "third_repeat"))));
 
     public SingleNestedRepeatSchema(ParquetConfiguration configuration) {
       super(SCHEMA, configuration);
@@ -399,10 +400,13 @@ public class TestVariableSchemas {
       for (int index = 0; index < TOTAL_ROWS; index++) {
         Group instance = new SimpleGroup(SCHEMA);
 
-        for (int firstRepeat = 0; firstRepeat < (index % 5); firstRepeat++) {
+        for (int firstRepeat = 0; firstRepeat < (index % 3); firstRepeat++) {
           Group first = instance.addGroup("first_repeat");
-          for (int secondRepeat = 0; secondRepeat < (index % 3); secondRepeat++) {
-            first.append("second_repeat", index + secondRepeat);
+          for (int secondRepeat = 0; secondRepeat < (index % 4);secondRepeat++) {
+            Group second = first.addGroup("second_repeat");
+            for (int thirdRepeat = 0; thirdRepeat < (index % 5); thirdRepeat++) {
+              second.append("third_repeat", index + secondRepeat + thirdRepeat);
+            }
           }
         }
         writer.write(instance);
@@ -416,14 +420,19 @@ public class TestVariableSchemas {
         int firstRepeat = 0;
         for (Cursor first : cursor.fieldIter("first_repeat")) {
           int secondRepeat = 0;
-          for (int value : first.i32Iter("second_repeat")) {
-            assertEquals(index + secondRepeat, value);
+          for (Cursor second : first.fieldIter("second_repeat")) {
+            int thirdRepeat = 0;
+            for (int value : second.i32Iter("third_repeat")) {
+              assertEquals(index + secondRepeat + thirdRepeat, value);
+              thirdRepeat++;
+            }
+            assertEquals(index % 5, thirdRepeat);
             secondRepeat++;
           }
-          assertEquals(index % 3, secondRepeat);
+          assertEquals(index % 4, secondRepeat);
           firstRepeat++;
         }
-        assertEquals(index % 5, firstRepeat);
+        assertEquals(index % 3, firstRepeat);
         index++;
       }
     }
