@@ -15,6 +15,7 @@ import java.util.List;
  * Created by sircodesalot on 6/4/15.
  */
 public abstract class AggregatingIngestNode extends IngestNode {
+  // TODO: Create Indexes class to limit the amount of 'Integers' we instantiate.
   private static final String EMPTY_PATH = "";
 
   protected final String path;
