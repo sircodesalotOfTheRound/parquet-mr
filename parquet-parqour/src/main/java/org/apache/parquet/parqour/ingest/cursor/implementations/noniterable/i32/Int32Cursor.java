@@ -1,9 +1,6 @@
-package org.apache.parquet.parqour.ingest.cursor.noniterable;
+package org.apache.parquet.parqour.ingest.cursor.implementations.noniterable.i32;
 
 import org.apache.parquet.parqour.ingest.cursor.iface.AdvanceableCursor;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
-import java.util.Iterator;
 
 /**
  * Created by sircodesalot on 6/18/15.

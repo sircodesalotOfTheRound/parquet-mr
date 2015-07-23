@@ -1,7 +1,7 @@
 package org.apache.parquet.parqour.ingest.read.nodes.impl.field;
 
 import org.apache.parquet.parqour.ingest.cursor.iface.AdvanceableCursor;
-import org.apache.parquet.parqour.ingest.cursor.noniterable.GroupCursor;
+import org.apache.parquet.parqour.ingest.cursor.implementations.noniterable.field.GroupCursor;
 import org.apache.parquet.parqour.ingest.paging.DiskInterfaceManager;
 import org.apache.parquet.parqour.ingest.read.nodes.IngestNodeSet;
 import org.apache.parquet.parqour.ingest.read.nodes.categories.AggregatingIngestNode;

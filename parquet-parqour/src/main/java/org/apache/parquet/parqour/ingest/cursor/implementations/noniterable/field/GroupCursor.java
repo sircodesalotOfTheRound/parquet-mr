@@ -1,23 +1,20 @@
-package org.apache.parquet.parqour.ingest.cursor.iterable.field;
+package org.apache.parquet.parqour.ingest.cursor.implementations.noniterable.field;
 
-import org.apache.parquet.parqour.ingest.cursor.noniterable.GroupCursor;
 import org.apache.parquet.parqour.ingest.cursor.iface.AdvanceableCursor;
 import org.apache.parquet.parqour.ingest.cursor.iface.Cursor;
 import org.apache.parquet.parqour.ingest.entrysets.FieldEntries;
 import org.apache.parquet.parqour.ingest.cursor.iterators.RollableFieldEntries;
 import org.apache.parquet.parqour.ingest.cursor.lookup.CursorHash;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 /**
  * An aggregate is a set of columns containing links to child records. For example, if we have a schema:
  * <p/>
  * group somegroup {
- *   int32 first
- *   int32 second
+ * int32 first
+ * int32 second
  * }
  * <p/>
  * the job of the GroupAggregate is to link results returned by the 'first' and 'second' columns.
@@ -26,7 +23,7 @@ import java.util.Map;
  * This improves performance because we can pre-allocate lots of memory, and then just virtually
  * connect the results without the overhead of many small allocations + collections.
  */
-public class GroupIterableCursor extends GroupCursor implements Iterable<Cursor> {
+public class GroupCursor extends AdvanceableCursor {
   private Integer[][] schemaLinks;
 
   private final AdvanceableCursor[] childCursorsByIndex;
@@ -34,8 +31,8 @@ public class GroupIterableCursor extends GroupCursor implements Iterable<Cursor>
 
   private final Map<String, Integer> cursorIndexes = new HashMap<String, Integer>();
 
-  public GroupIterableCursor(String name, int columnIndex, AdvanceableCursor[] childCursors, Integer[][] schemaLinks) {
-    super(name, columnIndex, childCursors, schemaLinks);
+  public GroupCursor(String name, int columnIndex, AdvanceableCursor[] childCursors, Integer[][] schemaLinks) {
+    super(name, columnIndex);
 
     this.schemaLinks = schemaLinks;
     this.childCursors = new CursorHash();
@@ -52,24 +49,8 @@ public class GroupIterableCursor extends GroupCursor implements Iterable<Cursor>
     return childCursors;
   }
 
-  @Override
-  public FieldEntries<Cursor> fieldStartIteration(int columnIndex, int startOffset) {
-    this.iterator = new GroupCursorIterator(name(), childCursorsByIndex, schemaLinks);
-    this.iterator.reset(startOffset);
-    return new FieldEntries<Cursor>(this);
-  }
-
-  private GroupCursorIterator iterator;
-
-  @Override
-  public Iterator<Cursor> iterator() {
-    return this.iterator;
-  }
-
-  @Override
-  public FieldEntries<Cursor> fieldIter() {
-    // Todo: Ask parent for location.
-    throw new NotImplementedException();
+  public void setSchemaLinks(Integer[][] schemaLinks) {
+    this.schemaLinks = schemaLinks;
   }
 
   @Override
@@ -163,4 +144,3 @@ public class GroupIterableCursor extends GroupCursor implements Iterable<Cursor>
     return this;
   }
 }
-

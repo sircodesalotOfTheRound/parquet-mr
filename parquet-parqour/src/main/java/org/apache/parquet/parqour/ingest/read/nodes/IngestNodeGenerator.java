@@ -10,6 +10,7 @@ import org.apache.parquet.parqour.ingest.read.nodes.impl.field.RepeatingGroupIng
 import org.apache.parquet.parqour.ingest.read.nodes.impl.binary.BinaryNoRepeatIngestNode;
 import org.apache.parquet.parqour.ingest.read.nodes.impl.i32.Int32NoRepeatIngestNode;
 import org.apache.parquet.parqour.ingest.read.nodes.impl.i32.Int32RepeatingIngestNode;
+import org.apache.parquet.parqour.ingest.read.nodes.impl.i64.Int64NoRepeatIngestNode;
 import org.apache.parquet.parqour.ingest.schema.SchemaInfo;
 import org.apache.parquet.schema.GroupType;
 import org.apache.parquet.schema.PrimitiveType;
@@ -65,6 +66,9 @@ public class IngestNodeGenerator {
     switch (schemaNode.getPrimitiveTypeName()) {
       case INT32:
         return new Int32NoRepeatIngestNode(schemaInfo, parent, schemaNode, descriptor, diskInterfaceManager, columnIndex);
+
+      case INT64:
+        return new Int64NoRepeatIngestNode(schemaInfo, parent, schemaNode, descriptor, diskInterfaceManager, columnIndex);
 
       case BINARY:
         return new BinaryNoRepeatIngestNode(schemaInfo, parent, schemaNode, descriptor, diskInterfaceManager, columnIndex);

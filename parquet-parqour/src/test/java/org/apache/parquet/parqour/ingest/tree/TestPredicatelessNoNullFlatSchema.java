@@ -21,6 +21,7 @@ import org.junit.Test;
 import java.io.IOException;
 
 import static org.apache.parquet.schema.PrimitiveType.PrimitiveTypeName.INT32;
+import static org.apache.parquet.schema.PrimitiveType.PrimitiveTypeName.INT64;
 import static org.apache.parquet.schema.Type.Repetition.REQUIRED;
 import static org.junit.Assert.assertEquals;
 
@@ -31,8 +32,8 @@ public class TestPredicatelessNoNullFlatSchema extends UsesPersistence {
   private final int TOTAL_ROWS = TestTools.generateRandomInt(1000000);
 
   private final GroupType COUNTING_SCHEMA = new GroupType(REQUIRED, "multipliers",
-    new PrimitiveType(REQUIRED, INT32, "one"),
-    new PrimitiveType(REQUIRED, INT32, "two"),
+    new PrimitiveType(REQUIRED, INT32, "i32"),
+    new PrimitiveType(REQUIRED, INT64, "i64"),
     new PrimitiveType(REQUIRED, INT32, "three"),
     new PrimitiveType(REQUIRED, INT32, "four"),
     new PrimitiveType(REQUIRED, INT32, "five"),
@@ -48,8 +49,8 @@ public class TestPredicatelessNoNullFlatSchema extends UsesPersistence {
       public void write(ParquetWriter<Group> writer) throws IOException {
         for (int index = 0; index < TOTAL_ROWS; index++) {
           Group countingGroup = new SimpleGroup(COUNTING_SCHEMA)
-            .append("one", index)
-            .append("two", index * 2)
+            .append("i32", (int)(index))
+            .append("i64", (long)(index * 2))
             .append("three", index * 3)
             .append("four", index * 4)
             .append("five", index * 5)
@@ -85,8 +86,8 @@ public class TestPredicatelessNoNullFlatSchema extends UsesPersistence {
 
           int index = 0;
           while (driver.readNext()) {
-            assertEquals(index, (int) cursor.i32("one"));
-            assertEquals(index * 2, (int) cursor.i32("two"));
+            assertEquals(index, (int) cursor.i32("i32"));
+            assertEquals(index * 2, (long) cursor.i64("i64"));
             assertEquals(index * 3, (int) cursor.i32("three"));
             assertEquals(index * 4, (int) cursor.i32("four"));
             assertEquals(index * 5, (int) cursor.i32("five"));

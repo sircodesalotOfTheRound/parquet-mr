@@ -1,4 +1,4 @@
-package org.apache.parquet.parqour.ingest.cursor.iterable.i32;
+package org.apache.parquet.parqour.ingest.cursor.implementations.iterable.i32;
 
 import org.apache.parquet.parqour.ingest.cursor.iterators.ResettableCursorIterator;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;

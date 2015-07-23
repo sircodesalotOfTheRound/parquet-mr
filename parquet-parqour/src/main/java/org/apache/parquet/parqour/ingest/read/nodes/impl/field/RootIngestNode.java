@@ -2,14 +2,12 @@ package org.apache.parquet.parqour.ingest.read.nodes.impl.field;
 
 import org.apache.parquet.parqour.ingest.cursor.iface.AdvanceableCursor;
 import org.apache.parquet.parqour.ingest.cursor.iface.Cursor;
-import org.apache.parquet.parqour.ingest.cursor.noniterable.RootCursor;
+import org.apache.parquet.parqour.ingest.cursor.implementations.noniterable.root.RootCursor;
 import org.apache.parquet.parqour.ingest.paging.DiskInterfaceManager;
 import org.apache.parquet.parqour.ingest.read.nodes.categories.AggregatingIngestNode;
 import org.apache.parquet.parqour.ingest.read.nodes.categories.IngestNode;
 import org.apache.parquet.parqour.ingest.schema.SchemaInfo;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
-import java.util.Arrays;
 
 /**
  * Created by sircodesalot on 6/2/15.

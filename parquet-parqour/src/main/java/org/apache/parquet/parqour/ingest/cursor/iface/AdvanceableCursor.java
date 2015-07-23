@@ -41,6 +41,21 @@ public abstract class AdvanceableCursor implements Cursor {
   }
 
   @Override
+  public Long i64() {
+    throw new DataIngestException("Invalid path");
+  }
+
+  @Override
+  public Long i64(int index) {
+    throw new DataIngestException("Invalid path");
+  }
+
+  @Override
+  public Long i64(String path) {
+    throw new DataIngestException("Invalid path");
+  }
+
+  @Override
   public Object value() {
     throw new DataIngestException("Invalid path");
   }

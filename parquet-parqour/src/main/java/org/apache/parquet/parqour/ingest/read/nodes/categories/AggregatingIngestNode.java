@@ -1,6 +1,5 @@
 package org.apache.parquet.parqour.ingest.read.nodes.categories;
 
-import org.apache.parquet.parqour.ingest.cursor.noniterable.GroupCursor;
 import org.apache.parquet.parqour.ingest.cursor.iface.AdvanceableCursor;
 import org.apache.parquet.parqour.ingest.paging.DiskInterfaceManager;
 import org.apache.parquet.parqour.ingest.read.nodes.IngestNodeGenerator;
