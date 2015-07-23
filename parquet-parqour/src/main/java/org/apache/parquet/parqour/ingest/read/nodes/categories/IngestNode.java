@@ -39,6 +39,7 @@ public abstract class IngestNode {
 
   protected int ingestBufferLength;
 
+  // Todo: many of these properties are no longer neccesary. Find their usages and remove.
   public IngestNode(SchemaInfo schemaInfo, AggregatingIngestNode parent, String path, Type schemaNode, IngestNodeCategory category, int childNodeIndex) {
     this.schemaInfo = schemaInfo;
     this.parent = parent;
@@ -61,14 +62,15 @@ public abstract class IngestNode {
 
   // By definition, the schema beyond the first common parent should be equal. For example, if there are two columns, 'A' and 'B',
   // but 'A' reports a different number of 'zero' repetition levels from 'B', then 'A' and 'B' have a different number of rows, which
-  // implies that the data is invalid - all columns should have the same number of rows. Proceeding by induction, every node beyond the first
-  // common ancestor level between two columns must report the same number of parents - if 'A' and 'B' share a sublist ancestor, then the number
-  // of sublists shared between 'A' and 'B' must be equal. Since this is the case, the schema only needs to be reported upstream by the first child node
+  // implies that the data is invalid - all columns should have the same number of 0-Repetitions (rows). Proceeding by induction, every node beyond the first
+  // common ancestor level between two columns must report the same number of parents - if 'A' and 'B' share a sub-list ancestor, then the number
+  // of sub-lists reported by 'A' and 'B' must be equal. Since this is the case, the schema only needs to be reported upstream by the first child node
   // of any parent (since all other children will report the exact same schema), hence we only permit 'child-0' to send schema information upstream.
   private boolean determineIsSchemaReportingNode(int childNodeIndex) {
     return childNodeIndex == 0;
   }
-  // A node can perform true fast forwards (fast-forwards through entrie pages) if it, and all of it's parents are listed as 'REQUIRED'.
+
+  // A node can perform true fast forwards (fast-forwards through entire pages) if it, and all of it's (non-root) parents are listed as 'REQUIRED'.
   // This means that the rows are one-to-one with the entries, and we can compute fast-forwards based on
   // entry number. Otherwise, we can skip entries, but we cannot perform true fast-forwards.
   private boolean determineCanPerformTrueFastForwarding(IngestNode node) {
