@@ -13,11 +13,12 @@ public class PlainBooleanFastForwardReader extends FastForwardReaderBase impleme
     super(metadata, type);
 
     this.currentEntryNumber = 0;
+    this.dataOffset = metadata.contentDataOffset();
   }
 
   @Override
   public boolean readtf() {
-    int byteNumber = (int)(this.currentEntryNumber / 8);
+    int byteNumber = (int)(this.currentEntryNumber / 8) + dataOffset;
     int bitNumber = (int)(this.currentEntryNumber % 8);
 
     currentEntryNumber++;
