@@ -62,7 +62,7 @@ public class Int32DictionaryFastForwardReader extends FastForwardReaderBase impl
 
   @Override
   public int readi32() {
-    super.advanceRowNumber();
+    super.advanceEntryNumber();
     if (!segment.any()) {
       this.segment = segment.generateReaderForNextSection();
     }

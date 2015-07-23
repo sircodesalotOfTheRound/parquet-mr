@@ -23,7 +23,7 @@ public class DeltaPackedIntegerFastForwardReader extends FastForwardReaderBase
 
   @Override
   public int readi32() {
-    super.advanceRowNumber();
+    super.advanceEntryNumber();
     return deltaPackedSegment.readi32();
   }
 

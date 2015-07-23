@@ -34,7 +34,7 @@ public abstract class FastForwardReaderBase implements FastForwardReader {
     this.currentEntryNumber = 0;
   }
 
-  public void advanceRowNumber() {
+  public void advanceEntryNumber() {
     this.currentEntryNumber++;
   }
 

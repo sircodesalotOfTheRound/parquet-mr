@@ -30,7 +30,7 @@ public final class Parquet2RLEBitPackedHybridFastForwardIntReader extends FastFo
       this.segment = segment.generateReaderForNextSection();
     }
 
-    super.advanceRowNumber();
+    super.advanceEntryNumber();
     return segment.readNext();
   }
 

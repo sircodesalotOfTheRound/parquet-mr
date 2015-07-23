@@ -20,6 +20,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 
+import static org.apache.parquet.schema.PrimitiveType.PrimitiveTypeName.BOOLEAN;
 import static org.apache.parquet.schema.PrimitiveType.PrimitiveTypeName.INT32;
 import static org.apache.parquet.schema.PrimitiveType.PrimitiveTypeName.INT64;
 import static org.apache.parquet.schema.Type.Repetition.REQUIRED;
@@ -34,7 +35,7 @@ public class TestPredicatelessNoNullFlatSchema extends UsesPersistence {
   private final GroupType COUNTING_SCHEMA = new GroupType(REQUIRED, "multipliers",
     new PrimitiveType(REQUIRED, INT32, "i32"),
     new PrimitiveType(REQUIRED, INT64, "i64"),
-    new PrimitiveType(REQUIRED, INT32, "three"),
+    new PrimitiveType(REQUIRED, BOOLEAN, "bool"),
     new PrimitiveType(REQUIRED, INT32, "four"),
     new PrimitiveType(REQUIRED, INT32, "five"),
     new PrimitiveType(REQUIRED, INT32, "six"),
@@ -51,7 +52,7 @@ public class TestPredicatelessNoNullFlatSchema extends UsesPersistence {
           Group countingGroup = new SimpleGroup(COUNTING_SCHEMA)
             .append("i32", (int)(index))
             .append("i64", (long)(index * 2))
-            .append("three", index * 3)
+            .append("bool", (index % 3 == 0))
             .append("four", index * 4)
             .append("five", index * 5)
             .append("six", index * 6)
@@ -88,7 +89,7 @@ public class TestPredicatelessNoNullFlatSchema extends UsesPersistence {
           while (driver.readNext()) {
             assertEquals(index, (int) cursor.i32("i32"));
             assertEquals(index * 2, (long) cursor.i64("i64"));
-            assertEquals(index * 3, (int) cursor.i32("three"));
+            assertEquals((index % 3 == 0), cursor.bool("bool"));
             assertEquals(index * 4, (int) cursor.i32("four"));
             assertEquals(index * 5, (int) cursor.i32("five"));
             assertEquals(index * 6, (int) cursor.i32("six"));

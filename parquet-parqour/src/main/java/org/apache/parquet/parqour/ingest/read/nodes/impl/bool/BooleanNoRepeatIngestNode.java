@@ -1,9 +1,11 @@
-package org.apache.parquet.parqour.ingest.read.nodes.impl.i64;
+package org.apache.parquet.parqour.ingest.read.nodes.impl.bool;
 
 import org.apache.parquet.column.ColumnDescriptor;
 import org.apache.parquet.parqour.ingest.cursor.iface.AdvanceableCursor;
-import org.apache.parquet.parqour.ingest.cursor.implementations.noniterable.i64.Int64Cursor;
-import org.apache.parquet.parqour.ingest.ffreader.interfaces.Int64FastForwardReader;
+import org.apache.parquet.parqour.ingest.cursor.implementations.noniterable.bool.BooleanCursor;
+import org.apache.parquet.parqour.ingest.cursor.implementations.noniterable.i32.Int32Cursor;
+import org.apache.parquet.parqour.ingest.ffreader.interfaces.BooleanFastForwardReader;
+import org.apache.parquet.parqour.ingest.ffreader.interfaces.Int32FastForwardReader;
 import org.apache.parquet.parqour.ingest.paging.DiskInterfaceManager;
 import org.apache.parquet.parqour.ingest.read.nodes.categories.AggregatingIngestNode;
 import org.apache.parquet.parqour.ingest.read.nodes.categories.PrimitiveIngestNodeBase;
@@ -15,28 +17,28 @@ import java.util.Arrays;
 /**
  * Created by sircodesalot on 6/11/15.
  */
-public final class Int64NoRepeatIngestNode extends PrimitiveIngestNodeBase<Int64FastForwardReader> {
-  private long currentValue;
-  private Long[] ingestBuffer;
-  private final Int64Cursor cursor;
+public final class BooleanNoRepeatIngestNode extends PrimitiveIngestNodeBase<BooleanFastForwardReader> {
+  private Boolean currentValue;
+  private Boolean[] ingestBuffer;
+  private final BooleanCursor cursor;
 
-  public Int64NoRepeatIngestNode(SchemaInfo schemaInfo,
-                                 AggregatingIngestNode parent,
-                                 Type schemaNode,
-                                 ColumnDescriptor descriptor,
-                                 DiskInterfaceManager diskInterfaceManager,
-                                 int childIndex) {
+  public BooleanNoRepeatIngestNode(SchemaInfo schemaInfo,
+                                   AggregatingIngestNode parent,
+                                   Type schemaNode,
+                                   ColumnDescriptor descriptor,
+                                   DiskInterfaceManager diskInterfaceManager,
+                                   int childIndex) {
 
     super(schemaInfo, parent, schemaNode, descriptor, diskInterfaceManager, childIndex);
 
     this.ingestBufferLength = 100;
-    this.ingestBuffer = new Long[ingestBufferLength];
-    this.cursor = new Int64Cursor(name, columnIndex, ingestBuffer);
+    this.ingestBuffer = new Boolean[ingestBufferLength];
+    this.cursor = new BooleanCursor(name, columnIndex, ingestBuffer);
   }
 
   @Override
   protected void updateValuesReaderValue() {
-    this.currentValue = valuesReader.readi64();
+    this.currentValue = valuesReader.readtf();
   }
 
 
@@ -75,14 +77,14 @@ public final class Int64NoRepeatIngestNode extends PrimitiveIngestNodeBase<Int64
 
         // If we're defined at this node, update the value:
         if (currentEntryDefinitionLevel >= definitionLevelAtThisNode) {
-          this.currentValue = valuesReader.readi64();
+          this.currentValue = valuesReader.readtf();
         }
       } else if (currentRowNumber < totalRowCount - 1) {
         super.moveToNextPage();
       } else {
         this.currentEntryDefinitionLevel = 0;
         this.currentEntryRepetitionLevel = 0;
-        this.currentValue = -1;
+        this.currentValue = false;
       }
 
     } while (currentEntryRepetitionLevel != NEW_RECORD);

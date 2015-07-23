@@ -5,6 +5,7 @@ import org.apache.parquet.parqour.ingest.paging.DiskInterfaceManager;
 import org.apache.parquet.parqour.ingest.read.nodes.categories.AggregatingIngestNode;
 import org.apache.parquet.parqour.ingest.read.nodes.categories.IngestNode;
 import org.apache.parquet.parqour.ingest.read.nodes.categories.PrimitiveIngestNodeBase;
+import org.apache.parquet.parqour.ingest.read.nodes.impl.bool.BooleanNoRepeatIngestNode;
 import org.apache.parquet.parqour.ingest.read.nodes.impl.field.NoRepeatGroupIngestNode;
 import org.apache.parquet.parqour.ingest.read.nodes.impl.field.RepeatingGroupIngestNode;
 import org.apache.parquet.parqour.ingest.read.nodes.impl.binary.BinaryNoRepeatIngestNode;
@@ -64,6 +65,9 @@ public class IngestNodeGenerator {
   private static PrimitiveIngestNodeBase generateNoRepeatIngestNode(SchemaInfo schemaInfo, AggregatingIngestNode parent, ColumnDescriptor descriptor,
                                                                     PrimitiveType schemaNode, DiskInterfaceManager diskInterfaceManager, int columnIndex) {
     switch (schemaNode.getPrimitiveTypeName()) {
+      case BOOLEAN:
+        return new BooleanNoRepeatIngestNode(schemaInfo, parent, schemaNode, descriptor, diskInterfaceManager, columnIndex);
+
       case INT32:
         return new Int32NoRepeatIngestNode(schemaInfo, parent, schemaNode, descriptor, diskInterfaceManager, columnIndex);
 

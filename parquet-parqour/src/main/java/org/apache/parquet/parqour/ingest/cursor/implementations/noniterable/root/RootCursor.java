@@ -95,6 +95,15 @@ public class RootCursor extends AdvanceableCursor {
     return childCursorsByIndex[index].i64();
   }
 
+  @Override
+  public Boolean bool(String path) {
+    return childCursors.get(path).bool();
+  }
+
+  @Override
+  public Boolean bool(int index) {
+    return childCursorsByIndex[index].bool();
+  }
 
   @Override
   public RollableFieldEntries<Integer> i32Iter(int columnIndex) {

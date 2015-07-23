@@ -13,7 +13,7 @@ public final class PlainDoubleFastForwardReader extends FastForwardReaderBase {
   }
 
   public double readDouble() {
-    super.advanceRowNumber();
+    super.advanceEntryNumber();
 
     long rawLongBits = ((long)data[++dataOffset] & 0xFF)
       | ((long)data[++dataOffset] & 0xFF) << 8

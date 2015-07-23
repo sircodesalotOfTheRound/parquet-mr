@@ -29,7 +29,7 @@ public final class PlainFixedBinaryFastForwardReader extends FastForwardReaderBa
   }
 
   public String readString() {
-    super.advanceRowNumber();
+    super.advanceEntryNumber();
 
     int startingOffset = ++dataOffset;
     dataOffset += fieldLength - 1;

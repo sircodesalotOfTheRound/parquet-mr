@@ -13,7 +13,7 @@ public final class PlainSingleFastForwardReader extends FastForwardReaderBase {
   }
 
   public float readSingle() {
-    super.advanceRowNumber();
+    super.advanceEntryNumber();
 
     int rawIntBits = ((int)data[++dataOffset] & 0xFF)
       | ((int)data[++dataOffset] & 0xFF) << 8

@@ -29,7 +29,7 @@ public final class RLEBooleanFastForwardReader extends FastForwardReaderBase imp
       this.segment = segment.generateReaderForNextSection();
     }
 
-    super.advanceRowNumber();
+    super.advanceEntryNumber();
     int value = segment.readNext();
     return value == TRUE;
   }

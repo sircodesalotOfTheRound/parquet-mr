@@ -29,7 +29,7 @@ public final class RLEBitPackedHybridFastForwardIntReader extends FastForwardRea
       this.segment = segment.generateReaderForNextSection();
     }
 
-    super.advanceRowNumber();
+    super.advanceEntryNumber();
     return segment.readNext();
   }
 

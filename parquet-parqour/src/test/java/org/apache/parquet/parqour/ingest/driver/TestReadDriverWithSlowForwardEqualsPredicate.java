@@ -23,6 +23,7 @@ import java.io.IOException;
 
 import static org.apache.parquet.parqour.testtools.TestTools.EMPTY_CONFIGURATION;
 import static org.apache.parquet.parqour.testtools.TestTools.TEST_FILE_PATH;
+import static org.apache.parquet.schema.PrimitiveType.PrimitiveTypeName.BOOLEAN;
 import static org.apache.parquet.schema.PrimitiveType.PrimitiveTypeName.INT32;
 import static org.apache.parquet.schema.PrimitiveType.PrimitiveTypeName.INT64;
 import static org.apache.parquet.schema.Type.Repetition.OPTIONAL;
@@ -41,7 +42,7 @@ public class TestReadDriverWithSlowForwardEqualsPredicate {
   private final MessageType COUNTING_SCHEMA = new MessageType("multipliers",
     new PrimitiveType(OPTIONAL, INT32, "i32"),
     new PrimitiveType(OPTIONAL, INT64, "i64"),
-    new PrimitiveType(OPTIONAL, INT32, "three"));
+    new PrimitiveType(OPTIONAL, BOOLEAN, "bool"));
 
   public void generateTestData(ParquetConfiguration configuration) {
     WriteTools.withParquetWriter(new WriteTools.ParquetWriteContext(COUNTING_SCHEMA, configuration.version(), 1, 10, configuration.useDictionary()) {
@@ -51,7 +52,7 @@ public class TestReadDriverWithSlowForwardEqualsPredicate {
           Group countingGroup = new SimpleGroup(COUNTING_SCHEMA)
             .append("i32", index)
             .append("i64", (long)(index * 2))
-            .append("three", index * 3);
+            .append("bool", (index % 3 == 0));
 
           writer.write(countingGroup);
         }
@@ -76,7 +77,7 @@ public class TestReadDriverWithSlowForwardEqualsPredicate {
 
             assertEquals((Integer) ROW_TO_SEARCH_FOR, cursor.i32("i32"));
             assertEquals((Long)(long)(ROW_TO_SEARCH_FOR * 2), cursor.i64("i64"));
-            assertEquals((Integer) (ROW_TO_SEARCH_FOR * 3), cursor.i32("three"));
+            assertEquals((Boolean) (ROW_TO_SEARCH_FOR % 3 == 0), cursor.bool("bool"));
           }
         }
       });

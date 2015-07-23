@@ -17,7 +17,7 @@ public final class PlainInt32FastForwardReader extends FastForwardReaderBase imp
 
   @Override
   public int readi32() {
-    super.advanceRowNumber();
+    super.advanceEntryNumber();
 
     return (data[++dataOffset] & 0xFF)
       | (data[++dataOffset] & 0xFF) << 8

@@ -63,7 +63,7 @@ public final class RLEFixedBinaryDictionaryFastForwardReader extends FastForward
   }
 
   public int readNextDictionaryEntryIndex() {
-    super.advanceRowNumber();
+    super.advanceEntryNumber();
     if (!segment.any()) {
       this.segment = segment.generateReaderForNextSection();
     }
@@ -83,7 +83,7 @@ public final class RLEFixedBinaryDictionaryFastForwardReader extends FastForward
 
   @Override
   public String readString() {
-    super.advanceRowNumber();
+    super.advanceEntryNumber();
     if (!segment.any()) {
       this.segment = segment.generateReaderForNextSection();
     }

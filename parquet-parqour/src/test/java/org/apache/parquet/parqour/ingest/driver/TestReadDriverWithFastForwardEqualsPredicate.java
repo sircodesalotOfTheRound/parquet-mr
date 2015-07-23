@@ -23,6 +23,7 @@ import java.io.IOException;
 
 import static org.apache.parquet.parqour.testtools.TestTools.EMPTY_CONFIGURATION;
 import static org.apache.parquet.parqour.testtools.TestTools.TEST_FILE_PATH;
+import static org.apache.parquet.schema.PrimitiveType.PrimitiveTypeName.BOOLEAN;
 import static org.apache.parquet.schema.PrimitiveType.PrimitiveTypeName.INT32;
 import static org.apache.parquet.schema.PrimitiveType.PrimitiveTypeName.INT64;
 import static org.apache.parquet.schema.Type.Repetition.REQUIRED;
@@ -38,11 +39,11 @@ public class TestReadDriverWithFastForwardEqualsPredicate {
   private static final Operators.Eq<Integer> EQUALS_PREDICATE = FilterApi.eq(PREDICATE_COLUMN, ROW_TO_SEARCH_FOR);
 
   // If a PrimitiveType node and all of it's ancestors (except for the root, which is always REPEATED), have
-  // a RepeatType of 'REQUIRED' then we can use fast forwarding.
+  // a RepeatType of 'REQUIRED' then we can use fast forwarding. This setup will fall back to slow-forwarding.
   private final MessageType COUNTING_SCHEMA = new MessageType("multipliers",
     new PrimitiveType(REQUIRED, INT32, "i32"),
     new PrimitiveType(REQUIRED, INT64, "i64"),
-    new PrimitiveType(REQUIRED, INT32, "three"));
+    new PrimitiveType(REQUIRED, BOOLEAN, "bool"));
 
   public void generateTestData(ParquetConfiguration configuration) {
     WriteTools.withParquetWriter(new WriteTools.ParquetWriteContext(COUNTING_SCHEMA, configuration.version(), 1, 10, configuration.useDictionary()) {
@@ -52,7 +53,7 @@ public class TestReadDriverWithFastForwardEqualsPredicate {
           Group countingGroup = new SimpleGroup(COUNTING_SCHEMA)
             .append("i32", index)
             .append("i64", (long)(index * 2))
-            .append("three", index * 3);
+            .append("bool", (index % 3 == 0));
 
           writer.write(countingGroup);
         }
@@ -77,7 +78,7 @@ public class TestReadDriverWithFastForwardEqualsPredicate {
 
             assertEquals((Integer) ROW_TO_SEARCH_FOR, cursor.i32("i32"));
             assertEquals((Long)(long)(ROW_TO_SEARCH_FOR * 2), cursor.i64("i64"));
-            assertEquals((Integer) (ROW_TO_SEARCH_FOR * 3), cursor.i32("three"));
+            assertEquals((ROW_TO_SEARCH_FOR % 3 == 0), cursor.bool("bool"));
           }
         }
       });

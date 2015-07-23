@@ -17,7 +17,7 @@ public final class PlainInt64FastForwardReader extends FastForwardReaderBase imp
 
   @Override
   public long readi64() {
-    super.advanceRowNumber();
+    super.advanceEntryNumber();
 
     return ((long)data[++dataOffset] & 0xFF)
       | ((long)data[++dataOffset] & 0xFF) << 8

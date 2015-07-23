@@ -15,6 +15,10 @@ public interface Cursor {
   Long i64(int columnIndex);
   Long i64(String path);
 
+  Boolean bool();
+  Boolean bool(int columnIndex);
+  Boolean bool(String path);
+
   Object value();
   Object value(int columnIndex);
   Object value(String path);

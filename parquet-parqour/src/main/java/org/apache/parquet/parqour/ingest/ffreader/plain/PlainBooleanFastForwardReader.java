@@ -26,9 +26,6 @@ public class PlainBooleanFastForwardReader extends FastForwardReaderBase impleme
 
   @Override
   public void fastForwardTo(int entryNumber) {
-    long jumpDistance = (entryNumber - currentEntryNumber);
-
     this.currentEntryNumber = entryNumber;
-    this.currentEntryNumber += jumpDistance;
   }
 }

@@ -81,7 +81,7 @@ public final class PlainBinaryDictionaryFastForwardReader extends DictionaryBase
 
   @Override
   public String readString() {
-    super.advanceRowNumber();
+    super.advanceEntryNumber();
     if (!segment.any()) {
       this.segment = segment.generateReaderForNextSection();
     }

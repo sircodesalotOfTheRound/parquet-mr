@@ -72,7 +72,7 @@ public class Int64DictionaryFastForwardReader extends FastForwardReaderBase impl
 
   @Override
   public long readi64() {
-    super.advanceRowNumber();
+    super.advanceEntryNumber();
     if (!segment.any()) {
       this.segment = segment.generateReaderForNextSection();
     }

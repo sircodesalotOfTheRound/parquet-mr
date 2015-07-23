@@ -16,7 +16,7 @@ import java.util.Arrays;
  * Created by sircodesalot on 6/11/15.
  */
 public final class Int32NoRepeatIngestNode extends PrimitiveIngestNodeBase<Int32FastForwardReader> {
-  private int currentValue = 0;
+  private int currentValue;
 
   private Integer[] ingestBuffer;
   private final Int32Cursor cursor;
