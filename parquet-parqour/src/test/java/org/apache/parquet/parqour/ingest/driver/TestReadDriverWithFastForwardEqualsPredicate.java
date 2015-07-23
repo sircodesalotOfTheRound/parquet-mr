@@ -24,6 +24,7 @@ import java.io.IOException;
 import static org.apache.parquet.parqour.testtools.TestTools.EMPTY_CONFIGURATION;
 import static org.apache.parquet.parqour.testtools.TestTools.TEST_FILE_PATH;
 import static org.apache.parquet.schema.PrimitiveType.PrimitiveTypeName.INT32;
+import static org.apache.parquet.schema.PrimitiveType.PrimitiveTypeName.INT64;
 import static org.apache.parquet.schema.Type.Repetition.REQUIRED;
 import static org.junit.Assert.assertEquals;
 
@@ -33,14 +34,14 @@ import static org.junit.Assert.assertEquals;
 public class TestReadDriverWithFastForwardEqualsPredicate {
   private static int TOTAL_ROWS = 1000000;
   private static int ROW_TO_SEARCH_FOR = TestTools.generateRandomInt(TOTAL_ROWS);
-  private static final Operators.IntColumn COLUMN = FilterApi.intColumn("one");
-  private static final Operators.Eq<Integer> EQUALS_PREDICATE = FilterApi.eq(COLUMN, ROW_TO_SEARCH_FOR);
+  private static final Operators.IntColumn PREDICATE_COLUMN = FilterApi.intColumn("i32");
+  private static final Operators.Eq<Integer> EQUALS_PREDICATE = FilterApi.eq(PREDICATE_COLUMN, ROW_TO_SEARCH_FOR);
 
   // If a PrimitiveType node and all of it's ancestors (except for the root, which is always REPEATED), have
   // a RepeatType of 'REQUIRED' then we can use fast forwarding.
   private final MessageType COUNTING_SCHEMA = new MessageType("multipliers",
-    new PrimitiveType(REQUIRED, INT32, "one"),
-    new PrimitiveType(REQUIRED, INT32, "two"),
+    new PrimitiveType(REQUIRED, INT32, "i32"),
+    new PrimitiveType(REQUIRED, INT64, "i64"),
     new PrimitiveType(REQUIRED, INT32, "three"));
 
   public void generateTestData(ParquetConfiguration configuration) {
@@ -49,8 +50,8 @@ public class TestReadDriverWithFastForwardEqualsPredicate {
       public void write(ParquetWriter<Group> writer) throws IOException {
         for (int index = 0; index < TOTAL_ROWS; index++) {
           Group countingGroup = new SimpleGroup(COUNTING_SCHEMA)
-            .append("one", index)
-            .append("two", index * 2)
+            .append("i32", index)
+            .append("i64", (long)(index * 2))
             .append("three", index * 3);
 
           writer.write(countingGroup);
@@ -74,8 +75,8 @@ public class TestReadDriverWithFastForwardEqualsPredicate {
             // Should have all results reported, and there should be just one item.
             Cursor cursor = driver.cursor();
 
-            assertEquals((Integer) ROW_TO_SEARCH_FOR, cursor.i32("one"));
-            assertEquals((Integer) (ROW_TO_SEARCH_FOR * 2), cursor.i32("two"));
+            assertEquals((Integer) ROW_TO_SEARCH_FOR, cursor.i32("i32"));
+            assertEquals((Long)(long)(ROW_TO_SEARCH_FOR * 2), cursor.i64("i64"));
             assertEquals((Integer) (ROW_TO_SEARCH_FOR * 3), cursor.i32("three"));
           }
         }

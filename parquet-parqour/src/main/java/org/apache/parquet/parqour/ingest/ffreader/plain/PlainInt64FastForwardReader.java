@@ -9,6 +9,8 @@ import org.apache.parquet.parqour.ingest.paging.DataPageMetadata;
  * Created by sircodesalot on 6/13/15.
  */
 public final class PlainInt64FastForwardReader extends FastForwardReaderBase implements Int64FastForwardReader {
+  private static final int SIZEOF_INT64 = 8;
+
   public PlainInt64FastForwardReader(DataPageMetadata metadata, ValuesType type) {
     super(metadata, type);
   }
@@ -29,7 +31,10 @@ public final class PlainInt64FastForwardReader extends FastForwardReaderBase imp
 
   @Override
   public void fastForwardTo(int entryNumber) {
+    long jumpDistance = (entryNumber - currentEntryNumber) * SIZEOF_INT64;
 
+    dataOffset += jumpDistance;
+    currentEntryNumber = entryNumber;
   }
 }
 
