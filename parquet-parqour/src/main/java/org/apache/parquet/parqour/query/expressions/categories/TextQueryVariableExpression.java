@@ -5,7 +5,10 @@ import org.apache.parquet.parqour.query.backtracking.rules.*;
 import org.apache.parquet.parqour.query.collections.TextQueryAppendableCollection;
 import org.apache.parquet.parqour.query.collections.TextQueryCollection;
 import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
+import org.apache.parquet.parqour.query.expressions.infix.TextQueryInfixExpression;
+import org.apache.parquet.parqour.query.expressions.infix.TextQueryInfixTokens;
 import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
+import org.apache.parquet.parqour.query.tokens.TextQueryPunctuationToken;
 import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
 
 /**
@@ -32,8 +35,21 @@ public abstract class TextQueryVariableExpression extends TextQueryExpression {
     return rules.canParse(parent, lexer);
   }
 
-  public static TextQueryVariableExpression read(TextQueryExpression parent, TextQueryLexer lexer) {
+  public static TextQueryVariableExpression readIgnoringInfixExpressions(TextQueryExpression parent, TextQueryLexer lexer) {
     return rules.read(parent, lexer);
+  }
+
+  public static TextQueryVariableExpression read(TextQueryExpression parent, TextQueryLexer lexer) {
+    lexer.setUndoPoint();
+    TextQueryVariableExpression variableExpression = rules.read(parent, lexer);
+
+    if (TextQueryInfixTokens.isInfixToken(lexer)) {
+      lexer.rollbackToUndoPoint();
+      return TextQueryInfixExpression.read(parent, lexer);
+    } else {
+      lexer.clearUndoPoint();
+      return variableExpression;
+    }
   }
 
   public static TextQueryCollection<TextQueryVariableExpression> readParameterList(TextQueryExpression parent, TextQueryLexer lexer) {
@@ -43,7 +59,7 @@ public abstract class TextQueryVariableExpression extends TextQueryExpression {
       parameters.add(TextQueryVariableExpression.read(parent, lexer));
 
       // If the following isn't a comma, then drop out.
-      if (!lexer.isEof() && lexer.currentIs(TextQueryExpressionType.PUNCTUATION, ",")) {
+      if (!lexer.isEof() && lexer.currentIs(TextQueryExpressionType.PUNCTUATION, TextQueryPunctuationToken.COMMA)) {
         lexer.readCurrentAndAdvance(TextQueryExpressionType.PUNCTUATION);
       } else {
         break;

@@ -2,6 +2,7 @@ package org.apache.parquet.parqour.query.expressions.txql;
 
 import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
+import org.apache.parquet.parqour.query.expressions.categories.TextQueryVariableExpression;
 import org.apache.parquet.parqour.query.expressions.infix.TextQueryInfixExpression;
 import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
 import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
@@ -10,13 +11,13 @@ import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
  * Created by sircodesalot on 6/30/15.
  */
 public class TextQueryWhereExpression extends TextQueryExpression {
-  private final TextQueryInfixExpression expression;
+  private final TextQueryVariableExpression expression;
 
   private TextQueryWhereExpression(TextQueryExpression parent, TextQueryLexer lexer) {
     super(parent, lexer, TextQueryExpressionType.WHERE);
 
     lexer.readCurrentAndAdvance(TextQueryExpressionType.IDENTIFIER, TextQueryKeywordExpression.WHERE);
-    this.expression = TextQueryInfixExpression.read(this, lexer);
+    this.expression = TextQueryVariableExpression.read(this, lexer);
   }
 
   public static boolean canParse(TextQuerySelectStatementExpression parent, TextQueryLexer lexer) {
@@ -27,7 +28,7 @@ public class TextQueryWhereExpression extends TextQueryExpression {
     return new TextQueryWhereExpression(parent, lexer);
   }
 
-  public TextQueryInfixExpression infixExpression() {
+  public TextQueryVariableExpression predicate() {
     return expression;
   }
 

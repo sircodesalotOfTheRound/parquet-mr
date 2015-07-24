@@ -12,10 +12,8 @@ import org.apache.parquet.parqour.query.expressions.txql.TextQueryFullyQualified
 import org.apache.parquet.parqour.query.expressions.txql.TextQuerySelectStatementExpression;
 import org.apache.parquet.parqour.query.expressions.txql.TextQueryTreeRootExpression;
 import org.apache.parquet.parqour.query.expressions.txql.TextQueryWhereExpression;
-import org.apache.parquet.parqour.query.expressions.tables.ParquelTableExpressionType;
 import org.apache.parquet.parqour.query.expressions.tables.TextQueryNamedTableExpression;
 import org.apache.parquet.parqour.query.expressions.tables.TextQueryStringExpression;
-import org.apache.parquet.parqour.query.expressions.tables.TextQueryTableExpression;
 import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
 import org.junit.Test;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
@@ -178,7 +176,7 @@ public class TestTextQuery {
   public void testWhereExpression() {
     for (String lhs : new String[] { "one", "two.three", "four", "five.six", "6", "10" }) {
       for (String rhs : new String[] {"100", "four.five", "seven.eight.nine.ten", "some", "12", "10" }) {
-        for (String operator : new String[]{ "=", "!=", "<", ">" }) {
+        for (String operator : new String[]{ "=", "!=", "<", ">", "<=", ">=" }) {
           String statement = String.format("select * from something where %s %s %s", lhs, operator, rhs);
           TextQueryLexer lexer = new TextQueryLexer(statement, true);
           TextQueryTreeRootExpression rootExpression = new TextQueryTreeRootExpression(lexer);
@@ -193,7 +191,7 @@ public class TestTextQuery {
   }
 
   public void assertWhereIsLike(TextQueryWhereExpression whereExpression, String lhs, String operator, String rhs) {
-    TextQueryInfixExpression infixExpression = whereExpression.infixExpression();
+    TextQueryInfixExpression infixExpression = (TextQueryInfixExpression) whereExpression.predicate();
 
     assertEquals(getLexedTypeForString(lhs), infixExpression.lhs().type());
     assertEquals(getLexedTypeForString(rhs), infixExpression.rhs().type());

@@ -24,7 +24,7 @@ public class TextQueryInfixExpression extends TextQueryVariableExpression {
   }
 
   private TextQueryExpression readLhs(TextQueryLexer lexer) {
-    return TextQueryVariableExpression.read(this, lexer);
+    return TextQueryVariableExpression.readIgnoringInfixExpressions(this, lexer);
   }
 
   private TextQueryToken readOperationToken(TextQueryLexer lexer) {
@@ -32,7 +32,7 @@ public class TextQueryInfixExpression extends TextQueryVariableExpression {
   }
 
   private TextQueryExpression readRhs(TextQueryLexer lexer) {
-    return TextQueryVariableExpression.read(this, lexer);
+    return TextQueryVariableExpression.readIgnoringInfixExpressions(this, lexer);
   }
 
   public TextQueryExpression lhs() { return this.lhs; }

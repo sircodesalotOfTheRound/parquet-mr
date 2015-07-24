@@ -32,7 +32,7 @@ public class InfixPredicateCollectingVisitor extends TextQueryExpressionVisitor<
 
   @Override
   public FilterPredicate visit(TextQueryWhereExpression whereExpression) {
-    TextQueryInfixExpression infixExpression = whereExpression.infixExpression();
+    TextQueryInfixExpression infixExpression = (TextQueryInfixExpression) whereExpression.predicate();
 
     Operators.Column column = collectColumnFromLhs(infixExpression.lhs());
     Integer comparisonValue = collectValueFromRhs(infixExpression.rhs());

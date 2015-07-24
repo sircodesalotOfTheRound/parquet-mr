@@ -79,7 +79,7 @@ public class TextQueryColumnCollectingVisitor extends TextQueryExpressionVisitor
 
   @Override
   public Iterable<TextQueryNamedColumnExpression> visit(TextQueryWhereExpression whereExpression) {
-    whereExpression.infixExpression().accept(this);
+    whereExpression.predicate().accept(this);
     return null;
   }
 

@@ -13,8 +13,14 @@ public class TextQueryPunctuationToken extends TextQueryToken {
   public static final String CLOSE_PARENS = ")";
   public static final String OPEN_BRACE = "{";
   public static final String CLOSE_BRACE = "}";
-  public static final String OPEN_DIAMOND = "<";
-  public static final String CLOSE_DIAMOND = ">";
+  public static final String LESS_THAN_OR_EQUALS = "<";
+  public static final String LESS_THAN = "<=";
+  public static final String GREATER_THAN = ">";
+  public static final String GREATER_THAN_OR_EQUALS = ">=";
+  public static final String PLUS = "+";
+  public static final String MINUS = "-";
+  public static final String MULTIPLY = "*";
+  public static final String DIVIDE = "%";
   public static final String COLON = ":";
   public static final String EQUALS = "=";
   public static final String NOT_EQUALS = "!=";
@@ -36,6 +42,10 @@ public class TextQueryPunctuationToken extends TextQueryToken {
     builder.append(first);
 
     if (first == '!' && !stream.isEof() && stream.currentIs('=')) {
+      builder.append(stream.readCurrentAndAdvance());
+    } else if (first == '<' && !stream.isEof() && stream.currentIs('=')) {
+      builder.append(stream.readCurrentAndAdvance());
+    } else if (first == '>' && !stream.isEof() && stream.currentIs('=')) {
       builder.append(stream.readCurrentAndAdvance());
     }
 
