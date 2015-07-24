@@ -52,4 +52,6 @@ public abstract class TextQueryVariableExpression extends TextQueryExpression {
 
     return parameters;
   }
+
+  // TODO: Add 'Generate Cursor Expression' function that allows for querying column dependencies.
 }
