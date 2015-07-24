@@ -10,12 +10,12 @@ import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
 /**
  * Created by sircodesalot on 15/4/2.
  */
-public class TextQuerySelectStatement extends TextQueryKeywordExpression implements ParquelStatementExpression {
+public class TextQuerySelectStatementExpression extends TextQueryKeywordExpression implements ParquelStatementExpression {
   private final TextQueryColumnSetExpression columns;
   private final TextQueryFromExpression from;
   private final TextQueryWhereExpression where;
 
-  public TextQuerySelectStatement(TextQueryExpression parent, TextQueryLexer lexer) {
+  public TextQuerySelectStatementExpression(TextQueryExpression parent, TextQueryLexer lexer) {
     super(parent, lexer, TextQueryExpressionType.SELECT);
 
     this.columns = readColumns(lexer);
@@ -62,8 +62,8 @@ public class TextQuerySelectStatement extends TextQueryKeywordExpression impleme
   }
 
 
-  public static TextQuerySelectStatement read(TextQueryExpression parent, TextQueryLexer lexer) {
-    return new TextQuerySelectStatement(parent, lexer);
+  public static TextQuerySelectStatementExpression read(TextQueryExpression parent, TextQueryLexer lexer) {
+    return new TextQuerySelectStatementExpression(parent, lexer);
   }
 
   @Override

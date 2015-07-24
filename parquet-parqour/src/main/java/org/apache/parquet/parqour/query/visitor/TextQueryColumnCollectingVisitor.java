@@ -3,11 +3,12 @@ package org.apache.parquet.parqour.query.visitor;
 import org.apache.parquet.parqour.ingest.read.iterator.lamba.Projection;
 import org.apache.parquet.parqour.query.collections.TextQueryAppendableCollection;
 import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
+import org.apache.parquet.parqour.query.expressions.categories.TextQueryVariableExpression;
 import org.apache.parquet.parqour.query.expressions.column.TextQueryColumnExpression;
 import org.apache.parquet.parqour.query.expressions.column.TextQueryColumnSetExpression;
 import org.apache.parquet.parqour.query.expressions.column.TextQueryNamedColumnExpression;
 import org.apache.parquet.parqour.query.expressions.column.TextQueryWildcardExpression;
-import org.apache.parquet.parqour.query.expressions.pql.TextQuerySelectStatement;
+import org.apache.parquet.parqour.query.expressions.pql.TextQuerySelectStatementExpression;
 import org.apache.parquet.parqour.query.expressions.pql.TextQueryTreeRootExpression;
 import org.apache.parquet.parqour.query.expressions.pql.TextQueryWhereExpression;
 
@@ -44,7 +45,7 @@ public class TextQueryColumnCollectingVisitor extends TextQueryExpressionVisitor
   }
 
   @Override
-  public Iterable<TextQueryNamedColumnExpression> visit(TextQuerySelectStatement selectStatement) {
+  public Iterable<TextQueryNamedColumnExpression> visit(TextQuerySelectStatementExpression selectStatement) {
     if (selectStatement.columnSet() != null) {
       selectStatement.columnSet().accept(this);
     }
@@ -58,7 +59,7 @@ public class TextQueryColumnCollectingVisitor extends TextQueryExpressionVisitor
 
   @Override
   public Iterable<TextQueryNamedColumnExpression> visit(TextQueryColumnSetExpression columnSetExpression) {
-    for (TextQueryColumnExpression column : columnSetExpression.columns()) {
+    for (TextQueryVariableExpression column : columnSetExpression.columns()) {
       column.accept(this);
     }
 

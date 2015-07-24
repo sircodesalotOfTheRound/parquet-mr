@@ -62,13 +62,13 @@ public class TextQueryTreeRootExpression extends TextQueryExpression {
     });
   }
 
-  public TextQuerySelectStatement asSelectStatement() {
+  public TextQuerySelectStatementExpression asSelectStatement() {
     return expressions.where(new Predicate<TextQueryExpression>() {
       @Override
       public boolean test(TextQueryExpression expression) {
         return expression.is(TextQueryExpressionType.SELECT);
       }
-    }).firstAs(TextQuerySelectStatement.class);
+    }).firstAs(TextQuerySelectStatementExpression.class);
   }
 
   public boolean isFqnExpression() {

@@ -3,7 +3,7 @@ package org.apache.parquet.parqour.query.visitor;
 import org.apache.parquet.parqour.query.expressions.column.TextQueryColumnSetExpression;
 import org.apache.parquet.parqour.query.expressions.column.TextQueryNamedColumnExpression;
 import org.apache.parquet.parqour.query.expressions.column.TextQueryWildcardExpression;
-import org.apache.parquet.parqour.query.expressions.pql.TextQuerySelectStatement;
+import org.apache.parquet.parqour.query.expressions.pql.TextQuerySelectStatementExpression;
 import org.apache.parquet.parqour.query.expressions.pql.TextQueryTreeRootExpression;
 import org.apache.parquet.parqour.query.expressions.pql.TextQueryWhereExpression;
 
@@ -15,7 +15,7 @@ public abstract class TextQueryExpressionVisitor<TReturnType> {
     return null;
   }
 
-  public TReturnType visit(TextQuerySelectStatement textQuerySelectStatement) {
+  public TReturnType visit(TextQuerySelectStatementExpression textQuerySelectStatementExpression) {
     return null;
   }
 

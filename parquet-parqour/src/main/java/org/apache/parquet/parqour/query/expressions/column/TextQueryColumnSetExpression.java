@@ -5,6 +5,7 @@ import org.apache.parquet.parqour.query.collections.TextQueryAppendableCollectio
 import org.apache.parquet.parqour.query.collections.TextQueryCollection;
 import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
+import org.apache.parquet.parqour.query.expressions.categories.TextQueryVariableExpression;
 import org.apache.parquet.parqour.query.expressions.pql.TextQueryKeywordExpression;
 import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
 import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
@@ -14,19 +15,19 @@ import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
  */
 public class TextQueryColumnSetExpression extends TextQueryExpression {
   private final String COLUMNS = "(COLUMNS)";
-  private final TextQueryCollection<TextQueryColumnExpression> columns;
+  private final TextQueryCollection<TextQueryVariableExpression> columns;
 
   public TextQueryColumnSetExpression(TextQueryExpression parent, TextQueryLexer lexer) {
     super(parent, lexer, TextQueryExpressionType.COLUMN_SET);
     this.columns = readColumns(lexer);
   }
 
-  private TextQueryCollection<TextQueryColumnExpression> readColumns(TextQueryLexer lexer) {
+  private TextQueryCollection<TextQueryVariableExpression> readColumns(TextQueryLexer lexer) {
     lexer.readCurrentAndAdvance(TextQueryExpressionType.IDENTIFIER, TextQueryKeywordExpression.SELECT);
-    TextQueryAppendableCollection<TextQueryColumnExpression> columns = new TextQueryAppendableCollection<TextQueryColumnExpression>();
+    TextQueryAppendableCollection<TextQueryVariableExpression> columns = new TextQueryAppendableCollection<TextQueryVariableExpression>();
 
-    while (TextQueryColumnExpression.canParse(this, lexer)) {
-      columns.add(TextQueryColumnExpression.read(this, lexer));
+    while (TextQueryVariableExpression.canParse(this, lexer)) {
+      columns.add(TextQueryVariableExpression.read(this, lexer));
 
       // If the following isn't a comma, then drop out.
       if (!lexer.isEof() && lexer.currentIs(TextQueryExpressionType.PUNCTUATION, ",")) {
@@ -40,15 +41,12 @@ public class TextQueryColumnSetExpression extends TextQueryExpression {
   }
 
   public boolean containsWildcardColumn() {
-    return columns.any(new Predicate<TextQueryColumnExpression>() {
-      @Override
-      public boolean test(TextQueryColumnExpression column) {
-        return column.isWildcardColumn();
-      }
-    });
+    return columns
+      .ofType(TextQueryWildcardExpression.class)
+      .any();
   }
 
-  public TextQueryCollection<TextQueryColumnExpression> columns() {
+  public TextQueryCollection<TextQueryVariableExpression> columns() {
     return this.columns;
   }
 

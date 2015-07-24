@@ -5,7 +5,7 @@ import org.apache.parquet.parqour.query.backtracking.interfaces.TextQueryBacktra
 import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
 import org.apache.parquet.parqour.query.expressions.pql.TextQueryKeywordExpression;
-import org.apache.parquet.parqour.query.expressions.pql.TextQuerySelectStatement;
+import org.apache.parquet.parqour.query.expressions.pql.TextQuerySelectStatementExpression;
 import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
 
 /**
@@ -21,6 +21,6 @@ public class TextQuerySelectStatementBacktrackRule extends TextQueryBacktrackRul
   }
 
   public TextQueryExpression read(TextQueryExpression parent, TextQueryLexer lexer) {
-    return TextQuerySelectStatement.read(parent, lexer);
+    return TextQuerySelectStatementExpression.read(parent, lexer);
   }
 }

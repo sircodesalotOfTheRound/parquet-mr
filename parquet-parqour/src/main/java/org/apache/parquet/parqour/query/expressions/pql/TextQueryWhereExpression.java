@@ -19,7 +19,7 @@ public class TextQueryWhereExpression extends TextQueryExpression {
     this.expression = TextQueryInfixExpression.read(this, lexer);
   }
 
-  public static boolean canParse(TextQuerySelectStatement parent, TextQueryLexer lexer) {
+  public static boolean canParse(TextQuerySelectStatementExpression parent, TextQueryLexer lexer) {
     return lexer.currentIs(TextQueryExpressionType.IDENTIFIER, TextQueryKeywordExpression.WHERE);
   }
 

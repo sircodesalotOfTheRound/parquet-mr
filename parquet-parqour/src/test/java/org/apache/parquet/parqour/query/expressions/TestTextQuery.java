@@ -4,12 +4,13 @@ import org.apache.parquet.parqour.ingest.read.iterator.lamba.Predicate;
 import org.apache.parquet.parqour.ingest.read.iterator.lamba.Projection;
 import org.apache.parquet.parqour.query.collections.TextQueryCollection;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
+import org.apache.parquet.parqour.query.expressions.categories.TextQueryVariableExpression;
 import org.apache.parquet.parqour.query.expressions.column.TextQueryColumnExpression;
 import org.apache.parquet.parqour.query.expressions.column.TextQueryNamedColumnExpression;
 import org.apache.parquet.parqour.query.expressions.column.TextQueryWildcardExpression;
 import org.apache.parquet.parqour.query.expressions.infix.TextQueryInfixExpression;
 import org.apache.parquet.parqour.query.expressions.pql.TextQueryFullyQualifiedNameExpression;
-import org.apache.parquet.parqour.query.expressions.pql.TextQuerySelectStatement;
+import org.apache.parquet.parqour.query.expressions.pql.TextQuerySelectStatementExpression;
 import org.apache.parquet.parqour.query.expressions.pql.TextQueryTreeRootExpression;
 import org.apache.parquet.parqour.query.expressions.pql.TextQueryWhereExpression;
 import org.apache.parquet.parqour.query.expressions.tables.ParquelTableExpressionType;
@@ -47,7 +48,7 @@ public class TestTextQuery {
 
     assertTrue(root.containsSelectExpression());
 
-    TextQuerySelectStatement select = root.asSelectStatement();
+    TextQuerySelectStatementExpression select = root.asSelectStatement();
     final Set<String> columns = new HashSet<String>() {{
       add("one");
       add("two");
@@ -58,9 +59,9 @@ public class TestTextQuery {
 
     // Columns -> NamedColumns -> NamedColumn.toString() -> All(name in columns-hash).
     assertTrue(select.columnSet().columns()
-      .map(new Projection<TextQueryColumnExpression, TextQueryNamedColumnExpression>() {
+      .map(new Projection<TextQueryVariableExpression, TextQueryNamedColumnExpression>() {
         @Override
-        public TextQueryNamedColumnExpression apply(TextQueryColumnExpression expression) {
+        public TextQueryNamedColumnExpression apply(TextQueryVariableExpression expression) {
           return (TextQueryNamedColumnExpression) expression;
         }
       })
@@ -85,7 +86,7 @@ public class TestTextQuery {
 
     assertTrue(root.isSelectStatement());
 
-    TextQuerySelectStatement select = (TextQuerySelectStatement) root.expressions().first();
+    TextQuerySelectStatementExpression select = (TextQuerySelectStatementExpression) root.expressions().first();
 
     final Set<String> columnNames = fillSet("first", "second", "third", "fourth");
     final Set<String> tableNames = fillSet("table1", "table2");
@@ -183,7 +184,7 @@ public class TestTextQuery {
           TextQueryLexer lexer = new TextQueryLexer(statement, true);
           TextQueryTreeRootExpression rootExpression = new TextQueryTreeRootExpression(lexer);
 
-          TextQuerySelectStatement selectStatement = rootExpression.asSelectStatement();
+          TextQuerySelectStatementExpression selectStatement = rootExpression.asSelectStatement();
           assertTrue(selectStatement.columnSet().containsWildcardColumn());
 
           assertWhereIsLike(selectStatement.where(), lhs, operator, rhs);
