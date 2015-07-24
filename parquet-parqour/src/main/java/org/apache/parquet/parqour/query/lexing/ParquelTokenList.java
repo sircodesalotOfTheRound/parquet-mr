@@ -39,6 +39,7 @@ public class ParquelTokenList implements Iterable<TextQueryToken> {
     } else if (stream.currentIsPunctuation()) {
       return TextQueryPunctuationToken.read(stream);
     } else if (stream.currentIsNumeric()) {
+      // TODO: Add support for negative and decimal numbers.
       return TextQueryNumericToken.read(stream);
     } else {
       // In practice, this should never be used.
