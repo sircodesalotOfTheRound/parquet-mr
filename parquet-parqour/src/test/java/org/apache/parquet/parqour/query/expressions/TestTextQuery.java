@@ -14,7 +14,7 @@ import org.apache.parquet.parqour.query.expressions.txql.TextQueryTreeRootExpres
 import org.apache.parquet.parqour.query.expressions.txql.TextQueryWhereExpression;
 import org.apache.parquet.parqour.query.expressions.tables.ParquelTableExpressionType;
 import org.apache.parquet.parqour.query.expressions.tables.TextQueryNamedTableExpression;
-import org.apache.parquet.parqour.query.expressions.tables.TextQueryQuotedTableExpression;
+import org.apache.parquet.parqour.query.expressions.tables.TextQueryStringExpression;
 import org.apache.parquet.parqour.query.expressions.tables.TextQueryTableExpression;
 import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
 import org.junit.Test;
@@ -140,16 +140,16 @@ public class TestTextQuery {
   }
   @Test
   public void testFromFQNExpression() {
-    TextQueryLexer lexer = new TextQueryLexer("select one, two, three from sometable.parq", true);
+    TextQueryLexer lexer = new TextQueryLexer("select one, two, three from 'sometable.parq'", true);
     TextQueryTreeRootExpression root = new TextQueryTreeRootExpression(lexer);
 
-    TextQueryNamedTableExpression tableExpression = root.asSelectStatement()
+    TextQueryStringExpression tableExpression = root.asSelectStatement()
       .from()
       .tableSet()
       .tables()
-      .firstAs(TextQueryNamedTableExpression.class);
+      .firstAs(TextQueryStringExpression.class);
 
-    String tableName = tableExpression.fullyQualifiedName().toString();
+    String tableName = tableExpression.asString();
     assertEquals("sometable.parq", tableName);
   }
 
@@ -160,16 +160,16 @@ public class TestTextQuery {
       TextQueryLexer lexer = new TextQueryLexer(queryExpression, true);
       TextQueryTreeRootExpression root = new TextQueryTreeRootExpression(lexer);
 
-      TextQueryTableExpression tableExpression = root.asSelectStatement()
+      TextQueryVariableExpression tableExpression = root.asSelectStatement()
         .from()
         .tableSet()
         .tables()
         .first();
 
-      assertTrue(tableExpression.tableExpressionType() == ParquelTableExpressionType.QUOTED);
-      TextQueryQuotedTableExpression quotedTableExpression = tableExpression.asQuotedTableExpression();
+      assertTrue(tableExpression.is(TextQueryExpressionType.STRING));
+      TextQueryStringExpression stringExpression = (TextQueryStringExpression)tableExpression;
 
-      String tableName = quotedTableExpression.asString();
+      String tableName = stringExpression.asString();
       assertEquals(path, tableName);
     }
   }

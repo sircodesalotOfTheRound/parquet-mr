@@ -93,7 +93,7 @@ public abstract class TextQueryCollection<T> implements Iterable<T> {
   }
 
   public <U> U secondAs(Class<U> type) {
-    return (U)this.first();
+    return (U)this.second();
   }
 
   public T first() {

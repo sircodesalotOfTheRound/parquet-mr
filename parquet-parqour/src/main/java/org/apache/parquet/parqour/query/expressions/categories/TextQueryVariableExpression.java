@@ -16,7 +16,7 @@ public abstract class TextQueryVariableExpression extends TextQueryExpression {
     .add(new TextQueryUdfExpressionBacktrackRule())
     .add(new TextQueryNumericExpressionBacktrackRule())
     .add(new TextQueryNamedColumnExpressionBacktrackRule())
-    .add(new TextQueryQuotedTableExpressionBacktrackRule())
+    .add(new TextQueryStringExpressionBacktrackRule())
     .add(new TextQueryWildcardExpressionBacktrackRule());
 
   public TextQueryVariableExpression(TextQueryExpression parent, TextQueryLexer lexer, TextQueryExpressionType type) {

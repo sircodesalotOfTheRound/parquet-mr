@@ -4,6 +4,7 @@ import org.apache.parquet.parqour.exceptions.TextQueryException;
 import org.apache.parquet.parqour.query.collections.TextQueryAppendableCollection;
 import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
+import org.apache.parquet.parqour.query.expressions.categories.TextQueryVariableExpression;
 import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
 import org.apache.parquet.parqour.query.tokens.TextQueryPunctuationToken;
 import org.apache.parquet.parqour.query.tokens.TextQueryToken;
@@ -12,12 +13,12 @@ import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
 /**
  * Created by sircodesalot on 7/5/15.
  */
-public class TextQueryQuotedTableExpression extends TextQueryTableExpression {
+public class TextQueryStringExpression extends TextQueryVariableExpression {
   private final TextQueryAppendableCollection<TextQueryToken> expressionTokens;
   private final String expressionAsString;
 
-  public TextQueryQuotedTableExpression(TextQueryExpression parent, TextQueryLexer lexer) {
-    super(parent, lexer, ParquelTableExpressionType.QUOTED);
+  public TextQueryStringExpression(TextQueryExpression parent, TextQueryLexer lexer) {
+    super(parent, lexer, TextQueryExpressionType.STRING);
 
     this.validateLexing(parent, lexer);
     this.expressionTokens = readExpression(lexer);
@@ -53,8 +54,8 @@ public class TextQueryQuotedTableExpression extends TextQueryTableExpression {
     return builder.toString().trim();
   }
 
-  public static TextQueryQuotedTableExpression read(TextQueryExpression parent, TextQueryLexer lexer) {
-    return new TextQueryQuotedTableExpression(parent, lexer);
+  public static TextQueryStringExpression read(TextQueryExpression parent, TextQueryLexer lexer) {
+    return new TextQueryStringExpression(parent, lexer);
   }
 
   public String asString() {

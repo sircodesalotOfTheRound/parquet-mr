@@ -12,6 +12,7 @@ public enum TextQueryExpressionType {
 
   TABLE,
   TABLE_SET,
+  STRING,
 
   NAMED_COLUMN,
   WILDCARD,
