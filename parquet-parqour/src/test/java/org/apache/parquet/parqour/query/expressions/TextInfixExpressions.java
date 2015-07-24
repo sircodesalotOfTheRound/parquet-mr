@@ -1,7 +1,7 @@
 package org.apache.parquet.parqour.query.expressions;
 
-import junit.framework.Assert;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
+import org.apache.parquet.parqour.query.expressions.categories.TextQueryVariableExpression;
 import org.apache.parquet.parqour.query.expressions.infix.TextQueryInfixExpression;
 import org.apache.parquet.parqour.query.expressions.tables.TextQueryStringExpression;
 import org.apache.parquet.parqour.query.expressions.txql.TextQueryNumericExpression;
@@ -72,6 +72,27 @@ public class TextInfixExpressions {
 
   @Test
   public void testNestedInfixExpression() {
+    TextQueryTreeRootExpression statement = TextQueryTreeRootExpression.fromString("select * where 100 != 1000 and 'something' >= udf()");
+    TextQuerySelectStatementExpression selectStatement = statement.asSelectStatement();
+    TextQueryInfixExpression andExpression = (TextQueryInfixExpression) selectStatement.where().predicate();
+
+    assertEquals("and", andExpression.operator().toString());
+
+    TextQueryInfixExpression notEqualsExpression = (TextQueryInfixExpression) andExpression.lhs();
+    assertEquals("!=", notEqualsExpression.operator().toString());
+    assertEquals(100, (int) ((TextQueryNumericExpression) notEqualsExpression.lhs()).asInteger());
+    assertEquals(1000, (int) ((TextQueryNumericExpression) notEqualsExpression.rhs()).asInteger());
+
+    TextQueryInfixExpression greaterThanOrEqualsExpression = (TextQueryInfixExpression) andExpression.rhs();
+    assertEquals(">=", greaterThanOrEqualsExpression.operator().toString());
+    assertEquals("something", ((TextQueryStringExpression) greaterThanOrEqualsExpression.lhs()).asString());
+
+    assertEquals("udf", ((TextQueryUdfExpression) greaterThanOrEqualsExpression.rhs()).functionName().toString());
+    assertEquals(0, ((TextQueryUdfExpression) greaterThanOrEqualsExpression.rhs()).parameterCount());
+  }
+
+  @Test
+  public void testComplexInfixExpression() {
     String statement = "select * from something where "
       + "left_function(first_inner(a.column) + second_inner(42 - 69), third_inner(x.y, y.x)) <= 'string value'";
 

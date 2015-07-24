@@ -56,9 +56,7 @@ public class TextQueryLexer {
     return tokens.get(index);
   }
 
-  public boolean isIncludingWhitespaces() {
-    return this.skipWhitespaces;
-  }
+  public boolean isSkippingWhiteSpaces() { return this.skipWhitespaces; }
 
   public void temporarilyIncludeWhitespaces() {
     this.whitespaceStateStack.push(this.skipWhitespaces);
