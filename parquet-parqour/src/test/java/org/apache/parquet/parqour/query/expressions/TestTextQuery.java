@@ -172,39 +172,4 @@ public class TestTextQuery {
     }
   }
 
-  @Test
-  public void testWhereExpression() {
-    for (String lhs : new String[] { "one", "two.three", "four", "five.six", "6", "10" }) {
-      for (String rhs : new String[] {"100", "four.five", "seven.eight.nine.ten", "some", "12", "10" }) {
-        for (String operator : new String[]{ "=", "!=", "<", ">", "<=", ">=" }) {
-          String statement = String.format("select * from something where %s %s %s", lhs, operator, rhs);
-          TextQueryLexer lexer = new TextQueryLexer(statement, true);
-          TextQueryTreeRootExpression rootExpression = new TextQueryTreeRootExpression(lexer);
-
-          TextQuerySelectStatementExpression selectStatement = rootExpression.asSelectStatement();
-          assertTrue(selectStatement.columnSet().containsWildcardColumn());
-
-          assertWhereIsLike(selectStatement.where(), lhs, operator, rhs);
-        }
-      }
-    }
-  }
-
-  public void assertWhereIsLike(TextQueryWhereExpression whereExpression, String lhs, String operator, String rhs) {
-    TextQueryInfixExpression infixExpression = (TextQueryInfixExpression) whereExpression.predicate();
-
-    assertEquals(getLexedTypeForString(lhs), infixExpression.lhs().type());
-    assertEquals(getLexedTypeForString(rhs), infixExpression.rhs().type());
-
-    assertEquals(lhs, infixExpression.lhs().toString());
-    assertEquals(operator, infixExpression.operator().toString());
-    assertEquals(rhs, infixExpression.rhs().toString());
-  }
-
-  public TextQueryExpressionType getLexedTypeForString(String string) {
-    if (Character.isAlphabetic(string.charAt(0))) return TextQueryExpressionType.NAMED_COLUMN;
-    if (Character.isDigit(string.charAt(0))) return TextQueryExpressionType.NUMERIC;
-
-    throw new NotImplementedException();
-  }
 }
