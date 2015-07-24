@@ -40,8 +40,8 @@ public class TextQueryStringExpression extends TextQueryVariableExpression {
       tokens.add(lexer.readCurrentAndAdvance());
     }
 
-    lexer.readCurrentAndAdvance(TextQueryExpressionType.PUNCTUATION, TextQueryPunctuationToken.SINGLE_QUOTE);
     lexer.revertToPreviousWhitespaceInclusionState();
+    lexer.readCurrentAndAdvance(TextQueryExpressionType.PUNCTUATION, TextQueryPunctuationToken.SINGLE_QUOTE);
     return tokens;
   }
 

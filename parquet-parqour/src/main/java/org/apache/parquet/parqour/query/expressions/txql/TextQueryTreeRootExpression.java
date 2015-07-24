@@ -23,11 +23,13 @@ public class TextQueryTreeRootExpression extends TextQueryExpression {
     .add(new TextQueryFromExpressionBacktrackRule());
 
   private final TextQueryCollection<TextQueryExpression> expressions;
+  private final String text;
 
   public TextQueryTreeRootExpression(TextQueryLexer lexer) {
     super(null, lexer, TextQueryExpressionType.ROOT);
 
     this.expressions = readExpressions(lexer);
+    this.text = lexer.text();
   }
 
   private TextQueryCollection<TextQueryExpression> readExpressions(TextQueryLexer lexer) {
@@ -97,6 +99,7 @@ public class TextQueryTreeRootExpression extends TextQueryExpression {
   public String toString() {
     return ROOT;
   }
+  public String text() { return this.text; }
 
   public static TextQueryTreeRootExpression fromString(String pql) {
     TextQueryLexer lexer = new TextQueryLexer(pql, true);

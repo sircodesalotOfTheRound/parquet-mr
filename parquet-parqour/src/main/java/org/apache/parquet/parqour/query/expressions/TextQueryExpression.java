@@ -1,6 +1,7 @@
 package org.apache.parquet.parqour.query.expressions;
 
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
+import org.apache.parquet.parqour.query.expressions.categories.TextQueryVariableExpression;
 import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
 import org.apache.parquet.parqour.query.tokens.TextQueryToken;
 import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
@@ -27,4 +28,8 @@ public abstract class TextQueryExpression extends TextQueryToken {
   }
 
   public abstract <TReturnType> TReturnType accept(TextQueryExpressionVisitor<TReturnType> visitor);
+
+  public void setParent(TextQueryVariableExpression parent) {
+    this.parent = parent;
+  }
 }

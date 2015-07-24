@@ -10,10 +10,10 @@ import java.util.List;
 /**
  * Created by sircodesalot on 15/4/2.
  */
-public class ParquelTokenList implements Iterable<TextQueryToken> {
+public class TextQueryTokenList implements Iterable<TextQueryToken> {
   private final List<TextQueryToken> tokens;
 
-  public ParquelTokenList(String statement) {
+  public TextQueryTokenList(String statement) {
     this.tokens = generateFromString(statement);
   }
 
@@ -39,6 +39,7 @@ public class ParquelTokenList implements Iterable<TextQueryToken> {
     } else if (stream.currentIsPunctuation()) {
       return TextQueryPunctuationToken.read(stream);
     } else if (stream.currentIsNumeric()) {
+      // TODO: Add support for negative and decimal numbers.
       return TextQueryNumericToken.read(stream);
     } else {
       // In practice, this should never be used.
