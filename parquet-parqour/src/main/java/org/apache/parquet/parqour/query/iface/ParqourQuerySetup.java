@@ -1,7 +1,7 @@
 package org.apache.parquet.parqour.query.iface;
 
 import org.apache.parquet.parqour.query.collections.OneToManyMap;
-import org.apache.parquet.parqour.query.expressions.pql.TextQueryTreeRootExpression;
+import org.apache.parquet.parqour.query.expressions.txql.TextQueryTreeRootExpression;
 import org.apache.parquet.parqour.query.udf.*;
 
 /**

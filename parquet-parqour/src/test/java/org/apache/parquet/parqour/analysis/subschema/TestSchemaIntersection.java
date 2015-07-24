@@ -2,8 +2,8 @@ package org.apache.parquet.parqour.analysis.subschema;
 
 import org.apache.parquet.parqour.ingest.read.iterator.lamba.Projection;
 import org.apache.parquet.parqour.ingest.schema.SchemaIntersection;
-import org.apache.parquet.parqour.query.expressions.column.TextQueryNamedColumnExpression;
-import org.apache.parquet.parqour.query.expressions.pql.TextQueryTreeRootExpression;
+import org.apache.parquet.parqour.query.expressions.variable.column.TextQueryNamedColumnExpression;
+import org.apache.parquet.parqour.query.expressions.txql.TextQueryTreeRootExpression;
 import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
 import org.apache.parquet.schema.GroupType;
 import org.apache.parquet.schema.MessageType;

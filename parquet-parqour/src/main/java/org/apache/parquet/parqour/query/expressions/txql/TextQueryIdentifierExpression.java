@@ -1,8 +1,8 @@
-package org.apache.parquet.parqour.query.expressions.pql;
+package org.apache.parquet.parqour.query.expressions.txql;
 
 import org.apache.parquet.parqour.exceptions.TextQueryException;
 import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
-import org.apache.parquet.parqour.query.expressions.categories.ParquelMemberExpression;
+import org.apache.parquet.parqour.query.expressions.categories.TextQueryMemberExpression;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
 import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
 import org.apache.parquet.parqour.query.tokens.TextQueryIdentifierToken;
@@ -11,7 +11,7 @@ import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
 /**
  * Created by sircodesalot on 15/4/2.
  */
-public class TextQueryIdentifierExpression extends TextQueryExpression implements ParquelMemberExpression {
+public class TextQueryIdentifierExpression extends TextQueryExpression implements TextQueryMemberExpression {
   private final TextQueryIdentifierToken identifier;
   //private final ParquelGenericParameterListExpression genericParameters;
   private final String representation;

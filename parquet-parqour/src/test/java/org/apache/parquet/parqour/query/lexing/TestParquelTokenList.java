@@ -1,6 +1,5 @@
-package org.apache.parquet.parqour.query.tokenization;
+package org.apache.parquet.parqour.query.lexing;
 
-import org.apache.parquet.parqour.query.lexing.ParquelTokenList;
 import org.apache.parquet.parqour.query.tokens.*;
 import org.junit.Test;
 

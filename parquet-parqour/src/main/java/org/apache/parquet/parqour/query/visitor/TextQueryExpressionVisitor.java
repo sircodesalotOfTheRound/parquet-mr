@@ -1,11 +1,11 @@
 package org.apache.parquet.parqour.query.visitor;
 
-import org.apache.parquet.parqour.query.expressions.column.TextQueryColumnSetExpression;
-import org.apache.parquet.parqour.query.expressions.column.TextQueryNamedColumnExpression;
-import org.apache.parquet.parqour.query.expressions.column.TextQueryWildcardExpression;
-import org.apache.parquet.parqour.query.expressions.pql.TextQuerySelectStatementExpression;
-import org.apache.parquet.parqour.query.expressions.pql.TextQueryTreeRootExpression;
-import org.apache.parquet.parqour.query.expressions.pql.TextQueryWhereExpression;
+import org.apache.parquet.parqour.query.expressions.variable.column.TextQueryColumnSetExpression;
+import org.apache.parquet.parqour.query.expressions.variable.column.TextQueryNamedColumnExpression;
+import org.apache.parquet.parqour.query.expressions.variable.column.TextQueryWildcardExpression;
+import org.apache.parquet.parqour.query.expressions.txql.TextQuerySelectStatementExpression;
+import org.apache.parquet.parqour.query.expressions.txql.TextQueryTreeRootExpression;
+import org.apache.parquet.parqour.query.expressions.txql.TextQueryWhereExpression;
 
 /**
  * Created by sircodesalot on 6/27/15.

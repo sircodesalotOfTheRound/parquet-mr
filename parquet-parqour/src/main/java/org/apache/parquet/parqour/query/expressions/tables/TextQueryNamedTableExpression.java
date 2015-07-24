@@ -3,7 +3,7 @@ package org.apache.parquet.parqour.query.expressions.tables;
 import org.apache.parquet.parqour.exceptions.TextQueryException;
 import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
-import org.apache.parquet.parqour.query.expressions.pql.TextQueryFullyQualifiedNameExpression;
+import org.apache.parquet.parqour.query.expressions.txql.TextQueryFullyQualifiedNameExpression;
 import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
 import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
 

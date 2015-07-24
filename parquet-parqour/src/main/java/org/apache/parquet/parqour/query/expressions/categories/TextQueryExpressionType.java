@@ -31,4 +31,5 @@ public enum TextQueryExpressionType {
   PUNCTUATION,
 
   NUMERIC,
+  UDF
 }

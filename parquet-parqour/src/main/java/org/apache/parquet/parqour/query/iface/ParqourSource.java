@@ -1,6 +1,6 @@
 package org.apache.parquet.parqour.query.iface;
 
-import org.apache.parquet.parqour.query.expressions.pql.TextQueryTreeRootExpression;
+import org.apache.parquet.parqour.query.expressions.txql.TextQueryTreeRootExpression;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**

@@ -1,16 +1,16 @@
-package org.apache.parquet.parqour.query.expressions.pql;
+package org.apache.parquet.parqour.query.expressions.txql;
 
 import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
-import org.apache.parquet.parqour.query.expressions.categories.ParquelStatementExpression;
+import org.apache.parquet.parqour.query.expressions.categories.TextQueryStatementExpression;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
-import org.apache.parquet.parqour.query.expressions.column.TextQueryColumnSetExpression;
+import org.apache.parquet.parqour.query.expressions.variable.column.TextQueryColumnSetExpression;
 import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
 import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
 
 /**
  * Created by sircodesalot on 15/4/2.
  */
-public class TextQuerySelectStatementExpression extends TextQueryKeywordExpression implements ParquelStatementExpression {
+public class TextQuerySelectStatementExpression extends TextQueryKeywordExpression implements TextQueryStatementExpression {
   private final TextQueryColumnSetExpression columns;
   private final TextQueryFromExpression from;
   private final TextQueryWhereExpression where;

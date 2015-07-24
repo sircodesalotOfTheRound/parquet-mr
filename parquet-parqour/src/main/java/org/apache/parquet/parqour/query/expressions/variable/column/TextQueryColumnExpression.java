@@ -1,4 +1,4 @@
-package org.apache.parquet.parqour.query.expressions.column;
+package org.apache.parquet.parqour.query.expressions.variable.column;
 
 import org.apache.parquet.parqour.query.backtracking.interfaces.TextQueryBacktrackingRuleSet;
 import org.apache.parquet.parqour.query.backtracking.rules.TextQueryNamedColumnExpressionBacktrackRule;

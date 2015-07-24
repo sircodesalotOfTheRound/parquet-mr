@@ -5,7 +5,7 @@ import org.apache.parquet.parqour.ingest.read.iterator.lamba.Predicate;
 import org.apache.parquet.parqour.ingest.read.iterator.lamba.Projection;
 import org.apache.parquet.parqour.ingest.read.iterator.paging.ParqourPageset;
 import org.apache.parquet.parqour.materialization.lambda.LambdaMaterializer;
-import org.apache.parquet.parqour.query.expressions.pql.TextQueryTreeRootExpression;
+import org.apache.parquet.parqour.query.expressions.txql.TextQueryTreeRootExpression;
 import org.apache.parquet.parqour.query.iface.ParqourQuery;
 import org.apache.parquet.parqour.query.iface.ParqourQuerySetup;
 import org.apache.parquet.parqour.query.udf.SingleParameterUdf;

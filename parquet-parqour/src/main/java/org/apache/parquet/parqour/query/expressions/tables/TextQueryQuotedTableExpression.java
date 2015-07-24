@@ -24,18 +24,6 @@ public class TextQueryQuotedTableExpression extends TextQueryTableExpression {
     this.expressionAsString = convertExpressionToString(expressionTokens);
   }
 
-
-  /*
-  @Override
-  public void accept(ParquelNoReturnVisitor visitor) {
-    visitor.visit(this);
-  }
-
-  @Override
-  public ParquelCollection<ParquelExpression> children() {
-    return new ParquelAppendableCollection<ParquelExpression>(fqn);
-  }*/
-
   private void validateLexing(TextQueryExpression parent, TextQueryLexer lexer) {
     if (!lexer.currentIs(TextQueryExpressionType.PUNCTUATION, TextQueryPunctuationToken.SINGLE_QUOTE)) {
       throw new TextQueryException("Named table expressions must start with a single quote.");

@@ -1,4 +1,4 @@
-package org.apache.parquet.parqour.query.expressions.pql;
+package org.apache.parquet.parqour.query.expressions.txql;
 
 import org.apache.parquet.parqour.ingest.read.iterator.lamba.Predicate;
 import org.apache.parquet.parqour.query.backtracking.rules.TextQuerySelectStatementBacktrackRule;

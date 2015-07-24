@@ -1,7 +1,7 @@
-package org.apache.parquet.parqour.query.expressions.column;
+package org.apache.parquet.parqour.query.expressions.variable.column;
 
 import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
-import org.apache.parquet.parqour.query.expressions.categories.ParquelMemberExpression;
+import org.apache.parquet.parqour.query.expressions.categories.TextQueryMemberExpression;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
 import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
 import org.apache.parquet.parqour.query.tokens.TextQueryPunctuationToken;
@@ -11,7 +11,7 @@ import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
 /**
  * Created by sircodesalot on 15/4/2.
  */
-public class TextQueryWildcardExpression extends TextQueryColumnExpression implements ParquelMemberExpression {
+public class TextQueryWildcardExpression extends TextQueryColumnExpression implements TextQueryMemberExpression {
   public TextQueryToken token;
 
   public TextQueryWildcardExpression(TextQueryExpression parent, TextQueryLexer lexer) {

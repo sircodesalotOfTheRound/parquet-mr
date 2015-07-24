@@ -4,7 +4,7 @@ import org.apache.parquet.hadoop.metadata.ParquetMetadata;
 import org.apache.parquet.parqour.ingest.cursor.iface.Cursor;
 import org.apache.parquet.parqour.ingest.read.iterator.ParqourRecordset;
 import org.apache.parquet.parqour.ingest.schema.SchemaInfo;
-import org.apache.parquet.parqour.query.expressions.pql.TextQueryTreeRootExpression;
+import org.apache.parquet.parqour.query.expressions.txql.TextQueryTreeRootExpression;
 
 import java.util.Iterator;
 

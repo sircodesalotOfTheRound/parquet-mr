@@ -1,7 +1,6 @@
-package org.apache.parquet.parqour.query.tokenization;
+package org.apache.parquet.parqour.query.lexing;
 
 import org.apache.parquet.parqour.exceptions.TextQueryException;
-import org.apache.parquet.parqour.query.lexing.ParquelCharacterStream;
 import org.junit.Test;
 
 import java.util.HashMap;

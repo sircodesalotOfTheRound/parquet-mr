@@ -1,7 +1,7 @@
 package org.apache.parquet.parqour.query.columns;
 
 import org.apache.parquet.parqour.ingest.schema.SchemaIntersection;
-import org.apache.parquet.parqour.query.expressions.pql.TextQueryTreeRootExpression;
+import org.apache.parquet.parqour.query.expressions.txql.TextQueryTreeRootExpression;
 import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
 import org.apache.parquet.parqour.query.visitor.TextQueryColumnCollectingVisitor;
 import org.apache.parquet.schema.GroupType;

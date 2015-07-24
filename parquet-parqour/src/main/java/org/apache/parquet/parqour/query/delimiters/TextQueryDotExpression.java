@@ -1,7 +1,7 @@
 package org.apache.parquet.parqour.query.delimiters;
 
 import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
-import org.apache.parquet.parqour.query.expressions.categories.ParquelDelimiterExpression;
+import org.apache.parquet.parqour.query.expressions.categories.TextQueryDelimiterExpression;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
 import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
 import org.apache.parquet.parqour.query.tokens.TextQueryPunctuationToken;
@@ -10,7 +10,7 @@ import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
 /**
  * Created by sircodesalot on 15/4/9.
  */
-public class TextQueryDotExpression extends TextQueryExpression implements ParquelDelimiterExpression {
+public class TextQueryDotExpression extends TextQueryExpression implements TextQueryDelimiterExpression {
   private final TextQueryPunctuationToken dot;
 
   public TextQueryDotExpression(TextQueryExpression parent, TextQueryLexer lexer) {

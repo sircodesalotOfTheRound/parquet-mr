@@ -1,7 +1,7 @@
-package org.apache.parquet.parqour.query.expressions.pql;
+package org.apache.parquet.parqour.query.expressions.txql;
 
 import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
-import org.apache.parquet.parqour.query.expressions.categories.ParquelStatementExpression;
+import org.apache.parquet.parqour.query.expressions.categories.TextQueryStatementExpression;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
 import org.apache.parquet.parqour.query.expressions.tables.TextQueryTableSetExpression;
 import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
@@ -10,7 +10,7 @@ import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
 /**
  * Created by sircodesalot on 15/4/2.
  */
-public class TextQueryFromExpression extends TextQueryKeywordExpression implements ParquelStatementExpression {
+public class TextQueryFromExpression extends TextQueryKeywordExpression implements TextQueryStatementExpression {
   private final TextQueryTableSetExpression tableSet;
 
   public TextQueryFromExpression(TextQueryExpression parent, TextQueryLexer lexer) {
