@@ -5,8 +5,8 @@ import org.apache.parquet.parqour.query.backtracking.rules.*;
 import org.apache.parquet.parqour.query.collections.TextQueryAppendableCollection;
 import org.apache.parquet.parqour.query.collections.TextQueryCollection;
 import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
-import org.apache.parquet.parqour.query.expressions.infix.TextQueryInfixExpression;
-import org.apache.parquet.parqour.query.expressions.infix.TextQueryInfixTokens;
+import org.apache.parquet.parqour.query.expressions.variable.infix.TextQueryInfixExpression;
+import org.apache.parquet.parqour.query.expressions.variable.infix.TextQueryInfixTokens;
 import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
 import org.apache.parquet.parqour.query.tokens.TextQueryPunctuationToken;
 import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
@@ -16,6 +16,7 @@ import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
  */
 public abstract class TextQueryVariableExpression extends TextQueryExpression {
   private static final TextQueryBacktrackingRuleSet<TextQueryVariableExpression> rules = new TextQueryBacktrackingRuleSet<TextQueryVariableExpression>()
+    .add(new TextQueryParentheticalExpressionBacktrackRule())
     .add(new TextQueryUdfExpressionBacktrackRule())
     .add(new TextQueryNumericExpressionBacktrackRule())
     .add(new TextQueryNamedColumnExpressionBacktrackRule())

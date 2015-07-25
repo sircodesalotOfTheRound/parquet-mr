@@ -13,7 +13,7 @@ public class TestParquelTokenList {
   @Test
   public void testTokenization() {
     Map<Class, Integer> tokensCounts = new HashMap<Class, Integer>();
-    ParquelTokenList tokens = new ParquelTokenList("select 1, second.third from table1, where name = 'smith'");
+    TextQueryTokenList tokens = new TextQueryTokenList("select 1, second.third from table1, where name = 'smith'");
 
     for (TextQueryToken token : tokens) {
       Class tokenType = token.getClass();

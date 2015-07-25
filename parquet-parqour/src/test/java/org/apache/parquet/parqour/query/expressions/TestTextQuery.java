@@ -7,16 +7,13 @@ import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressi
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryVariableExpression;
 import org.apache.parquet.parqour.query.expressions.variable.column.TextQueryNamedColumnExpression;
 import org.apache.parquet.parqour.query.expressions.variable.column.TextQueryWildcardExpression;
-import org.apache.parquet.parqour.query.expressions.infix.TextQueryInfixExpression;
 import org.apache.parquet.parqour.query.expressions.txql.TextQueryFullyQualifiedNameExpression;
 import org.apache.parquet.parqour.query.expressions.txql.TextQuerySelectStatementExpression;
 import org.apache.parquet.parqour.query.expressions.txql.TextQueryTreeRootExpression;
-import org.apache.parquet.parqour.query.expressions.txql.TextQueryWhereExpression;
 import org.apache.parquet.parqour.query.expressions.tables.TextQueryNamedTableExpression;
 import org.apache.parquet.parqour.query.expressions.tables.TextQueryStringExpression;
 import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
 import org.junit.Test;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.HashSet;
 import java.util.Set;

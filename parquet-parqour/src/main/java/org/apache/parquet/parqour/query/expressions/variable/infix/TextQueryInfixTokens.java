@@ -1,4 +1,4 @@
-package org.apache.parquet.parqour.query.expressions.infix;
+package org.apache.parquet.parqour.query.expressions.variable.infix;
 
 import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
 import org.apache.parquet.parqour.query.tokens.TextQueryPunctuationToken;

@@ -1,8 +1,7 @@
 package org.apache.parquet.parqour.query.expressions;
 
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
-import org.apache.parquet.parqour.query.expressions.categories.TextQueryVariableExpression;
-import org.apache.parquet.parqour.query.expressions.infix.TextQueryInfixExpression;
+import org.apache.parquet.parqour.query.expressions.variable.infix.TextQueryInfixExpression;
 import org.apache.parquet.parqour.query.expressions.tables.TextQueryStringExpression;
 import org.apache.parquet.parqour.query.expressions.txql.TextQueryNumericExpression;
 import org.apache.parquet.parqour.query.expressions.txql.TextQuerySelectStatementExpression;
@@ -20,7 +19,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * Created by sircodesalot on 7/24/15.
  */
-public class TextInfixExpressions {
+public class TestInfixExpressions {
   @Test
   public void testVariableWhereExpression() {
     for (String lhs : new String[]{"one", "two.three", "four", "five.six", "6", "10"}) {

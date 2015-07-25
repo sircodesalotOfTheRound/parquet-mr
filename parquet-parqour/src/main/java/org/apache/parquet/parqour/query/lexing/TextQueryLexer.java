@@ -12,7 +12,7 @@ import java.util.Stack;
  */
 public class TextQueryLexer {
   private final String text;
-  private final ParquelTokenList tokens;
+  private final TextQueryTokenList tokens;
   private boolean skipWhitespaces;
   private int currentIndex;
   private Stack<Integer> undoStack;
@@ -21,7 +21,7 @@ public class TextQueryLexer {
   public TextQueryLexer(String text, boolean skipWhitespacesByDefault) {
     this.text = text;
     this.skipWhitespaces = skipWhitespacesByDefault;
-    this.tokens = new ParquelTokenList(text);
+    this.tokens = new TextQueryTokenList(text);
     this.undoStack = new Stack<Integer>();
     this.whitespaceStateStack = new Stack<Boolean>();
   }

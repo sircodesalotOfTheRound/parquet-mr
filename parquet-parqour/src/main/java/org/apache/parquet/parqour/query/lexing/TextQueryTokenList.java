@@ -10,10 +10,10 @@ import java.util.List;
 /**
  * Created by sircodesalot on 15/4/2.
  */
-public class ParquelTokenList implements Iterable<TextQueryToken> {
+public class TextQueryTokenList implements Iterable<TextQueryToken> {
   private final List<TextQueryToken> tokens;
 
-  public ParquelTokenList(String statement) {
+  public TextQueryTokenList(String statement) {
     this.tokens = generateFromString(statement);
   }
 
