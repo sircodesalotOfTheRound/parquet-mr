@@ -14,19 +14,19 @@ import java.util.Map;
 public enum InfixOperator {
   AND("and", 1),
   OR("or", 1),
-  PLUS(TextQueryPunctuationToken.PLUS, 1),
-  MINUS(TextQueryPunctuationToken.MINUS, 1),
-  MULTIPLY(TextQueryPunctuationToken.MULTIPLY, 1),
-  DIVIDE(TextQueryPunctuationToken.DIVIDE, 1),
-  EQUALS(TextQueryPunctuationToken.EQUALS, 1),
-  NOT_EQUALS(TextQueryPunctuationToken.NOT_EQUALS, 1),
-  LESS_THAN(TextQueryPunctuationToken.LESS_THAN, 1),
-  LESS_THAN_OR_EQUALS(TextQueryPunctuationToken.LESS_THAN_OR_EQUALS, 1),
-  GREATER_THAN(TextQueryPunctuationToken.GREATER_THAN, 1),
-  GREATER_THAN_OR_EQUALS(TextQueryPunctuationToken.GREATER_THAN_OR_EQUALS, 1);
+  PLUS(TextQueryPunctuationToken.PLUS, 3),
+  MINUS(TextQueryPunctuationToken.MINUS, 3),
+  MULTIPLY(TextQueryPunctuationToken.MULTIPLY, 4),
+  DIVIDE(TextQueryPunctuationToken.DIVIDE, 4),
+  EQUALS(TextQueryPunctuationToken.EQUALS, 2),
+  NOT_EQUALS(TextQueryPunctuationToken.NOT_EQUALS, 2),
+  LESS_THAN(TextQueryPunctuationToken.LESS_THAN, 2),
+  LESS_THAN_OR_EQUALS(TextQueryPunctuationToken.LESS_THAN_OR_EQUALS, 2),
+  GREATER_THAN(TextQueryPunctuationToken.GREATER_THAN, 2),
+  GREATER_THAN_OR_EQUALS(TextQueryPunctuationToken.GREATER_THAN_OR_EQUALS, 2);
 
   private final String representation;
-  private final int precedence;
+  private final Integer precedence;
 
   InfixOperator(String representation, int precedence) {
     this.representation = representation;
@@ -82,5 +82,9 @@ public enum InfixOperator {
     } else {
       throw new TextQueryException("Invalid token for infix expression");
     }
+  }
+
+  public int comparePrecedenceTo(InfixOperator rhs) {
+    return this.precedence.compareTo(rhs.precedence);
   }
 }
