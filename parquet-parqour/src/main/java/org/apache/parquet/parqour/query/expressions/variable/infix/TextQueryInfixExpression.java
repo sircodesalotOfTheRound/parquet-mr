@@ -14,7 +14,7 @@ import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
 public class TextQueryInfixExpression extends TextQueryVariableExpression {
   private TextQueryExpression lhs;
   private TextQueryExpression rhs;
-  private final TextQueryToken operationToken;
+  private final InfixOperator operationToken;
 
   private TextQueryInfixExpression(TextQueryExpression parent, TextQueryLexer lexer) {
     super(parent, lexer, TextQueryExpressionType.INFIX);
@@ -36,12 +36,8 @@ public class TextQueryInfixExpression extends TextQueryVariableExpression {
     return TextQueryVariableExpression.readIgnoringInfixExpressions(this, lexer);
   }
 
-  private TextQueryToken readOperationToken(TextQueryLexer lexer) {
-    if (TextQueryInfixTokens.isInfixToken(lexer)) {
-      return lexer.readCurrentAndAdvance();
-    } else {
-      throw new TextQueryException("Invalid token for infix expression");
-    }
+  private InfixOperator readOperationToken(TextQueryLexer lexer) {
+    return InfixOperator.readInfixOperator(lexer);
   }
 
   private TextQueryExpression readRhs(TextQueryLexer lexer) {
@@ -54,12 +50,12 @@ public class TextQueryInfixExpression extends TextQueryVariableExpression {
 
   public TextQueryExpression lhs() { return this.lhs; }
   public TextQueryExpression rhs() { return this.rhs; }
-  public TextQueryToken operator() { return this.operationToken; }
+  public InfixOperator operator() { return this.operationToken; }
 
   public static TextQueryInfixExpression read(TextQueryExpression parent, TextQueryLexer lexer) {
     TextQueryInfixExpression infixExpression = new TextQueryInfixExpression(parent, lexer);
 
-    if (TextQueryInfixTokens.isInfixToken(lexer)) {
+    if (InfixOperator.isInfixToken(lexer)) {
       return new TextQueryInfixExpression(parent, infixExpression, lexer);
     } else {
       return infixExpression;

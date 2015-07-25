@@ -1,16 +1,17 @@
 package org.apache.parquet.parqour.query.expressions.variable.infix;
 
+import org.apache.parquet.parqour.exceptions.TextQueryException;
 import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
 import org.apache.parquet.parqour.query.tokens.TextQueryPunctuationToken;
 import org.apache.parquet.parqour.query.tokens.TextQueryToken;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by sircodesalot on 7/24/15.
  */
-public enum TextQueryInfixTokens {
+public enum InfixOperator {
   AND("and", 1),
   OR("or", 1),
   PLUS(TextQueryPunctuationToken.PLUS, 1),
@@ -27,30 +28,30 @@ public enum TextQueryInfixTokens {
   private final String representation;
   private final int precedence;
 
-  TextQueryInfixTokens(String representation, int precedence) {
+  InfixOperator(String representation, int precedence) {
     this.representation = representation;
     this.precedence = precedence;
   }
 
-  private static Set<String> tokens = generateTokens();
+  private static Map<String, InfixOperator> operators = generateTokens();
 
-  private static Set<String> generateTokens() {
-    Set<String> tokens = new HashSet<String>();
-    tokens.add(AND.toString());
-    tokens.add(OR.toString());
+  private static Map<String, InfixOperator> generateTokens() {
+    Map<String, InfixOperator> operators = new HashMap<String, InfixOperator>();
+    operators.put(AND.toString(), AND);
+    operators.put(OR.toString(), OR);
 
-    tokens.add(PLUS.toString());
-    tokens.add(MINUS.toString());
-    tokens.add(MULTIPLY.toString());
-    tokens.add(DIVIDE.toString());
-    tokens.add(EQUALS.toString());
-    tokens.add(NOT_EQUALS.toString());
-    tokens.add(LESS_THAN.toString());
-    tokens.add(LESS_THAN_OR_EQUALS.toString());
-    tokens.add(GREATER_THAN.toString());
-    tokens.add(GREATER_THAN_OR_EQUALS.toString());
+    operators.put(PLUS.toString(), PLUS);
+    operators.put(MINUS.toString(), MINUS);
+    operators.put(MULTIPLY.toString(), MULTIPLY);
+    operators.put(DIVIDE.toString(), DIVIDE);
+    operators.put(EQUALS.toString(), EQUALS);
+    operators.put(NOT_EQUALS.toString(), NOT_EQUALS);
+    operators.put(LESS_THAN.toString(), LESS_THAN);
+    operators.put(LESS_THAN_OR_EQUALS.toString(), LESS_THAN_OR_EQUALS);
+    operators.put(GREATER_THAN.toString(), GREATER_THAN);
+    operators.put(GREATER_THAN_OR_EQUALS.toString(), GREATER_THAN_OR_EQUALS);
 
-    return tokens;
+    return operators;
   }
 
   public int precedence() { return this.precedence; }
@@ -59,7 +60,7 @@ public enum TextQueryInfixTokens {
   public String toString() { return this.representation; }
 
   public static boolean isInfixToken(String token) {
-    return tokens.contains(token.toLowerCase());
+    return operators.containsKey(token.toLowerCase());
   }
 
   public static boolean isInfixToken(TextQueryToken token) {
@@ -72,5 +73,14 @@ public enum TextQueryInfixTokens {
     }
 
     return false;
+  }
+
+  public static InfixOperator readInfixOperator(TextQueryLexer lexer) {
+    if (InfixOperator.isInfixToken(lexer)) {
+      TextQueryToken token = lexer.readCurrentAndAdvance();
+      return operators.get(token.toString());
+    } else {
+      throw new TextQueryException("Invalid token for infix expression");
+    }
   }
 }

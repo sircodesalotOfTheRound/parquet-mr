@@ -10,6 +10,7 @@ import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
 import org.apache.parquet.parqour.query.expressions.variable.column.TextQueryColumnExpression;
 import org.apache.parquet.parqour.query.expressions.variable.column.TextQueryNamedColumnExpression;
+import org.apache.parquet.parqour.query.expressions.variable.infix.InfixOperator;
 import org.apache.parquet.parqour.query.expressions.variable.infix.TextQueryInfixExpression;
 import org.apache.parquet.parqour.query.expressions.txql.TextQueryNumericExpression;
 import org.apache.parquet.parqour.query.expressions.txql.TextQueryWhereExpression;
@@ -79,8 +80,8 @@ public class InfixPredicateCollectingVisitor extends TextQueryExpressionVisitor<
     return numericExpression.asInteger();
   }
 
-  private FilterPredicate generatePredicateFromBinaryExpression(TextQueryToken operator, Operators.Column column, Integer comparisonValue) {
-    if (operator.is(TextQueryExpressionType.PUNCTUATION, TextQueryPunctuationToken.EQUALS)) {
+  private FilterPredicate generatePredicateFromBinaryExpression(InfixOperator operator, Operators.Column column, Integer comparisonValue) {
+    if (operator == InfixOperator.EQUALS) {
       return FilterApi.eq((Operators.IntColumn)column, comparisonValue);
     }
 

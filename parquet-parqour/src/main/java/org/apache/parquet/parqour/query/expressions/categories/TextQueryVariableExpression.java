@@ -6,7 +6,7 @@ import org.apache.parquet.parqour.query.collections.TextQueryAppendableCollectio
 import org.apache.parquet.parqour.query.collections.TextQueryCollection;
 import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
 import org.apache.parquet.parqour.query.expressions.variable.infix.TextQueryInfixExpression;
-import org.apache.parquet.parqour.query.expressions.variable.infix.TextQueryInfixTokens;
+import org.apache.parquet.parqour.query.expressions.variable.infix.InfixOperator;
 import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
 import org.apache.parquet.parqour.query.tokens.TextQueryPunctuationToken;
 import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
@@ -44,7 +44,7 @@ public abstract class TextQueryVariableExpression extends TextQueryExpression {
     lexer.setUndoPoint();
     TextQueryVariableExpression variableExpression = rules.read(parent, lexer);
 
-    if (TextQueryInfixTokens.isInfixToken(lexer)) {
+    if (InfixOperator.isInfixToken(lexer)) {
       lexer.rollbackToUndoPoint();
       return TextQueryInfixExpression.read(parent, lexer);
     } else {
