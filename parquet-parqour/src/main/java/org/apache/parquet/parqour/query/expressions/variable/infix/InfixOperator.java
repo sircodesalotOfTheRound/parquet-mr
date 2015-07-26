@@ -12,6 +12,7 @@ import java.util.Map;
  * Created by sircodesalot on 7/24/15.
  */
 public enum InfixOperator {
+  AS("as", 0),
   AND("and", 1),
   OR("or", 1),
   PLUS(TextQueryPunctuationToken.PLUS, 3),
@@ -38,20 +39,9 @@ public enum InfixOperator {
 
   private static Map<String, InfixOperator> generateTokens() {
     Map<String, InfixOperator> operators = new HashMap<String, InfixOperator>();
-    operators.put(AND.toString(), AND);
-    operators.put(OR.toString(), OR);
-
-    operators.put(PLUS.toString(), PLUS);
-    operators.put(MINUS.toString(), MINUS);
-    operators.put(MULTIPLY.toString(), MULTIPLY);
-    operators.put(DIVIDE.toString(), DIVIDE);
-    operators.put(MODULO.toString(), MODULO);
-    operators.put(EQUALS.toString(), EQUALS);
-    operators.put(NOT_EQUALS.toString(), NOT_EQUALS);
-    operators.put(LESS_THAN.toString(), LESS_THAN);
-    operators.put(LESS_THAN_OR_EQUALS.toString(), LESS_THAN_OR_EQUALS);
-    operators.put(GREATER_THAN.toString(), GREATER_THAN);
-    operators.put(GREATER_THAN_OR_EQUALS.toString(), GREATER_THAN_OR_EQUALS);
+    for (InfixOperator value : InfixOperator.values()) {
+      operators.put(value.toString(), value);
+    }
 
     return operators;
   }

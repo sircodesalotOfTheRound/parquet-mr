@@ -16,7 +16,6 @@ import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
  * Created by sircodesalot on 15/4/2.
  */
 public class TextQueryTreeRootExpression extends TextQueryExpression {
-  private static final String ROOT = "(ROOT)";
   private static final TextQueryBacktrackingRuleSet<TextQueryExpression> rules = new TextQueryBacktrackingRuleSet<TextQueryExpression>()
     .add(new TextQueryFullyQualifiedNameExpressionBacktrackRule())
     .add(new TextQuerySelectStatementBacktrackRule())
@@ -97,8 +96,9 @@ public class TextQueryTreeRootExpression extends TextQueryExpression {
 
   @Override
   public String toString() {
-    return ROOT;
+    return this.text;
   }
+
   public String text() { return this.text; }
 
   public static TextQueryTreeRootExpression fromString(String pql) {
