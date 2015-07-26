@@ -5,6 +5,7 @@ import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressi
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryVariableExpression;
 import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
 import org.apache.parquet.parqour.query.tokens.TextQueryPunctuationToken;
+import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
 
 /**
  * Created by sircodesalot on 7/25/15.
@@ -32,5 +33,10 @@ public class TextQueryParentheticalExpression extends TextQueryVariableExpressio
 
   public static TextQueryParentheticalExpression read(TextQueryExpression parent, TextQueryLexer lexer) {
     return new TextQueryParentheticalExpression(parent, lexer);
+  }
+
+  @Override
+  public <TReturnType> TReturnType accept(TextQueryExpressionVisitor<TReturnType> visitor) {
+    return visitor.visit(this);
   }
 }

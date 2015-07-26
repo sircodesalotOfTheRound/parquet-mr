@@ -7,6 +7,7 @@ import org.apache.parquet.parqour.query.expressions.categories.TextQueryVariable
 import org.apache.parquet.parqour.query.expressions.txql.TextQueryFullyQualifiedNameExpression;
 import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
 import org.apache.parquet.parqour.query.tokens.TextQueryPunctuationToken;
+import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
 
 /**
  * Created by sircodesalot on 7/24/15.
@@ -48,5 +49,10 @@ public class TextQueryUdfExpression extends TextQueryVariableExpression {
 
   public TextQueryCollection<TextQueryVariableExpression> parameters() {
     return this.parameters;
+  }
+
+  @Override
+  public <TReturnType> TReturnType accept(TextQueryExpressionVisitor<TReturnType> visitor) {
+    return visitor.visit(this);
   }
 }

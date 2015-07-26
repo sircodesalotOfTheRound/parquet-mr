@@ -97,6 +97,22 @@ public class TestColumnCollection {
     assertEquals(shouldBeSchema, subSchema);
   }
 
+  @Test
+  public void testOwnerAndPhoneNumberInUDF() {
+    TextQueryColumnCollectingVisitor columnSet
+      = createColumnCollectorFromString("select udf(owner) where function(contacts.phoneNumber)");
+
+    SchemaIntersection intersection = new SchemaIntersection(CONTACTS_SCHEMA, columnSet.columns());
+    GroupType subSchema = intersection.subSchema();
+
+    MessageType shouldBeSchema = new MessageType("AddressBook",
+      new PrimitiveType(REQUIRED, BINARY, "owner"),
+      new GroupType(REQUIRED, "contacts",
+        new PrimitiveType(REQUIRED, BINARY, "phoneNumber")));
+
+    assertEquals(shouldBeSchema, subSchema);
+  }
+
   private TextQueryColumnCollectingVisitor createColumnCollectorFromString(String expression) {
     TextQueryLexer lexer = new TextQueryLexer(expression, true);
     TextQueryTreeRootExpression rootExpression = new TextQueryTreeRootExpression(lexer);

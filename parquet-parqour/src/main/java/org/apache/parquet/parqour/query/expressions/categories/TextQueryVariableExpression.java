@@ -27,11 +27,6 @@ public abstract class TextQueryVariableExpression extends TextQueryExpression {
     super(parent, lexer, type);
   }
 
-  @Override
-  public <TReturnType> TReturnType accept(TextQueryExpressionVisitor<TReturnType> visitor) {
-    return null;
-  }
-
   public static boolean canParse(TextQueryExpression parent, TextQueryLexer lexer) {
     return rules.canParse(parent, lexer);
   }

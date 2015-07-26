@@ -4,12 +4,14 @@ import org.apache.parquet.parqour.ingest.read.iterator.lamba.Projection;
 import org.apache.parquet.parqour.query.collections.TextQueryAppendableCollection;
 import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryVariableExpression;
+import org.apache.parquet.parqour.query.expressions.variable.TextQueryUdfExpression;
 import org.apache.parquet.parqour.query.expressions.variable.column.TextQueryColumnSetExpression;
 import org.apache.parquet.parqour.query.expressions.variable.column.TextQueryNamedColumnExpression;
 import org.apache.parquet.parqour.query.expressions.variable.column.TextQueryWildcardExpression;
 import org.apache.parquet.parqour.query.expressions.txql.TextQuerySelectStatementExpression;
 import org.apache.parquet.parqour.query.expressions.txql.TextQueryTreeRootExpression;
 import org.apache.parquet.parqour.query.expressions.txql.TextQueryWhereExpression;
+import org.apache.parquet.parqour.query.expressions.variable.parenthetical.TextQueryParentheticalExpression;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,6 +82,22 @@ public class TextQueryColumnCollectingVisitor extends TextQueryExpressionVisitor
   @Override
   public Iterable<TextQueryNamedColumnExpression> visit(TextQueryWhereExpression whereExpression) {
     whereExpression.predicate().accept(this);
+    return null;
+  }
+
+  @Override
+  public Iterable<TextQueryNamedColumnExpression> visit(TextQueryParentheticalExpression parentheticalExpression) {
+    parentheticalExpression.innerExpression().accept(this);
+
+    return null;
+  }
+
+  @Override
+  public Iterable<TextQueryNamedColumnExpression> visit(TextQueryUdfExpression udfExpression) {
+    for (TextQueryVariableExpression variableExpression : udfExpression.parameters()) {
+      variableExpression.accept(this);
+    }
+
     return null;
   }
 
