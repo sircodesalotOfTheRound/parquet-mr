@@ -12,6 +12,7 @@ import org.junit.Test;
 
 import static org.apache.parquet.parqour.testtools.TestTools.CONTACTS_SCHEMA;
 import static org.apache.parquet.schema.PrimitiveType.PrimitiveTypeName.BINARY;
+import static org.apache.parquet.schema.Type.Repetition.REPEATED;
 import static org.apache.parquet.schema.Type.Repetition.REQUIRED;
 import static org.junit.Assert.assertEquals;
 
@@ -38,7 +39,7 @@ public class TestSchemaIntersection {
     GroupType subSchema = intersection.subSchema();
 
     MessageType shouldBeSchema = new MessageType("AddressBook",
-      new GroupType(REQUIRED, "contacts",
+      new GroupType(REPEATED, "contacts",
         new PrimitiveType(REQUIRED, BINARY, "name"),
         new PrimitiveType(REQUIRED, BINARY, "phoneNumber")));
 
@@ -52,8 +53,8 @@ public class TestSchemaIntersection {
     GroupType subSchema = intersection.subSchema();
 
     MessageType shouldBeSchema = new MessageType("AddressBook",
-      new PrimitiveType(REQUIRED, BINARY, "ownerPhoneNumbers"),
-      new GroupType(REQUIRED, "contacts",
+      new PrimitiveType(REPEATED, BINARY, "ownerPhoneNumbers"),
+      new GroupType(REPEATED, "contacts",
         new PrimitiveType(REQUIRED, BINARY, "phoneNumber")));
 
     assertEquals(shouldBeSchema, subSchema);
@@ -67,7 +68,7 @@ public class TestSchemaIntersection {
 
     MessageType shouldBeSchema = new MessageType("AddressBook",
       new PrimitiveType(REQUIRED, BINARY, "owner"),
-      new GroupType(REQUIRED, "contacts",
+      new GroupType(REPEATED, "contacts",
         new PrimitiveType(REQUIRED, BINARY, "name")));
 
     assertEquals(shouldBeSchema, subSchema);
@@ -92,7 +93,7 @@ public class TestSchemaIntersection {
     GroupType subSchema = intersection.subSchema();
 
     MessageType shouldBeSchema = new MessageType("AddressBook",
-      new GroupType(REQUIRED, "contacts",
+      new GroupType(REPEATED, "contacts",
         new PrimitiveType(REQUIRED, BINARY, "name"),
         new PrimitiveType(REQUIRED, BINARY, "phoneNumber")));
 
@@ -106,8 +107,8 @@ public class TestSchemaIntersection {
     GroupType subSchema = intersection.subSchema();
 
     MessageType shouldBeSchema = new MessageType("AddressBook",
-      new PrimitiveType(REQUIRED, BINARY, "ownerPhoneNumbers"),
-      new GroupType(REQUIRED, "contacts",
+      new PrimitiveType(REPEATED, BINARY, "ownerPhoneNumbers"),
+      new GroupType(REPEATED, "contacts",
         new PrimitiveType(REQUIRED, BINARY, "phoneNumber")));
 
     assertEquals(shouldBeSchema, subSchema);
@@ -121,7 +122,7 @@ public class TestSchemaIntersection {
 
     MessageType shouldBeSchema = new MessageType("AddressBook",
       new PrimitiveType(REQUIRED, BINARY, "owner"),
-      new GroupType(REQUIRED, "contacts",
+      new GroupType(REPEATED, "contacts",
         new PrimitiveType(REQUIRED, BINARY, "name")));
 
     assertEquals(shouldBeSchema, subSchema);

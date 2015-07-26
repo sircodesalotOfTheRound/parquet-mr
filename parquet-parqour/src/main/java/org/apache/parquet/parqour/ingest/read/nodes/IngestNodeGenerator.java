@@ -86,6 +86,10 @@ public class IngestNodeGenerator {
     switch (schemaNode.getPrimitiveTypeName()) {
       case INT32:
         return new Int32RepeatingIngestNode(schemaInfo, parent, schemaNode, descriptor, diskInterfaceManager, columnIndex);
+
+      case BINARY:
+        // Todo: replace with correct ingest node.
+        return new BinaryNoRepeatIngestNode(schemaInfo, parent, schemaNode, descriptor, diskInterfaceManager, columnIndex);
     }
 
     throw new NotImplementedException();

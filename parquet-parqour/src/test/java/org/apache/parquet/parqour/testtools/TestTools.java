@@ -27,6 +27,7 @@ import static org.apache.parquet.column.ParquetProperties.WriterVersion.PARQUET_
 import static org.apache.parquet.filter2.predicate.FilterApi.binaryColumn;
 import static org.apache.parquet.filter2.predicate.FilterApi.intColumn;
 import static org.apache.parquet.schema.PrimitiveType.PrimitiveTypeName.BINARY;
+import static org.apache.parquet.schema.Type.Repetition.REPEATED;
 import static org.apache.parquet.schema.Type.Repetition.REQUIRED;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
@@ -49,8 +50,8 @@ public class TestTools {
   public static final MessageType CONTACTS_SCHEMA =
     new MessageType("AddressBook",
       new PrimitiveType(REQUIRED, BINARY, "owner"),
-      new PrimitiveType(REQUIRED, BINARY, "ownerPhoneNumbers"),
-      new GroupType(REQUIRED, "contacts",
+      new PrimitiveType(REPEATED, BINARY, "ownerPhoneNumbers"),
+      new GroupType(REPEATED, "contacts",
         new PrimitiveType(REQUIRED, BINARY, "name"),
         new PrimitiveType(REQUIRED, BINARY, "phoneNumber")));
 
