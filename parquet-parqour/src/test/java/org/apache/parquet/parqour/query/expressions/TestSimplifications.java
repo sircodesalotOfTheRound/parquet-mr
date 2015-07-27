@@ -40,6 +40,19 @@ public class TestSimplifications {
 
     TextQueryNumericExpression fiftyFour = (TextQueryNumericExpression) simplifiedFirstColumn("select (1 + 2 + 3)  * (4 + 5)");
     assertEquals(54, (int) fiftyFour.asInteger());
+
+    TextQueryNumericExpression thirtyThree = (TextQueryNumericExpression) simplifiedFirstColumn("select 1 + 2 * 3 + 4 * 5 + 6");
+    assertEquals(33, (int) thirtyThree.asInteger());
+  }
+
+  @Test
+  public void testUdfExpressions() {
+    TextQueryUdfExpression function = (TextQueryUdfExpression) simplifiedFirstColumn("select function((5 + 5) * 10)");
+    assertEquals("function", function.functionName().toString());
+    assertEquals(1, function.parameterCount());
+
+    TextQueryNumericExpression oneHundred = function.parameters().firstAs(TextQueryNumericExpression.class);
+    assertEquals(100, (int) oneHundred.asInteger());
   }
 
   private TextQueryVariableExpression simplifiedFirstColumn(String selectStatement) {

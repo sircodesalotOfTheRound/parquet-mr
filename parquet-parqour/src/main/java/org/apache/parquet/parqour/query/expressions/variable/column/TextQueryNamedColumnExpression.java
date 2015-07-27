@@ -13,6 +13,7 @@ import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
  */
 public class TextQueryNamedColumnExpression extends TextQueryColumnExpression {
   private final TextQueryFullyQualifiedNameExpression identifier;
+  private boolean isNegated = false;
 
   public TextQueryNamedColumnExpression(TextQueryExpression parent, TextQueryLexer lexer) {
     super(parent, lexer, TextQueryExpressionType.NAMED_COLUMN);
@@ -39,8 +40,11 @@ public class TextQueryNamedColumnExpression extends TextQueryColumnExpression {
 
   @Override
   public TextQueryVariableExpression negate() {
-    return null;
+    this.isNegated = !isNegated;
+    return this;
   }
+
+  public boolean isNegated() { return this.isNegated; }
 
   public TextQueryFullyQualifiedNameExpression identifier() {
     return identifier;

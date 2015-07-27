@@ -1,5 +1,6 @@
 package org.apache.parquet.parqour.query.expressions.txql;
 
+import org.apache.parquet.parqour.exceptions.TextQueryException;
 import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryVariableExpression;
@@ -40,7 +41,7 @@ public class TextQueryNumericExpression extends TextQueryVariableExpression {
 
   @Override
   public TextQueryVariableExpression negate() {
-    return null;
+    throw new TextQueryException("Attempted to negate a numeric value");
   }
 
   @Override

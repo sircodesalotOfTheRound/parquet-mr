@@ -65,7 +65,7 @@ public class TextQueryStringExpression extends TextQueryVariableExpression {
 
   @Override
   public TextQueryVariableExpression negate() {
-    return null;
+    throw new TextQueryException("Attempted to negate a string value");
   }
 
   public String asString() {
