@@ -1,15 +1,18 @@
 package org.apache.parquet.parqour.query.expressions;
 
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryVariableExpression;
+import org.apache.parquet.parqour.query.expressions.predicate.logical.TextQueryLogicalOrExpression;
 import org.apache.parquet.parqour.query.expressions.predicate.testable.*;
 import org.apache.parquet.parqour.query.expressions.tables.TextQueryStringExpression;
 import org.apache.parquet.parqour.query.expressions.txql.TextQueryNumericExpression;
 import org.apache.parquet.parqour.query.expressions.txql.TextQueryTreeRootExpression;
+import org.apache.parquet.parqour.query.expressions.variable.TextQueryUdfExpression;
 import org.apache.parquet.parqour.query.expressions.variable.column.TextQueryColumnSetExpression;
 import org.apache.parquet.parqour.query.expressions.variable.infix.InfixOperator;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by sircodesalot on 7/27/15.
@@ -34,6 +37,17 @@ public class TestNegation {
 
     TextQueryTestableLessThanOrEqualsExpression oneIsLessThanOrEqualToTen = (TextQueryTestableLessThanOrEqualsExpression) simplifiedFirstColumn("select not (1 > 10)");
     assertEquals(InfixOperator.LESS_THAN_OR_EQUALS, oneIsLessThanOrEqualToTen.operator());
+
+    TextQueryLogicalOrExpression orExpression = (TextQueryLogicalOrExpression) simplifiedFirstColumn("select not (first() and second())");
+    assertEquals(InfixOperator.OR, orExpression.operator());
+    assertTrue(((TextQueryUdfExpression) orExpression.lhs()).isNegated());
+    assertTrue(((TextQueryUdfExpression) orExpression.rhs()).isNegated());
+
+
+    TextQueryLogicalOrExpression andExpression = (TextQueryLogicalOrExpression) simplifiedFirstColumn("select not (first() or second())");
+    assertEquals(InfixOperator.OR, andExpression.operator());
+    assertTrue(((TextQueryUdfExpression) andExpression.lhs()).isNegated());
+    assertTrue(((TextQueryUdfExpression) andExpression.rhs()).isNegated());
   }
 
   private TextQueryVariableExpression simplifiedFirstColumn(String selectStatement) {

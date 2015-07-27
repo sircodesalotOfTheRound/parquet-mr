@@ -4,6 +4,7 @@ import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryVariableExpression;
 import org.apache.parquet.parqour.query.expressions.predicate.TextQueryTestablePredicateExpression;
+import org.apache.parquet.parqour.query.expressions.predicate.logical.TextQueryLogicalExpression;
 import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
 import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
@@ -128,6 +129,8 @@ public class TextQueryInfixExpression extends TextQueryVariableExpression {
       return InfixExpressionCalculator.precomputeExpression(this);
     } else if (TextQueryTestablePredicateExpression.isTestablePredicateExpression(this)) {
       return TextQueryTestablePredicateExpression.fromExpression(this);
+    } else if (TextQueryLogicalExpression.isLogicalExpression(this)) {
+      return TextQueryLogicalExpression.fromExpression(this);
     }
 
     throw new NotImplementedException();

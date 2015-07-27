@@ -42,4 +42,7 @@ public enum TextQueryExpressionType {
   LESS_THAN_OR_EQUALS,
   GREATER_THAN,
   GREATER_THAN_OR_EQUALS,
+
+  AND,
+  OR
 }
