@@ -3,8 +3,7 @@ package org.apache.parquet.parqour.query.expressions.predicate;
 import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryVariableExpression;
-import org.apache.parquet.parqour.query.expressions.predicate.testable.TextQueryTestableEqualsExpression;
-import org.apache.parquet.parqour.query.expressions.predicate.testable.TextQueryTestableNotEqualsExpression;
+import org.apache.parquet.parqour.query.expressions.predicate.testable.*;
 import org.apache.parquet.parqour.query.expressions.variable.infix.InfixOperator;
 import org.apache.parquet.parqour.query.expressions.variable.infix.TextQueryInfixExpression;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
@@ -39,6 +38,16 @@ public abstract class TextQueryTestablePredicateExpression extends TextQueryVari
           return new TextQueryTestableEqualsExpression(infixExpression);
         case NOT_EQUALS:
           return new TextQueryTestableNotEqualsExpression(infixExpression);
+
+        case LESS_THAN:
+          return new TextQueryTestableLessThanExpression(infixExpression);
+        case LESS_THAN_OR_EQUALS:
+          return new TextQueryTestableLessThanOrEqualsExpression(infixExpression);
+
+        case GREATER_THAN:
+          return new TextQueryTestableGreaterThanExpression(infixExpression);
+        case GREATER_THAN_OR_EQUALS:
+          return new TextQueryTestableGreaterThanOrEqualsExpression(infixExpression);
       }
     }
 

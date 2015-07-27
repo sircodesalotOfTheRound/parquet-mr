@@ -1,8 +1,7 @@
 package org.apache.parquet.parqour.query.expressions;
 
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryVariableExpression;
-import org.apache.parquet.parqour.query.expressions.predicate.testable.TextQueryTestableEqualsExpression;
-import org.apache.parquet.parqour.query.expressions.predicate.testable.TextQueryTestableNotEqualsExpression;
+import org.apache.parquet.parqour.query.expressions.predicate.testable.*;
 import org.apache.parquet.parqour.query.expressions.tables.TextQueryStringExpression;
 import org.apache.parquet.parqour.query.expressions.txql.TextQueryNumericExpression;
 import org.apache.parquet.parqour.query.expressions.txql.TextQueryTreeRootExpression;
@@ -24,7 +23,17 @@ public class TestNegation {
     TextQueryTestableEqualsExpression oneEqualsTen = (TextQueryTestableEqualsExpression) simplifiedFirstColumn("select not (1 != 10)");
     assertEquals(InfixOperator.EQUALS, oneEqualsTen.operator());
 
+    TextQueryTestableGreaterThanOrEqualsExpression oneIsGreaterThanOrEqualToTen = (TextQueryTestableGreaterThanOrEqualsExpression) simplifiedFirstColumn("select not (1 < 10)");
+    assertEquals(InfixOperator.GREATER_THAN_OR_EQUALS, oneIsGreaterThanOrEqualToTen .operator());
 
+    TextQueryTestableGreaterThanExpression oneIsGreaterThanTen = (TextQueryTestableGreaterThanExpression) simplifiedFirstColumn("select not (1 <= 10)");
+    assertEquals(InfixOperator.GREATER_THAN, oneIsGreaterThanTen.operator());
+
+    TextQueryTestableLessThanExpression oneIsLessThanTen = (TextQueryTestableLessThanExpression) simplifiedFirstColumn("select not (1 >= 10)");
+    assertEquals(InfixOperator.LESS_THAN, oneIsLessThanTen.operator());
+
+    TextQueryTestableLessThanOrEqualsExpression oneIsLessThanOrEqualToTen = (TextQueryTestableLessThanOrEqualsExpression) simplifiedFirstColumn("select not (1 > 10)");
+    assertEquals(InfixOperator.LESS_THAN_OR_EQUALS, oneIsLessThanOrEqualToTen.operator());
   }
 
   private TextQueryVariableExpression simplifiedFirstColumn(String selectStatement) {
