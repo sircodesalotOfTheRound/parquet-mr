@@ -23,6 +23,9 @@ public abstract class TextQueryKeywordExpression extends TextQueryExpression {
   public static final String NOT = "NOT";
   public static final String AND = "AND";
   public static final String OR = "OR";
+  public static final String BETWEEN = "OR";
+  public static final String MATCHES = "OR";
+  public static final String IN = "OR";
 
   private final TextQueryIdentifierToken token;
 

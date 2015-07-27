@@ -34,8 +34,7 @@ public class TextQueryInfixExpression extends TextQueryVariableExpression {
 
   private TextQueryVariableExpression readRhs(TextQueryLexer lexer) {
     lexer.setUndoPoint();
-
-    TextQueryVariableExpression expression = TextQueryVariableExpression .readIgnoringInfixExpressions(this, lexer);
+    TextQueryVariableExpression expression = TextQueryVariableExpression.readIgnoringInfixExpressions(this, lexer);
 
     // If reading the last expression ended in a math operator, then
     if (InfixOperator.isInfixToken(lexer)) {

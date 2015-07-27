@@ -15,17 +15,20 @@ public enum InfixOperator {
   AS("as", 0),
   AND("and", 1),
   OR("or", 1),
-  PLUS(TextQueryPunctuationToken.PLUS, 3),
-  MINUS(TextQueryPunctuationToken.MINUS, 3),
-  MULTIPLY(TextQueryPunctuationToken.MULTIPLY, 4),
-  DIVIDE(TextQueryPunctuationToken.DIVIDE, 4),
-  MODULO(TextQueryPunctuationToken.MODULO, 4),
-  EQUALS(TextQueryPunctuationToken.EQUALS, 2),
-  NOT_EQUALS(TextQueryPunctuationToken.NOT_EQUALS, 2),
-  LESS_THAN(TextQueryPunctuationToken.LESS_THAN, 2),
-  LESS_THAN_OR_EQUALS(TextQueryPunctuationToken.LESS_THAN_OR_EQUALS, 2),
-  GREATER_THAN(TextQueryPunctuationToken.GREATER_THAN, 2),
-  GREATER_THAN_OR_EQUALS(TextQueryPunctuationToken.GREATER_THAN_OR_EQUALS, 2);
+  BETWEEN("between", 2),
+  MATCHES("matches", 2),
+  IN("in", 2),
+  EQUALS(TextQueryPunctuationToken.EQUALS, 3),
+  NOT_EQUALS(TextQueryPunctuationToken.NOT_EQUALS, 3),
+  LESS_THAN(TextQueryPunctuationToken.LESS_THAN, 3),
+  LESS_THAN_OR_EQUALS(TextQueryPunctuationToken.LESS_THAN_OR_EQUALS, 3),
+  GREATER_THAN(TextQueryPunctuationToken.GREATER_THAN, 3),
+  GREATER_THAN_OR_EQUALS(TextQueryPunctuationToken.GREATER_THAN_OR_EQUALS, 3),
+  PLUS(TextQueryPunctuationToken.PLUS, 4),
+  MINUS(TextQueryPunctuationToken.MINUS, 4),
+  MULTIPLY(TextQueryPunctuationToken.MULTIPLY, 5),
+  DIVIDE(TextQueryPunctuationToken.DIVIDE, 5),
+  MODULO(TextQueryPunctuationToken.MODULO, 5);
 
   private final String representation;
   private final Integer precedence;
