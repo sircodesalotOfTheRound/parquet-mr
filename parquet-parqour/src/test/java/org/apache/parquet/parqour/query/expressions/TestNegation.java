@@ -1,6 +1,7 @@
 package org.apache.parquet.parqour.query.expressions;
 
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryVariableExpression;
+import org.apache.parquet.parqour.query.expressions.predicate.logical.TextQueryLogicalAndExpression;
 import org.apache.parquet.parqour.query.expressions.predicate.logical.TextQueryLogicalOrExpression;
 import org.apache.parquet.parqour.query.expressions.predicate.testable.*;
 import org.apache.parquet.parqour.query.expressions.tables.TextQueryStringExpression;
@@ -44,7 +45,7 @@ public class TestNegation {
     assertTrue(((TextQueryUdfExpression) orExpression.rhs()).isNegated());
 
 
-    TextQueryLogicalOrExpression andExpression = (TextQueryLogicalOrExpression) simplifiedFirstColumn("select not (first() or second())");
+    TextQueryLogicalAndExpression andExpression = (TextQueryLogicalAndExpression) simplifiedFirstColumn("select not (first() or second())");
     assertEquals(InfixOperator.AND, andExpression.operator());
     assertTrue(((TextQueryUdfExpression) andExpression.lhs()).isNegated());
     assertTrue(((TextQueryUdfExpression) andExpression.rhs()).isNegated());

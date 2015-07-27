@@ -11,7 +11,7 @@ import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
  */
 public class TextQueryLogicalOrExpression extends TextQueryLogicalExpression {
   public TextQueryLogicalOrExpression(TextQueryVariableExpression lhs, TextQueryVariableExpression rhs) {
-    super(lhs, rhs, TextQueryExpressionType.AND);
+    super(lhs, rhs, TextQueryExpressionType.OR);
   }
 
   @Override
@@ -31,6 +31,6 @@ public class TextQueryLogicalOrExpression extends TextQueryLogicalExpression {
 
   @Override
   public InfixOperator operator() {
-    return InfixOperator.AND;
+    return InfixOperator.OR;
   }
 }
