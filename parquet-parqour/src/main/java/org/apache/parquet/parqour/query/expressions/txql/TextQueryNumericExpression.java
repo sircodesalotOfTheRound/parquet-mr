@@ -19,6 +19,12 @@ public class TextQueryNumericExpression extends TextQueryVariableExpression {
     this.value = readValue(lexer);
   }
 
+  public TextQueryNumericExpression(TextQueryExpression parent, TextQueryNumericToken value) {
+    super(parent, TextQueryExpressionType.NUMERIC);
+
+    this.value = value;
+  }
+
   private TextQueryNumericToken readValue(TextQueryLexer lexer) {
     return lexer.readCurrentAndAdvance(TextQueryExpressionType.NUMERIC);
   }

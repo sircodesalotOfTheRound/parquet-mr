@@ -5,7 +5,6 @@ import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressi
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryVariableExpression;
 import org.apache.parquet.parqour.query.expressions.txql.TextQueryKeywordExpression;
 import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
-import org.apache.parquet.parqour.query.tokens.TextQueryToken;
 import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
 
 /**
@@ -33,7 +32,8 @@ public class TextQueryNotExpression extends TextQueryVariableExpression {
 
   @Override
   public TextQueryVariableExpression negate() {
-    return null;
+    // Double negation.
+    return this.negatedExpression;
   }
 
   public TextQueryVariableExpression negatedExpression() { return this.negatedExpression; }

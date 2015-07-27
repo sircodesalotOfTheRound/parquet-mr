@@ -24,6 +24,10 @@ public abstract class TextQueryVariableExpression extends TextQueryExpression {
     .add(new TextQueryStringExpressionBacktrackRule())
     .add(new TextQueryWildcardExpressionBacktrackRule());
 
+  public TextQueryVariableExpression(TextQueryExpression parent, TextQueryExpressionType type) {
+    super(parent, type);
+  }
+
   public TextQueryVariableExpression(TextQueryExpression parent, TextQueryLexer lexer, TextQueryExpressionType type) {
     super(parent, lexer, type);
   }

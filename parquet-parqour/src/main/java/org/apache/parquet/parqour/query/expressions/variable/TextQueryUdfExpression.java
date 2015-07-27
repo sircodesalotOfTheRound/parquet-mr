@@ -42,7 +42,7 @@ public class TextQueryUdfExpression extends TextQueryVariableExpression {
 
   @Override
   public TextQueryVariableExpression simplify(TextQueryExpression parent) {
-    return null;
+    return this;
   }
 
   @Override

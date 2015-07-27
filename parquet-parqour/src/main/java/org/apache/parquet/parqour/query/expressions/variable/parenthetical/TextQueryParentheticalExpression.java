@@ -44,7 +44,7 @@ public class TextQueryParentheticalExpression extends TextQueryVariableExpressio
 
   @Override
   public TextQueryVariableExpression negate() {
-    return null;
+    return this.simplify(this.parent()).negate();
   }
 
   @Override

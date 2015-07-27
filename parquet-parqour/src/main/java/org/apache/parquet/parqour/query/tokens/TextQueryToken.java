@@ -16,6 +16,11 @@ public abstract class TextQueryToken {
     this.type = type;
   }
 
+  public TextQueryToken(TextQueryExpressionType type) {
+    this.position = new ParquelLexPosition(-1, -1, -1);
+    this.type = type;
+  }
+
   public ParquelLexPosition position() {
     return this.position;
   }

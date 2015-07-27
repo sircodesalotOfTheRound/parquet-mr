@@ -5,6 +5,7 @@ import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressi
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryVariableExpression;
 import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
 import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * Created by sircodesalot on 6/30/15.
@@ -104,11 +105,11 @@ public class TextQueryInfixExpression extends TextQueryVariableExpression {
     return newParent;
   }
 
-  public TextQueryExpression lhs() {
+  public TextQueryVariableExpression lhs() {
     return this.lhs;
   }
 
-  public TextQueryExpression rhs() {
+  public TextQueryVariableExpression rhs() {
     return this.rhs;
   }
 
@@ -123,8 +124,13 @@ public class TextQueryInfixExpression extends TextQueryVariableExpression {
 
   @Override
   public TextQueryVariableExpression simplify(TextQueryExpression parent) {
-    return null;
+    if (InfixExpressionCalculator.canPrecomputeExpression(this)) {
+      return InfixExpressionCalculator.precomputeExpression(this);
+    }
+
+    throw new NotImplementedException();
   }
+
 
   @Override
   public TextQueryVariableExpression negate() {
