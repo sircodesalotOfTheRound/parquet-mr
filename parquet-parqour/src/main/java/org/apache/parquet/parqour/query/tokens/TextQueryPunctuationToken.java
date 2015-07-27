@@ -13,8 +13,8 @@ public class TextQueryPunctuationToken extends TextQueryToken {
   public static final String CLOSE_PARENS = ")";
   public static final String OPEN_BRACE = "{";
   public static final String CLOSE_BRACE = "}";
-  public static final String LESS_THAN_OR_EQUALS = "<";
-  public static final String LESS_THAN = "<=";
+  public static final String LESS_THAN_OR_EQUALS = "<=";
+  public static final String LESS_THAN = "<";
   public static final String GREATER_THAN = ">";
   public static final String GREATER_THAN_OR_EQUALS = ">=";
   public static final String PLUS = "+";

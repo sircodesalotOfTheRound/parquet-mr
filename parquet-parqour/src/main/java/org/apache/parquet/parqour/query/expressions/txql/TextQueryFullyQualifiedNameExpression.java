@@ -12,6 +12,7 @@ import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressi
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryVariableExpression;
 import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
 import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * Created by sircodesalot on 15/4/9.
@@ -69,6 +70,16 @@ public class TextQueryFullyQualifiedNameExpression extends TextQueryVariableExpr
 
   public static TextQueryFullyQualifiedNameExpression read(TextQueryExpression parent, TextQueryLexer lexer) {
     return new TextQueryFullyQualifiedNameExpression(parent, lexer);
+  }
+
+  @Override
+  public TextQueryVariableExpression simplify(TextQueryExpression parent) {
+    return null;
+  }
+
+  @Override
+  public TextQueryVariableExpression negate() {
+    throw new NotImplementedException();
   }
 
   @Override

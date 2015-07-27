@@ -10,11 +10,17 @@ import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
  * Created by sircodesalot on 15/4/2.
  */
 public abstract class TextQueryExpression extends TextQueryToken {
-
   private final TextQueryLexer lexer;
   private final TextQueryExpressionType type;
   private TextQueryExpression parent;
 
+
+  public TextQueryExpression(TextQueryExpression parent, TextQueryExpressionType type) {
+    super(type);
+    this.lexer = null;
+    this.type = type;
+    this.parent = parent;
+  }
 
   public TextQueryExpression(TextQueryExpression parent, TextQueryLexer lexer, TextQueryExpressionType type) {
     super(lexer.position(), type);
@@ -29,7 +35,7 @@ public abstract class TextQueryExpression extends TextQueryToken {
 
   public abstract <TReturnType> TReturnType accept(TextQueryExpressionVisitor<TReturnType> visitor);
 
-  public void setParent(TextQueryVariableExpression parent) {
+  public void setParent(TextQueryExpression parent) {
     this.parent = parent;
   }
 }

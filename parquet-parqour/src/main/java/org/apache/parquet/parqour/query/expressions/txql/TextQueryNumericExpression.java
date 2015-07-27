@@ -1,5 +1,6 @@
 package org.apache.parquet.parqour.query.expressions.txql;
 
+import org.apache.parquet.parqour.exceptions.TextQueryException;
 import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryVariableExpression;
@@ -19,12 +20,28 @@ public class TextQueryNumericExpression extends TextQueryVariableExpression {
     this.value = readValue(lexer);
   }
 
+  public TextQueryNumericExpression(TextQueryExpression parent, TextQueryNumericToken value) {
+    super(parent, TextQueryExpressionType.NUMERIC);
+
+    this.value = value;
+  }
+
   private TextQueryNumericToken readValue(TextQueryLexer lexer) {
     return lexer.readCurrentAndAdvance(TextQueryExpressionType.NUMERIC);
   }
 
   public static TextQueryNumericExpression read(TextQueryExpression parent, TextQueryLexer lexer) {
     return new TextQueryNumericExpression(parent, lexer);
+  }
+
+  @Override
+  public TextQueryVariableExpression simplify(TextQueryExpression parent) {
+    return this;
+  }
+
+  @Override
+  public TextQueryVariableExpression negate() {
+    throw new TextQueryException("Attempted to negate a numeric value");
   }
 
   @Override

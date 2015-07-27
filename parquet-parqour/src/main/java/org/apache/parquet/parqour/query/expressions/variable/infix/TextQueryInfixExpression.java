@@ -3,8 +3,11 @@ package org.apache.parquet.parqour.query.expressions.variable.infix;
 import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryVariableExpression;
+import org.apache.parquet.parqour.query.expressions.predicate.TextQueryTestablePredicateExpression;
+import org.apache.parquet.parqour.query.expressions.predicate.logical.TextQueryLogicalExpression;
 import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
 import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * Created by sircodesalot on 6/30/15.
@@ -32,8 +35,7 @@ public class TextQueryInfixExpression extends TextQueryVariableExpression {
 
   private TextQueryVariableExpression readRhs(TextQueryLexer lexer) {
     lexer.setUndoPoint();
-
-    TextQueryVariableExpression expression = TextQueryVariableExpression .readIgnoringInfixExpressions(this, lexer);
+    TextQueryVariableExpression expression = TextQueryVariableExpression.readIgnoringInfixExpressions(this, lexer);
 
     // If reading the last expression ended in a math operator, then
     if (InfixOperator.isInfixToken(lexer)) {
@@ -104,11 +106,11 @@ public class TextQueryInfixExpression extends TextQueryVariableExpression {
     return newParent;
   }
 
-  public TextQueryExpression lhs() {
+  public TextQueryVariableExpression lhs() {
     return this.lhs;
   }
 
-  public TextQueryExpression rhs() {
+  public TextQueryVariableExpression rhs() {
     return this.rhs;
   }
 
@@ -119,6 +121,25 @@ public class TextQueryInfixExpression extends TextQueryVariableExpression {
   public static TextQueryInfixExpression read(TextQueryExpression parent, TextQueryLexer lexer) {
     TextQueryInfixExpression infixExpression = new TextQueryInfixExpression(parent, lexer);
     return updateOperatorPrecedence(infixExpression);
+  }
+
+  @Override
+  public TextQueryVariableExpression simplify(TextQueryExpression parent) {
+    if (InfixExpressionCalculator.canPrecomputeExpression(this)) {
+      return InfixExpressionCalculator.precomputeExpression(this);
+    } else if (TextQueryTestablePredicateExpression.isTestablePredicateExpression(this)) {
+      return TextQueryTestablePredicateExpression.fromExpression(this);
+    } else if (TextQueryLogicalExpression.isLogicalExpression(this)) {
+      return TextQueryLogicalExpression.fromExpression(this);
+    }
+
+    throw new NotImplementedException();
+  }
+
+
+  @Override
+  public TextQueryVariableExpression negate() {
+    return this.simplify(this.parent()).negate();
   }
 
   @Override

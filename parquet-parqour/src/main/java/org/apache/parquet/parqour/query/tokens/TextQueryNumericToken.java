@@ -17,6 +17,12 @@ public class TextQueryNumericToken extends TextQueryToken {
     this.value = parseValueFromString(stream);
   }
 
+  public TextQueryNumericToken(BigInteger value) {
+    super(null, TextQueryExpressionType.NUMERIC);
+
+    this.value = value;
+  }
+
   private BigInteger parseValueFromString(ParquelCharacterStream stream) {
     StringBuilder builder = new StringBuilder();
     while (!stream.isEof() && (stream.currentIsNumeric() || stream.currentIs('.'))) {

@@ -6,6 +6,7 @@ import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryVariableExpression;
 import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
+import org.apache.parquet.parqour.query.tokens.TextQueryIdentifierToken;
 import org.apache.parquet.parqour.query.tokens.TextQueryPunctuationToken;
 import org.apache.parquet.parqour.query.tokens.TextQueryToken;
 import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
@@ -23,6 +24,13 @@ public class TextQueryStringExpression extends TextQueryVariableExpression {
     this.validateLexing(parent, lexer);
     this.expressionTokens = readExpression(lexer);
     this.expressionAsString = convertExpressionToString(expressionTokens);
+  }
+
+  public TextQueryStringExpression(TextQueryExpression parent, String string) {
+    super(parent, TextQueryExpressionType.STRING);
+
+    this.expressionTokens = new TextQueryAppendableCollection<TextQueryToken>();
+    this.expressionAsString = string;
   }
 
   private void validateLexing(TextQueryExpression parent, TextQueryLexer lexer) {
@@ -56,6 +64,16 @@ public class TextQueryStringExpression extends TextQueryVariableExpression {
 
   public static TextQueryStringExpression read(TextQueryExpression parent, TextQueryLexer lexer) {
     return new TextQueryStringExpression(parent, lexer);
+  }
+
+  @Override
+  public TextQueryVariableExpression simplify(TextQueryExpression parent) {
+    return this;
+  }
+
+  @Override
+  public TextQueryVariableExpression negate() {
+    throw new TextQueryException("Attempted to negate a string value");
   }
 
   public String asString() {

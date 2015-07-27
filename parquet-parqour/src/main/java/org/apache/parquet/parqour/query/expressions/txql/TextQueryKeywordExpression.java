@@ -20,11 +20,12 @@ public abstract class TextQueryKeywordExpression extends TextQueryExpression {
   public static final String SELECT = "SELECT";
   public static final String FROM = "FROM";
   public static final String WHERE = "WHERE";
-  public static final String USE = "USE";
-  public static final String CREATE = "CREATE";
-  public static final String DROP = "DROP";
-  public static final String TABLE = "TABLE";
-  public static final String COMMENT = "COMMENT";
+  public static final String NOT = "NOT";
+  public static final String AND = "AND";
+  public static final String OR = "OR";
+  public static final String BETWEEN = "OR";
+  public static final String MATCHES = "OR";
+  public static final String IN = "OR";
 
   private final TextQueryIdentifierToken token;
 
@@ -60,9 +61,9 @@ public abstract class TextQueryKeywordExpression extends TextQueryExpression {
     keywords.add(SELECT);
     keywords.add(FROM);
     keywords.add(WHERE);
-    keywords.add(USE);
-    keywords.add(CREATE);
-    keywords.add(DROP);
+    keywords.add(AND);
+    keywords.add(OR);
+    keywords.add(NOT);
 
     return keywords;
   }
