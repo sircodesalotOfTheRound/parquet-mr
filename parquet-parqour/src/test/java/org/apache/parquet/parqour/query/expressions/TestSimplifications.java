@@ -1,11 +1,13 @@
 package org.apache.parquet.parqour.query.expressions;
 
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryVariableExpression;
+import org.apache.parquet.parqour.query.expressions.predicate.testable.TextQueryTestableEqualsExpression;
 import org.apache.parquet.parqour.query.expressions.tables.TextQueryStringExpression;
 import org.apache.parquet.parqour.query.expressions.txql.TextQueryNumericExpression;
 import org.apache.parquet.parqour.query.expressions.txql.TextQueryTreeRootExpression;
 import org.apache.parquet.parqour.query.expressions.variable.TextQueryUdfExpression;
 import org.apache.parquet.parqour.query.expressions.variable.column.TextQueryColumnSetExpression;
+import org.apache.parquet.parqour.query.expressions.variable.infix.InfixOperator;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -44,6 +46,7 @@ public class TestSimplifications {
     TextQueryNumericExpression thirtyThree = (TextQueryNumericExpression) simplifiedFirstColumn("select 1 + 2 * 3 + 4 * 5 + 6");
     assertEquals(33, (int) thirtyThree.asInteger());
   }
+
 
   @Test
   public void testUdfExpressions() {

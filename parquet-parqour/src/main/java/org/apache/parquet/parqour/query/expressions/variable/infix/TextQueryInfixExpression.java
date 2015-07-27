@@ -3,6 +3,7 @@ package org.apache.parquet.parqour.query.expressions.variable.infix;
 import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryVariableExpression;
+import org.apache.parquet.parqour.query.expressions.predicate.TextQueryTestablePredicateExpression;
 import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
 import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
@@ -126,6 +127,8 @@ public class TextQueryInfixExpression extends TextQueryVariableExpression {
   public TextQueryVariableExpression simplify(TextQueryExpression parent) {
     if (InfixExpressionCalculator.canPrecomputeExpression(this)) {
       return InfixExpressionCalculator.precomputeExpression(this);
+    } else if (TextQueryTestablePredicateExpression.isTestablePredicateExpression(this)) {
+      return TextQueryTestablePredicateExpression.fromExpression(this);
     }
 
     throw new NotImplementedException();
@@ -134,7 +137,7 @@ public class TextQueryInfixExpression extends TextQueryVariableExpression {
 
   @Override
   public TextQueryVariableExpression negate() {
-    return null;
+    return this.simplify(this.parent()).negate();
   }
 
   @Override

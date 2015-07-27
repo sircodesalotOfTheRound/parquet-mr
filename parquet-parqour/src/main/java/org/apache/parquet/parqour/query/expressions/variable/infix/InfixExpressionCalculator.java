@@ -14,7 +14,7 @@ import java.util.Set;
  * Created by sircodesalot on 7/27/15.
  */
 public class InfixExpressionCalculator {
-  public static Set<InfixOperator> computableOperators = new HashSet<InfixOperator>() {{
+  private static Set<InfixOperator> computableOperators = new HashSet<InfixOperator>() {{
     add(InfixOperator.PLUS);
     add(InfixOperator.MINUS);
     add(InfixOperator.MULTIPLY);
