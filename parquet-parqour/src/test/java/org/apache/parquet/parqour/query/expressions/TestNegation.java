@@ -45,7 +45,7 @@ public class TestNegation {
 
 
     TextQueryLogicalOrExpression andExpression = (TextQueryLogicalOrExpression) simplifiedFirstColumn("select not (first() or second())");
-    assertEquals(InfixOperator.OR, andExpression.operator());
+    assertEquals(InfixOperator.AND, andExpression.operator());
     assertTrue(((TextQueryUdfExpression) andExpression.lhs()).isNegated());
     assertTrue(((TextQueryUdfExpression) andExpression.rhs()).isNegated());
   }
