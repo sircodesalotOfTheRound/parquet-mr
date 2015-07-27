@@ -3,6 +3,7 @@ package org.apache.parquet.parqour.query.expressions.variable.column;
 import org.apache.parquet.parqour.exceptions.TextQueryException;
 import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
+import org.apache.parquet.parqour.query.expressions.categories.TextQueryVariableExpression;
 import org.apache.parquet.parqour.query.expressions.txql.TextQueryFullyQualifiedNameExpression;
 import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
 import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
@@ -29,6 +30,16 @@ public class TextQueryNamedColumnExpression extends TextQueryColumnExpression {
 
   public static TextQueryColumnExpression read(TextQueryExpression parent, TextQueryLexer lexer) {
     return new TextQueryNamedColumnExpression(parent, lexer);
+  }
+
+  @Override
+  public TextQueryVariableExpression simplify(TextQueryExpression parent) {
+    return null;
+  }
+
+  @Override
+  public TextQueryVariableExpression negate() {
+    return null;
   }
 
   public TextQueryFullyQualifiedNameExpression identifier() {

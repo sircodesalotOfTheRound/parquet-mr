@@ -13,8 +13,9 @@ import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
  * Created by sircodesalot on 7/24/15.
  */
 public class TextQueryUdfExpression extends TextQueryVariableExpression {
-  private final TextQueryFullyQualifiedNameExpression identifier;
-  private final TextQueryCollection<TextQueryVariableExpression> parameters;
+  private TextQueryFullyQualifiedNameExpression identifier;
+  private TextQueryCollection<TextQueryVariableExpression> parameters;
+  private boolean isNegated = false;
 
   public TextQueryUdfExpression(TextQueryExpression parent, TextQueryLexer lexer) {
     super(parent, lexer, TextQueryExpressionType.UDF);
@@ -39,6 +40,17 @@ public class TextQueryUdfExpression extends TextQueryVariableExpression {
     return new TextQueryUdfExpression(parent, lexer);
   }
 
+  @Override
+  public TextQueryVariableExpression simplify(TextQueryExpression parent) {
+    return null;
+  }
+
+  @Override
+  public TextQueryVariableExpression negate() {
+    this.isNegated = !isNegated;
+    return this;
+  }
+
   public TextQueryFullyQualifiedNameExpression functionName() {
     return this.identifier;
   }
@@ -55,4 +67,6 @@ public class TextQueryUdfExpression extends TextQueryVariableExpression {
   public <TReturnType> TReturnType accept(TextQueryExpressionVisitor<TReturnType> visitor) {
     return visitor.visit(this);
   }
+
+  public boolean isNegated() { return this.isNegated; }
 }

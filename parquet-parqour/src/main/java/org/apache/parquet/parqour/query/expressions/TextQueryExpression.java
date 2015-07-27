@@ -29,7 +29,7 @@ public abstract class TextQueryExpression extends TextQueryToken {
 
   public abstract <TReturnType> TReturnType accept(TextQueryExpressionVisitor<TReturnType> visitor);
 
-  public void setParent(TextQueryVariableExpression parent) {
+  public void setParent(TextQueryExpression parent) {
     this.parent = parent;
   }
 }

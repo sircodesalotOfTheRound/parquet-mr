@@ -122,6 +122,16 @@ public class TextQueryInfixExpression extends TextQueryVariableExpression {
   }
 
   @Override
+  public TextQueryVariableExpression simplify(TextQueryExpression parent) {
+    return null;
+  }
+
+  @Override
+  public TextQueryVariableExpression negate() {
+    return null;
+  }
+
+  @Override
   public <TReturnType> TReturnType accept(TextQueryExpressionVisitor<TReturnType> visitor) {
     if (lhs != null) {
       lhs.accept(visitor);

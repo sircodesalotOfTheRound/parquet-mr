@@ -3,6 +3,7 @@ package org.apache.parquet.parqour.query.expressions.variable.column;
 import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryMemberExpression;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
+import org.apache.parquet.parqour.query.expressions.categories.TextQueryVariableExpression;
 import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
 import org.apache.parquet.parqour.query.tokens.TextQueryPunctuationToken;
 import org.apache.parquet.parqour.query.tokens.TextQueryToken;
@@ -19,16 +20,6 @@ public class TextQueryWildcardExpression extends TextQueryColumnExpression imple
 
     this.token = readToken(lexer);
   }
-/*
-  @Override
-  public void accept(ParquelNoReturnVisitor visitor) {
-    visitor.visit(this);
-  }
-
-  @Override
-  public ParquelCollection<ParquelExpression> children() {
-    return null;
-  }*/
 
   private TextQueryToken readToken(TextQueryLexer lexer) {
     return lexer.readCurrentAndAdvance(TextQueryExpressionType.PUNCTUATION, TextQueryPunctuationToken.WILDCARD);
@@ -36,6 +27,16 @@ public class TextQueryWildcardExpression extends TextQueryColumnExpression imple
 
   public static TextQueryWildcardExpression read(TextQueryExpression parent, TextQueryLexer lexer) {
     return new TextQueryWildcardExpression(parent, lexer);
+  }
+
+  @Override
+  public TextQueryVariableExpression simplify(TextQueryExpression parent) {
+    return null;
+  }
+
+  @Override
+  public TextQueryVariableExpression negate() {
+    return null;
   }
 
   @Override

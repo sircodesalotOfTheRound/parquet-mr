@@ -36,6 +36,18 @@ public class TextQueryParentheticalExpression extends TextQueryVariableExpressio
   }
 
   @Override
+  public TextQueryVariableExpression simplify(TextQueryExpression parent) {
+    // Elide parenthasis.
+    this.innerExpression.setParent(parent);
+    return this.innerExpression.simplify(parent);
+  }
+
+  @Override
+  public TextQueryVariableExpression negate() {
+    return null;
+  }
+
+  @Override
   public <TReturnType> TReturnType accept(TextQueryExpressionVisitor<TReturnType> visitor) {
     return visitor.visit(this);
   }

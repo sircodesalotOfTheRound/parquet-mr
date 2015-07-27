@@ -28,6 +28,16 @@ public class TextQueryNumericExpression extends TextQueryVariableExpression {
   }
 
   @Override
+  public TextQueryVariableExpression simplify(TextQueryExpression parent) {
+    return this;
+  }
+
+  @Override
+  public TextQueryVariableExpression negate() {
+    return null;
+  }
+
+  @Override
   public String toString() {
     return value.toString();
   }

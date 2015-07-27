@@ -28,6 +28,7 @@ public enum TextQueryExpressionType {
 
   UNKNOWN,
   ROOT,
+  NOT,
 
   WHITESPACE,
   PUNCTUATION,

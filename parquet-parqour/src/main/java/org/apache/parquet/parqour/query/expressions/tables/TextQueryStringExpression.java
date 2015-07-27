@@ -58,6 +58,16 @@ public class TextQueryStringExpression extends TextQueryVariableExpression {
     return new TextQueryStringExpression(parent, lexer);
   }
 
+  @Override
+  public TextQueryVariableExpression simplify(TextQueryExpression parent) {
+    return this;
+  }
+
+  @Override
+  public TextQueryVariableExpression negate() {
+    return null;
+  }
+
   public String asString() {
     return this.expressionAsString;
   }
