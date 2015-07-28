@@ -45,6 +45,12 @@ public class TestSimplifications {
 
     TextQueryNumericExpression thirtyThree = (TextQueryNumericExpression) simplifiedFirstColumn("select 1 + 2 * 3 + 4 * 5 + 6");
     assertEquals(33, (int) thirtyThree.asInteger());
+
+    TextQueryStringExpression oneTwoThreeSomething = (TextQueryStringExpression) simplifiedFirstColumn("select (123 + 'something')");
+    assertEquals("123something", oneTwoThreeSomething.asString());
+
+    TextQueryStringExpression somethingOneTwoThree = (TextQueryStringExpression) simplifiedFirstColumn("select ('something' + 123)");
+    assertEquals("something123", somethingOneTwoThree .asString());
   }
 
 

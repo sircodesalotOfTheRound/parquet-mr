@@ -2,7 +2,9 @@ package org.apache.parquet.parqour.query.expressions.variable.infix;
 
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryVariableExpression;
+import org.apache.parquet.parqour.query.expressions.tables.TextQueryStringExpression;
 import org.apache.parquet.parqour.query.expressions.txql.TextQueryNumericExpression;
+import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
 import org.apache.parquet.parqour.query.tokens.TextQueryNumericToken;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
@@ -36,12 +38,24 @@ public class InfixExpressionCalculator {
   }
 
   public static TextQueryVariableExpression precomputeExpression(TextQueryInfixExpression expression) {
-    Integer lhs = getValue(expression.lhs().simplify(expression));
-    Integer rhs = getValue(expression.rhs().simplify(expression));
+    Object lhs = getValue(expression.lhs().simplify(expression));
+    Object rhs = getValue(expression.rhs().simplify(expression));
 
+    if (lhs instanceof String || rhs instanceof String) {
+      return new TextQueryStringExpression(expression.parent(), precomputeString(lhs, rhs));
+    } else {
+      BigInteger result = precomputeNumeric((Integer) lhs, expression.operator(), (Integer) rhs);
+      return new TextQueryNumericExpression(expression.parent(), new TextQueryNumericToken(result));
+    }
+  }
+
+  private static String precomputeString(Object lhs, Object rhs) {
+    return String.format("%s%s", lhs, rhs);
+  }
+
+  public static BigInteger precomputeNumeric(Integer lhs, InfixOperator operator,  Integer rhs) {
     BigInteger result = null;
-
-    switch (expression.operator()) {
+    switch (operator) {
       case PLUS:
         result = BigInteger.valueOf(lhs + rhs);
         break;
@@ -62,15 +76,14 @@ public class InfixExpressionCalculator {
         throw new NotImplementedException();
     }
 
-    return new TextQueryNumericExpression(expression.parent(), new TextQueryNumericToken(result));
+    return result;
   }
 
-  public static Integer getValue(TextQueryVariableExpression expression) {
+  public static Object getValue(TextQueryVariableExpression expression) {
     if (expression.is(TextQueryExpressionType.NUMERIC)) {
       return ((TextQueryNumericExpression)expression).asInteger();
     } else if (expression.is(TextQueryExpressionType.STRING)){
-      throw new NotImplementedException();
-      //return ((TextQueryStringExpression)expression).asString();
+      return ((TextQueryStringExpression)expression).asString();
     }
 
     throw new NotImplementedException();
