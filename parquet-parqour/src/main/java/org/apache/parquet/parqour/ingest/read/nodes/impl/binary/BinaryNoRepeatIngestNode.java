@@ -7,7 +7,7 @@ import org.apache.parquet.parqour.ingest.ffreader.interfaces.Int32FastForwardRea
 import org.apache.parquet.parqour.ingest.paging.DiskInterfaceManager;
 import org.apache.parquet.parqour.ingest.read.nodes.categories.AggregatingIngestNode;
 import org.apache.parquet.parqour.ingest.read.nodes.categories.PrimitiveIngestNodeBase;
-import org.apache.parquet.parqour.ingest.schema.SchemaInfo;
+import org.apache.parquet.parqour.ingest.schema.QueryInfo;
 import org.apache.parquet.schema.Type;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
@@ -22,14 +22,14 @@ public final class BinaryNoRepeatIngestNode extends PrimitiveIngestNodeBase<Int3
 
   private final Int32Cursor cursor = new Int32Cursor(name, columnIndex, rowVector);
 
-  public BinaryNoRepeatIngestNode(SchemaInfo schemaInfo,
+  public BinaryNoRepeatIngestNode(QueryInfo queryInfo,
                                   AggregatingIngestNode parent,
                                   Type schemaNode,
                                   ColumnDescriptor descriptor,
                                   DiskInterfaceManager diskInterfaceManager,
                                   int childIndex) {
 
-    super(schemaInfo, parent, schemaNode, descriptor, diskInterfaceManager, childIndex);
+    super(queryInfo, parent, schemaNode, descriptor, diskInterfaceManager, childIndex);
 
   }
 

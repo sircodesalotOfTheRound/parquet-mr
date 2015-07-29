@@ -11,7 +11,7 @@ import org.apache.parquet.parqour.ingest.cursor.iface.Cursor;
 import org.apache.parquet.parqour.ingest.read.iterator.Parqour;
 import org.apache.parquet.parqour.ingest.read.iterator.filtering.ParqourQueryFilterIterable;
 import org.apache.parquet.parqour.ingest.read.iterator.lamba.Predicate;
-import org.apache.parquet.parqour.ingest.schema.SchemaInfo;
+import org.apache.parquet.parqour.ingest.schema.QueryInfo;
 import org.apache.parquet.parqour.materialization.readsupport.ReadSupportIterable;
 import org.apache.parquet.parqour.query.expressions.txql.TextQueryTreeRootExpression;
 import org.apache.parquet.schema.MessageType;
@@ -25,13 +25,13 @@ public abstract class ParqourQuery extends Parqour<Cursor> {
   public static final Configuration EMPTY_CONFIGURATION = new Configuration();
 
   protected final ParqourSource source;
-  protected final SchemaInfo schemaInfo;
+  protected final QueryInfo queryInfo;
   protected final TextQueryTreeRootExpression query;
   protected final ParquetMetadata metadata;
 
   public ParqourQuery (ParqourQuery query) {
     this.source = query.source;
-    this.schemaInfo = query.schemaInfo;
+    this.queryInfo = query.queryInfo;
     this.query = query.query;
     this.metadata = query.metadata;
   }
@@ -39,7 +39,7 @@ public abstract class ParqourQuery extends Parqour<Cursor> {
   public ParqourQuery(ParqourSource source, TextQueryTreeRootExpression query) {
     this.source = source;
     this.metadata = captureMetadata(source);
-    this.schemaInfo = captureSchemaInfo(source, metadata);
+    this.queryInfo = captureSchemaInfo(source, metadata);
     this.query = query;
   }
 
@@ -52,10 +52,10 @@ public abstract class ParqourQuery extends Parqour<Cursor> {
     }
   }
 
-  private SchemaInfo captureSchemaInfo(ParqourSource source, ParquetMetadata metadata) {
+  private QueryInfo captureSchemaInfo(ParqourSource source, ParquetMetadata metadata) {
     Path sourceFile = new Path(source.path());
     MessageType schema = metadata.getFileMetaData().getSchema();
-    return new SchemaInfo(EMPTY_CONFIGURATION, sourceFile, metadata, schema);
+    return new QueryInfo(EMPTY_CONFIGURATION, sourceFile, metadata, schema);
   }
 
   public static ParqourQuery fromRootExpression(TextQueryTreeRootExpression expression) {
@@ -68,6 +68,6 @@ public abstract class ParqourQuery extends Parqour<Cursor> {
   }
 
   public <T> Parqour<T> materialize(ReadSupport<T> readSupport) {
-    return new ReadSupportIterable<T>(schemaInfo, readSupport, this);
+    return new ReadSupportIterable<T>(queryInfo, readSupport, this);
   }
 }

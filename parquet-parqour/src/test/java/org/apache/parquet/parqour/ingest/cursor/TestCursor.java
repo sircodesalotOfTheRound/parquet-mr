@@ -12,7 +12,7 @@ import org.apache.parquet.parqour.ingest.paging.DiskInterfaceManager;
 import org.apache.parquet.parqour.ingest.read.nodes.IngestTree;
 import org.apache.parquet.parqour.ingest.read.nodes.impl.field.RootIngestNode;
 import org.apache.parquet.parqour.ingest.read.nodes.impl.i32.Int32NoRepeatIngestNode;
-import org.apache.parquet.parqour.ingest.schema.SchemaInfo;
+import org.apache.parquet.parqour.ingest.schema.QueryInfo;
 import org.apache.parquet.parqour.testtools.TestTools;
 import org.apache.parquet.parqour.testtools.WriteTools;
 import org.apache.parquet.schema.GroupType;
@@ -59,9 +59,9 @@ public class TestCursor {
       public void execute() throws Exception {
         ParquetMetadata metadata = ParquetFileReader.readFooter(TestTools.EMPTY_CONFIGURATION, new Path(TestTools.TEST_FILE_PATH), ParquetMetadataConverter.NO_FILTER);
 
-        SchemaInfo schemaInfo = new SchemaInfo(TestTools.EMPTY_CONFIGURATION, new Path(TestTools.TEST_FILE_PATH), metadata, COUNTING_SCHEMA);
-        DiskInterfaceManager diskInterfaceManager = new DiskInterfaceManager(schemaInfo);
-        IngestTree ingestTree = new IngestTree(schemaInfo, diskInterfaceManager);
+        QueryInfo queryInfo = new QueryInfo(TestTools.EMPTY_CONFIGURATION, new Path(TestTools.TEST_FILE_PATH), metadata, COUNTING_SCHEMA);
+        DiskInterfaceManager diskInterfaceManager = new DiskInterfaceManager(queryInfo);
+        IngestTree ingestTree = new IngestTree(queryInfo, diskInterfaceManager);
 
         RootIngestNode root = ingestTree.root();
         Int32NoRepeatIngestNode oneXIngest = (Int32NoRepeatIngestNode) ingestTree.getIngestNodeByPath(ONE_X);

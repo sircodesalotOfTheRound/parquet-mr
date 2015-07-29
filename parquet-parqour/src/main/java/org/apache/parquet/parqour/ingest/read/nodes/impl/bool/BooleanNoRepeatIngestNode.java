@@ -3,13 +3,11 @@ package org.apache.parquet.parqour.ingest.read.nodes.impl.bool;
 import org.apache.parquet.column.ColumnDescriptor;
 import org.apache.parquet.parqour.ingest.cursor.iface.AdvanceableCursor;
 import org.apache.parquet.parqour.ingest.cursor.implementations.noniterable.bool.BooleanCursor;
-import org.apache.parquet.parqour.ingest.cursor.implementations.noniterable.i32.Int32Cursor;
 import org.apache.parquet.parqour.ingest.ffreader.interfaces.BooleanFastForwardReader;
-import org.apache.parquet.parqour.ingest.ffreader.interfaces.Int32FastForwardReader;
 import org.apache.parquet.parqour.ingest.paging.DiskInterfaceManager;
 import org.apache.parquet.parqour.ingest.read.nodes.categories.AggregatingIngestNode;
 import org.apache.parquet.parqour.ingest.read.nodes.categories.PrimitiveIngestNodeBase;
-import org.apache.parquet.parqour.ingest.schema.SchemaInfo;
+import org.apache.parquet.parqour.ingest.schema.QueryInfo;
 import org.apache.parquet.schema.Type;
 
 import java.util.Arrays;
@@ -22,14 +20,14 @@ public final class BooleanNoRepeatIngestNode extends PrimitiveIngestNodeBase<Boo
   private Boolean[] ingestBuffer;
   private final BooleanCursor cursor;
 
-  public BooleanNoRepeatIngestNode(SchemaInfo schemaInfo,
+  public BooleanNoRepeatIngestNode(QueryInfo queryInfo,
                                    AggregatingIngestNode parent,
                                    Type schemaNode,
                                    ColumnDescriptor descriptor,
                                    DiskInterfaceManager diskInterfaceManager,
                                    int childIndex) {
 
-    super(schemaInfo, parent, schemaNode, descriptor, diskInterfaceManager, childIndex);
+    super(queryInfo, parent, schemaNode, descriptor, diskInterfaceManager, childIndex);
 
     this.ingestBufferLength = 100;
     this.ingestBuffer = new Boolean[ingestBufferLength];

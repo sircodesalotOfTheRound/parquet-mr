@@ -12,7 +12,7 @@ import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
  * Created by sircodesalot on 15/4/2.
  */
 public class TextQueryTableSetExpression extends TextQueryExpression {
-  private static final String TABLE_SET = "(TABLES)";
+  // Todo: this should just be a single table.
   private final TextQueryCollection<TextQueryVariableExpression> tables;
 
   public TextQueryTableSetExpression(TextQueryExpression parent, TextQueryLexer lexer) {
@@ -20,16 +20,6 @@ public class TextQueryTableSetExpression extends TextQueryExpression {
 
     this.tables = readTables(lexer);
   }
-/*
-  @Override
-  public void accept(ParquelNoReturnVisitor visitor) {
-    visitor.visit(this);
-  }
-  @Override
-  public ParquelCollection<ParquelExpression> children() {
-    return null;
-    //return tables.castTo(ParquelExpression.class);
-  }*/
 
   private TextQueryCollection<TextQueryVariableExpression> readTables(TextQueryLexer lexer) {
     TextQueryAppendableCollection<TextQueryVariableExpression> tables = new TextQueryAppendableCollection<TextQueryVariableExpression>();
@@ -63,11 +53,6 @@ public class TextQueryTableSetExpression extends TextQueryExpression {
 
   public static TextQueryTableSetExpression read(TextQueryExpression parent, TextQueryLexer lexer) {
     return new TextQueryTableSetExpression(parent, lexer);
-  }
-
-  @Override
-  public String toString() {
-    return TABLE_SET;
   }
 
   @Override

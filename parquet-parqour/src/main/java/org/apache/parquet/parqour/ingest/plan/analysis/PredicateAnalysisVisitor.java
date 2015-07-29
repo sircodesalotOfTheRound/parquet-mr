@@ -10,7 +10,7 @@ import org.apache.parquet.parqour.ingest.plan.predicates.builders.leaf.sys.*;
 import org.apache.parquet.parqour.ingest.plan.predicates.builders.logic.AndColumnPredicateBuilder;
 import org.apache.parquet.parqour.ingest.plan.predicates.builders.logic.OrColumnPredicateBuilder;
 import org.apache.parquet.parqour.ingest.read.nodes.IngestTree;
-import org.apache.parquet.parqour.ingest.schema.SchemaInfo;
+import org.apache.parquet.parqour.ingest.schema.QueryInfo;
 import org.apache.parquet.schema.MessageType;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
@@ -22,11 +22,11 @@ import java.util.Map;
 */
 class PredicateAnalysisVisitor implements FilterPredicate.Visitor<ColumnPredicateBuildable> {
   private final IngestTree ingestTree;
-  private final SchemaInfo schemaInfo;
+  private final QueryInfo queryInfo;
 
   public PredicateAnalysisVisitor(IngestTree ingestTree) {
     this.ingestTree = ingestTree;
-    this.schemaInfo = ingestTree.schemaInfo();
+    this.queryInfo = ingestTree.schemaInfo();
   }
 
   private Map<String, ColumnDescriptor> captureColumnDescriptors(MessageType schema) {
@@ -41,7 +41,7 @@ class PredicateAnalysisVisitor implements FilterPredicate.Visitor<ColumnPredicat
 
   private ColumnDescriptor getColumnDescriptor(Operators.Column column) {
     String columnPath = column.getColumnPath().toDotString();
-    return schemaInfo.getColumnDescriptorByPath(columnPath);
+    return queryInfo.getColumnDescriptorByPath(columnPath);
   }
 
   @Override

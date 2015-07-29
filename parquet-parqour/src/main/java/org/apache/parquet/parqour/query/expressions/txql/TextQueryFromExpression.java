@@ -18,16 +18,6 @@ public class TextQueryFromExpression extends TextQueryKeywordExpression implemen
 
     this.tableSet = readTables(lexer);
   }
-/*
-  @Override
-  public void accept(ParquelNoReturnVisitor visitor) {
-    visitor.visit(this);
-  }
-
-  @Override
-  public ParquelCollection<ParquelExpression> children() {
-    return new ParquelAppendableCollection<ParquelExpression>(tableSet);
-  }*/
 
   private TextQueryTableSetExpression readTables(TextQueryLexer lexer) {
     lexer.readCurrentAndAdvance(TextQueryExpressionType.IDENTIFIER, FROM);
@@ -48,7 +38,7 @@ public class TextQueryFromExpression extends TextQueryKeywordExpression implemen
 
   @Override
   public String toString() {
-    return FROM;
+    return this.tableSet.toString();
   }
 
   @Override

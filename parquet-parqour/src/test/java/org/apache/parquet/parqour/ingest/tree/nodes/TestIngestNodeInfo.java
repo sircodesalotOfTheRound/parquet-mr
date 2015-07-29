@@ -4,7 +4,7 @@ import org.apache.parquet.parqour.ingest.cursor.iface.AdvanceableCursor;
 import org.apache.parquet.parqour.ingest.read.nodes.categories.AggregatingIngestNode;
 import org.apache.parquet.parqour.ingest.read.nodes.categories.IngestNode;
 import org.apache.parquet.parqour.ingest.read.nodes.categories.IngestNodeCategory;
-import org.apache.parquet.parqour.ingest.schema.SchemaInfo;
+import org.apache.parquet.parqour.ingest.schema.QueryInfo;
 import org.apache.parquet.parqour.testtools.TestTools;
 import org.apache.parquet.schema.GroupType;
 import org.apache.parquet.schema.PrimitiveType;
@@ -25,7 +25,7 @@ public class TestIngestNodeInfo {
   private static final GroupType SCHEMA = new GroupType(REQUIRED, "schema",
     new PrimitiveType(REQUIRED, INT32, "primitive"));
 
-  private static final SchemaInfo SCHEMA_INFO = TestTools.generateSchemaInfoFromSchema(SCHEMA);
+  private static final QueryInfo SCHEMA_INFO = TestTools.generateSchemaInfoFromSchema(SCHEMA);
   private static final AggregatingIngestNode AGGREGATOR = mockAggregationNode();
 
   @Test
@@ -53,8 +53,8 @@ public class TestIngestNodeInfo {
   }
 
   public static class SimpleMockIngestNode extends IngestNode {
-    public SimpleMockIngestNode(SchemaInfo schemaInfo, AggregatingIngestNode parent, String path, Type schemaNode, IngestNodeCategory category, int childNodeIndex) {
-      super(schemaInfo, parent, path, schemaNode, category, childNodeIndex);
+    public SimpleMockIngestNode(QueryInfo queryInfo, AggregatingIngestNode parent, String path, Type schemaNode, IngestNodeCategory category, int childNodeIndex) {
+      super(queryInfo, parent, path, schemaNode, category, childNodeIndex);
     }
 
     @Override

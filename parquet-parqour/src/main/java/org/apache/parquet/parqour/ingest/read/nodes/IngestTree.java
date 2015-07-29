@@ -6,7 +6,7 @@ import org.apache.parquet.parqour.ingest.read.nodes.categories.AggregatingIngest
 import org.apache.parquet.parqour.ingest.read.nodes.categories.IngestNode;
 import org.apache.parquet.parqour.ingest.read.nodes.categories.IngestNodeCategory;
 import org.apache.parquet.parqour.ingest.read.nodes.impl.field.RootIngestNode;
-import org.apache.parquet.parqour.ingest.schema.SchemaInfo;
+import org.apache.parquet.parqour.ingest.schema.QueryInfo;
 
 import java.util.*;
 
@@ -14,14 +14,14 @@ import java.util.*;
  * Created by sircodesalot on 6/9/15.
  */
 public class IngestTree {
-  private final SchemaInfo schemaInfo;
+  private final QueryInfo queryInfo;
   private final RootIngestNode root;
   private final Map<String, IngestNode> ingestNodesByPath;
   private final Iterable<IngestNode> ingestNodeList;
 
-  public IngestTree(SchemaInfo schemaInfo, DiskInterfaceManager diskInterfaceManager) {
-    this.schemaInfo = schemaInfo;
-    this.root = new RootIngestNode(schemaInfo, diskInterfaceManager);
+  public IngestTree(QueryInfo queryInfo, DiskInterfaceManager diskInterfaceManager) {
+    this.queryInfo = queryInfo;
+    this.root = new RootIngestNode(queryInfo, diskInterfaceManager);
     this.ingestNodesByPath = collectIngestNodesByPath(root);
     this.ingestNodeList = collectIngestNodes(ingestNodesByPath);
   }
@@ -81,7 +81,7 @@ public class IngestTree {
     return dependencies;
   }
 
-  public SchemaInfo schemaInfo() { return this.schemaInfo; }
+  public QueryInfo schemaInfo() { return this.queryInfo; }
   public RootIngestNode root() { return this.root; }
   public Iterable<IngestNode> ingestNodes() { return this.ingestNodeList; }
 

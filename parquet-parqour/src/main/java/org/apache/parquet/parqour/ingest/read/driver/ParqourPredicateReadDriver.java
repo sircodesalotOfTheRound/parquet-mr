@@ -2,7 +2,7 @@ package org.apache.parquet.parqour.ingest.read.driver;
 
 import org.apache.parquet.parqour.ingest.plan.evaluation.waypoints.PredicateTestWayPoint;
 import org.apache.parquet.parqour.ingest.plan.evaluation.waypoints.WayPoint;
-import org.apache.parquet.parqour.ingest.schema.SchemaInfo;
+import org.apache.parquet.parqour.ingest.schema.QueryInfo;
 
 /**
  * Created by sircodesalot on 6/9/15.
@@ -10,8 +10,8 @@ import org.apache.parquet.parqour.ingest.schema.SchemaInfo;
 public class ParqourPredicateReadDriver extends ParqourReadDriverBase {
   private final PredicateTestWayPoint predicatePathStartPoint;
 
-  public ParqourPredicateReadDriver(SchemaInfo schemaInfo) {
-    super(schemaInfo);
+  public ParqourPredicateReadDriver(QueryInfo queryInfo) {
+    super(queryInfo);
 
     this.predicatePathStartPoint = super.pathAnalysis.path();
   }

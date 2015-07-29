@@ -10,7 +10,7 @@ import org.apache.parquet.parqour.ingest.ffreader.interfaces.BinaryFastForwardRe
 import org.apache.parquet.parqour.ingest.ffreader.interfaces.Int32FastForwardReader;
 import org.apache.parquet.parqour.ingest.paging.DataPageDecorator;
 import org.apache.parquet.parqour.ingest.paging.DiskInterfaceManager;
-import org.apache.parquet.parqour.ingest.schema.SchemaInfo;
+import org.apache.parquet.parqour.ingest.schema.QueryInfo;
 import org.apache.parquet.parqour.testtools.TestTools;
 import org.apache.parquet.parqour.testtools.UsesPersistence;
 import org.apache.parquet.parqour.testtools.WriteTools;
@@ -63,13 +63,13 @@ public class TestDiskInterfaceManager extends UsesPersistence {
     for (ParquetProperties.WriterVersion version : PARQUET_VERSIONS) {
       this.generateTestData(version);
 
-      SchemaInfo schemaInfo = TestTools.generateSchemaInfoFromPath(TEST_FILE_PATH);
-      DiskInterfaceManager diskInterfaceManager = new DiskInterfaceManager(schemaInfo);
+      QueryInfo queryInfo = TestTools.generateSchemaInfoFromPath(TEST_FILE_PATH);
+      DiskInterfaceManager diskInterfaceManager = new DiskInterfaceManager(queryInfo);
 
-      Int32FastForwardReader idReader = generateReaderForColumn(ID, schemaInfo, diskInterfaceManager);
-      Int32FastForwardReader ageReader = generateReaderForColumn(AGE, schemaInfo, diskInterfaceManager);
-      BinaryFastForwardReader firstReader = generateReaderForColumn(FIRST, schemaInfo, diskInterfaceManager);
-      BinaryFastForwardReader lastReader = generateReaderForColumn(LAST, schemaInfo, diskInterfaceManager);
+      Int32FastForwardReader idReader = generateReaderForColumn(ID, queryInfo, diskInterfaceManager);
+      Int32FastForwardReader ageReader = generateReaderForColumn(AGE, queryInfo, diskInterfaceManager);
+      BinaryFastForwardReader firstReader = generateReaderForColumn(FIRST, queryInfo, diskInterfaceManager);
+      BinaryFastForwardReader lastReader = generateReaderForColumn(LAST, queryInfo, diskInterfaceManager);
 
       // Should be one item on the page, and that value should be two.
       assertEquals(1, idReader.totalItemsOnPage());
@@ -87,8 +87,8 @@ public class TestDiskInterfaceManager extends UsesPersistence {
 
   }
 
-  private <T extends FastForwardReaderBase> T generateReaderForColumn(String columnName, SchemaInfo schemaInfo, DiskInterfaceManager diskInterfaceManager) {
-    ColumnDescriptor columnDescriptor = schemaInfo.getColumnDescriptorByPath(columnName);
+  private <T extends FastForwardReaderBase> T generateReaderForColumn(String columnName, QueryInfo queryInfo, DiskInterfaceManager diskInterfaceManager) {
+    ColumnDescriptor columnDescriptor = queryInfo.getColumnDescriptorByPath(columnName);
     DataPageDecorator page = diskInterfaceManager.getFirstPageForColumn(columnDescriptor);
 
     return page.valuesReader();

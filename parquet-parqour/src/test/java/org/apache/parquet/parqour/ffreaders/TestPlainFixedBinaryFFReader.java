@@ -7,7 +7,7 @@ import org.apache.parquet.hadoop.ParquetWriter;
 import org.apache.parquet.parqour.ingest.ffreader.interfaces.BinaryFastForwardReader;
 import org.apache.parquet.parqour.ingest.paging.DataPageDecorator;
 import org.apache.parquet.parqour.ingest.paging.DiskInterfaceManager;
-import org.apache.parquet.parqour.ingest.schema.SchemaInfo;
+import org.apache.parquet.parqour.ingest.schema.QueryInfo;
 import org.apache.parquet.parqour.testtools.ParquetConfiguration;
 import org.apache.parquet.parqour.testtools.TestTools;
 import org.apache.parquet.parqour.testtools.UsesPersistence;
@@ -68,9 +68,9 @@ public class TestPlainFixedBinaryFFReader extends UsesPersistence {
     for (ParquetConfiguration configuration : TestTools.CONFIGURATIONS) {
       TestTools.generateTestData(new SingleNameWriteContext(configuration));
 
-      SchemaInfo schemaInfo = TestTools.generateSchemaInfoFromPath(TestTools.TEST_FILE_PATH);
-      DiskInterfaceManager diskInterfaceManager = new DiskInterfaceManager(schemaInfo);
-      ColumnDescriptor doubleIncrementColumn = schemaInfo.getColumnDescriptorByPath(COLUMN_NAME);
+      QueryInfo queryInfo = TestTools.generateSchemaInfoFromPath(TestTools.TEST_FILE_PATH);
+      DiskInterfaceManager diskInterfaceManager = new DiskInterfaceManager(queryInfo);
+      ColumnDescriptor doubleIncrementColumn = queryInfo.getColumnDescriptorByPath(COLUMN_NAME);
       DataPageDecorator page = diskInterfaceManager.getFirstPageForColumn(doubleIncrementColumn);
       BinaryFastForwardReader reader = page.valuesReader();
 

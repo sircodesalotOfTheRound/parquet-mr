@@ -4,7 +4,7 @@ import org.apache.parquet.parqour.ingest.cursor.iface.AdvanceableCursor;
 import org.apache.parquet.parqour.ingest.paging.DiskInterfaceManager;
 import org.apache.parquet.parqour.ingest.read.nodes.IngestNodeGenerator;
 import org.apache.parquet.parqour.ingest.read.nodes.IngestNodeSet;
-import org.apache.parquet.parqour.ingest.schema.SchemaInfo;
+import org.apache.parquet.parqour.ingest.schema.QueryInfo;
 import org.apache.parquet.schema.GroupType;
 import org.apache.parquet.schema.Type;
 
@@ -26,11 +26,11 @@ public abstract class AggregatingIngestNode extends IngestNode {
 
   protected int schemaLinkWriteIndexForColumn[];
 
-  protected AggregatingIngestNode(SchemaInfo schemaInfo, Type schemaNode, DiskInterfaceManager diskInterfaceManager) {
-    super(schemaInfo, null, "", schemaNode, IngestNodeCategory.AGGREGATOR, -1);
+  protected AggregatingIngestNode(QueryInfo queryInfo, Type schemaNode, DiskInterfaceManager diskInterfaceManager) {
+    super(queryInfo, null, "", schemaNode, IngestNodeCategory.AGGREGATOR, -1);
 
     this.path = EMPTY_PATH;
-    this.groupSchema = schemaInfo.schema();
+    this.groupSchema = queryInfo.schema();
     this.diskInterfaceManager = diskInterfaceManager;
     this.children = collectChildren(groupSchema);
     this.childColumnCount = children.size();
@@ -39,11 +39,11 @@ public abstract class AggregatingIngestNode extends IngestNode {
     this.ingestBufferLength = 100;
   }
 
-  public AggregatingIngestNode(SchemaInfo schemaInfo, AggregatingIngestNode parent,
+  public AggregatingIngestNode(QueryInfo queryInfo, AggregatingIngestNode parent,
                                String fqn, GroupType groupSchema,
                                DiskInterfaceManager diskInterfaceManager, int childNodeIndex) {
 
-    super(schemaInfo, parent, fqn, groupSchema, IngestNodeCategory.AGGREGATOR, childNodeIndex);
+    super(queryInfo, parent, fqn, groupSchema, IngestNodeCategory.AGGREGATOR, childNodeIndex);
 
     this.path = fqn;
     this.groupSchema = groupSchema;
@@ -60,7 +60,7 @@ public abstract class AggregatingIngestNode extends IngestNode {
     for (int columnIndex = 0; columnIndex < node.getFields().size(); columnIndex++) {
       Type child = node.getFields().get(columnIndex);
       IngestNode ingestNode = IngestNodeGenerator
-        .generateIngestNode(this, child, schemaInfo, diskInterfaceManager, columnIndex);
+        .generateIngestNode(this, child, queryInfo, diskInterfaceManager, columnIndex);
 
       children.add(ingestNode);
     }

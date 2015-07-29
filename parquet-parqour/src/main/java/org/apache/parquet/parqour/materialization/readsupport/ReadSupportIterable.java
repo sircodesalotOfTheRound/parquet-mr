@@ -3,7 +3,7 @@ package org.apache.parquet.parqour.materialization.readsupport;
 import org.apache.parquet.hadoop.api.ReadSupport;
 import org.apache.parquet.parqour.ingest.cursor.iface.Cursor;
 import org.apache.parquet.parqour.ingest.read.iterator.Parqour;
-import org.apache.parquet.parqour.ingest.schema.SchemaInfo;
+import org.apache.parquet.parqour.ingest.schema.QueryInfo;
 
 import java.util.Iterator;
 
@@ -14,8 +14,8 @@ public class ReadSupportIterable<T> extends Parqour<T> {
   private final ReadSupportMaterializer<T> materializer;
   private final Iterable<Cursor> iterable;
 
-  public ReadSupportIterable(SchemaInfo schemaInfo, ReadSupport<T> readSupport, Iterable<Cursor> iterable) {
-    this.materializer = new ReadSupportMaterializer<T>(schemaInfo, readSupport);
+  public ReadSupportIterable(QueryInfo queryInfo, ReadSupport<T> readSupport, Iterable<Cursor> iterable) {
+    this.materializer = new ReadSupportMaterializer<T>(queryInfo, readSupport);
     this.iterable = iterable;
   }
 

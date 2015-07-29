@@ -14,7 +14,7 @@ import org.apache.parquet.hadoop.metadata.ParquetMetadata;
 import org.apache.parquet.parqour.ingest.paging.DiskInterfaceManager;
 import org.apache.parquet.parqour.ingest.read.nodes.IngestTree;
 import org.apache.parquet.parqour.ingest.read.nodes.impl.i32.Int32NoRepeatIngestNode;
-import org.apache.parquet.parqour.ingest.schema.SchemaInfo;
+import org.apache.parquet.parqour.ingest.schema.QueryInfo;
 import org.apache.parquet.parqour.testtools.TestTools;
 import org.apache.parquet.parqour.testtools.UsesPersistence;
 import org.apache.parquet.parqour.testtools.WriteTools;
@@ -165,10 +165,10 @@ public class TestSingleColumnPredicate extends UsesPersistence {
       public void execute() throws Exception {
         ParquetMetadata metadata = ParquetFileReader.readFooter(EMPTY_CONFIGURATION, new Path(TEST_FILE_PATH), ParquetMetadataConverter.NO_FILTER);
 
-        SchemaInfo schemaInfo = new SchemaInfo(EMPTY_CONFIGURATION, new Path(TEST_FILE_PATH), metadata, COUNTING_SCHEMA, predicate);
-        DiskInterfaceManager diskInterfaceManager = new DiskInterfaceManager(schemaInfo);
+        QueryInfo queryInfo = new QueryInfo(EMPTY_CONFIGURATION, new Path(TEST_FILE_PATH), metadata, COUNTING_SCHEMA, predicate);
+        DiskInterfaceManager diskInterfaceManager = new DiskInterfaceManager(queryInfo);
 
-        IngestTree ingest = new IngestTree(schemaInfo, diskInterfaceManager);
+        IngestTree ingest = new IngestTree(queryInfo, diskInterfaceManager);
         Int32NoRepeatIngestNode countNode = (Int32NoRepeatIngestNode) ingest.getIngestNodeByPath(COUNT);
 /*
         ingest.prepareForRead(TOTAL_ROWS);

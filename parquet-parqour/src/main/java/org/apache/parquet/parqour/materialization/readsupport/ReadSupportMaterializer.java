@@ -8,7 +8,7 @@ import org.apache.parquet.io.api.GroupConverter;
 import org.apache.parquet.io.api.PrimitiveConverter;
 import org.apache.parquet.io.api.RecordMaterializer;
 import org.apache.parquet.parqour.ingest.cursor.iface.Cursor;
-import org.apache.parquet.parqour.ingest.schema.SchemaInfo;
+import org.apache.parquet.parqour.ingest.schema.QueryInfo;
 import org.apache.parquet.schema.MessageType;
 import org.apache.parquet.schema.PrimitiveType;
 import org.apache.parquet.schema.Type;
@@ -24,7 +24,7 @@ import java.util.Set;
  * Created by sircodesalot on 7/4/15.
  */
 public class ReadSupportMaterializer<T> {
-  private final SchemaInfo schemaInfo;
+  private final QueryInfo queryInfo;
   private final ReadSupport<T> readSupport;
 
   private final ReadSupport.ReadContext context;
@@ -32,27 +32,27 @@ public class ReadSupportMaterializer<T> {
   private final GroupConverter rootConverter;
   private final MessageType projectionSchema;
 
-  public ReadSupportMaterializer(SchemaInfo schemaInfo, ReadSupport<T> readSupport) {
-    this.schemaInfo = schemaInfo;
+  public ReadSupportMaterializer(QueryInfo queryInfo, ReadSupport<T> readSupport) {
+    this.queryInfo = queryInfo;
     this.readSupport = readSupport;
-    this.projectionSchema = schemaInfo.projectionSchema();
-    this.context = initializeContext(schemaInfo, readSupport);
-    this.materializer = initializeMaterializer(schemaInfo, readSupport, context);
+    this.projectionSchema = queryInfo.projectionSchema();
+    this.context = initializeContext(queryInfo, readSupport);
+    this.materializer = initializeMaterializer(queryInfo, readSupport, context);
     this.rootConverter = materializer.getRootConverter();
   }
 
-  private ReadSupport.ReadContext initializeContext(SchemaInfo schemaInfo, ReadSupport<T> readSupport) {
-    Configuration configuration = schemaInfo.configuration();
-    Map<String, Set<String>> metadataEntries = captureKeyValueMetadata(schemaInfo.metadata());
-    InitContext context = new InitContext(configuration, metadataEntries, schemaInfo.projectionSchema());
+  private ReadSupport.ReadContext initializeContext(QueryInfo queryInfo, ReadSupport<T> readSupport) {
+    Configuration configuration = queryInfo.configuration();
+    Map<String, Set<String>> metadataEntries = captureKeyValueMetadata(queryInfo.metadata());
+    InitContext context = new InitContext(configuration, metadataEntries, queryInfo.projectionSchema());
 
     return readSupport.init(context);
   }
 
-  private RecordMaterializer<T> initializeMaterializer(SchemaInfo schemaInfo, ReadSupport<T> readSupport, ReadSupport.ReadContext context) {
-    return readSupport.prepareForRead(schemaInfo.configuration(),
-      schemaInfo.metadata().getFileMetaData().getKeyValueMetaData(),
-      schemaInfo.schema(), context);
+  private RecordMaterializer<T> initializeMaterializer(QueryInfo queryInfo, ReadSupport<T> readSupport, ReadSupport.ReadContext context) {
+    return readSupport.prepareForRead(queryInfo.configuration(),
+      queryInfo.metadata().getFileMetaData().getKeyValueMetaData(),
+      queryInfo.schema(), context);
   }
 
   private Map<String, Set<String>> captureKeyValueMetadata(ParquetMetadata metadata) {

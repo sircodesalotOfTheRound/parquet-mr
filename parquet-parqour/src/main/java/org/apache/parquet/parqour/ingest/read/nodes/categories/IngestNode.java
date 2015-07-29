@@ -1,14 +1,14 @@
 package org.apache.parquet.parqour.ingest.read.nodes.categories;
 
 import org.apache.parquet.parqour.ingest.cursor.iface.AdvanceableCursor;
-import org.apache.parquet.parqour.ingest.schema.SchemaInfo;
+import org.apache.parquet.parqour.ingest.schema.QueryInfo;
 import org.apache.parquet.schema.Type;
 
 /**
  * Created by sircodesalot on 6/2/15.
  */
 public abstract class IngestNode {
-  protected final SchemaInfo schemaInfo;
+  protected final QueryInfo queryInfo;
 
   protected final AggregatingIngestNode parent;
   protected final int repetitionLevelAtThisNode;
@@ -40,8 +40,8 @@ public abstract class IngestNode {
   protected int ingestBufferLength;
 
   // Todo: many of these properties are no longer neccesary. Find their usages and remove.
-  public IngestNode(SchemaInfo schemaInfo, AggregatingIngestNode parent, String path, Type schemaNode, IngestNodeCategory category, int childNodeIndex) {
-    this.schemaInfo = schemaInfo;
+  public IngestNode(QueryInfo queryInfo, AggregatingIngestNode parent, String path, Type schemaNode, IngestNodeCategory category, int childNodeIndex) {
+    this.queryInfo = queryInfo;
     this.parent = parent;
     this.path = path;
     this.name = schemaNode.getName();
@@ -49,10 +49,10 @@ public abstract class IngestNode {
     this.schemaNode = schemaNode;
     this.columnIndex = childNodeIndex;
     this.hasParent = determineHasParent();
-    this.totalRowCount = schemaInfo.totalRowCount();
+    this.totalRowCount = queryInfo.totalRowCount();
     this.repetitionType = schemaNode.getRepetition();
-    this.repetitionLevelAtThisNode = schemaInfo.determineRepeatLevel(this);
-    this.definitionLevelAtThisNode = schemaInfo.getDefinitionLevel(path);
+    this.repetitionLevelAtThisNode = queryInfo.determineRepeatLevel(this);
+    this.definitionLevelAtThisNode = queryInfo.getDefinitionLevel(path);
     this.canPerformTrueFastForwards = determineCanPerformTrueFastForwarding(this);
     this.isSchemaReportingNode = determineIsSchemaReportingNode(childNodeIndex);
     this.parentRepetitionLevel = computeParentRepetitionLevel();

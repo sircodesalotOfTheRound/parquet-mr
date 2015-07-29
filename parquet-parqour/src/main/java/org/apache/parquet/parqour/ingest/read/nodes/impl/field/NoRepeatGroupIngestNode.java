@@ -6,7 +6,7 @@ import org.apache.parquet.parqour.ingest.paging.DiskInterfaceManager;
 import org.apache.parquet.parqour.ingest.read.nodes.IngestNodeSet;
 import org.apache.parquet.parqour.ingest.read.nodes.categories.AggregatingIngestNode;
 import org.apache.parquet.parqour.ingest.read.nodes.categories.IngestNode;
-import org.apache.parquet.parqour.ingest.schema.SchemaInfo;
+import org.apache.parquet.parqour.ingest.schema.QueryInfo;
 import org.apache.parquet.schema.GroupType;
 
 import java.util.Arrays;
@@ -16,8 +16,8 @@ import java.util.Arrays;
  */
 public final class NoRepeatGroupIngestNode extends GroupIngestNode {
 
-  public NoRepeatGroupIngestNode(SchemaInfo schemaInfo, AggregatingIngestNode aggregatingIngestNode, String childPath, GroupType child, DiskInterfaceManager diskInterfaceManager, int childColumnIndex) {
-    super(schemaInfo, aggregatingIngestNode, childPath, child, diskInterfaceManager, childColumnIndex);
+  public NoRepeatGroupIngestNode(QueryInfo queryInfo, AggregatingIngestNode aggregatingIngestNode, String childPath, GroupType child, DiskInterfaceManager diskInterfaceManager, int childColumnIndex) {
+    super(queryInfo, aggregatingIngestNode, childPath, child, diskInterfaceManager, childColumnIndex);
   }
 
   @Override

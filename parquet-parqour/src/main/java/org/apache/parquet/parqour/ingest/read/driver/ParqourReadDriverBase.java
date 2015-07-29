@@ -6,13 +6,13 @@ import org.apache.parquet.parqour.ingest.plan.analysis.PredicateAnalysis;
 import org.apache.parquet.parqour.ingest.plan.evaluation.EvaluationPathAnalysis;
 import org.apache.parquet.parqour.ingest.plan.evaluation.skipchain.SkipChain;
 import org.apache.parquet.parqour.ingest.read.nodes.IngestTree;
-import org.apache.parquet.parqour.ingest.schema.SchemaInfo;
+import org.apache.parquet.parqour.ingest.schema.QueryInfo;
 
 /**
  * Created by sircodesalot on 7/10/15.
  */
 public abstract class ParqourReadDriverBase {
-  protected final SchemaInfo schemaInfo;
+  protected final QueryInfo queryInfo;
   protected final DiskInterfaceManager diskInterfaceManager;
   protected final IngestTree ingestTree;
   protected final PredicateAnalysis predicateAnalysis;
@@ -22,17 +22,17 @@ public abstract class ParqourReadDriverBase {
   protected final long rowCount;
   protected long rowNumber;
 
-  public ParqourReadDriverBase(SchemaInfo schemaInfo) {
-    this.schemaInfo = schemaInfo;
-    this.diskInterfaceManager = new DiskInterfaceManager(schemaInfo);
-    this.ingestTree = new IngestTree(schemaInfo, diskInterfaceManager);
+  public ParqourReadDriverBase(QueryInfo queryInfo) {
+    this.queryInfo = queryInfo;
+    this.diskInterfaceManager = new DiskInterfaceManager(queryInfo);
+    this.ingestTree = new IngestTree(queryInfo, diskInterfaceManager);
 
     this.predicateAnalysis = new PredicateAnalysis(ingestTree);
     this.pathAnalysis = new EvaluationPathAnalysis(ingestTree, predicateAnalysis);
 
     this.finalCommitIngestPath = pathAnalysis.finalCommitIngestPath();
 
-    this.rowCount = schemaInfo.totalRowCount();
+    this.rowCount = queryInfo.totalRowCount();
     this.rowNumber = -1;
   }
 
@@ -42,11 +42,11 @@ public abstract class ParqourReadDriverBase {
     return ingestTree.root().cursor();
   }
 
-  public static ParqourReadDriverBase determineReadDriverFromSchemaInfo(SchemaInfo schemaInfo) {
-    if (schemaInfo.hasPredicate()) {
-      return new ParqourPredicateReadDriver(schemaInfo);
+  public static ParqourReadDriverBase determineReadDriverFromSchemaInfo(QueryInfo queryInfo) {
+    if (queryInfo.hasPredicate()) {
+      return new ParqourPredicateReadDriver(queryInfo);
     } else {
-      return new ParqourNoPredicateReadDriver(schemaInfo);
+      return new ParqourNoPredicateReadDriver(queryInfo);
     }
   }
 }

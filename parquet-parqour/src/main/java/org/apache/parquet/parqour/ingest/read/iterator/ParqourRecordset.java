@@ -6,7 +6,7 @@ import org.apache.parquet.parqour.ingest.read.driver.ParqourReadDriverBase;
 import org.apache.parquet.parqour.ingest.read.iterator.filtering.ParqourFilterIterable;
 import org.apache.parquet.parqour.ingest.read.iterator.lamba.Predicate;
 import org.apache.parquet.parqour.ingest.read.iterator.lamba.Projection;
-import org.apache.parquet.parqour.ingest.schema.SchemaInfo;
+import org.apache.parquet.parqour.ingest.schema.QueryInfo;
 import org.apache.parquet.parqour.materialization.lambda.LambdaMaterializer;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
@@ -17,14 +17,14 @@ import java.util.Iterator;
  */
 public class ParqourRecordset extends Parqour<Cursor> {
   public static class ParqourCursorIterator implements Iterator<Cursor> {
-    private final SchemaInfo schemaInfo;
+    private final QueryInfo queryInfo;
     private final ParqourReadDriverBase driver;
     private final Cursor cursor;
     private boolean itemAvailable;
 
-    public ParqourCursorIterator(SchemaInfo schemaInfo) {
-      this.schemaInfo = schemaInfo;
-      this.driver = ParqourReadDriverBase.determineReadDriverFromSchemaInfo(schemaInfo);
+    public ParqourCursorIterator(QueryInfo queryInfo) {
+      this.queryInfo = queryInfo;
+      this.driver = ParqourReadDriverBase.determineReadDriverFromSchemaInfo(queryInfo);
       this.cursor = driver.cursor();
 
       this.itemAvailable = false;
@@ -55,10 +55,10 @@ public class ParqourRecordset extends Parqour<Cursor> {
     }
   }
 
-  private final SchemaInfo schemaInfo;
+  private final QueryInfo queryInfo;
 
-  public ParqourRecordset(SchemaInfo schemaInfo) {
-    this.schemaInfo = schemaInfo;
+  public ParqourRecordset(QueryInfo queryInfo) {
+    this.queryInfo = queryInfo;
   }
 
   public Parqour<Cursor> filter(Predicate<Cursor> expression) {
@@ -72,6 +72,6 @@ public class ParqourRecordset extends Parqour<Cursor> {
 
   @Override
   public Iterator<Cursor> iterator() {
-    return new ParqourCursorIterator(schemaInfo);
+    return new ParqourCursorIterator(queryInfo);
   }
 }

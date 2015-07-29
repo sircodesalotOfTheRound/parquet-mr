@@ -9,7 +9,7 @@ import org.apache.parquet.hadoop.ParquetWriter;
 import org.apache.parquet.hadoop.metadata.ParquetMetadata;
 import org.apache.parquet.parqour.ingest.cursor.iface.Cursor;
 import org.apache.parquet.parqour.ingest.read.driver.ParqourPredicateReadDriver;
-import org.apache.parquet.parqour.ingest.schema.SchemaInfo;
+import org.apache.parquet.parqour.ingest.schema.QueryInfo;
 import org.apache.parquet.parqour.testtools.ParquetConfiguration;
 import org.apache.parquet.parqour.testtools.TestTools;
 import org.apache.parquet.parqour.testtools.UsesPersistence;
@@ -80,8 +80,8 @@ public class TestPredicatelessNoNullFlatSchema extends UsesPersistence {
         @Override
         public void execute() throws Exception {
           ParquetMetadata metadata = ParquetFileReader.readFooter(TestTools.EMPTY_CONFIGURATION, new Path(TestTools.TEST_FILE_PATH), ParquetMetadataConverter.NO_FILTER);
-          SchemaInfo schemaInfo = new SchemaInfo(TestTools.EMPTY_CONFIGURATION, new Path(TestTools.TEST_FILE_PATH), metadata, COUNTING_SCHEMA);
-          ParqourPredicateReadDriver driver = new ParqourPredicateReadDriver(schemaInfo);
+          QueryInfo queryInfo = new QueryInfo(TestTools.EMPTY_CONFIGURATION, new Path(TestTools.TEST_FILE_PATH), metadata, COUNTING_SCHEMA);
+          ParqourPredicateReadDriver driver = new ParqourPredicateReadDriver(queryInfo);
 
           Cursor cursor = driver.cursor();
 

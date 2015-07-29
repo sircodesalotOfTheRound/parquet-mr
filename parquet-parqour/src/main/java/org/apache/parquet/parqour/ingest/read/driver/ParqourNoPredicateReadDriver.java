@@ -4,7 +4,7 @@ import org.apache.parquet.parqour.ingest.plan.evaluation.skipchain.SkipChain;
 import org.apache.parquet.parqour.ingest.plan.evaluation.waypoints.SkipChainWayPoint;
 import org.apache.parquet.parqour.ingest.plan.evaluation.waypoints.WayPoint;
 import org.apache.parquet.parqour.ingest.read.nodes.categories.PrimitiveIngestNodeBase;
-import org.apache.parquet.parqour.ingest.schema.SchemaInfo;
+import org.apache.parquet.parqour.ingest.schema.QueryInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,8 +15,8 @@ import java.util.List;
 public class ParqourNoPredicateReadDriver extends ParqourReadDriverBase {
   private final PrimitiveIngestNodeBase[] columnIngestNodes;
 
-  public ParqourNoPredicateReadDriver(SchemaInfo schemaInfo) {
-    super(schemaInfo);
+  public ParqourNoPredicateReadDriver(QueryInfo queryInfo) {
+    super(queryInfo);
 
     this.columnIngestNodes = collectIngestNodes(finalCommitIngestPath);
   }

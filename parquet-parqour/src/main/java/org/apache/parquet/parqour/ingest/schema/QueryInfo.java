@@ -12,6 +12,7 @@ import org.apache.parquet.hadoop.metadata.ColumnPath;
 import org.apache.parquet.hadoop.metadata.ParquetMetadata;
 import org.apache.parquet.parqour.exceptions.DataIngestException;
 import org.apache.parquet.parqour.ingest.read.nodes.categories.IngestNode;
+import org.apache.parquet.parqour.query.expressions.txql.TextQueryTreeRootExpression;
 import org.apache.parquet.schema.GroupType;
 import org.apache.parquet.schema.MessageType;
 import org.apache.parquet.schema.Type;
@@ -23,7 +24,7 @@ import java.util.Map;
 /**
  * Created by sircodesalot on 6/9/15.
  */
-public class SchemaInfo {
+public class QueryInfo {
   private final MessageType schema;
   private final Map<String, ColumnDescriptor> columnDescriptorsByPath;
   private final Map<String, Type> schemaNodeByPath;
@@ -35,11 +36,27 @@ public class SchemaInfo {
   private final List<BlockMetaData> blocks;
   private final long totalNumberOfRows;
 
-  public SchemaInfo(Configuration configuration, Path path, ParquetMetadata metadata, GroupType projectionSchema) {
+  public QueryInfo(TextQueryTreeRootExpression expression) {
+    this.schema = null;
+    this.columnDescriptorsByPath = null;
+    this.schemaNodeByPath = null;
+    this.configuration = null;
+    this.path = null;
+
+    this.metadata = null;
+    this.projectionSchema = null;
+    this.predicate = null;
+    this.blocks = null;
+    this.totalNumberOfRows = 0;
+  }
+
+  @Deprecated
+  public QueryInfo(Configuration configuration, Path path, ParquetMetadata metadata, GroupType projectionSchema) {
     this(configuration, path, metadata, projectionSchema, null);
   }
 
-  public SchemaInfo(Configuration configuration, Path path, ParquetMetadata metadata, GroupType projectionSchema, FilterPredicate predicate) {
+  @Deprecated
+  public QueryInfo(Configuration configuration, Path path, ParquetMetadata metadata, GroupType projectionSchema, FilterPredicate predicate) {
     this.configuration = configuration;
     this.path = path;
     this.metadata = metadata;

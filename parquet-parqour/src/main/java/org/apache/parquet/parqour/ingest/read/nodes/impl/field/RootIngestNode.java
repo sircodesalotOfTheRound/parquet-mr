@@ -6,7 +6,7 @@ import org.apache.parquet.parqour.ingest.cursor.implementations.noniterable.root
 import org.apache.parquet.parqour.ingest.paging.DiskInterfaceManager;
 import org.apache.parquet.parqour.ingest.read.nodes.categories.AggregatingIngestNode;
 import org.apache.parquet.parqour.ingest.read.nodes.categories.IngestNode;
-import org.apache.parquet.parqour.ingest.schema.SchemaInfo;
+import org.apache.parquet.parqour.ingest.schema.QueryInfo;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
@@ -16,8 +16,8 @@ public final class RootIngestNode extends AggregatingIngestNode {
   private final Integer[] schemaLinks;
   private final RootCursor cursor;
 
-  public RootIngestNode(SchemaInfo schemaInfo, DiskInterfaceManager diskInterfaceManager) {
-    super(schemaInfo, schemaInfo.metadata().getFileMetaData().getSchema(), diskInterfaceManager);
+  public RootIngestNode(QueryInfo queryInfo, DiskInterfaceManager diskInterfaceManager) {
+    super(queryInfo, queryInfo.metadata().getFileMetaData().getSchema(), diskInterfaceManager);
 
     this.schemaLinks = new Integer[childColumnCount];
     this.cursor = generateCursor();

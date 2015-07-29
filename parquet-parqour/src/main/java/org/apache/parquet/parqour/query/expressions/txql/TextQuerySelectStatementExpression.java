@@ -22,16 +22,6 @@ public class TextQuerySelectStatementExpression extends TextQueryKeywordExpressi
     this.from = readTables(lexer);
     this.where = readPredicates(lexer);
   }
-/*
-  @Override
-  public void accept(ParquelNoReturnVisitor visitor) {
-    visitor.visit(this);
-  }
-
-  @Override
-  public ParquelCollection<ParquelExpression> children() {
-    return new ParquelAppendableCollection<ParquelExpression>(columns, from);
-  }*/
 
   private TextQueryColumnSetExpression readColumns(TextQueryLexer lexer) {
     return TextQueryColumnSetExpression.read(this, lexer);

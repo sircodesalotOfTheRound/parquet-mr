@@ -1,7 +1,7 @@
-package org.apache.parquet.parqour.schema;
+package org.apache.parquet.parqour.queryinfo;
 
 import org.apache.parquet.column.ColumnDescriptor;
-import org.apache.parquet.parqour.ingest.schema.SchemaInfo;
+import org.apache.parquet.parqour.ingest.schema.QueryInfo;
 import org.apache.parquet.parqour.testtools.TestTools;
 import org.apache.parquet.schema.GroupType;
 import org.apache.parquet.schema.MessageType;
@@ -25,11 +25,11 @@ public class TestSchemaInfo {
       new PrimitiveType(REQUIRED, INT32, "third")
     );
 
-    SchemaInfo schemaInfo = TestTools.generateSchemaInfoFromSchema(schema);
+    QueryInfo queryInfo = TestTools.generateSchemaInfoFromSchema(schema);
 
-    assertEquals(getPath(schemaInfo.getColumnDescriptorByPath("first")), "first");
-    assertEquals(getPath(schemaInfo.getColumnDescriptorByPath("second")), "second");
-    assertEquals(getPath(schemaInfo.getColumnDescriptorByPath("third")), "third");
+    assertEquals(getPath(queryInfo.getColumnDescriptorByPath("first")), "first");
+    assertEquals(getPath(queryInfo.getColumnDescriptorByPath("second")), "second");
+    assertEquals(getPath(queryInfo.getColumnDescriptorByPath("third")), "third");
   }
 
   @Test
@@ -41,11 +41,11 @@ public class TestSchemaInfo {
       new PrimitiveType(REQUIRED, INT32, "thirth")
     );
 
-    SchemaInfo schemaInfo = TestTools.generateSchemaInfoFromSchema(schema);
+    QueryInfo queryInfo = TestTools.generateSchemaInfoFromSchema(schema);
 
-    assertEquals(getPath(schemaInfo.getColumnDescriptorByPath("subgroup.first")), "subgroup.first");
-    assertEquals(getPath(schemaInfo.getColumnDescriptorByPath("subgroup.second")), "subgroup.second");
-    assertEquals(getPath(schemaInfo.getColumnDescriptorByPath("thirth")), "thirth");
+    assertEquals(getPath(queryInfo.getColumnDescriptorByPath("subgroup.first")), "subgroup.first");
+    assertEquals(getPath(queryInfo.getColumnDescriptorByPath("subgroup.second")), "subgroup.second");
+    assertEquals(getPath(queryInfo.getColumnDescriptorByPath("thirth")), "thirth");
   }
 
   private String getPath(ColumnDescriptor descriptor) {

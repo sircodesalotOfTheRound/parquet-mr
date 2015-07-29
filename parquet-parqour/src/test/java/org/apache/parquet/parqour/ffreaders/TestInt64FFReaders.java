@@ -9,7 +9,7 @@ import org.apache.parquet.parqour.ingest.ffreader.interfaces.Int64FastForwardRea
 import org.apache.parquet.parqour.ingest.ffreader.plain.PlainInt64FastForwardReader;
 import org.apache.parquet.parqour.ingest.paging.DataPageDecorator;
 import org.apache.parquet.parqour.ingest.paging.DiskInterfaceManager;
-import org.apache.parquet.parqour.ingest.schema.SchemaInfo;
+import org.apache.parquet.parqour.ingest.schema.QueryInfo;
 import org.apache.parquet.parqour.testtools.ParquetConfiguration;
 import org.apache.parquet.parqour.testtools.TestTools;
 import org.apache.parquet.parqour.testtools.UsesPersistence;
@@ -54,9 +54,9 @@ public class TestInt64FFReaders extends UsesPersistence {
     for (ParquetProperties.WriterVersion version : TestTools.PARQUET_VERSIONS) {
       TestTools.generateTestData(new SingleIntegerColumnWriteContext(version));
 
-      SchemaInfo schemaInfo = TestTools.generateSchemaInfoFromPath(TestTools.TEST_FILE_PATH);
-      DiskInterfaceManager diskInterfaceManager = new DiskInterfaceManager(schemaInfo);
-      ColumnDescriptor squaredColumn = schemaInfo.getColumnDescriptorByPath(COLUMN_NAME);
+      QueryInfo queryInfo = TestTools.generateSchemaInfoFromPath(TestTools.TEST_FILE_PATH);
+      DiskInterfaceManager diskInterfaceManager = new DiskInterfaceManager(queryInfo);
+      ColumnDescriptor squaredColumn = queryInfo.getColumnDescriptorByPath(COLUMN_NAME);
       DataPageDecorator page = diskInterfaceManager.getFirstPageForColumn(squaredColumn);
       PlainInt64FastForwardReader reader = page.valuesReader();
 
@@ -92,9 +92,9 @@ public class TestInt64FFReaders extends UsesPersistence {
     for (ParquetConfiguration configuration : TestTools.CONFIGURATIONS) {
       TestTools.generateTestData(new SingleModuloizedIntWriterContext(configuration));
 
-      SchemaInfo schemaInfo = TestTools.generateSchemaInfoFromPath(TestTools.TEST_FILE_PATH);
-      DiskInterfaceManager diskInterfaceManager = new DiskInterfaceManager(schemaInfo);
-      ColumnDescriptor twiceIncrementColumn = schemaInfo.getColumnDescriptorByPath(MODULO_COLUMN);
+      QueryInfo queryInfo = TestTools.generateSchemaInfoFromPath(TestTools.TEST_FILE_PATH);
+      DiskInterfaceManager diskInterfaceManager = new DiskInterfaceManager(queryInfo);
+      ColumnDescriptor twiceIncrementColumn = queryInfo.getColumnDescriptorByPath(MODULO_COLUMN);
       DataPageDecorator page = diskInterfaceManager.getFirstPageForColumn(twiceIncrementColumn);
       Int64FastForwardReader ffReader = page.valuesReader();
 

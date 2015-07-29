@@ -7,7 +7,7 @@ import org.apache.parquet.parqour.ingest.ffreader.interfaces.Int32FastForwardRea
 import org.apache.parquet.parqour.ingest.paging.DiskInterfaceManager;
 import org.apache.parquet.parqour.ingest.read.nodes.categories.AggregatingIngestNode;
 import org.apache.parquet.parqour.ingest.read.nodes.categories.PrimitiveIngestNodeBase;
-import org.apache.parquet.parqour.ingest.schema.SchemaInfo;
+import org.apache.parquet.parqour.ingest.schema.QueryInfo;
 import org.apache.parquet.schema.Type;
 
 import java.util.Arrays;
@@ -20,14 +20,14 @@ public final class Int32RepeatingIngestNode extends PrimitiveIngestNodeBase<Int3
   private Integer[] ingestBuffer;
   private final Int32IterableCursor cursor;
 
-  public Int32RepeatingIngestNode(SchemaInfo schemaInfo,
+  public Int32RepeatingIngestNode(QueryInfo queryInfo,
                                   AggregatingIngestNode parent,
                                   Type schemaNode,
                                   ColumnDescriptor descriptor,
                                   DiskInterfaceManager diskInterfaceManager,
                                   int childIndex) {
 
-    super(schemaInfo, parent, schemaNode, descriptor, diskInterfaceManager, childIndex);
+    super(queryInfo, parent, schemaNode, descriptor, diskInterfaceManager, childIndex);
 
     this.ingestBufferLength = 100;
     this.ingestBuffer = new Integer[ingestBufferLength];

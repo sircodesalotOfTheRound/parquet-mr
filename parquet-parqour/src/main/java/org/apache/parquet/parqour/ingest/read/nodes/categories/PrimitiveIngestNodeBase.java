@@ -7,7 +7,7 @@ import org.apache.parquet.parqour.ingest.ffreader.interfaces.FastForwardReader;
 import org.apache.parquet.parqour.ingest.ffreader.interfaces.RelationshipLevelFastForwardReader;
 import org.apache.parquet.parqour.ingest.paging.DataPageDecorator;
 import org.apache.parquet.parqour.ingest.paging.DiskInterfaceManager;
-import org.apache.parquet.parqour.ingest.schema.SchemaInfo;
+import org.apache.parquet.parqour.ingest.schema.QueryInfo;
 import org.apache.parquet.schema.Type;
 
 /**
@@ -28,11 +28,11 @@ public abstract class PrimitiveIngestNodeBase<TFFReaderType extends FastForwardR
   protected long currentEntryOnPage;
   protected long totalItemsOnThisPage;
 
-  public PrimitiveIngestNodeBase(SchemaInfo schemaInfo, AggregatingIngestNode parent,
+  public PrimitiveIngestNodeBase(QueryInfo queryInfo, AggregatingIngestNode parent,
                                  Type schemaNode, ColumnDescriptor columnDescriptor,
                                  DiskInterfaceManager diskInterfaceManager, int childIndex) {
 
-    super(schemaInfo, parent, ColumnPath.get(columnDescriptor.getPath()).toDotString(),
+    super(queryInfo, parent, ColumnPath.get(columnDescriptor.getPath()).toDotString(),
       schemaNode, IngestNodeCategory.DATA_INGEST, childIndex);
 
     this.validateNode();

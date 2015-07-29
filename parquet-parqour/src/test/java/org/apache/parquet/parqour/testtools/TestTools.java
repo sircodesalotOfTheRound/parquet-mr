@@ -15,7 +15,7 @@ import org.apache.parquet.parqour.ingest.ffreader.interfaces.RelationshipLevelFa
 import org.apache.parquet.parqour.ingest.paging.DataPageDecorator;
 import org.apache.parquet.parqour.ingest.paging.DiskInterfaceManager;
 import org.apache.parquet.parqour.ingest.read.nodes.IngestTree;
-import org.apache.parquet.parqour.ingest.schema.SchemaInfo;
+import org.apache.parquet.parqour.ingest.schema.QueryInfo;
 import org.apache.parquet.schema.GroupType;
 import org.apache.parquet.schema.MessageType;
 import org.apache.parquet.schema.PrimitiveType;
@@ -87,22 +87,22 @@ public class TestTools {
     return schema.getColumnDescription(path);
   }
 
-  public static SchemaInfo generateSchemaInfoFromSchema(GroupType schema) {
-    return new SchemaInfo(new Configuration(), new Path(CURRENT_DIRECTORY), generateEmptyMetadataFromSchema(schema), schema);
+  public static QueryInfo generateSchemaInfoFromSchema(GroupType schema) {
+    return new QueryInfo(new Configuration(), new Path(CURRENT_DIRECTORY), generateEmptyMetadataFromSchema(schema), schema);
   }
 
-  public static SchemaInfo generateSchemaInfoFromSchema(GroupType schema, FilterPredicate predicate) {
-    return new SchemaInfo(new Configuration(), new Path(CURRENT_DIRECTORY), generateEmptyMetadataFromSchema(schema), schema, predicate);
+  public static QueryInfo generateSchemaInfoFromSchema(GroupType schema, FilterPredicate predicate) {
+    return new QueryInfo(new Configuration(), new Path(CURRENT_DIRECTORY), generateEmptyMetadataFromSchema(schema), schema, predicate);
   }
 
   public static IngestTree generateIngestTreeFromSchema(GroupType schema) {
-    SchemaInfo schemaInfo = generateSchemaInfoFromSchema(schema);
-    return new IngestTree(schemaInfo, mockDiskInterfaceManager());
+    QueryInfo queryInfo = generateSchemaInfoFromSchema(schema);
+    return new IngestTree(queryInfo, mockDiskInterfaceManager());
   }
 
   public static IngestTree generateIngestTreeFromSchema(GroupType schema, FilterPredicate predicate) {
-    SchemaInfo schemaInfo = generateSchemaInfoFromSchema(schema, predicate);
-    return new IngestTree(schemaInfo, mockDiskInterfaceManager());
+    QueryInfo queryInfo = generateSchemaInfoFromSchema(schema, predicate);
+    return new IngestTree(queryInfo, mockDiskInterfaceManager());
   }
 
   public static ParquetMetadata generateEmptyMetadataFromSchema(GroupType schema) {
@@ -111,7 +111,7 @@ public class TestTools {
     return new ParquetMetadata(fileMetaData, new ArrayList<BlockMetaData>());
   }
 
-  public static SchemaInfo generateSchemaInfoFromPath(String path) throws Exception {
+  public static QueryInfo generateSchemaInfoFromPath(String path) throws Exception {
     Path filePath = new Path(path);
     ParquetMetadata metadata = ParquetFileReader.readFooter(EMPTY_CONFIGURATION,
       filePath,
@@ -119,7 +119,7 @@ public class TestTools {
 
     MessageType messageSchema = metadata.getFileMetaData().getSchema();
 
-    return new SchemaInfo(EMPTY_CONFIGURATION, filePath, metadata, messageSchema);
+    return new QueryInfo(EMPTY_CONFIGURATION, filePath, metadata, messageSchema);
   }
 
   public static void generateTestData(WriteTools.ParquetWriteContext context) {

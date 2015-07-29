@@ -5,7 +5,7 @@ import org.apache.parquet.column.page.PageReadStore;
 import org.apache.parquet.hadoop.ParquetFileReader;
 import org.apache.parquet.hadoop.metadata.BlockMetaData;
 import org.apache.parquet.parqour.exceptions.DataIngestException;
-import org.apache.parquet.parqour.ingest.schema.SchemaInfo;
+import org.apache.parquet.parqour.ingest.schema.QueryInfo;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -20,29 +20,29 @@ public class DiskInterfaceManager {
   private final ParquetFileReader diskReader;
   private final Map<ColumnDescriptor, LinkedList<RowGroup>> pageStoresByColumn;
 
-  public DiskInterfaceManager(SchemaInfo schemaInfo) {
-    this.diskReader = generateDiskReader(schemaInfo);
-    this.pageStoresByColumn = generatePageStoreSet(schemaInfo);
+  public DiskInterfaceManager(QueryInfo queryInfo) {
+    this.diskReader = generateDiskReader(queryInfo);
+    this.pageStoresByColumn = generatePageStoreSet(queryInfo);
   }
 
-  private ParquetFileReader generateDiskReader(SchemaInfo schemaInfo) {
+  private ParquetFileReader generateDiskReader(QueryInfo queryInfo) {
     try {
-      List<BlockMetaData> blocks = schemaInfo.blocks();
-      List<ColumnDescriptor> columns = schemaInfo.columnDescriptors();
+      List<BlockMetaData> blocks = queryInfo.blocks();
+      List<ColumnDescriptor> columns = queryInfo.columnDescriptors();
 
-      return new ParquetFileReader(schemaInfo.configuration(), schemaInfo.path(), blocks, columns);
+      return new ParquetFileReader(queryInfo.configuration(), queryInfo.path(), blocks, columns);
     } catch (IOException ex) {
       throw new DataIngestException("Failed to read because as there was an IO Exception.");
     }
   }
 
-  private Map<ColumnDescriptor, LinkedList<RowGroup>> generatePageStoreSet(SchemaInfo schemaInfo) {
+  private Map<ColumnDescriptor, LinkedList<RowGroup>> generatePageStoreSet(QueryInfo queryInfo) {
     try {
       HashMap<ColumnDescriptor, LinkedList<RowGroup>> pageStoreByColumnMap
         = new HashMap<ColumnDescriptor, LinkedList<RowGroup>>();
 
       PageReadStore pageReadStore = diskReader.readNextRowGroup();
-      for (ColumnDescriptor column : schemaInfo.columnDescriptors()) {
+      for (ColumnDescriptor column : queryInfo.columnDescriptors()) {
         RowGroup group = new RowGroup(column, pageReadStore);
         LinkedList<RowGroup> pageList = new LinkedList<RowGroup>();
         pageList.add(group);
