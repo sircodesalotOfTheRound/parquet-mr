@@ -1,5 +1,7 @@
 package org.apache.parquet.parqour.query.backtracking.interfaces;
 
+import org.apache.parquet.parqour.query.collections.TextQueryAppendableCollection;
+import org.apache.parquet.parqour.query.collections.TextQueryCollection;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
 import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
 
@@ -7,10 +9,10 @@ import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
  * Created by sircodesalot on 15/4/2.
  */
 public abstract class TextQueryBacktrackRuleBase implements TextQueryBacktrackRule {
-  private final TextQueryExpressionType launchForTokensOfType;
+  private final TextQueryCollection<TextQueryExpressionType> launchForTokensOfType;
 
-  protected TextQueryBacktrackRuleBase(TextQueryExpressionType launchForTokensOfType) {
-    this.launchForTokensOfType = launchForTokensOfType;
+  protected TextQueryBacktrackRuleBase(TextQueryExpressionType ... launchForTokensOfType) {
+    this.launchForTokensOfType = new TextQueryAppendableCollection<TextQueryExpressionType>(launchForTokensOfType);
   }
 
   protected boolean withRollback(TextQueryLexer lexer, TextQueryBacktrackingCallback callback) {
@@ -21,7 +23,7 @@ public abstract class TextQueryBacktrackRuleBase implements TextQueryBacktrackRu
     return result;
   }
 
-  public TextQueryExpressionType launchForTokensOfType() {
+  public Iterable<TextQueryExpressionType> launchForTokensOfType() {
     return this.launchForTokensOfType;
   }
 }

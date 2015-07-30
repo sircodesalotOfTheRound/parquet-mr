@@ -17,7 +17,10 @@ public class TextQueryBacktrackingRuleSet<TExpressionType> {
   }
 
   public TextQueryBacktrackingRuleSet<TExpressionType> add(TextQueryBacktrackRule rule) {
-    rules.add(rule.launchForTokensOfType(), rule);
+    for (TextQueryExpressionType type : rule.launchForTokensOfType()) {
+      rules.add(type, rule);
+    }
+
     return this;
   }
 

@@ -11,6 +11,7 @@ import org.apache.parquet.parqour.testtools.WriteTools;
 import org.apache.parquet.schema.GroupType;
 import org.apache.parquet.schema.MessageType;
 import org.apache.parquet.schema.PrimitiveType;
+import org.apache.parquet.schema.Type;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -464,6 +465,7 @@ public class TestVariableSchemas {
 
     @Override
     public void write(ParquetWriter<Group> writer) throws IOException {
+
       for (int index = 0; index < TOTAL_ROWS; index++) {
         Group instance = new SimpleGroup(SCHEMA);
 

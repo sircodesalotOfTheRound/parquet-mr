@@ -17,9 +17,9 @@ import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
 public abstract class TextQueryVariableExpression extends TextQueryExpression {
   private static final TextQueryBacktrackingRuleSet<TextQueryVariableExpression> rules = new TextQueryBacktrackingRuleSet<TextQueryVariableExpression>()
     .add(new TextQueryParentheticalExpressionBacktrackRule())
+    .add(new TextQueryNumericExpressionBacktrackRule())
     .add(new TextQueryNotExpressionBacktrackRule())
     .add(new TextQueryUdfExpressionBacktrackRule())
-    .add(new TextQueryNumericExpressionBacktrackRule())
     .add(new TextQueryNamedColumnExpressionBacktrackRule())
     .add(new TextQueryStringExpressionBacktrackRule())
     .add(new TextQueryWildcardExpressionBacktrackRule());

@@ -6,7 +6,10 @@ import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressi
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryVariableExpression;
 import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
 import org.apache.parquet.parqour.query.tokens.TextQueryNumericToken;
+import org.apache.parquet.parqour.query.tokens.TextQueryPunctuationToken;
 import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
+
+import java.math.BigInteger;
 
 /**
  * Created by sircodesalot on 6/30/15.
@@ -27,7 +30,15 @@ public class TextQueryNumericExpression extends TextQueryVariableExpression {
   }
 
   private TextQueryNumericToken readValue(TextQueryLexer lexer) {
-    return lexer.readCurrentAndAdvance(TextQueryExpressionType.NUMERIC);
+    // TODO: Clean this up. Negation should be handled more naturally.
+    if (lexer.currentIs(TextQueryExpressionType.PUNCTUATION, TextQueryPunctuationToken.MINUS)) {
+      lexer.readCurrentAndAdvance(TextQueryExpressionType.PUNCTUATION, TextQueryPunctuationToken.MINUS);
+      TextQueryNumericToken numericToken = lexer.readCurrentAndAdvance(TextQueryExpressionType.NUMERIC);
+
+      return new TextQueryNumericToken(numericToken.value().negate());
+    } else {
+      return lexer.readCurrentAndAdvance(TextQueryExpressionType.NUMERIC);
+    }
   }
 
   public static TextQueryNumericExpression read(TextQueryExpression parent, TextQueryLexer lexer) {

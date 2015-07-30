@@ -37,6 +37,9 @@ public class TestSimplifications {
 
   @Test
   public void testPrecomputation() {
+    TextQueryNumericExpression zero = (TextQueryNumericExpression) simplifiedFirstColumn("select (5 + -5)");
+    assertEquals(0, (int) zero.asInteger());
+
     TextQueryNumericExpression ten = (TextQueryNumericExpression) simplifiedFirstColumn("select (5 + 5)");
     assertEquals(10, (int) ten.asInteger());
 
