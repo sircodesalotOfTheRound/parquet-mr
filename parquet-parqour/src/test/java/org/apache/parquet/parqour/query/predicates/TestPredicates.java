@@ -48,13 +48,6 @@ public class TestPredicates {
     assertEquals(predicate.getValue(), 42);
   }
 
-  @Test
-  public void testOneEqualsOnePredicate() {
-    TextQueryTestableEqualsExpression equalsExpression = testablePredicateFromString("select * where 49 = 1");
-    assertEquals(1, (int)equalsExpression.lhs().as(TextQueryNumericExpression.class).asInteger());
-    assertEquals(1, (int)equalsExpression.rhs().as(TextQueryNumericExpression.class).asInteger());
-  }
-
 
   private <T extends TextQueryTestablePredicateExpression> T testablePredicateFromString(String expression) {
     TextQueryTreeRootExpression rootExpression = TextQueryTreeRootExpression.fromString(expression);
