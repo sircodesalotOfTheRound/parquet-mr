@@ -1,6 +1,5 @@
 package org.apache.parquet.parqour.query.expressions.predicates;
 
-import org.apache.parquet.parqour.query.expressions.categories.TextQueryVariableExpression;
 import org.apache.parquet.parqour.query.expressions.predicate.TextQueryTestablePredicateExpression;
 import org.apache.parquet.parqour.query.expressions.txql.TextQueryTreeRootExpression;
 import org.apache.parquet.parqour.query.expressions.txql.TextQueryWhereExpression;
@@ -14,6 +13,8 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by sircodesalot on 8/4/15.
@@ -33,18 +34,48 @@ public class TestConstantValuePredicateEvaluation {
       InfixOperator operator = TestTools.randomListItem(OPERATOR_LIST);
       int rhs = TestTools.generateRandomPositiveNegativeInt(100);
 
-      String expression = String.format("select * where %s %s %s", lhs, operator, rhs);
-      TextQueryTreeRootExpression rootExpression = TextQueryTreeRootExpression.fromString(expression);
-      TextQueryWhereExpression where = rootExpression.asSelectStatement().where();
-      TextQueryVariableExpression predicate = rootExpression.asSelectStatement().where().predicate();
+      TextQueryTestablePredicateExpression predicate = asPredicate("select * where %s %s %s", lhs, operator, rhs);
 
       boolean actualResult = TESTABLE_BINARY_OPERATORS.get(operator).matches(lhs, rhs);
-      boolean predicateResult = predicate.simplify(where).as(TextQueryTestablePredicateExpression.class).test();
+      boolean predicateResult = predicate.test();
 
       assertEquals(actualResult, predicateResult);
     }
   }
 
+  @Test
+  public void testAgainstSimpleStringPredicates() {
+    assertTrue(asPredicate("select * where 'same' = 'same'").test());
+    assertTrue(asPredicate("select * where 'same' != 'different'").test());
+    assertTrue(asPredicate("select * where 'less' < 'more'").test());
+    assertTrue(asPredicate("select * where 'less' <= 'more'").test());
+    assertTrue(asPredicate("select * where 'more' > 'less'").test());
+    assertTrue(asPredicate("select * where 'more' >= 'less'").test());
+
+    assertFalse(asPredicate("select * where 'same' != 'same'").test());
+    assertFalse(asPredicate("select * where 'same' = 'different'").test());
+    assertFalse(asPredicate("select * where 'less' >= 'more'").test());
+    assertFalse(asPredicate("select * where 'less' > 'more'").test());
+    assertFalse(asPredicate("select * where 'more' <= 'less'").test());
+    assertFalse(asPredicate("select * where 'more' < 'less'").test());
+  }
+
+  @Test
+  public void testMatchesPredicate() {
+
+  }
+
+  @Test
+  public void testLikePredicate() {
+
+  }
+
+  private TextQueryTestablePredicateExpression asPredicate(String format, Object... args) {
+    String expression = String.format(format, args);
+    TextQueryTreeRootExpression rootExpression = TextQueryTreeRootExpression.fromString(expression);
+    TextQueryWhereExpression where = rootExpression.asSelectStatement().where();
+    return where.predicate().simplify(where).as(TextQueryTestablePredicateExpression.class);
+  }
   private static Map<InfixOperator, TestCallback> generateTestCallbacks() {
     Map<InfixOperator, TestCallback> callbacks = new HashMap<InfixOperator, TestCallback>();
     callbacks.put(InfixOperator.EQUALS, new TestCallback() {

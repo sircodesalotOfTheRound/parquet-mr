@@ -1,5 +1,7 @@
 package org.apache.parquet.parqour.query.expressions.tables;
 
+import org.apache.parquet.parqour.cursor.iface.Cursor;
+import org.apache.parquet.parqour.cursor.implementations.noniterable.constant.ConstantValueCursor;
 import org.apache.parquet.parqour.exceptions.TextQueryException;
 import org.apache.parquet.parqour.query.collections.TextQueryAppendableCollection;
 import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
@@ -83,6 +85,11 @@ public class TextQueryStringExpression extends TextQueryVariableExpression {
   @Override
   public String toString() {
     return this.expressionAsString;
+  }
+
+  @Override
+  public Cursor getCursor() {
+    return new ConstantValueCursor(asString(), -1, asString());
   }
 
   @Override
