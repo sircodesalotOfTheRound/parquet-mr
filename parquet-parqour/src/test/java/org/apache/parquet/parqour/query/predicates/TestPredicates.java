@@ -3,6 +3,10 @@ package org.apache.parquet.parqour.query.predicates;
 import org.apache.parquet.filter2.predicate.FilterPredicate;
 import org.apache.parquet.filter2.predicate.Operators;
 import org.apache.parquet.parqour.ingest.read.nodes.IngestTree;
+import org.apache.parquet.parqour.query.expressions.categories.TextQueryVariableExpression;
+import org.apache.parquet.parqour.query.expressions.predicate.TextQueryTestablePredicateExpression;
+import org.apache.parquet.parqour.query.expressions.predicate.testable.TextQueryTestableEqualsExpression;
+import org.apache.parquet.parqour.query.expressions.txql.TextQueryNumericExpression;
 import org.apache.parquet.parqour.query.expressions.txql.TextQueryTreeRootExpression;
 import org.apache.parquet.parqour.query.expressions.txql.TextQueryWhereExpression;
 import org.apache.parquet.parqour.query.visitor.InfixPredicateCollectingVisitor;
@@ -29,6 +33,7 @@ public class TestPredicates {
   private static final IngestTree SCHEMA_INGEST_TREE = TestTools.generateIngestTreeFromSchema(SCHEMA);
 
   @Test
+  @Deprecated
   public void testLevelOneBinaryPredicate() {
     Operators.Eq predicate = generateFilterApiFromExpression("select * where first = 10");
     assertColumnPathsAreEqual(predicate.getColumn(), "first");
@@ -36,12 +41,29 @@ public class TestPredicates {
   }
 
   @Test
+  @Deprecated
   public void testNestedBinaryPredicateApplication() {
     Operators.Eq predicate = generateFilterApiFromExpression("select * where grouping.second = 42");
     assertColumnPathsAreEqual(predicate.getColumn(), "grouping.second");
     assertEquals(predicate.getValue(), 42);
   }
 
+  @Test
+  public void testOneEqualsOnePredicate() {
+    TextQueryTestableEqualsExpression equalsExpression = testablePredicateFromString("select * where 49 = 1");
+    assertEquals(1, (int)equalsExpression.lhs().as(TextQueryNumericExpression.class).asInteger());
+    assertEquals(1, (int)equalsExpression.rhs().as(TextQueryNumericExpression.class).asInteger());
+  }
+
+
+  private <T extends TextQueryTestablePredicateExpression> T testablePredicateFromString(String expression) {
+    TextQueryTreeRootExpression rootExpression = TextQueryTreeRootExpression.fromString(expression);
+    TextQueryWhereExpression where = rootExpression.asSelectStatement().where();
+    TextQueryVariableExpression predicate = rootExpression.asSelectStatement().where().predicate();
+    return (T) predicate.simplify(where);
+  }
+
+  @Deprecated
   private <T extends FilterPredicate> T generateFilterApiFromExpression(String expression) {
     TextQueryTreeRootExpression rootExpression = TextQueryTreeRootExpression.fromString(expression);
     TextQueryWhereExpression whereExpression = rootExpression.asSelectStatement().where();

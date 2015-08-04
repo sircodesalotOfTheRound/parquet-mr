@@ -1,4 +1,4 @@
-package org.apache.parquet.parqour.ingest.cursor.iterators;
+package org.apache.parquet.parqour.cursor.iterators;
 
 import java.util.Iterator;
 

@@ -1,7 +1,7 @@
-package org.apache.parquet.parqour.ingest.cursor.implementations.iterable.i32;
+package org.apache.parquet.parqour.cursor.implementations.iterable.i32;
 
-import org.apache.parquet.parqour.ingest.cursor.iface.AdvanceableCursor;
-import org.apache.parquet.parqour.ingest.cursor.iterators.RollableFieldEntries;
+import org.apache.parquet.parqour.cursor.iterators.RollableFieldEntries;
+import org.apache.parquet.parqour.cursor.iface.AdvanceableCursor;
 
 import java.util.Iterator;
 

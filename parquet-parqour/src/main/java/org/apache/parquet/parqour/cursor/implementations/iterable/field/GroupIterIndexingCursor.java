@@ -1,8 +1,8 @@
-package org.apache.parquet.parqour.ingest.cursor.implementations.iterable.field;
+package org.apache.parquet.parqour.cursor.implementations.iterable.field;
 
-import org.apache.parquet.parqour.ingest.cursor.iface.AdvanceableCursor;
-import org.apache.parquet.parqour.ingest.cursor.iface.Cursor;
-import org.apache.parquet.parqour.ingest.cursor.iterators.RollableFieldEntries;
+import org.apache.parquet.parqour.cursor.iterators.RollableFieldEntries;
+import org.apache.parquet.parqour.cursor.iface.AdvanceableCursor;
+import org.apache.parquet.parqour.cursor.iface.Cursor;
 import org.apache.parquet.parqour.ingest.entrysets.FieldEntries;
 
 import java.util.HashMap;

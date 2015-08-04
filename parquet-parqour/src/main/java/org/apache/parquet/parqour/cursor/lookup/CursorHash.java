@@ -1,7 +1,7 @@
-package org.apache.parquet.parqour.ingest.cursor.lookup;
+package org.apache.parquet.parqour.cursor.lookup;
 
 import org.apache.parquet.parqour.exceptions.DataIngestException;
-import org.apache.parquet.parqour.ingest.cursor.iface.AdvanceableCursor;
+import org.apache.parquet.parqour.cursor.iface.AdvanceableCursor;
 
 /**
  * A linear probing map optimized for handling strings. The primary optimizations are

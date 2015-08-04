@@ -1,6 +1,6 @@
 package org.apache.parquet.parqour.ingest.entrysets.collections;
 
-import org.apache.parquet.parqour.ingest.cursor.iterators.RollableFieldEntries;
+import org.apache.parquet.parqour.cursor.iterators.RollableFieldEntries;
 
 import java.util.Arrays;
 import java.util.Iterator;

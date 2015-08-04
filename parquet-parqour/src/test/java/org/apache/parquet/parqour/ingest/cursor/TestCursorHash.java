@@ -1,8 +1,8 @@
 package org.apache.parquet.parqour.ingest.cursor;
 
-import org.apache.parquet.parqour.ingest.cursor.iface.AdvanceableCursor;
-import org.apache.parquet.parqour.ingest.cursor.iface.Cursor;
-import org.apache.parquet.parqour.ingest.cursor.lookup.CursorHash;
+import org.apache.parquet.parqour.cursor.iface.AdvanceableCursor;
+import org.apache.parquet.parqour.cursor.iface.Cursor;
+import org.apache.parquet.parqour.cursor.lookup.CursorHash;
 import org.apache.parquet.parqour.testtools.TestTools;
 import org.junit.Test;
 

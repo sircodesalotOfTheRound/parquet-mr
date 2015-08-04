@@ -1,6 +1,6 @@
 package org.apache.parquet.parqour.materialization.readsupport;
 
-import org.apache.parquet.parqour.ingest.cursor.iface.Cursor;
+import org.apache.parquet.parqour.cursor.iface.Cursor;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.Iterator;

@@ -1,6 +1,6 @@
 package org.apache.parquet.parqour.ingest.read.driver;
 
-import org.apache.parquet.parqour.ingest.cursor.iface.Cursor;
+import org.apache.parquet.parqour.cursor.iface.Cursor;
 import org.apache.parquet.parqour.ingest.paging.DiskInterfaceManager;
 import org.apache.parquet.parqour.ingest.plan.analysis.PredicateAnalysis;
 import org.apache.parquet.parqour.ingest.plan.evaluation.EvaluationPathAnalysis;

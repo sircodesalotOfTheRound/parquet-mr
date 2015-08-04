@@ -1,7 +1,7 @@
 package org.apache.parquet.parqour.ingest.read.iterator.filtering;
 
 
-import org.apache.parquet.parqour.ingest.cursor.iface.Cursor;
+import org.apache.parquet.parqour.cursor.iface.Cursor;
 import org.apache.parquet.parqour.ingest.read.iterator.lamba.Predicate;
 import org.apache.parquet.parqour.query.iface.ParqourQuery;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;

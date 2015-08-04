@@ -1,5 +1,7 @@
 package org.apache.parquet.parqour.query.expressions.predicate.testable;
 
+import org.apache.parquet.parqour.cursor.iface.Cursor;
+import org.apache.parquet.parqour.cursor.implementations.noniterable.constant.ConstantValueCursor;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryVariableExpression;
 import org.apache.parquet.parqour.query.expressions.variable.infix.InfixOperator;
@@ -25,8 +27,20 @@ public class TextQueryTestableLessThanExpression extends TextQueryTestableBinary
   }
 
   @Override
-  public void test() {
+  public boolean test() {
+    if (!lhsIsCached) {
+      lastSeenLhs = (Comparable)lhsCursor.value();
+    }
 
+    if (!rhsIsCached) {
+      lastSeenRhs = (Comparable)rhsCursor.value();
+    }
+
+    if (lastSeenLhs != null) {
+      return lastSeenLhs.compareTo(lastSeenRhs) < 0;
+    } else {
+      return false;
+    }
   }
 
   @Override

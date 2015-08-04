@@ -1,5 +1,6 @@
 package org.apache.parquet.parqour.query.expressions.categories;
 
+import org.apache.parquet.parqour.cursor.iface.Cursor;
 import org.apache.parquet.parqour.query.backtracking.interfaces.TextQueryBacktrackingRuleSet;
 import org.apache.parquet.parqour.query.backtracking.rules.*;
 import org.apache.parquet.parqour.query.collections.TextQueryAppendableCollection;
@@ -9,7 +10,6 @@ import org.apache.parquet.parqour.query.expressions.variable.infix.TextQueryInfi
 import org.apache.parquet.parqour.query.expressions.variable.infix.InfixOperator;
 import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
 import org.apache.parquet.parqour.query.tokens.TextQueryPunctuationToken;
-import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
 
 /**
  * Created by sircodesalot on 6/30/15.
@@ -73,5 +73,5 @@ public abstract class TextQueryVariableExpression extends TextQueryExpression {
   public abstract TextQueryVariableExpression simplify(TextQueryExpression parent);
   public abstract TextQueryVariableExpression negate();
 
-  // TODO: Add 'Generate Cursor Expression' function that allows for querying column dependencies.
+  public Cursor getCursor() { return null; }
 }

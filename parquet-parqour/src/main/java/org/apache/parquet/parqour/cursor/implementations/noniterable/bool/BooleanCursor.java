@@ -1,6 +1,6 @@
-package org.apache.parquet.parqour.ingest.cursor.implementations.noniterable.bool;
+package org.apache.parquet.parqour.cursor.implementations.noniterable.bool;
 
-import org.apache.parquet.parqour.ingest.cursor.iface.AdvanceableCursor;
+import org.apache.parquet.parqour.cursor.iface.AdvanceableCursor;
 
 /**
  * Created by sircodesalot on 6/18/15.

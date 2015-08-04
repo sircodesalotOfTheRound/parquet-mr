@@ -25,8 +25,20 @@ public class TextQueryTestableLessThanOrEqualsExpression extends TextQueryTestab
   }
 
   @Override
-  public void test() {
+  public boolean test() {
+    if (!lhsIsCached) {
+      lastSeenLhs = (Comparable)lhsCursor.value();
+    }
 
+    if (!rhsIsCached) {
+      lastSeenRhs = (Comparable)rhsCursor.value();
+    }
+
+    if (lastSeenLhs != null) {
+      return lastSeenLhs.compareTo(lastSeenRhs) <= 0;
+    } else {
+      return false;
+    }
   }
 
   @Override

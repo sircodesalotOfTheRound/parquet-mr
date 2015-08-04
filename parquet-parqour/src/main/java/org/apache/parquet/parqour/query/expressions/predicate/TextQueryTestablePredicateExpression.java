@@ -28,7 +28,7 @@ public abstract class TextQueryTestablePredicateExpression extends TextQueryVari
     super(parent, type);
   }
 
-  public abstract void test();
+  public abstract boolean test();
 
   public static TextQueryTestablePredicateExpression fromExpression(TextQueryVariableExpression expression) {
     if (expression.is(TextQueryExpressionType.INFIX)) {

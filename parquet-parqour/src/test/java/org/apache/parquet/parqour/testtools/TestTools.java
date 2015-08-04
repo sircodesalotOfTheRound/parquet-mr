@@ -162,6 +162,20 @@ public class TestTools {
     return RANDOM.nextInt(max);
   }
 
+  public static int generateRandomPositiveNegativeInt(int max) {
+    boolean sign = (generateRandomInt(100) % 2) == 0;
+    if (sign) {
+      return generateRandomInt(max);
+    } else {
+      return -generateRandomInt(max);
+    }
+  }
+
+  public static <T> T randomListItem(List<T> list) {
+    int index = generateRandomInt(list.size());
+    return list.get(index);
+  }
+
   public static void deleteTestData() {
     WriteTools.deleteTestData();
   }

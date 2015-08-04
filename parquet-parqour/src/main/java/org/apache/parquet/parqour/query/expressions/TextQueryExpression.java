@@ -38,4 +38,6 @@ public abstract class TextQueryExpression extends TextQueryToken {
   public void setParent(TextQueryExpression parent) {
     this.parent = parent;
   }
+
+  public <T> T as(Class<T> type) { return (T)this; }
 }

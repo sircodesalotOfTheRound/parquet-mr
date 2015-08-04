@@ -1,8 +1,8 @@
 package org.apache.parquet.parqour.ingest.read.nodes.impl.bool;
 
 import org.apache.parquet.column.ColumnDescriptor;
-import org.apache.parquet.parqour.ingest.cursor.iface.AdvanceableCursor;
-import org.apache.parquet.parqour.ingest.cursor.implementations.noniterable.bool.BooleanCursor;
+import org.apache.parquet.parqour.cursor.iface.AdvanceableCursor;
+import org.apache.parquet.parqour.cursor.implementations.noniterable.bool.BooleanCursor;
 import org.apache.parquet.parqour.ingest.ffreader.interfaces.BooleanFastForwardReader;
 import org.apache.parquet.parqour.ingest.paging.DiskInterfaceManager;
 import org.apache.parquet.parqour.ingest.read.nodes.categories.AggregatingIngestNode;

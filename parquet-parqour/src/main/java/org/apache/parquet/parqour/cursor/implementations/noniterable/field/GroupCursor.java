@@ -1,10 +1,10 @@
-package org.apache.parquet.parqour.ingest.cursor.implementations.noniterable.root;
+package org.apache.parquet.parqour.cursor.implementations.noniterable.field;
 
-import org.apache.parquet.parqour.ingest.cursor.iface.AdvanceableCursor;
-import org.apache.parquet.parqour.ingest.cursor.iface.Cursor;
+import org.apache.parquet.parqour.cursor.iface.AdvanceableCursor;
+import org.apache.parquet.parqour.cursor.iface.Cursor;
+import org.apache.parquet.parqour.cursor.iterators.RollableFieldEntries;
+import org.apache.parquet.parqour.cursor.lookup.CursorHash;
 import org.apache.parquet.parqour.ingest.entrysets.FieldEntries;
-import org.apache.parquet.parqour.ingest.cursor.iterators.RollableFieldEntries;
-import org.apache.parquet.parqour.ingest.cursor.lookup.CursorHash;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,19 +23,16 @@ import java.util.Map;
  * This improves performance because we can pre-allocate lots of memory, and then just virtually
  * connect the results without the overhead of many small allocations + collections.
  */
-public class RootCursor extends AdvanceableCursor {
-  private static final String ROOT_NAME = "root";
-  private static final int ROOT_COLUMN = 0;
-
-  private Integer[] schemaLinks;
+public class GroupCursor extends AdvanceableCursor {
+  private Integer[][] schemaLinks;
 
   private final AdvanceableCursor[] childCursorsByIndex;
   private final CursorHash childCursors;
 
   private final Map<String, Integer> cursorIndexes = new HashMap<String, Integer>();
 
-  public RootCursor(AdvanceableCursor[] childCursors, Integer[] schemaLinks) {
-    super(ROOT_NAME, ROOT_COLUMN);
+  public GroupCursor(String name, int columnIndex, AdvanceableCursor[] childCursors, Integer[][] schemaLinks) {
+    super(name, columnIndex);
 
     this.schemaLinks = schemaLinks;
     this.childCursors = new CursorHash();
@@ -52,9 +49,13 @@ public class RootCursor extends AdvanceableCursor {
     return childCursors;
   }
 
+  public void setSchemaLinks(Integer[][] schemaLinks) {
+    this.schemaLinks = schemaLinks;
+  }
+
   @Override
   public FieldEntries<Cursor> fieldIter(int columnIndex) {
-    Integer startOffset = schemaLinks[columnIndex];
+    Integer startOffset = schemaLinks[columnIndex][index];
 
     if (startOffset != null) {
       return childCursorsByIndex[columnIndex].fieldStartIteration(columnIndex, startOffset);
@@ -66,7 +67,7 @@ public class RootCursor extends AdvanceableCursor {
   @Override
   public FieldEntries<Cursor> fieldIter(String path) {
     int columnIndex = this.cursorIndexes.get(path);
-    Integer startOffset = schemaLinks[columnIndex];
+    Integer startOffset = schemaLinks[columnIndex][index];
 
     if (startOffset != null) {
       return childCursorsByIndex[columnIndex].fieldStartIteration(columnIndex, startOffset);
@@ -86,28 +87,8 @@ public class RootCursor extends AdvanceableCursor {
   }
 
   @Override
-  public Long i64(String path) {
-    return childCursors.get(path).i64();
-  }
-
-  @Override
-  public Long i64(int index) {
-    return childCursorsByIndex[index].i64();
-  }
-
-  @Override
-  public Boolean bool(String path) {
-    return childCursors.get(path).bool();
-  }
-
-  @Override
-  public Boolean bool(int index) {
-    return childCursorsByIndex[index].bool();
-  }
-
-  @Override
   public RollableFieldEntries<Integer> i32Iter(int columnIndex) {
-    Integer startOffset = schemaLinks[columnIndex];
+    Integer startOffset = schemaLinks[columnIndex][index];
 
     if (startOffset != null) {
       return childCursorsByIndex[columnIndex].i32StartIteration(startOffset);
@@ -119,7 +100,7 @@ public class RootCursor extends AdvanceableCursor {
   @Override
   public RollableFieldEntries<Integer> i32Iter(String path) {
     int columnIndex = this.cursorIndexes.get(path);
-    Integer startOffset = schemaLinks[columnIndex];
+    Integer startOffset = schemaLinks[columnIndex][index];
 
     if (startOffset != null) {
       return childCursorsByIndex[columnIndex].i32StartIteration(startOffset);
@@ -131,7 +112,7 @@ public class RootCursor extends AdvanceableCursor {
 
   @Override
   public Cursor field(int columnIndex) {
-    if (schemaLinks[columnIndex] != null) {
+    if (schemaLinks[columnIndex][index] != null) {
       return childCursorsByIndex[columnIndex];
     } else {
       return null;
@@ -141,7 +122,7 @@ public class RootCursor extends AdvanceableCursor {
   @Override
   public Cursor field(String path) {
     int columnIndex = this.cursorIndexes.get(path);
-    if (schemaLinks[columnIndex] != null) {
+    if (schemaLinks[columnIndex][index] != null) {
       return childCursorsByIndex[columnIndex];
     } else {
       return null;

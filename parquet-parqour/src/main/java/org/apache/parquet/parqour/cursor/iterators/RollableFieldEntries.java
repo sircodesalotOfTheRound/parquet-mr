@@ -1,7 +1,7 @@
-package org.apache.parquet.parqour.ingest.cursor.iterators;
+package org.apache.parquet.parqour.cursor.iterators;
 
 import org.apache.parquet.parqour.ingest.entrysets.collections.Roll;
-import org.apache.parquet.parqour.ingest.cursor.iface.Cursor;
+import org.apache.parquet.parqour.cursor.iface.Cursor;
 import org.apache.parquet.parqour.ingest.entrysets.FieldEntries;
 
 /**

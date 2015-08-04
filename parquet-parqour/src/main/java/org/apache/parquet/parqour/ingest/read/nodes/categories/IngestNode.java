@@ -1,6 +1,6 @@
 package org.apache.parquet.parqour.ingest.read.nodes.categories;
 
-import org.apache.parquet.parqour.ingest.cursor.iface.AdvanceableCursor;
+import org.apache.parquet.parqour.cursor.iface.AdvanceableCursor;
 import org.apache.parquet.parqour.ingest.schema.QueryInfo;
 import org.apache.parquet.schema.Type;
 

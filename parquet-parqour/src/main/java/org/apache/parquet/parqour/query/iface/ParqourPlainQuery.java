@@ -1,7 +1,7 @@
 package org.apache.parquet.parqour.query.iface;
 
 import org.apache.parquet.hadoop.metadata.ParquetMetadata;
-import org.apache.parquet.parqour.ingest.cursor.iface.Cursor;
+import org.apache.parquet.parqour.cursor.iface.Cursor;
 import org.apache.parquet.parqour.ingest.read.iterator.ParqourRecordset;
 import org.apache.parquet.parqour.ingest.schema.QueryInfo;
 import org.apache.parquet.parqour.query.expressions.txql.TextQueryTreeRootExpression;

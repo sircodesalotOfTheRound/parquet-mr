@@ -1,11 +1,11 @@
-package org.apache.parquet.parqour.ingest.cursor.implementations.iterable.field;
+package org.apache.parquet.parqour.cursor.implementations.iterable.field;
 
-import org.apache.parquet.parqour.ingest.cursor.implementations.noniterable.field.GroupCursor;
-import org.apache.parquet.parqour.ingest.cursor.iface.AdvanceableCursor;
-import org.apache.parquet.parqour.ingest.cursor.iface.Cursor;
+import org.apache.parquet.parqour.cursor.iface.AdvanceableCursor;
+import org.apache.parquet.parqour.cursor.iface.Cursor;
+import org.apache.parquet.parqour.cursor.implementations.noniterable.field.GroupCursor;
+import org.apache.parquet.parqour.cursor.iterators.RollableFieldEntries;
+import org.apache.parquet.parqour.cursor.lookup.CursorHash;
 import org.apache.parquet.parqour.ingest.entrysets.FieldEntries;
-import org.apache.parquet.parqour.ingest.cursor.iterators.RollableFieldEntries;
-import org.apache.parquet.parqour.ingest.cursor.lookup.CursorHash;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.HashMap;

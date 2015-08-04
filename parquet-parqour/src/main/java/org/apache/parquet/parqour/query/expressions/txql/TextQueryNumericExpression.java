@@ -1,6 +1,8 @@
 package org.apache.parquet.parqour.query.expressions.txql;
 
+import org.apache.parquet.parqour.cursor.implementations.noniterable.constant.ConstantValueCursor;
 import org.apache.parquet.parqour.exceptions.TextQueryException;
+import org.apache.parquet.parqour.cursor.iface.Cursor;
 import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryVariableExpression;
@@ -8,8 +10,6 @@ import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
 import org.apache.parquet.parqour.query.tokens.TextQueryNumericToken;
 import org.apache.parquet.parqour.query.tokens.TextQueryPunctuationToken;
 import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
-
-import java.math.BigInteger;
 
 /**
  * Created by sircodesalot on 6/30/15.
@@ -62,6 +62,11 @@ public class TextQueryNumericExpression extends TextQueryVariableExpression {
 
   public Integer asInteger() {
     return this.value.value().intValue();
+  }
+
+  @Override
+  public Cursor getCursor() {
+    return new ConstantValueCursor(value.toString(), -1, this.value.value().intValue());
   }
 
   @Override

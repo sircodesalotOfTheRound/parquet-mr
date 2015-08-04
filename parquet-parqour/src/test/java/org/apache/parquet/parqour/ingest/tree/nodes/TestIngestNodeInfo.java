@@ -1,6 +1,6 @@
 package org.apache.parquet.parqour.ingest.tree.nodes;
 
-import org.apache.parquet.parqour.ingest.cursor.iface.AdvanceableCursor;
+import org.apache.parquet.parqour.cursor.iface.AdvanceableCursor;
 import org.apache.parquet.parqour.ingest.read.nodes.categories.AggregatingIngestNode;
 import org.apache.parquet.parqour.ingest.read.nodes.categories.IngestNode;
 import org.apache.parquet.parqour.ingest.read.nodes.categories.IngestNodeCategory;

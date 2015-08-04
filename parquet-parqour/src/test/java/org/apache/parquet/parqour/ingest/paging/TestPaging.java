@@ -3,7 +3,7 @@ package org.apache.parquet.parqour.ingest.paging;
 import org.apache.parquet.example.data.Group;
 import org.apache.parquet.example.data.simple.SimpleGroup;
 import org.apache.parquet.hadoop.ParquetWriter;
-import org.apache.parquet.parqour.ingest.cursor.iface.Cursor;
+import org.apache.parquet.parqour.cursor.iface.Cursor;
 import org.apache.parquet.parqour.ingest.read.iterator.Parqour;
 import org.apache.parquet.parqour.ingest.read.iterator.paging.ParqourPage;
 import org.apache.parquet.parqour.testtools.ParquetConfiguration;
