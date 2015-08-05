@@ -1,4 +1,4 @@
-package org.apache.parquet.parqour.query.expressions.txql;
+package org.apache.parquet.parqour.query.expressions.variable.constant;
 
 import org.apache.parquet.parqour.cursor.implementations.noniterable.constant.ConstantValueCursor;
 import org.apache.parquet.parqour.exceptions.TextQueryException;

@@ -11,7 +11,7 @@ import org.apache.parquet.parqour.query.expressions.txql.TextQueryFullyQualified
 import org.apache.parquet.parqour.query.expressions.txql.TextQuerySelectStatementExpression;
 import org.apache.parquet.parqour.query.expressions.txql.TextQueryTreeRootExpression;
 import org.apache.parquet.parqour.query.expressions.tables.TextQueryNamedTableExpression;
-import org.apache.parquet.parqour.query.expressions.tables.TextQueryStringExpression;
+import org.apache.parquet.parqour.query.expressions.variable.constant.TextQueryStringExpression;
 import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
 import org.junit.Test;
 

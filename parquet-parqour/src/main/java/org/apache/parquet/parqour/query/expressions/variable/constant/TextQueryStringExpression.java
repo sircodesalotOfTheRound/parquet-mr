@@ -1,4 +1,4 @@
-package org.apache.parquet.parqour.query.expressions.tables;
+package org.apache.parquet.parqour.query.expressions.variable.constant;
 
 import org.apache.parquet.parqour.cursor.iface.Cursor;
 import org.apache.parquet.parqour.cursor.implementations.noniterable.constant.ConstantValueCursor;
@@ -8,7 +8,6 @@ import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryVariableExpression;
 import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
-import org.apache.parquet.parqour.query.tokens.TextQueryIdentifierToken;
 import org.apache.parquet.parqour.query.tokens.TextQueryPunctuationToken;
 import org.apache.parquet.parqour.query.tokens.TextQueryToken;
 import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;

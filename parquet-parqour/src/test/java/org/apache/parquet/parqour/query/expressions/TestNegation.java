@@ -4,8 +4,6 @@ import org.apache.parquet.parqour.query.expressions.categories.TextQueryVariable
 import org.apache.parquet.parqour.query.expressions.predicate.logical.TextQueryLogicalAndExpression;
 import org.apache.parquet.parqour.query.expressions.predicate.logical.TextQueryLogicalOrExpression;
 import org.apache.parquet.parqour.query.expressions.predicate.testable.*;
-import org.apache.parquet.parqour.query.expressions.tables.TextQueryStringExpression;
-import org.apache.parquet.parqour.query.expressions.txql.TextQueryNumericExpression;
 import org.apache.parquet.parqour.query.expressions.txql.TextQueryTreeRootExpression;
 import org.apache.parquet.parqour.query.expressions.variable.TextQueryUdfExpression;
 import org.apache.parquet.parqour.query.expressions.variable.column.TextQueryColumnSetExpression;

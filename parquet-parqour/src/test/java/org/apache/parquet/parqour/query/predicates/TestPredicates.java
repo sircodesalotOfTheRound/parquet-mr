@@ -5,8 +5,6 @@ import org.apache.parquet.filter2.predicate.Operators;
 import org.apache.parquet.parqour.ingest.read.nodes.IngestTree;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryVariableExpression;
 import org.apache.parquet.parqour.query.expressions.predicate.TextQueryTestablePredicateExpression;
-import org.apache.parquet.parqour.query.expressions.predicate.testable.TextQueryTestableEqualsExpression;
-import org.apache.parquet.parqour.query.expressions.txql.TextQueryNumericExpression;
 import org.apache.parquet.parqour.query.expressions.txql.TextQueryTreeRootExpression;
 import org.apache.parquet.parqour.query.expressions.txql.TextQueryWhereExpression;
 import org.apache.parquet.parqour.query.visitor.InfixPredicateCollectingVisitor;

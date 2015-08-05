@@ -4,7 +4,7 @@ import org.apache.parquet.parqour.query.backtracking.interfaces.TextQueryBacktra
 import org.apache.parquet.parqour.query.backtracking.interfaces.TextQueryBacktrackingCallback;
 import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
-import org.apache.parquet.parqour.query.expressions.txql.TextQueryNumericExpression;
+import org.apache.parquet.parqour.query.expressions.variable.constant.TextQueryNumericExpression;
 import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
 import org.apache.parquet.parqour.query.tokens.TextQueryPunctuationToken;
 

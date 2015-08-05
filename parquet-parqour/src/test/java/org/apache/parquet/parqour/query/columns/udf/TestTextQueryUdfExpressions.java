@@ -2,8 +2,7 @@ package org.apache.parquet.parqour.query.columns.udf;
 
 import org.apache.parquet.parqour.ingest.read.iterator.lamba.Projection;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryVariableExpression;
-import org.apache.parquet.parqour.query.expressions.tables.TextQueryStringExpression;
-import org.apache.parquet.parqour.query.expressions.txql.TextQueryFullyQualifiedNameExpression;
+import org.apache.parquet.parqour.query.expressions.variable.constant.TextQueryStringExpression;
 import org.apache.parquet.parqour.query.expressions.txql.TextQuerySelectStatementExpression;
 import org.apache.parquet.parqour.query.expressions.txql.TextQueryTreeRootExpression;
 import org.apache.parquet.parqour.query.expressions.variable.TextQueryUdfExpression;

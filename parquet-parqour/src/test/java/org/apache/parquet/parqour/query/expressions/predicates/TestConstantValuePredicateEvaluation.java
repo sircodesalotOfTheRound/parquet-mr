@@ -75,6 +75,24 @@ public class TestConstantValuePredicateEvaluation {
   }
 
   @Test
+  public void testBooleanExpressions() {
+    assertTrue(asPredicate("select * where true").test());
+    assertFalse(asPredicate("select * where false").test());
+
+    assertTrue(asPredicate("select * where not false").test());
+    assertFalse(asPredicate("select * where not true").test());
+
+    assertTrue(asPredicate("select * where true = true").test());
+    assertTrue(asPredicate("select * where false = false").test());
+
+    assertFalse(asPredicate("select * where true = false").test());
+    assertFalse(asPredicate("select * where false = true").test());
+
+    assertTrue(asPredicate("select * where not true = false").test());
+    assertFalse(asPredicate("select * where not (not (false = true))").test());
+  }
+
+  @Test
   public void testNulls() {
 
   }

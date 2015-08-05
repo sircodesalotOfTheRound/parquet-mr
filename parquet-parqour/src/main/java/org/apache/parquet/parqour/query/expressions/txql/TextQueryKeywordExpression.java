@@ -26,6 +26,8 @@ public abstract class TextQueryKeywordExpression extends TextQueryExpression {
   public static final String BETWEEN = "OR";
   public static final String MATCHES = "OR";
   public static final String IN = "OR";
+  public static final String TRUE = "TRUE";
+  public static final String FALSE = "FALSE";
 
   private final TextQueryIdentifierToken token;
 

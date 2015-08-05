@@ -34,7 +34,7 @@ public class TextQueryTestableLessThanOrEqualsExpression extends TextQueryTestab
       lastSeenRhs = (Comparable)rhsCursor.value();
     }
 
-    if (lastSeenLhs != null) {
+    if (lastSeenLhs != null && lastSeenRhs != null) {
       return lastSeenLhs.compareTo(lastSeenRhs) <= 0;
     } else {
       return false;

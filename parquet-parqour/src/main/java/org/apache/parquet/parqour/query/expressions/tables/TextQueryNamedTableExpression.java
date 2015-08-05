@@ -10,6 +10,7 @@ import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
 /**
  * Created by sircodesalot on 15/4/3.
  */
+@Deprecated
 public class TextQueryNamedTableExpression extends TextQueryTableExpression {
   private final TextQueryFullyQualifiedNameExpression fqn;
 

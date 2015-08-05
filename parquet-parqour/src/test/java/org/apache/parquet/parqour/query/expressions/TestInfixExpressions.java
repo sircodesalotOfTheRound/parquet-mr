@@ -1,12 +1,11 @@
 package org.apache.parquet.parqour.query.expressions;
 
-import junit.framework.Assert;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
-import org.apache.parquet.parqour.query.expressions.categories.TextQueryVariableExpression;
+import org.apache.parquet.parqour.query.expressions.variable.constant.TextQueryBooleanConstantExpression;
 import org.apache.parquet.parqour.query.expressions.variable.infix.InfixOperator;
 import org.apache.parquet.parqour.query.expressions.variable.infix.TextQueryInfixExpression;
-import org.apache.parquet.parqour.query.expressions.tables.TextQueryStringExpression;
-import org.apache.parquet.parqour.query.expressions.txql.TextQueryNumericExpression;
+import org.apache.parquet.parqour.query.expressions.variable.constant.TextQueryStringExpression;
+import org.apache.parquet.parqour.query.expressions.variable.constant.TextQueryNumericExpression;
 import org.apache.parquet.parqour.query.expressions.txql.TextQuerySelectStatementExpression;
 import org.apache.parquet.parqour.query.expressions.txql.TextQueryTreeRootExpression;
 import org.apache.parquet.parqour.query.expressions.txql.TextQueryWhereExpression;
@@ -155,7 +154,7 @@ public class TestInfixExpressions {
     assertEquals(6, computeFromSelectStatement("select (18 / 6) * (3 + 4 - 5)"));
     assertEquals(120 % 7, computeFromSelectStatement("select (1 * 2 * 3 * 4 * 5) % 7"));
 
-    TextQueryTreeRootExpression rootExpression = TextQueryTreeRootExpression.fromString("select * where (5 != 6 and 7 >= 8) or (true())");
+    TextQueryTreeRootExpression rootExpression = TextQueryTreeRootExpression.fromString("select * where (5 != 6 and 7 >= 8) or (true)");
     TextQueryInfixExpression orExpression = (TextQueryInfixExpression) rootExpression.asSelectStatement().where().predicate();
 
     assertEquals(InfixOperator.OR, orExpression.operator());
@@ -175,10 +174,9 @@ public class TestInfixExpressions {
     assertEquals(8, (int)((TextQueryNumericExpression)sevenGtOrEqToEight.rhs()).asInteger());
 
     TextQueryParentheticalExpression rhsParentheticalExpression = (TextQueryParentheticalExpression) orExpression.rhs();
-    TextQueryUdfExpression trueExpression = (TextQueryUdfExpression) rhsParentheticalExpression.innerExpression();
+    TextQueryBooleanConstantExpression trueExpression = (TextQueryBooleanConstantExpression) rhsParentheticalExpression.innerExpression();
 
-    assertEquals("true", trueExpression.functionName().toString());
-    assertEquals(0, trueExpression.parameterCount());
+    assertEquals(true, trueExpression.value());
   }
 
   public int computeFromSelectStatement(String selectStatementExpression) {

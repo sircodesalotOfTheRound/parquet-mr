@@ -30,10 +30,10 @@ public class TextQueryTestableNotEqualsExpression extends TextQueryTestableBinar
       lastSeenRhs = (Comparable) rhsCursor.value();
     }
 
-    if (lastSeenLhs != null) {
+    if (lastSeenLhs != null && lastSeenRhs != null) {
       return !lastSeenLhs.equals(lastSeenRhs);
     } else {
-      return (lastSeenRhs != null);
+      return false;
     }
   }
 

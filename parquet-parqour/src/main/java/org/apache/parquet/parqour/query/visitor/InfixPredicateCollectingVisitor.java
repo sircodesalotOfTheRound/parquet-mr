@@ -12,10 +12,8 @@ import org.apache.parquet.parqour.query.expressions.variable.column.TextQueryCol
 import org.apache.parquet.parqour.query.expressions.variable.column.TextQueryNamedColumnExpression;
 import org.apache.parquet.parqour.query.expressions.variable.infix.InfixOperator;
 import org.apache.parquet.parqour.query.expressions.variable.infix.TextQueryInfixExpression;
-import org.apache.parquet.parqour.query.expressions.txql.TextQueryNumericExpression;
+import org.apache.parquet.parqour.query.expressions.variable.constant.TextQueryNumericExpression;
 import org.apache.parquet.parqour.query.expressions.txql.TextQueryWhereExpression;
-import org.apache.parquet.parqour.query.tokens.TextQueryPunctuationToken;
-import org.apache.parquet.parqour.query.tokens.TextQueryToken;
 import org.apache.parquet.schema.PrimitiveType;
 import org.apache.parquet.schema.Type;
 

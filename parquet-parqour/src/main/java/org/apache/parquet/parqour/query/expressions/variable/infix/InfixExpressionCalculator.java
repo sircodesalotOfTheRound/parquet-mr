@@ -2,9 +2,8 @@ package org.apache.parquet.parqour.query.expressions.variable.infix;
 
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryVariableExpression;
-import org.apache.parquet.parqour.query.expressions.tables.TextQueryStringExpression;
-import org.apache.parquet.parqour.query.expressions.txql.TextQueryNumericExpression;
-import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
+import org.apache.parquet.parqour.query.expressions.variable.constant.TextQueryStringExpression;
+import org.apache.parquet.parqour.query.expressions.variable.constant.TextQueryNumericExpression;
 import org.apache.parquet.parqour.query.tokens.TextQueryNumericToken;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 

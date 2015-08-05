@@ -1,18 +1,16 @@
 package org.apache.parquet.parqour.query.expressions;
 
-import junit.framework.Assert;
 import org.apache.parquet.parqour.ingest.read.iterator.lamba.Predicate;
 import org.apache.parquet.parqour.ingest.read.iterator.lamba.Projection;
 import org.apache.parquet.parqour.query.collections.TextQueryCollection;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryVariableExpression;
-import org.apache.parquet.parqour.query.expressions.tables.TextQueryStringExpression;
-import org.apache.parquet.parqour.query.expressions.txql.TextQueryNumericExpression;
+import org.apache.parquet.parqour.query.expressions.variable.constant.TextQueryStringExpression;
+import org.apache.parquet.parqour.query.expressions.variable.constant.TextQueryNumericExpression;
 import org.apache.parquet.parqour.query.expressions.txql.TextQuerySelectStatementExpression;
 import org.apache.parquet.parqour.query.expressions.txql.TextQueryTreeRootExpression;
 import org.apache.parquet.parqour.query.expressions.variable.TextQueryUdfExpression;
 import org.apache.parquet.parqour.query.expressions.variable.infix.TextQueryInfixExpression;
 import org.apache.parquet.parqour.query.expressions.variable.parenthetical.TextQueryParentheticalExpression;
-import org.apache.parquet.parqour.query.tokens.TextQueryPunctuationToken;
 import org.junit.Test;
 
 import static junit.framework.TestCase.assertTrue;

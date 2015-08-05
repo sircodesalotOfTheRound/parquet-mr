@@ -18,6 +18,8 @@ public enum TextQueryExpressionType {
   WILDCARD,
   COLUMN_SET,
 
+  BOOLEAN,
+
   INFIX,
   PARENTHETICAL,
 

@@ -17,6 +17,7 @@ import org.apache.parquet.parqour.query.tokens.TextQueryPunctuationToken;
 public abstract class TextQueryVariableExpression extends TextQueryExpression {
   private static final TextQueryBacktrackingRuleSet<TextQueryVariableExpression> rules = new TextQueryBacktrackingRuleSet<TextQueryVariableExpression>()
     .add(new TextQueryParentheticalExpressionBacktrackRule())
+    .add(new TextQueryBooleanConstantBacktrackingRule())
     .add(new TextQueryNumericExpressionBacktrackRule())
     .add(new TextQueryNotExpressionBacktrackRule())
     .add(new TextQueryUdfExpressionBacktrackRule())
