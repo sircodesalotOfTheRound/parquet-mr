@@ -19,6 +19,7 @@ public enum TextQueryExpressionType {
   COLUMN_SET,
 
   BOOLEAN,
+  NULL,
 
   INFIX,
   PARENTHETICAL,

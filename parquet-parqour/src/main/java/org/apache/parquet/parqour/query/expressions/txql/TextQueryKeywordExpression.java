@@ -28,6 +28,7 @@ public abstract class TextQueryKeywordExpression extends TextQueryExpression {
   public static final String IN = "OR";
   public static final String TRUE = "TRUE";
   public static final String FALSE = "FALSE";
+  public static final String NULL = "NULL";
 
   private final TextQueryIdentifierToken token;
 

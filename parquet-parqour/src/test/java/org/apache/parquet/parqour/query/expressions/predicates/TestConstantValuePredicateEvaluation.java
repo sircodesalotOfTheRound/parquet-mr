@@ -97,7 +97,7 @@ public class TestConstantValuePredicateEvaluation {
 
   @Test
   public void testNulls() {
-
+    assertFalse(asPredicate("select * where null = null").test());
   }
 
   @Test
