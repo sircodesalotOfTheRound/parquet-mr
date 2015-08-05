@@ -58,6 +58,25 @@ public class TestConstantValuePredicateEvaluation {
     assertFalse(asPredicate("select * where 'less' > 'more'").test());
     assertFalse(asPredicate("select * where 'more' <= 'less'").test());
     assertFalse(asPredicate("select * where 'more' < 'less'").test());
+
+    assertFalse(asPredicate("select * where not('same' = 'same')").test());
+    assertFalse(asPredicate("select * where not('same' != 'different')").test());
+    assertFalse(asPredicate("select * where not('less' < 'more')").test());
+    assertFalse(asPredicate("select * where not('less' <= 'more')").test());
+    assertFalse(asPredicate("select * where not('more' > 'less')").test());
+    assertFalse(asPredicate("select * where not('more' >= 'less')").test());
+
+    assertTrue(asPredicate("select * where not('same' != 'same')").test());
+    assertTrue(asPredicate("select * where not('same' = 'different')").test());
+    assertTrue(asPredicate("select * where not('less' >= 'more')").test());
+    assertTrue(asPredicate("select * where not('less' > 'more')").test());
+    assertTrue(asPredicate("select * where not('more' <= 'less')").test());
+    assertTrue(asPredicate("select * where not('more' < 'less')").test());
+  }
+
+  @Test
+  public void testNulls() {
+
   }
 
   @Test
