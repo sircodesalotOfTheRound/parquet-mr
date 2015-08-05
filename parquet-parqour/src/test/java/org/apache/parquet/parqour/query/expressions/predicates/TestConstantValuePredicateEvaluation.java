@@ -90,6 +90,9 @@ public class TestConstantValuePredicateEvaluation {
 
     assertTrue(asPredicate("select * where not true = false").test());
     assertFalse(asPredicate("select * where not (not (false = true))").test());
+
+    assertTrue(asPredicate("select * where true = (false = false)").test());
+    assertTrue(asPredicate("select * where false = (true != true)").test());
   }
 
   @Test

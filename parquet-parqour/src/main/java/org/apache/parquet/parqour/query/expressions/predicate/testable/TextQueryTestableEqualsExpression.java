@@ -9,7 +9,7 @@ import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
 /**
  * Created by sircodesalot on 7/27/15.
  */
-public class TextQueryTestableEqualsExpression extends TextQueryTestableBinaryExpression {
+public class TextQueryTestableEqualsExpression extends TextQueryTestableBinaryExpression<Object> {
   public TextQueryTestableEqualsExpression(TextQueryInfixExpression infixExpression) {
     super(infixExpression, TextQueryExpressionType.EQUALS);
   }
@@ -27,11 +27,11 @@ public class TextQueryTestableEqualsExpression extends TextQueryTestableBinaryEx
   @Override
   public boolean test() {
     if (!lhsIsCached) {
-      lastSeenLhs = (Comparable) lhsCursor.value();
+      lastSeenLhs = lhsCursor.value();
     }
 
     if (!rhsIsCached) {
-      lastSeenRhs = (Comparable) rhsCursor.value();
+      lastSeenRhs = rhsCursor.value();
     }
 
     if (lastSeenLhs != null && lastSeenRhs != null) {

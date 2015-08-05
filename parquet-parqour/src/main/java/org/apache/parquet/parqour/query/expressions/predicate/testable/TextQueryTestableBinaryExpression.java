@@ -1,7 +1,8 @@
 package org.apache.parquet.parqour.query.expressions.predicate.testable;
 
 import org.apache.parquet.parqour.cursor.iface.Cursor;
-import org.apache.parquet.parqour.cursor.implementations.noniterable.constant.ConstantValueCursor;
+import org.apache.parquet.parqour.cursor.implementations.noniterable.resolved.ConstantValueCursor;
+import org.apache.parquet.parqour.cursor.implementations.noniterable.resolved.EvaluatedValueCursor;
 import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryVariableExpression;
@@ -12,7 +13,7 @@ import org.apache.parquet.parqour.query.expressions.variable.infix.TextQueryInfi
 /**
  * Created by sircodesalot on 7/27/15.
  */
-public abstract class TextQueryTestableBinaryExpression extends TextQueryTestablePredicateExpression {
+public abstract class TextQueryTestableBinaryExpression<T> extends TextQueryTestablePredicateExpression {
   protected final TextQueryInfixExpression infixExpression;
   protected final Cursor lhsCursor;
   protected final Cursor rhsCursor;
@@ -20,15 +21,16 @@ public abstract class TextQueryTestableBinaryExpression extends TextQueryTestabl
   protected final boolean lhsIsCached;
   protected final boolean rhsIsCached;
 
-  protected Comparable lastSeenLhs;
-  protected Comparable lastSeenRhs;
+  protected T lastSeenLhs;
+  protected T lastSeenRhs;
 
   public TextQueryTestableBinaryExpression(TextQueryInfixExpression infixExpression, TextQueryExpressionType type) {
     super(infixExpression.parent(), type);
 
     this.infixExpression = infixExpression;
-    this.lhsCursor = infixExpression.lhs().getCursor();
-    this.rhsCursor = infixExpression.rhs().getCursor();
+    // TODO: Rampant simplifications.
+    this.lhsCursor = infixExpression.lhs().simplify(this).getCursor();
+    this.rhsCursor = infixExpression.rhs().simplify(this).getCursor();
 
     this.lastSeenLhs = attemptToCache(lhsCursor);
     this.lastSeenRhs = attemptToCache(rhsCursor);
@@ -37,9 +39,9 @@ public abstract class TextQueryTestableBinaryExpression extends TextQueryTestabl
     this.rhsIsCached = (lastSeenRhs != null);
   }
 
-  public Comparable attemptToCache(Cursor cursor) {
+  public T attemptToCache(Cursor cursor) {
     if (cursor instanceof ConstantValueCursor) {
-      return (Comparable)cursor.value();
+      return (T)cursor.value();
     } else {
       return null;
     }
@@ -50,6 +52,16 @@ public abstract class TextQueryTestableBinaryExpression extends TextQueryTestabl
     return infixExpression.simplify(parent);
   }
 
+  @Override
+  public Cursor getCursor() {
+    // Todo: give this a better name.
+    return new EvaluatedValueCursor("evaluated-cursor", -1) {
+      @Override
+      public Object value() {
+        return test();
+      }
+    };
+  }
 
   public TextQueryVariableExpression lhs() { return infixExpression.lhs(); }
   public abstract InfixOperator operator();

@@ -1,7 +1,5 @@
 package org.apache.parquet.parqour.query.expressions.predicate.testable;
 
-import org.apache.parquet.parqour.cursor.iface.Cursor;
-import org.apache.parquet.parqour.cursor.implementations.noniterable.constant.ConstantValueCursor;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryVariableExpression;
 import org.apache.parquet.parqour.query.expressions.variable.infix.InfixOperator;
@@ -11,7 +9,7 @@ import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
 /**
  * Created by sircodesalot on 7/27/15.
  */
-public class TextQueryTestableLessThanExpression extends TextQueryTestableBinaryExpression {
+public class TextQueryTestableLessThanExpression extends TextQueryTestableBinaryExpression<Comparable> {
   public TextQueryTestableLessThanExpression(TextQueryInfixExpression infixExpression) {
     super(infixExpression, TextQueryExpressionType.LESS_THAN);
   }

@@ -1,6 +1,6 @@
 package org.apache.parquet.parqour.query.expressions.variable.constant;
 
-import org.apache.parquet.parqour.cursor.implementations.noniterable.constant.ConstantValueCursor;
+import org.apache.parquet.parqour.cursor.implementations.noniterable.resolved.ConstantValueCursor;
 import org.apache.parquet.parqour.exceptions.TextQueryException;
 import org.apache.parquet.parqour.cursor.iface.Cursor;
 import org.apache.parquet.parqour.query.expressions.TextQueryExpression;

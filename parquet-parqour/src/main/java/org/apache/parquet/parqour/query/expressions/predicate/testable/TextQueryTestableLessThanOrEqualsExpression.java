@@ -9,7 +9,7 @@ import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
 /**
  * Created by sircodesalot on 7/27/15.
  */
-public class TextQueryTestableLessThanOrEqualsExpression extends TextQueryTestableBinaryExpression {
+public class TextQueryTestableLessThanOrEqualsExpression extends TextQueryTestableBinaryExpression<Comparable> {
   public TextQueryTestableLessThanOrEqualsExpression(TextQueryInfixExpression infixExpression) {
     super(infixExpression, TextQueryExpressionType.LESS_THAN_OR_EQUALS);
   }
