@@ -98,6 +98,17 @@ public class TestConstantValuePredicateEvaluation {
   @Test
   public void testNulls() {
     assertFalse(asPredicate("select * where null = null").test());
+    assertFalse(asPredicate("select * where false = null").test());
+    assertFalse(asPredicate("select * where false = null").test());
+
+    for (int index = 0; index < 100; index++) {
+      assertFalse(asPredicate("select * where %s = null", TestTools.generateRandomInt(100000)).test());
+    }
+  }
+
+  @Test
+  public void testIs() {
+
   }
 
   @Test
