@@ -108,12 +108,15 @@ public class TestConstantValuePredicateEvaluation {
 
   @Test
   public void testIs() {
-
+    //assertTrue(asPredicate("select * where null is null").test());
+    // Todo add negative tests.
   }
 
   @Test
   public void testMatchesPredicate() {
-
+    assertTrue(asPredicate("select * where 'scodey@email.com' matches '(\\w+?)@(\\w+?)\\.\\w+'").test());
+    assertTrue(asPredicate("select * where not (not ('scodey@email.com' matches '(\\w+?)@(\\w+?)\\.\\w+'))").test());
+    // Todo add negative tests.
   }
 
   @Test

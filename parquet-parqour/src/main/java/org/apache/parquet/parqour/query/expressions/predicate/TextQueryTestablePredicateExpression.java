@@ -22,6 +22,7 @@ public abstract class TextQueryTestablePredicateExpression extends TextQueryVari
     add(InfixOperator.LESS_THAN_OR_EQUALS);
     add(InfixOperator.GREATER_THAN);
     add(InfixOperator.GREATER_THAN_OR_EQUALS);
+    add(InfixOperator.MATCHES);
   }};
 
   public TextQueryTestablePredicateExpression(TextQueryExpression parent, TextQueryExpressionType type) {
@@ -48,6 +49,9 @@ public abstract class TextQueryTestablePredicateExpression extends TextQueryVari
           return new TextQueryTestableGreaterThanExpression(infixExpression);
         case GREATER_THAN_OR_EQUALS:
           return new TextQueryTestableGreaterThanOrEqualsExpression(infixExpression);
+
+        case MATCHES:
+          return new TextQueryMatchesExpression(infixExpression);
       }
     }
 
