@@ -24,6 +24,7 @@ public enum TextQueryExpressionType {
   INFIX,
   PARENTHETICAL,
   MATCHES,
+  IS,
 
   KEYWORD,
   SELECT,

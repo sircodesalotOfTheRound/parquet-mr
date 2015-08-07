@@ -18,6 +18,7 @@ public enum InfixOperator {
   BETWEEN("between", 2),
   MATCHES("matches", 2),
   IN("in", 2),
+  IS("is", 2),
   EQUALS(TextQueryPunctuationToken.EQUALS, 3),
   NOT_EQUALS(TextQueryPunctuationToken.NOT_EQUALS, 3),
   LESS_THAN(TextQueryPunctuationToken.LESS_THAN, 3),
