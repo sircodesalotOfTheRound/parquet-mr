@@ -11,6 +11,7 @@ import org.apache.parquet.parqour.ingest.disk.files.HDFSParquetFile;
 import org.apache.parquet.parqour.ingest.disk.files.HDFSParquetFileMetadata;
 import org.apache.parquet.parqour.ingest.disk.pages.DictionaryPageInfo;
 import org.apache.parquet.parqour.ingest.disk.pages.PageInfo;
+import org.apache.parquet.parqour.ingest.disk.pages.slate.DataSlate;
 import org.apache.parquet.parqour.tools.TransformCollection;
 import org.apache.parquet.parqour.tools.TransformList;
 import org.apache.parquet.schema.PrimitiveType;
@@ -45,21 +46,29 @@ public class RowGroupColumnInfo {
   private TransformCollection<PageInfo> readPages() {
     try {
       FSDataInputStream stream = file.stream();
-      stream.seek(startingOffset());
       TransformList<PageInfo> pages = new TransformList<PageInfo>();
 
-      long totalEntriesRead = 0;
+      DataSlate slate = new DataSlate(file, startingOffset());
+      stream.seek(startingOffset());
+
+      int totalEntriesRead = 0;
+      long offset = this.startingOffset();
       while (totalEntriesRead < totalEntryCount()) {
         PageHeader header = Util.readPageHeader(stream);
-        PageInfo pageInfo = PageInfo.readPage(this, file, metadata, header);
+        PageInfo pageInfo = PageInfo.readPage(this, file, metadata, header, slate, stream.getPos());
         if (pageInfo.isDictionaryPage()) {
           this.dictionaryPage = (DictionaryPageInfo)pageInfo;
         } else {
+          slate.addSegment(stream, header);
           pages.add(pageInfo);
+
           totalEntriesRead += pageInfo.entryCount();
         }
+
+        offset += header.getUncompressed_page_size();
       }
 
+      slate.construct();
       return pages;
     } catch (IOException ex) {
       throw new DataIngestException("Unable to read pages for column: '%s'", path());

@@ -6,8 +6,8 @@ import org.apache.parquet.column.ParquetProperties;
 import org.apache.parquet.column.statistics.Statistics;
 import org.apache.parquet.format.PageHeader;
 import org.apache.parquet.parqour.ingest.disk.blocks.RowGroupColumnInfo;
-import org.apache.parquet.parqour.ingest.disk.files.HDFSParquetFile;
 import org.apache.parquet.parqour.ingest.disk.files.HDFSParquetFileMetadata;
+import org.apache.parquet.parqour.ingest.disk.pages.slate.DataSlate;
 
 /**
  * Created by sircodesalot on 8/10/15.
@@ -15,8 +15,8 @@ import org.apache.parquet.parqour.ingest.disk.files.HDFSParquetFileMetadata;
 public abstract class DataPageInfo extends PageInfo {
   protected ColumnDescriptor columnDescriptor;
 
-  public DataPageInfo(RowGroupColumnInfo columnInfo, HDFSParquetFile file, HDFSParquetFileMetadata metadata, PageHeader header) {
-    super(columnInfo, file, header);
+  public DataPageInfo(RowGroupColumnInfo columnInfo, HDFSParquetFileMetadata metadata, PageHeader header, DataSlate slate, long offset) {
+    super(columnInfo, header, slate, offset);
 
     this.columnDescriptor = metadata.getColumnDescriptor(columnInfo.path());
   }

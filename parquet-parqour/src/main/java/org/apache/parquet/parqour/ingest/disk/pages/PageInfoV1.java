@@ -9,6 +9,7 @@ import org.apache.parquet.format.converter.ParquetMetadataConverter;
 import org.apache.parquet.parqour.ingest.disk.blocks.RowGroupColumnInfo;
 import org.apache.parquet.parqour.ingest.disk.files.HDFSParquetFile;
 import org.apache.parquet.parqour.ingest.disk.files.HDFSParquetFileMetadata;
+import org.apache.parquet.parqour.ingest.disk.pages.slate.DataSlate;
 
 /**
  * Created by sircodesalot on 8/10/15.
@@ -18,8 +19,8 @@ public class PageInfoV1 extends DataPageInfo {
   private final DataPageHeader pageHeader;
   private final HDFSParquetFileMetadata metadata;
 
-  public PageInfoV1(RowGroupColumnInfo columnInfo, HDFSParquetFile file, HDFSParquetFileMetadata metadata, PageHeader header) {
-    super(columnInfo, file, metadata, header);
+  public PageInfoV1(RowGroupColumnInfo columnInfo, HDFSParquetFileMetadata metadata, PageHeader header, DataSlate slate, long offset) {
+    super(columnInfo, metadata, header, slate, offset);
 
     this.metadata = metadata;
     this.pageHeader = header.getData_page_header();
