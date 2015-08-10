@@ -52,7 +52,6 @@ public class RowGroupColumnInfo {
       stream.seek(startingOffset());
 
       int totalEntriesRead = 0;
-      long offset = this.startingOffset();
       while (totalEntriesRead < totalEntryCount()) {
         PageHeader header = Util.readPageHeader(stream);
         PageInfo pageInfo = PageInfo.readPage(this, file, metadata, header, slate, stream.getPos());
@@ -64,8 +63,6 @@ public class RowGroupColumnInfo {
 
           totalEntriesRead += pageInfo.entryCount();
         }
-
-        offset += header.getUncompressed_page_size();
       }
 
       slate.construct();

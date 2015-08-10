@@ -12,11 +12,12 @@ import java.io.IOException;
  */
 public class DataSlate {
   private final long startingOffset;
+  private long endingOffset = 0;
+
   private final FSDataInputStream stream;
   private boolean isBuilt = false;
   private byte[] data;
 
-  private int totalSize = 0;
 
   public DataSlate(HDFSParquetFile file, long startingOffset) {
     this.startingOffset = startingOffset;
@@ -25,8 +26,7 @@ public class DataSlate {
 
   public void addSegment(FSDataInputStream stream, PageHeader header) {
     if (!isBuilt) {
-      int pageStartOffset = computePageStartOffset(stream, header);
-      this.totalSize += pageStartOffset + header.getCompressed_page_size();
+      this.endingOffset += computeEndingOffset(stream, header);
     } else {
       throw new DataIngestException("Data Slate is already built.");
     }
@@ -42,7 +42,9 @@ public class DataSlate {
 
   public void construct() {
     try {
+      int totalSize = (int)(endingOffset - startingOffset);
       byte[] data = new byte[totalSize];
+
       stream.readFully(startingOffset, data);
       this.isBuilt = true;
     } catch (IOException ex) {
@@ -50,9 +52,9 @@ public class DataSlate {
     }
   }
 
-  private int computePageStartOffset(FSDataInputStream stream, PageHeader header) {
+  private long computeEndingOffset(FSDataInputStream stream, PageHeader header) {
     try {
-      return (int) (stream.getPos() - startingOffset);
+      return stream.getPos() + header.getCompressed_page_size();
     } catch (IOException ex) {
       throw new DataIngestException("Unable to read pages for file.");
     }
