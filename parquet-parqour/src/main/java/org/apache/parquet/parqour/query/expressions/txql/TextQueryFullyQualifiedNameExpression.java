@@ -3,8 +3,8 @@ package org.apache.parquet.parqour.query.expressions.txql;
 import org.apache.parquet.parqour.query.backtracking.interfaces.TextQueryBacktrackingRuleSet;
 import org.apache.parquet.parqour.query.backtracking.rules.TextQueryIdentifierExpressionBacktrackRule;
 import org.apache.parquet.parqour.query.backtracking.rules.TextQueryWildcardExpressionBacktrackRule;
-import org.apache.parquet.parqour.query.collections.TextQueryAppendableCollection;
-import org.apache.parquet.parqour.query.collections.TextQueryCollection;
+import org.apache.parquet.parqour.tools.TransformList;
+import org.apache.parquet.parqour.tools.TransformCollection;
 import org.apache.parquet.parqour.query.delimiters.TextQueryDotExpression;
 import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryMemberExpression;
@@ -22,7 +22,7 @@ public class TextQueryFullyQualifiedNameExpression extends TextQueryVariableExpr
     .add(new TextQueryIdentifierExpressionBacktrackRule())
     .add(new TextQueryWildcardExpressionBacktrackRule());
 
-  private final TextQueryCollection<TextQueryMemberExpression> members;
+  private final TransformCollection<TextQueryMemberExpression> members;
   private final String representation;
 
   public TextQueryFullyQualifiedNameExpression(TextQueryExpression parent, TextQueryLexer lexer) {
@@ -32,8 +32,8 @@ public class TextQueryFullyQualifiedNameExpression extends TextQueryVariableExpr
     this.representation = generateRepresentation();
   }
 
-  private TextQueryCollection<TextQueryMemberExpression> readMembers(TextQueryLexer lexer) {
-    TextQueryAppendableCollection<TextQueryMemberExpression> identifiers = new TextQueryAppendableCollection<TextQueryMemberExpression>();
+  private TransformCollection<TextQueryMemberExpression> readMembers(TextQueryLexer lexer) {
+    TransformList<TextQueryMemberExpression> identifiers = new TransformList<TextQueryMemberExpression>();
     while (!lexer.isEof()) {
       if (memberTypeRules.canParse(this, lexer)) {
         identifiers.add(memberTypeRules.read(this, lexer));
@@ -64,7 +64,7 @@ public class TextQueryFullyQualifiedNameExpression extends TextQueryVariableExpr
     return builder.toString();
   }
 
-  public TextQueryCollection<TextQueryMemberExpression> members() {
+  public TransformCollection<TextQueryMemberExpression> members() {
     return this.members;
   }
 

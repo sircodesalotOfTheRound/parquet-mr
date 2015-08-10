@@ -5,8 +5,8 @@ import org.apache.parquet.parqour.query.backtracking.rules.TextQuerySelectStatem
 import org.apache.parquet.parqour.query.backtracking.interfaces.TextQueryBacktrackingRuleSet;
 import org.apache.parquet.parqour.query.backtracking.rules.TextQueryFromExpressionBacktrackRule;
 import org.apache.parquet.parqour.query.backtracking.rules.TextQueryFullyQualifiedNameExpressionBacktrackRule;
-import org.apache.parquet.parqour.query.collections.TextQueryAppendableCollection;
-import org.apache.parquet.parqour.query.collections.TextQueryCollection;
+import org.apache.parquet.parqour.tools.TransformList;
+import org.apache.parquet.parqour.tools.TransformCollection;
 import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
 import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
@@ -21,7 +21,7 @@ public class TextQueryTreeRootExpression extends TextQueryExpression {
     .add(new TextQuerySelectStatementBacktrackRule())
     .add(new TextQueryFromExpressionBacktrackRule());
 
-  private final TextQueryCollection<TextQueryExpression> expressions;
+  private final TransformCollection<TextQueryExpression> expressions;
   private final String text;
 
   public TextQueryTreeRootExpression(TextQueryLexer lexer) {
@@ -31,8 +31,8 @@ public class TextQueryTreeRootExpression extends TextQueryExpression {
     this.text = lexer.text();
   }
 
-  private TextQueryCollection<TextQueryExpression> readExpressions(TextQueryLexer lexer) {
-    TextQueryAppendableCollection<TextQueryExpression> expressions = new TextQueryAppendableCollection<TextQueryExpression>();
+  private TransformCollection<TextQueryExpression> readExpressions(TextQueryLexer lexer) {
+    TransformList<TextQueryExpression> expressions = new TransformList<TextQueryExpression>();
     while (!lexer.isEof()) {
       TextQueryExpression expression = rules.read(this, lexer);
 
@@ -46,7 +46,7 @@ public class TextQueryTreeRootExpression extends TextQueryExpression {
     return expressions;
   }
 
-  public TextQueryCollection<TextQueryExpression> expressions() {
+  public TransformCollection<TextQueryExpression> expressions() {
     return this.expressions;
   }
 

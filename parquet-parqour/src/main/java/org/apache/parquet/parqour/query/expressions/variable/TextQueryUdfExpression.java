@@ -1,8 +1,8 @@
 package org.apache.parquet.parqour.query.expressions.variable;
 
 import org.apache.parquet.parqour.ingest.read.iterator.lamba.Projection;
-import org.apache.parquet.parqour.query.collections.TextQueryAppendableCollection;
-import org.apache.parquet.parqour.query.collections.TextQueryCollection;
+import org.apache.parquet.parqour.tools.TransformList;
+import org.apache.parquet.parqour.tools.TransformCollection;
 import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryVariableExpression;
@@ -16,7 +16,7 @@ import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
  */
 public class TextQueryUdfExpression extends TextQueryVariableExpression {
   private TextQueryFullyQualifiedNameExpression identifier;
-  private TextQueryCollection<TextQueryVariableExpression> parameters;
+  private TransformCollection<TextQueryVariableExpression> parameters;
   private boolean isNegated = false;
 
   private TextQueryUdfExpression(TextQueryUdfExpression udfExpression, Iterable<TextQueryVariableExpression> simplifiedParameters) {
@@ -24,7 +24,7 @@ public class TextQueryUdfExpression extends TextQueryVariableExpression {
 
     this.identifier = udfExpression.identifier;
     this.isNegated = udfExpression.isNegated;
-    this.parameters = new TextQueryAppendableCollection<>(simplifiedParameters);
+    this.parameters = new TransformList<>(simplifiedParameters);
   }
 
   public TextQueryUdfExpression(TextQueryExpression parent, TextQueryLexer lexer) {
@@ -38,9 +38,9 @@ public class TextQueryUdfExpression extends TextQueryVariableExpression {
     return TextQueryFullyQualifiedNameExpression.read(this, lexer);
   }
 
-  private TextQueryCollection<TextQueryVariableExpression> readParameters(TextQueryLexer lexer) {
+  private TransformCollection<TextQueryVariableExpression> readParameters(TextQueryLexer lexer) {
     lexer.readCurrentAndAdvance(TextQueryExpressionType.PUNCTUATION, TextQueryPunctuationToken.OPEN_PARENS);
-    TextQueryCollection<TextQueryVariableExpression> parameters = TextQueryVariableExpression.readParameterList(this, lexer);
+    TransformCollection<TextQueryVariableExpression> parameters = TextQueryVariableExpression.readParameterList(this, lexer);
     lexer.readCurrentAndAdvance(TextQueryExpressionType.PUNCTUATION, TextQueryPunctuationToken.CLOSE_PARENS);
 
     return parameters;
@@ -77,7 +77,7 @@ public class TextQueryUdfExpression extends TextQueryVariableExpression {
     return this.parameters.count();
   }
 
-  public TextQueryCollection<TextQueryVariableExpression> parameters() {
+  public TransformCollection<TextQueryVariableExpression> parameters() {
     return this.parameters;
   }
 

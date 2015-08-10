@@ -1,7 +1,7 @@
 package org.apache.parquet.parqour.query.expressions.tables;
 
-import org.apache.parquet.parqour.query.collections.TextQueryAppendableCollection;
-import org.apache.parquet.parqour.query.collections.TextQueryCollection;
+import org.apache.parquet.parqour.tools.TransformList;
+import org.apache.parquet.parqour.tools.TransformCollection;
 import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryVariableExpression;
@@ -13,7 +13,7 @@ import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
  */
 public class TextQueryTableSetExpression extends TextQueryExpression {
   // Todo: this should just be a single table.
-  private final TextQueryCollection<TextQueryVariableExpression> tables;
+  private final TransformCollection<TextQueryVariableExpression> tables;
 
   public TextQueryTableSetExpression(TextQueryExpression parent, TextQueryLexer lexer) {
     super(parent, lexer, TextQueryExpressionType.TABLE_SET);
@@ -21,8 +21,8 @@ public class TextQueryTableSetExpression extends TextQueryExpression {
     this.tables = readTables(lexer);
   }
 
-  private TextQueryCollection<TextQueryVariableExpression> readTables(TextQueryLexer lexer) {
-    TextQueryAppendableCollection<TextQueryVariableExpression> tables = new TextQueryAppendableCollection<TextQueryVariableExpression>();
+  private TransformCollection<TextQueryVariableExpression> readTables(TextQueryLexer lexer) {
+    TransformList<TextQueryVariableExpression> tables = new TransformList<TextQueryVariableExpression>();
     while (!lexer.isEof()) {
       // Read the next entry. Or break on failure.
       if (TextQueryVariableExpression.canParse(this, lexer)) {
@@ -42,7 +42,7 @@ public class TextQueryTableSetExpression extends TextQueryExpression {
     return tables;
   }
 
-  public TextQueryCollection<TextQueryVariableExpression> tables() {
+  public TransformCollection<TextQueryVariableExpression> tables() {
     return this.tables;
   }
 

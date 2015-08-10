@@ -2,7 +2,7 @@ package org.apache.parquet.parqour.query.expressions;
 
 import org.apache.parquet.parqour.ingest.read.iterator.lamba.Predicate;
 import org.apache.parquet.parqour.ingest.read.iterator.lamba.Projection;
-import org.apache.parquet.parqour.query.collections.TextQueryCollection;
+import org.apache.parquet.parqour.tools.TransformCollection;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryVariableExpression;
 import org.apache.parquet.parqour.query.expressions.variable.constant.TextQueryStringExpression;
 import org.apache.parquet.parqour.query.expressions.variable.constant.TextQueryNumericExpression;
@@ -35,7 +35,7 @@ public class TestParentheticalExpressions {
 
     assertTrue(allEntriesHaveParenthasis);
 
-    TextQueryCollection<TextQueryParentheticalExpression> parentheticalExpressions = selectStatement
+    TransformCollection<TextQueryParentheticalExpression> parentheticalExpressions = selectStatement
       .columnSet()
       .columns()
       .map(new Projection<TextQueryVariableExpression, TextQueryParentheticalExpression>() {

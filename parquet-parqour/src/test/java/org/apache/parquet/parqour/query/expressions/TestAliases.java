@@ -1,6 +1,6 @@
 package org.apache.parquet.parqour.query.expressions;
 
-import org.apache.parquet.parqour.query.collections.TextQueryCollection;
+import org.apache.parquet.parqour.tools.TransformCollection;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryVariableExpression;
 import org.apache.parquet.parqour.query.expressions.variable.constant.TextQueryStringExpression;
 import org.apache.parquet.parqour.query.expressions.variable.constant.TextQueryNumericExpression;
@@ -24,7 +24,7 @@ public class TestAliases {
       .fromString("select (2 + 3) as five, 'something' as string, column as alias");
 
     TextQuerySelectStatementExpression selectStatement = rootExpression.asSelectStatement();
-    TextQueryCollection<TextQueryVariableExpression> columns = selectStatement.columnSet().columns();
+    TransformCollection<TextQueryVariableExpression> columns = selectStatement.columnSet().columns();
 
     TextQueryInfixExpression asFiveAlias = columns.firstAs(TextQueryInfixExpression.class);
     assertEquals("five", ((TextQueryNamedColumnExpression) asFiveAlias.rhs()).identifier().toString());

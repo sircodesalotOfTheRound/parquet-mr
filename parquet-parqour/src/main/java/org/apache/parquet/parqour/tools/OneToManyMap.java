@@ -1,4 +1,4 @@
-package org.apache.parquet.parqour.query.collections;
+package org.apache.parquet.parqour.tools;
 
 import java.util.ArrayList;
 import java.util.HashMap;

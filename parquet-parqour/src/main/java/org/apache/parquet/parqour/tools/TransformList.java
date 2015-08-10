@@ -1,4 +1,4 @@
-package org.apache.parquet.parqour.query.collections;
+package org.apache.parquet.parqour.tools;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,28 +6,28 @@ import java.util.List;
 /**
  * Created by sircodesalot on 15/4/7.
  */
-public class TextQueryAppendableCollection<T>  extends TextQueryCollection<T> {
+public class TransformList<T>  extends TransformCollection<T> {
   private final List<T> items = new ArrayList<T>();
 
-  public TextQueryAppendableCollection() {
+  public TransformList() {
   }
 
-  public TextQueryAppendableCollection(Iterable<T> items) {
+  public TransformList(Iterable<T> items) {
     this.add(items);
   }
 
-  public TextQueryAppendableCollection(T... items) {
+  public TransformList(T... items) {
     for (T item : items) {
       this.add(item);
     }
   }
 
-  public TextQueryAppendableCollection add(T item) {
+  public TransformList add(T item) {
     this.items.add(item);
     return this;
   }
 
-  public TextQueryAppendableCollection add(Iterable<T> items) {
+  public TransformList add(Iterable<T> items) {
     for (T item : items) {
       this.add(item);
     }

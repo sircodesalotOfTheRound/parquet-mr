@@ -3,8 +3,8 @@ package org.apache.parquet.parqour.query.expressions.categories;
 import org.apache.parquet.parqour.cursor.iface.Cursor;
 import org.apache.parquet.parqour.query.backtracking.interfaces.TextQueryBacktrackingRuleSet;
 import org.apache.parquet.parqour.query.backtracking.rules.*;
-import org.apache.parquet.parqour.query.collections.TextQueryAppendableCollection;
-import org.apache.parquet.parqour.query.collections.TextQueryCollection;
+import org.apache.parquet.parqour.tools.TransformList;
+import org.apache.parquet.parqour.tools.TransformCollection;
 import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
 import org.apache.parquet.parqour.query.expressions.variable.infix.TextQueryInfixExpression;
 import org.apache.parquet.parqour.query.expressions.variable.infix.InfixOperator;
@@ -55,8 +55,8 @@ public abstract class TextQueryVariableExpression extends TextQueryExpression {
     }
   }
 
-  public static TextQueryCollection<TextQueryVariableExpression> readParameterList(TextQueryExpression parent, TextQueryLexer lexer) {
-    TextQueryAppendableCollection<TextQueryVariableExpression> parameters = new TextQueryAppendableCollection<TextQueryVariableExpression>();
+  public static TransformCollection<TextQueryVariableExpression> readParameterList(TextQueryExpression parent, TextQueryLexer lexer) {
+    TransformList<TextQueryVariableExpression> parameters = new TransformList<TextQueryVariableExpression>();
 
     while (TextQueryVariableExpression.canParse(parent, lexer)) {
       parameters.add(TextQueryVariableExpression.read(parent, lexer));

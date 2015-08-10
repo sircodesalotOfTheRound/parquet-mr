@@ -6,6 +6,10 @@ import org.apache.parquet.hadoop.metadata.BlockMetaData;
 import org.apache.parquet.hadoop.metadata.FileMetaData;
 import org.apache.parquet.hadoop.metadata.ParquetMetadata;
 import org.apache.parquet.parqour.exceptions.DataIngestException;
+import org.apache.parquet.parqour.ingest.disk.blocks.RowGroupBlockInfo;
+import org.apache.parquet.parqour.ingest.read.iterator.lamba.Projection;
+import org.apache.parquet.parqour.tools.TransformList;
+import org.apache.parquet.parqour.tools.TransformCollection;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -18,9 +22,11 @@ public class HDFSParquetFileMetadata {
   private static final int PAR1_LENGTH = PAR1.length();
   private static final int FOOTER_LENGTH = 4;
 
+  private final HDFSParquetFile file;
   private final ParquetMetadata metadata;
 
   public HDFSParquetFileMetadata(HDFSParquetFile file) {
+    this.file = file;
     this.metadata = readMetadata(file);
   }
 
@@ -88,6 +94,15 @@ public class HDFSParquetFileMetadata {
     return converter.readParquetMetadata(stream, ParquetMetadataConverter.NO_FILTER);
   }
 
-  public Iterable<BlockMetaData> blocks() { return metadata.getBlocks(); }
   public FileMetaData fileMetaData() { return metadata.getFileMetaData(); }
+
+  public TransformCollection<RowGroupBlockInfo> blocks() {
+    return new TransformList<BlockMetaData>(metadata.getBlocks())
+      .map(new Projection<BlockMetaData, RowGroupBlockInfo>() {
+        @Override
+        public RowGroupBlockInfo apply(BlockMetaData blockMetaData) {
+          return new RowGroupBlockInfo(file, blockMetaData);
+        }
+      });
+  }
 }

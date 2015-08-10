@@ -1,7 +1,7 @@
 package org.apache.parquet.parqour.query.visitor;
 
 import org.apache.parquet.parqour.ingest.read.iterator.lamba.Projection;
-import org.apache.parquet.parqour.query.collections.TextQueryAppendableCollection;
+import org.apache.parquet.parqour.tools.TransformList;
 import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryVariableExpression;
 import org.apache.parquet.parqour.query.expressions.variable.TextQueryUdfExpression;
@@ -21,8 +21,8 @@ import java.util.List;
  */
 public class TextQueryColumnCollectingVisitor extends TextQueryExpressionVisitor<Iterable<TextQueryNamedColumnExpression>> {
   private boolean containsAWildcardExpression = false;
-  private final TextQueryAppendableCollection<TextQueryNamedColumnExpression> columns
-    = new TextQueryAppendableCollection<TextQueryNamedColumnExpression>();
+  private final TransformList<TextQueryNamedColumnExpression> columns
+    = new TransformList<TextQueryNamedColumnExpression>();
 
   public TextQueryColumnCollectingVisitor(TextQueryExpression expression) {
     this.collectColumns(expression);

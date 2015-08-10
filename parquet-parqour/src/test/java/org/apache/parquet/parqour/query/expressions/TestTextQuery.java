@@ -2,7 +2,7 @@ package org.apache.parquet.parqour.query.expressions;
 
 import org.apache.parquet.parqour.ingest.read.iterator.lamba.Predicate;
 import org.apache.parquet.parqour.ingest.read.iterator.lamba.Projection;
-import org.apache.parquet.parqour.query.collections.TextQueryCollection;
+import org.apache.parquet.parqour.tools.TransformCollection;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryVariableExpression;
 import org.apache.parquet.parqour.query.expressions.variable.column.TextQueryNamedColumnExpression;
@@ -30,7 +30,7 @@ public class TestTextQuery {
     TextQueryLexer lexer = new TextQueryLexer("select one, two, three from sometable", true);
     TextQueryTreeRootExpression root = new TextQueryTreeRootExpression(lexer);
 
-    TextQueryCollection<TextQueryExpression> expressions = root.expressions();
+    TransformCollection<TextQueryExpression> expressions = root.expressions();
 
     assertEquals(1, expressions.count());
     assertTrue(expressions.all(new Predicate<TextQueryExpression>() {

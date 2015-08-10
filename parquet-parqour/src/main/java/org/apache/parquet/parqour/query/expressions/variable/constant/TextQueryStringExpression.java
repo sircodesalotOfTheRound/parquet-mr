@@ -3,7 +3,7 @@ package org.apache.parquet.parqour.query.expressions.variable.constant;
 import org.apache.parquet.parqour.cursor.iface.Cursor;
 import org.apache.parquet.parqour.cursor.implementations.noniterable.resolved.ConstantValueCursor;
 import org.apache.parquet.parqour.exceptions.TextQueryException;
-import org.apache.parquet.parqour.query.collections.TextQueryAppendableCollection;
+import org.apache.parquet.parqour.tools.TransformList;
 import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryVariableExpression;
@@ -16,7 +16,7 @@ import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
  * Created by sircodesalot on 7/5/15.
  */
 public class TextQueryStringExpression extends TextQueryVariableExpression {
-  private final TextQueryAppendableCollection<TextQueryToken> expressionTokens;
+  private final TransformList<TextQueryToken> expressionTokens;
   private final String expressionAsString;
 
   public TextQueryStringExpression(TextQueryExpression parent, TextQueryLexer lexer) {
@@ -30,7 +30,7 @@ public class TextQueryStringExpression extends TextQueryVariableExpression {
   public TextQueryStringExpression(TextQueryExpression parent, String string) {
     super(parent, TextQueryExpressionType.STRING);
 
-    this.expressionTokens = new TextQueryAppendableCollection<TextQueryToken>();
+    this.expressionTokens = new TransformList<TextQueryToken>();
     this.expressionAsString = string;
   }
 
@@ -40,8 +40,8 @@ public class TextQueryStringExpression extends TextQueryVariableExpression {
     }
   }
 
-  private TextQueryAppendableCollection<TextQueryToken> readExpression(TextQueryLexer lexer) {
-    TextQueryAppendableCollection<TextQueryToken> tokens = new TextQueryAppendableCollection<TextQueryToken>();
+  private TransformList<TextQueryToken> readExpression(TextQueryLexer lexer) {
+    TransformList<TextQueryToken> tokens = new TransformList<TextQueryToken>();
 
     lexer.temporarilyIncludeWhitespaces();
     lexer.readCurrentAndAdvance(TextQueryExpressionType.PUNCTUATION, TextQueryPunctuationToken.SINGLE_QUOTE);
@@ -54,7 +54,7 @@ public class TextQueryStringExpression extends TextQueryVariableExpression {
     return tokens;
   }
 
-  private String convertExpressionToString(TextQueryAppendableCollection<TextQueryToken> expressionTokens) {
+  private String convertExpressionToString(TransformList<TextQueryToken> expressionTokens) {
     StringBuilder builder = new StringBuilder();
     for (TextQueryToken token : expressionTokens) {
       builder.append(token.toString());

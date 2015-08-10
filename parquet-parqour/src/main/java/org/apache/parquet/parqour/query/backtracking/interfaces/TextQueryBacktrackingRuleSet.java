@@ -1,7 +1,7 @@
 package org.apache.parquet.parqour.query.backtracking.interfaces;
 
 import org.apache.parquet.parqour.exceptions.TextQueryException;
-import org.apache.parquet.parqour.query.collections.OneToManyMap;
+import org.apache.parquet.parqour.tools.OneToManyMap;
 import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
 import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
