@@ -5,10 +5,10 @@ import org.apache.parquet.column.statistics.Statistics;
 import org.apache.parquet.format.PageHeader;
 import org.apache.parquet.format.Util;
 import org.apache.parquet.hadoop.metadata.ColumnChunkMetaData;
-import org.apache.parquet.hadoop.metadata.ColumnPath;
 import org.apache.parquet.hadoop.metadata.CompressionCodecName;
 import org.apache.parquet.parqour.exceptions.DataIngestException;
 import org.apache.parquet.parqour.ingest.disk.files.HDFSParquetFile;
+import org.apache.parquet.parqour.ingest.disk.files.HDFSParquetFileMetadata;
 import org.apache.parquet.parqour.ingest.disk.pages.DictionaryPageInfo;
 import org.apache.parquet.parqour.ingest.disk.pages.PageInfo;
 import org.apache.parquet.parqour.tools.TransformCollection;
@@ -23,13 +23,15 @@ import java.io.IOException;
 public class RowGroupColumnInfo {
   private final HDFSParquetFile file;
   private final ColumnChunkMetaData column;
+  private final HDFSParquetFileMetadata metadata;
 
   private DictionaryPageInfo dictionaryPage;
   private TransformCollection<PageInfo> pages;
 
-  public RowGroupColumnInfo(HDFSParquetFile file, ColumnChunkMetaData column) {
+  public RowGroupColumnInfo(HDFSParquetFile file, HDFSParquetFileMetadata metadata, ColumnChunkMetaData column) {
     this.file = file;
     this.column = column;
+    this.metadata = metadata;
   }
 
   public TransformCollection<PageInfo> pages() {
@@ -49,7 +51,7 @@ public class RowGroupColumnInfo {
       long totalEntriesRead = 0;
       while (totalEntriesRead < totalEntryCount()) {
         PageHeader header = Util.readPageHeader(stream);
-        PageInfo pageInfo = PageInfo.readPage(file, header);
+        PageInfo pageInfo = PageInfo.readPage(this, file, metadata, header);
         if (pageInfo.isDictionaryPage()) {
           this.dictionaryPage = (DictionaryPageInfo)pageInfo;
         } else {
@@ -72,6 +74,6 @@ public class RowGroupColumnInfo {
   public long uncompressedSize() { return column.getTotalUncompressedSize(); }
   public Statistics statistics() { return column.getStatistics(); }
   public long startingOffset() { return column.getStartingPos(); }
-  public ColumnPath path() { return column.getPath(); }
+  public String path() { return column.getPath().toDotString(); }
   public PrimitiveType.PrimitiveTypeName type() { return column.getType(); }
 }

@@ -1,8 +1,10 @@
 package org.apache.parquet.parqour.ingest.disk.files;
 
 import org.apache.hadoop.fs.FSDataInputStream;
+import org.apache.parquet.column.ColumnDescriptor;
 import org.apache.parquet.format.converter.ParquetMetadataConverter;
 import org.apache.parquet.hadoop.metadata.BlockMetaData;
+import org.apache.parquet.hadoop.metadata.ColumnPath;
 import org.apache.parquet.hadoop.metadata.FileMetaData;
 import org.apache.parquet.hadoop.metadata.ParquetMetadata;
 import org.apache.parquet.parqour.exceptions.DataIngestException;
@@ -13,6 +15,8 @@ import org.apache.parquet.parqour.tools.TransformCollection;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by sircodesalot on 8/10/15.
@@ -24,10 +28,22 @@ public class HDFSParquetFileMetadata {
 
   private final HDFSParquetFile file;
   private final ParquetMetadata metadata;
+  private final Map<String, ColumnDescriptor> columnDescriptors;
 
   public HDFSParquetFileMetadata(HDFSParquetFile file) {
     this.file = file;
     this.metadata = readMetadata(file);
+    this.columnDescriptors = collectColumnDescriptors(metadata);
+  }
+
+  private Map<String, ColumnDescriptor> collectColumnDescriptors(ParquetMetadata metadata) {
+    Map<String, ColumnDescriptor> columnDescriptors = new HashMap<String, ColumnDescriptor>();
+    for (ColumnDescriptor descriptor : metadata.getFileMetaData().getSchema().getColumns()) {
+      ColumnPath path = ColumnPath.get(descriptor.getPath());
+      columnDescriptors.put(path.toDotString(), descriptor);
+    }
+
+    return columnDescriptors;
   }
 
   public ParquetMetadata readMetadata(HDFSParquetFile file) {
@@ -94,15 +110,25 @@ public class HDFSParquetFileMetadata {
     return converter.readParquetMetadata(stream, ParquetMetadataConverter.NO_FILTER);
   }
 
-  public FileMetaData fileMetaData() { return metadata.getFileMetaData(); }
-
   public TransformCollection<RowGroupBlockInfo> blocks() {
     return new TransformList<BlockMetaData>(metadata.getBlocks())
       .map(new Projection<BlockMetaData, RowGroupBlockInfo>() {
         @Override
         public RowGroupBlockInfo apply(BlockMetaData blockMetaData) {
-          return new RowGroupBlockInfo(file, blockMetaData);
+          return new RowGroupBlockInfo(file, HDFSParquetFileMetadata.this, blockMetaData);
         }
       });
   }
+
+  public ColumnDescriptor getColumnDescriptor(String path) {
+    if (columnDescriptors.containsKey(path)) {
+      return columnDescriptors.get(path);
+    } else {
+      throw new DataIngestException("No ColumnDescriptor for path: '%s'", path);
+    }
+  }
+
+  public FileMetaData fileMetaData() { return metadata.getFileMetaData(); }
+  public String createdBy() { return metadata.getFileMetaData().getCreatedBy(); }
+
 }

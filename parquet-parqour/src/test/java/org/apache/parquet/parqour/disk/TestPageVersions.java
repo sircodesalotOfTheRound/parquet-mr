@@ -9,10 +9,12 @@ import org.apache.parquet.parqour.ingest.disk.blocks.RowGroupBlockInfo;
 import org.apache.parquet.parqour.ingest.disk.blocks.RowGroupColumnInfo;
 import org.apache.parquet.parqour.ingest.disk.files.HDFSParquetFile;
 import org.apache.parquet.parqour.ingest.disk.files.HDFSParquetFileMetadata;
+import org.apache.parquet.parqour.ingest.disk.pages.DataPageInfo;
 import org.apache.parquet.parqour.ingest.disk.pages.PageInfo;
 import org.apache.parquet.parqour.ingest.read.iterator.lamba.Projection;
 import org.apache.parquet.parqour.testtools.TestTools;
 import org.apache.parquet.parqour.testtools.WriteTools;
+import org.apache.parquet.parqour.tools.TransformCollection;
 import org.apache.parquet.schema.MessageType;
 import org.apache.parquet.schema.PrimitiveType;
 import org.junit.Test;
@@ -67,7 +69,7 @@ public class TestPageVersions {
       try (HDFSParquetFile file = new HDFSParquetFile(TestTools.EMPTY_CONFIGURATION, TestTools.TEST_FILE_PATH)) {
         HDFSParquetFileMetadata metadata = new HDFSParquetFileMetadata(file);
         for (RowGroupBlockInfo blockInfo : metadata.blocks()) {
-          final Iterable<PageInfo> pages = blockInfo.columnMetadata()
+          final Iterable<DataPageInfo> pages = blockInfo.columnMetadata()
             .map(new Projection<RowGroupColumnInfo, Iterable<PageInfo>>() {
               @Override
               public Iterable<PageInfo> apply(RowGroupColumnInfo columnInfo) {
@@ -79,9 +81,10 @@ public class TestPageVersions {
               public Iterable<PageInfo> apply(Iterable<PageInfo> pages) {
                 return pages;
               }
-            });
+            })
+            .castTo(DataPageInfo.class);
 
-          for (PageInfo pageInfo : pages) {
+          for (DataPageInfo pageInfo : pages) {
             assertEquals(version, pageInfo.version());
           }
         }

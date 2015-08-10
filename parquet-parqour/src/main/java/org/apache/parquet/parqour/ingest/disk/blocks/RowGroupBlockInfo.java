@@ -3,6 +3,7 @@ package org.apache.parquet.parqour.ingest.disk.blocks;
 import org.apache.parquet.hadoop.metadata.BlockMetaData;
 import org.apache.parquet.hadoop.metadata.ColumnChunkMetaData;
 import org.apache.parquet.parqour.ingest.disk.files.HDFSParquetFile;
+import org.apache.parquet.parqour.ingest.disk.files.HDFSParquetFileMetadata;
 import org.apache.parquet.parqour.ingest.read.iterator.lamba.Projection;
 import org.apache.parquet.parqour.query.expressions.predicate.TextQueryTestablePredicateExpression;
 import org.apache.parquet.parqour.tools.TransformList;
@@ -13,11 +14,13 @@ import org.apache.parquet.parqour.tools.TransformCollection;
  */
 public class RowGroupBlockInfo {
   private final HDFSParquetFile file;
-  private final BlockMetaData metadata;
+  private final BlockMetaData blockMetadata;
+  private final HDFSParquetFileMetadata metadata;
 
-  public RowGroupBlockInfo(HDFSParquetFile file, BlockMetaData metadata) {
+  public RowGroupBlockInfo(HDFSParquetFile file, HDFSParquetFileMetadata metadata, BlockMetaData blockMetadata) {
     this.file = file;
     this.metadata = metadata;
+    this.blockMetadata = blockMetadata;
   }
 
   public boolean shouldRead(TextQueryTestablePredicateExpression predicate) {
@@ -25,17 +28,17 @@ public class RowGroupBlockInfo {
   }
 
   public TransformCollection<RowGroupColumnInfo> columnMetadata() {
-    return new TransformList<ColumnChunkMetaData>(this.metadata.getColumns())
+    return new TransformList<ColumnChunkMetaData>(this.blockMetadata.getColumns())
       .map(new Projection<ColumnChunkMetaData, RowGroupColumnInfo>() {
         @Override
         public RowGroupColumnInfo apply(ColumnChunkMetaData column) {
-          return new RowGroupColumnInfo(file, column);
+          return new RowGroupColumnInfo(file, metadata, column);
         }
       });
   }
 
-  public long compressedSize() { return metadata.getCompressedSize(); }
-  public long rowCount() { return metadata.getRowCount(); }
-  public long startingOffset() { return metadata.getStartingPos(); }
-  public long totalBytes() { return metadata.getTotalByteSize(); }
+  public long compressedSize() { return blockMetadata.getCompressedSize(); }
+  public long rowCount() { return blockMetadata.getRowCount(); }
+  public long startingOffset() { return blockMetadata.getStartingPos(); }
+  public long totalBytes() { return blockMetadata.getTotalByteSize(); }
 }
