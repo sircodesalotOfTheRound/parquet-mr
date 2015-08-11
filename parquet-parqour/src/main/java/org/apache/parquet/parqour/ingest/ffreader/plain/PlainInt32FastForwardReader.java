@@ -1,6 +1,7 @@
 package org.apache.parquet.parqour.ingest.ffreader.plain;
 
 import org.apache.parquet.column.ValuesType;
+import org.apache.parquet.parqour.ingest.disk.pages.DataPageInfo;
 import org.apache.parquet.parqour.ingest.ffreader.FastForwardReaderBase;
 import org.apache.parquet.parqour.ingest.ffreader.interfaces.Int32FastForwardReader;
 import org.apache.parquet.parqour.ingest.paging.DataPageMetadata;
@@ -11,6 +12,12 @@ import org.apache.parquet.parqour.ingest.paging.DataPageMetadata;
 public final class PlainInt32FastForwardReader extends FastForwardReaderBase implements Int32FastForwardReader {
   private static final int SIZEOF_INT32 = 4;
 
+  public PlainInt32FastForwardReader(DataPageInfo info, ValuesType type) {
+    super(info, type);
+
+  }
+
+  @Deprecated
   public PlainInt32FastForwardReader(DataPageMetadata metadata, ValuesType type) {
     super(metadata, type);
   }

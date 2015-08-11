@@ -2,8 +2,7 @@ package org.apache.parquet.parqour.ingest.disk.pages;
 
 import org.apache.parquet.format.PageHeader;
 import org.apache.parquet.parqour.exceptions.DataIngestException;
-import org.apache.parquet.parqour.ingest.disk.blocks.RowGroupColumnInfo;
-import org.apache.parquet.parqour.ingest.disk.files.HDFSParquetFile;
+import org.apache.parquet.parqour.ingest.disk.pagesets.RowGroupColumnPageSetInfo;
 import org.apache.parquet.parqour.ingest.disk.files.HDFSParquetFileMetadata;
 import org.apache.parquet.parqour.ingest.disk.pages.slate.DataSlate;
 
@@ -11,14 +10,12 @@ import org.apache.parquet.parqour.ingest.disk.pages.slate.DataSlate;
  * Created by sircodesalot on 8/10/15.
  */
 public abstract class PageInfo {
-  protected final RowGroupColumnInfo columnInfo;
+  protected final RowGroupColumnPageSetInfo columnInfo;
   protected final PageHeader header;
   protected final DataSlate slate;
   protected final int offset;
 
-  protected byte[] data;
-
-  public PageInfo(RowGroupColumnInfo columnInfo, PageHeader header, DataSlate slate, int offset) {
+  public PageInfo(RowGroupColumnPageSetInfo columnInfo, PageHeader header, DataSlate slate, int offset) {
     this.columnInfo = columnInfo;
     this.header = header;
     this.slate = slate;
@@ -29,14 +26,10 @@ public abstract class PageInfo {
   public abstract long entryCount();
 
   public byte[] data() {
-    if (data == null) {
-      this.data = slate.data();
-    }
-
-    return this.data;
+    return slate.data();
   }
 
-  public static PageInfo readPage(RowGroupColumnInfo columnInfo, HDFSParquetFileMetadata metadata, PageHeader header,
+  public static PageInfo readPage(RowGroupColumnPageSetInfo columnInfo, HDFSParquetFileMetadata metadata, PageHeader header,
                                   DataSlate slate, int offset) {
     switch (header.getType()) {
       case DATA_PAGE:

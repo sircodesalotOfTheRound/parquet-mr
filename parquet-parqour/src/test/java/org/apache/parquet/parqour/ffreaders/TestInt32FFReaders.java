@@ -7,7 +7,7 @@ import org.apache.parquet.example.data.simple.SimpleGroup;
 import org.apache.parquet.hadoop.ParquetWriter;
 import org.apache.parquet.parqour.ingest.ffreader.interfaces.Int32FastForwardReader;
 import org.apache.parquet.parqour.ingest.paging.DataPageDecorator;
-import org.apache.parquet.parqour.ingest.paging.DiskInterfaceManager;
+import org.apache.parquet.parqour.ingest.paging.DiskInterfaceManager_OLD;
 import org.apache.parquet.parqour.ingest.schema.QueryInfo;
 import org.apache.parquet.parqour.testtools.ParquetConfiguration;
 import org.apache.parquet.parqour.testtools.TestTools;
@@ -55,7 +55,7 @@ public class TestInt32FFReaders extends UsesPersistence {
       TestTools.generateTestData(new SingleIntegerColumnWriteContext(version));
 
       QueryInfo queryInfo = TestTools.generateSchemaInfoFromPath(TestTools.TEST_FILE_PATH);
-      DiskInterfaceManager diskInterfaceManager = new DiskInterfaceManager(queryInfo);
+      DiskInterfaceManager_OLD diskInterfaceManager = new DiskInterfaceManager_OLD(queryInfo);
       ColumnDescriptor twiceIncrementColumn = queryInfo.getColumnDescriptorByPath(INCREMENT_COLUMN);
       DataPageDecorator page = diskInterfaceManager.getFirstPageForColumn(twiceIncrementColumn);
       Int32FastForwardReader reader = page.valuesReader();
@@ -93,7 +93,7 @@ public class TestInt32FFReaders extends UsesPersistence {
       TestTools.generateTestData(new SingleModuloizedIntWriterContext(configuration));
 
       QueryInfo queryInfo = TestTools.generateSchemaInfoFromPath(TestTools.TEST_FILE_PATH);
-      DiskInterfaceManager diskInterfaceManager = new DiskInterfaceManager(queryInfo);
+      DiskInterfaceManager_OLD diskInterfaceManager = new DiskInterfaceManager_OLD(queryInfo);
       ColumnDescriptor twiceIncrementColumn = queryInfo.getColumnDescriptorByPath(MODULO_COLUMN);
       DataPageDecorator page = diskInterfaceManager.getFirstPageForColumn(twiceIncrementColumn);
       Int32FastForwardReader ffReader = page.valuesReader();

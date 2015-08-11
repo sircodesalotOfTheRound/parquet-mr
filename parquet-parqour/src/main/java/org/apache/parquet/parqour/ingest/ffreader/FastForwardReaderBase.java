@@ -1,6 +1,7 @@
 package org.apache.parquet.parqour.ingest.ffreader;
 
 import org.apache.parquet.column.ValuesType;
+import org.apache.parquet.parqour.ingest.disk.pages.DataPageInfo;
 import org.apache.parquet.parqour.ingest.ffreader.delta.DeltaByteArrayBinaryFastForwardReader;
 import org.apache.parquet.parqour.ingest.ffreader.delta.DeltaPackedIntegerFastForwardReader;
 import org.apache.parquet.parqour.ingest.ffreader.dictionary.*;
@@ -24,6 +25,16 @@ public abstract class FastForwardReaderBase implements FastForwardReader {
   protected byte[] data;
   protected int dataOffset;
 
+  public FastForwardReaderBase(DataPageInfo info, ValuesType type) {
+    this.metadata = null;
+    this.type = type;
+    this.currentEntryNumber = 0;
+    this.totalItemsOnPage = info.entryCount();
+
+    this.dataOffset = info.computeOffset(type) - 1;
+  }
+
+  @Deprecated
   public FastForwardReaderBase(DataPageMetadata metadata, ValuesType type) {
     this.metadata = metadata;
     this.type = type;

@@ -1,7 +1,7 @@
 package org.apache.parquet.parqour.ingest.read.nodes;
 
 import org.apache.parquet.column.ColumnDescriptor;
-import org.apache.parquet.parqour.ingest.paging.DiskInterfaceManager;
+import org.apache.parquet.parqour.ingest.paging.DiskInterfaceManager_OLD;
 import org.apache.parquet.parqour.ingest.read.nodes.categories.AggregatingIngestNode;
 import org.apache.parquet.parqour.ingest.read.nodes.categories.IngestNode;
 import org.apache.parquet.parqour.ingest.read.nodes.categories.PrimitiveIngestNodeBase;
@@ -23,7 +23,7 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
  */
 public class IngestNodeGenerator {
   public static IngestNode generateIngestNode(AggregatingIngestNode parent, Type child, QueryInfo queryInfo,
-                                              DiskInterfaceManager diskInterfaceManager, int columnIndex) {
+                                              DiskInterfaceManager_OLD diskInterfaceManager, int columnIndex) {
     String childPath = QueryInfo.computePath(parent.path(), child.getName());
 
     if (child.isPrimitive()) {
@@ -37,7 +37,7 @@ public class IngestNodeGenerator {
   }
 
   private static AggregatingIngestNode generateAggregationNode(QueryInfo queryInfo, AggregatingIngestNode parent, String path, GroupType schemaNode,
-                                                               DiskInterfaceManager diskInterfaceManager, int columnIndex) {
+                                                               DiskInterfaceManager_OLD diskInterfaceManager, int columnIndex) {
     switch (schemaNode.getRepetition()) {
       case REQUIRED:
       case OPTIONAL:
@@ -50,7 +50,7 @@ public class IngestNodeGenerator {
   }
 
   private static PrimitiveIngestNodeBase generatePrimitiveIngestNode(QueryInfo queryInfo, AggregatingIngestNode parent, ColumnDescriptor descriptor,
-                                                                     PrimitiveType schemaNode, DiskInterfaceManager diskInterfaceManager, int columnIndex) {
+                                                                     PrimitiveType schemaNode, DiskInterfaceManager_OLD diskInterfaceManager, int columnIndex) {
     switch (schemaNode.getRepetition()) {
       case REQUIRED:
       case OPTIONAL:
@@ -63,7 +63,7 @@ public class IngestNodeGenerator {
   }
 
   private static PrimitiveIngestNodeBase generateNoRepeatIngestNode(QueryInfo queryInfo, AggregatingIngestNode parent, ColumnDescriptor descriptor,
-                                                                    PrimitiveType schemaNode, DiskInterfaceManager diskInterfaceManager, int columnIndex) {
+                                                                    PrimitiveType schemaNode, DiskInterfaceManager_OLD diskInterfaceManager, int columnIndex) {
     switch (schemaNode.getPrimitiveTypeName()) {
       case BOOLEAN:
         return new BooleanNoRepeatIngestNode(queryInfo, parent, schemaNode, descriptor, diskInterfaceManager, columnIndex);
@@ -82,7 +82,7 @@ public class IngestNodeGenerator {
   }
 
   private static PrimitiveIngestNodeBase generateRepeatingIngestNode(QueryInfo queryInfo, AggregatingIngestNode parent, ColumnDescriptor descriptor,
-                                                                     PrimitiveType schemaNode, DiskInterfaceManager diskInterfaceManager, int columnIndex) {
+                                                                     PrimitiveType schemaNode, DiskInterfaceManager_OLD diskInterfaceManager, int columnIndex) {
     switch (schemaNode.getPrimitiveTypeName()) {
       case INT32:
         return new Int32RepeatingIngestNode(queryInfo, parent, schemaNode, descriptor, diskInterfaceManager, columnIndex);

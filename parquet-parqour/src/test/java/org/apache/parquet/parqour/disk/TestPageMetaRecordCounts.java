@@ -5,13 +5,10 @@ import org.apache.parquet.example.data.Group;
 import org.apache.parquet.example.data.simple.SimpleGroup;
 import org.apache.parquet.hadoop.ParquetWriter;
 import org.apache.parquet.io.api.Binary;
-import org.apache.parquet.parqour.ingest.disk.blocks.RowGroupBlockInfo;
-import org.apache.parquet.parqour.ingest.disk.pagesets.RowGroupColumnPageSetInfo;
 import org.apache.parquet.parqour.ingest.disk.files.HDFSParquetFile;
 import org.apache.parquet.parqour.ingest.disk.files.HDFSParquetFileMetadata;
-import org.apache.parquet.parqour.ingest.disk.pages.DataPageInfo;
-import org.apache.parquet.parqour.ingest.disk.pages.PageInfo;
-import org.apache.parquet.parqour.ingest.read.iterator.lamba.Projection;
+import org.apache.parquet.parqour.ingest.disk.manager.DiskInterfaceManager;
+import org.apache.parquet.parqour.ingest.disk.pages.meta.PageMeta;
 import org.apache.parquet.parqour.testtools.TestTools;
 import org.apache.parquet.parqour.testtools.WriteTools;
 import org.apache.parquet.schema.MessageType;
@@ -27,8 +24,8 @@ import static org.junit.Assert.assertEquals;
 /**
  * Created by sircodesalot on 8/8/15.
  */
-public class TestPageVersions {
-  private final int TOTAL_ROWS = TestTools.generateRandomInt(100);
+public class TestPageMetaRecordCounts {
+  private final int TOTAL_ROWS = TestTools.generateRandomInt(1000000);
   private final MessageType SCHEMA = new MessageType("schema",
     new PrimitiveType(OPTIONAL, INT32, "i32"),
     new PrimitiveType(OPTIONAL, INT64, "i64"),
@@ -61,33 +58,30 @@ public class TestPageVersions {
   }
 
   @Test
-  public void testVersions() throws Exception {
+  public void testPagination() throws Exception {
     for (ParquetProperties.WriterVersion version : TestTools.PARQUET_VERSIONS) {
       this.generateTestData(version);
 
-      try (HDFSParquetFile file = new HDFSParquetFile(TestTools.EMPTY_CONFIGURATION, TestTools.TEST_FILE_PATH)) {
-        HDFSParquetFileMetadata metadata = new HDFSParquetFileMetadata(file);
-        /*for (RowGroupBlockInfo blockInfo : metadata.blocks()) {
-          final Iterable<DataPageInfo> pages = blockInfo.columnMetadata()
-            .map(new Projection<RowGroupColumnPageSetInfo, Iterable<PageInfo>>() {
-              @Override
-              public Iterable<PageInfo> apply(RowGroupColumnPageSetInfo columnInfo) {
-                return columnInfo.pages();
-              }
-            })
-            .flatten(new Projection<Iterable<PageInfo>, Iterable<PageInfo>>() {
-              @Override
-              public Iterable<PageInfo> apply(Iterable<PageInfo> pages) {
-                return pages;
-              }
-            })
-            .castTo(DataPageInfo.class);
+      HDFSParquetFile file = new HDFSParquetFile(TestTools.EMPTY_CONFIGURATION, TestTools.TEST_FILE_PATH);
+      HDFSParquetFileMetadata metadata = new HDFSParquetFileMetadata(file);
+      DiskInterfaceManager diskInterfaceManager = new DiskInterfaceManager(metadata);
 
-          for (DataPageInfo pageInfo : pages) {
-            assertEquals(version, pageInfo.version());
-          }
-        }*/
-      }
+      assertAllEntriesAccountedFor(diskInterfaceManager.getPageIteratorForColumn("i32"), TOTAL_ROWS);
+      assertAllEntriesAccountedFor(diskInterfaceManager.getPageIteratorForColumn("i64"), TOTAL_ROWS);
+      assertAllEntriesAccountedFor(diskInterfaceManager.getPageIteratorForColumn("i96"), TOTAL_ROWS);
+      assertAllEntriesAccountedFor(diskInterfaceManager.getPageIteratorForColumn("boolean"), TOTAL_ROWS);
+      assertAllEntriesAccountedFor(diskInterfaceManager.getPageIteratorForColumn("float"), TOTAL_ROWS);
+      assertAllEntriesAccountedFor(diskInterfaceManager.getPageIteratorForColumn("double"), TOTAL_ROWS);
+      assertAllEntriesAccountedFor(diskInterfaceManager.getPageIteratorForColumn("binary"), TOTAL_ROWS);
+      assertAllEntriesAccountedFor(diskInterfaceManager.getPageIteratorForColumn("fixed-binary"), TOTAL_ROWS);
     }
+  }
+
+  private void assertAllEntriesAccountedFor(Iterable<PageMeta> pages, int total) {
+    for (PageMeta pageMeta : pages) {
+      total -= pageMeta.totalEntryCount();
+    }
+
+    assertEquals(0, total);
   }
 }

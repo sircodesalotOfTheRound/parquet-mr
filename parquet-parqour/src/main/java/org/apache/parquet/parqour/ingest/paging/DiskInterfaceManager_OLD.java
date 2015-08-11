@@ -16,11 +16,12 @@ import java.util.Map;
 /**
  * Created by sircodesalot on 6/9/15.
  */
-public class DiskInterfaceManager {
+@Deprecated
+public class DiskInterfaceManager_OLD {
   private final ParquetFileReader diskReader;
   private final Map<ColumnDescriptor, LinkedList<RowGroup>> pageStoresByColumn;
 
-  public DiskInterfaceManager(QueryInfo queryInfo) {
+  public DiskInterfaceManager_OLD(QueryInfo queryInfo) {
     this.diskReader = generateDiskReader(queryInfo);
     this.pageStoresByColumn = generatePageStoreSet(queryInfo);
   }

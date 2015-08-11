@@ -6,7 +6,7 @@ import org.apache.parquet.example.data.simple.SimpleGroup;
 import org.apache.parquet.hadoop.ParquetWriter;
 import org.apache.parquet.parqour.ingest.ffreader.interfaces.BooleanFastForwardReader;
 import org.apache.parquet.parqour.ingest.paging.DataPageDecorator;
-import org.apache.parquet.parqour.ingest.paging.DiskInterfaceManager;
+import org.apache.parquet.parqour.ingest.paging.DiskInterfaceManager_OLD;
 import org.apache.parquet.parqour.ingest.schema.QueryInfo;
 import org.apache.parquet.parqour.testtools.ParquetConfiguration;
 import org.apache.parquet.parqour.testtools.TestTools;
@@ -54,7 +54,7 @@ public class TestBooleanFFReaders extends UsesPersistence {
       TestTools.generateTestData(new SingleBitWriteContext(configuration));
 
       QueryInfo queryInfo = TestTools.generateSchemaInfoFromPath(TestTools.TEST_FILE_PATH);
-      DiskInterfaceManager diskInterfaceManager = new DiskInterfaceManager(queryInfo);
+      DiskInterfaceManager_OLD diskInterfaceManager = new DiskInterfaceManager_OLD(queryInfo);
       ColumnDescriptor moduloBitColumn = queryInfo.getColumnDescriptorByPath(COLUMN_NAME);
       DataPageDecorator page = diskInterfaceManager.getFirstPageForColumn(moduloBitColumn);
       BooleanFastForwardReader reader = page.valuesReader();
