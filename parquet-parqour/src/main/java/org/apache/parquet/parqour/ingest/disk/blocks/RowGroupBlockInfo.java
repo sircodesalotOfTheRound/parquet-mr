@@ -4,6 +4,7 @@ import org.apache.parquet.hadoop.metadata.BlockMetaData;
 import org.apache.parquet.hadoop.metadata.ColumnChunkMetaData;
 import org.apache.parquet.parqour.ingest.disk.files.HDFSParquetFile;
 import org.apache.parquet.parqour.ingest.disk.files.HDFSParquetFileMetadata;
+import org.apache.parquet.parqour.ingest.disk.pagesets.RowGroupPageSetColumnInfo;
 import org.apache.parquet.parqour.ingest.read.iterator.lamba.Projection;
 import org.apache.parquet.parqour.query.expressions.predicate.TextQueryTestablePredicateExpression;
 import org.apache.parquet.parqour.tools.TransformList;
@@ -27,12 +28,12 @@ public class RowGroupBlockInfo {
     return true;
   }
 
-  public TransformCollection<RowGroupColumnInfo> columnMetadata() {
+  public TransformCollection<RowGroupPageSetColumnInfo> columnMetadata() {
     return new TransformList<ColumnChunkMetaData>(this.blockMetadata.getColumns())
-      .map(new Projection<ColumnChunkMetaData, RowGroupColumnInfo>() {
+      .map(new Projection<ColumnChunkMetaData, RowGroupPageSetColumnInfo>() {
         @Override
-        public RowGroupColumnInfo apply(ColumnChunkMetaData column) {
-          return new RowGroupColumnInfo(file, metadata, column);
+        public RowGroupPageSetColumnInfo apply(ColumnChunkMetaData column) {
+          return new RowGroupPageSetColumnInfo(file, metadata, column);
         }
       });
   }

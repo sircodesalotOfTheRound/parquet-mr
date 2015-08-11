@@ -1,7 +1,7 @@
 package org.apache.parquet.parqour.ingest.read.driver;
 
 import org.apache.parquet.parqour.cursor.iface.Cursor;
-import org.apache.parquet.parqour.ingest.paging.DiskInterfaceManager;
+import org.apache.parquet.parqour.ingest.paging.DiskInterfaceManager_OLD;
 import org.apache.parquet.parqour.ingest.plan.analysis.PredicateAnalysis;
 import org.apache.parquet.parqour.ingest.plan.evaluation.EvaluationPathAnalysis;
 import org.apache.parquet.parqour.ingest.plan.evaluation.skipchain.SkipChain;
@@ -13,7 +13,7 @@ import org.apache.parquet.parqour.ingest.schema.QueryInfo;
  */
 public abstract class ParqourReadDriverBase {
   protected final QueryInfo queryInfo;
-  protected final DiskInterfaceManager diskInterfaceManager;
+  protected final DiskInterfaceManager_OLD diskInterfaceManager;
   protected final IngestTree ingestTree;
   protected final PredicateAnalysis predicateAnalysis;
   protected final EvaluationPathAnalysis pathAnalysis;
@@ -24,7 +24,7 @@ public abstract class ParqourReadDriverBase {
 
   public ParqourReadDriverBase(QueryInfo queryInfo) {
     this.queryInfo = queryInfo;
-    this.diskInterfaceManager = new DiskInterfaceManager(queryInfo);
+    this.diskInterfaceManager = new DiskInterfaceManager_OLD(queryInfo);
     this.ingestTree = new IngestTree(queryInfo, diskInterfaceManager);
 
     this.predicateAnalysis = new PredicateAnalysis(ingestTree);

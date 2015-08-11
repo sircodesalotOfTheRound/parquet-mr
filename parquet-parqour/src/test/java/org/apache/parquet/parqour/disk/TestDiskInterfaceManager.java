@@ -9,7 +9,7 @@ import org.apache.parquet.parqour.ingest.ffreader.FastForwardReaderBase;
 import org.apache.parquet.parqour.ingest.ffreader.interfaces.BinaryFastForwardReader;
 import org.apache.parquet.parqour.ingest.ffreader.interfaces.Int32FastForwardReader;
 import org.apache.parquet.parqour.ingest.paging.DataPageDecorator;
-import org.apache.parquet.parqour.ingest.paging.DiskInterfaceManager;
+import org.apache.parquet.parqour.ingest.paging.DiskInterfaceManager_OLD;
 import org.apache.parquet.parqour.ingest.schema.QueryInfo;
 import org.apache.parquet.parqour.testtools.TestTools;
 import org.apache.parquet.parqour.testtools.UsesPersistence;
@@ -64,7 +64,7 @@ public class TestDiskInterfaceManager extends UsesPersistence {
       this.generateTestData(version);
 
       QueryInfo queryInfo = TestTools.generateSchemaInfoFromPath(TEST_FILE_PATH);
-      DiskInterfaceManager diskInterfaceManager = new DiskInterfaceManager(queryInfo);
+      DiskInterfaceManager_OLD diskInterfaceManager = new DiskInterfaceManager_OLD(queryInfo);
 
       Int32FastForwardReader idReader = generateReaderForColumn(ID, queryInfo, diskInterfaceManager);
       Int32FastForwardReader ageReader = generateReaderForColumn(AGE, queryInfo, diskInterfaceManager);
@@ -87,7 +87,7 @@ public class TestDiskInterfaceManager extends UsesPersistence {
 
   }
 
-  private <T extends FastForwardReaderBase> T generateReaderForColumn(String columnName, QueryInfo queryInfo, DiskInterfaceManager diskInterfaceManager) {
+  private <T extends FastForwardReaderBase> T generateReaderForColumn(String columnName, QueryInfo queryInfo, DiskInterfaceManager_OLD diskInterfaceManager) {
     ColumnDescriptor columnDescriptor = queryInfo.getColumnDescriptorByPath(columnName);
     DataPageDecorator page = diskInterfaceManager.getFirstPageForColumn(columnDescriptor);
 

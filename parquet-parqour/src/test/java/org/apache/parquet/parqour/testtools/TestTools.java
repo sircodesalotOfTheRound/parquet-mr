@@ -13,7 +13,7 @@ import org.apache.parquet.hadoop.metadata.FileMetaData;
 import org.apache.parquet.hadoop.metadata.ParquetMetadata;
 import org.apache.parquet.parqour.ingest.ffreader.interfaces.RelationshipLevelFastForwardReader;
 import org.apache.parquet.parqour.ingest.paging.DataPageDecorator;
-import org.apache.parquet.parqour.ingest.paging.DiskInterfaceManager;
+import org.apache.parquet.parqour.ingest.paging.DiskInterfaceManager_OLD;
 import org.apache.parquet.parqour.ingest.read.nodes.IngestTree;
 import org.apache.parquet.parqour.ingest.schema.QueryInfo;
 import org.apache.parquet.schema.GroupType;
@@ -126,8 +126,8 @@ public class TestTools {
     WriteTools.withParquetWriter(context);
   }
 
-  private static DiskInterfaceManager mockDiskInterfaceManager() {
-    DiskInterfaceManager diskInterfaceManager = mock(DiskInterfaceManager.class);
+  private static DiskInterfaceManager_OLD mockDiskInterfaceManager() {
+    DiskInterfaceManager_OLD diskInterfaceManager = mock(DiskInterfaceManager_OLD.class);
     DataPageDecorator dataPageDecorator = mock(DataPageDecorator.class);
 
     RelationshipLevelFastForwardReader mockDlRlReader = mockDlRlReader();

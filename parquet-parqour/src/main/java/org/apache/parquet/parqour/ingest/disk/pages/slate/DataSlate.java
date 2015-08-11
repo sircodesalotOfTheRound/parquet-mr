@@ -33,20 +33,23 @@ public class DataSlate {
   }
 
   public byte[] data() {
-    if (isBuilt) {
-      return data;
-    } else {
-      throw new DataIngestException("Data Slate is not yet built");
+    if (!isBuilt) {
+      this.data = this.construct();
+      this.isBuilt = true;
     }
+
+    return data;
   }
 
-  public void construct() {
+  public byte[] construct() {
     try {
       int totalSize = (int)(endingOffset - startingOffset);
       byte[] data = new byte[totalSize];
 
       stream.readFully(startingOffset, data);
       this.isBuilt = true;
+
+      return data;
     } catch (IOException ex) {
       throw new DataIngestException("Unable to read pages for file");
     }

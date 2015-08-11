@@ -9,7 +9,7 @@ import org.apache.parquet.parqour.ingest.ffreader.interfaces.Int32FastForwardRea
 import org.apache.parquet.parqour.ingest.ffreader.interfaces.Int64FastForwardReader;
 import org.apache.parquet.parqour.ingest.ffreader.interfaces.RelationshipLevelFastForwardReader;
 import org.apache.parquet.parqour.ingest.paging.DataPageDecorator;
-import org.apache.parquet.parqour.ingest.paging.DiskInterfaceManager;
+import org.apache.parquet.parqour.ingest.paging.DiskInterfaceManager_OLD;
 import org.apache.parquet.parqour.ingest.schema.QueryInfo;
 import org.apache.parquet.parqour.testtools.ParquetConfiguration;
 import org.apache.parquet.parqour.testtools.TestTools;
@@ -71,7 +71,7 @@ public class TestRelationshipLevelFastForwardReaders extends UsesPersistence {
       TestTools.generateTestData(new VaryingDefinitionLevelWriteContext(version));
 
       QueryInfo queryInfo = TestTools.generateSchemaInfoFromPath(TestTools.TEST_FILE_PATH);
-      DiskInterfaceManager diskManagerForMyImplementation = new DiskInterfaceManager(queryInfo);
+      DiskInterfaceManager_OLD diskManagerForMyImplementation = new DiskInterfaceManager_OLD(queryInfo);
       ColumnDescriptor twiceIncrementColumn = queryInfo.getColumnDescriptorByPath(LEAF);
       DataPageDecorator page = diskManagerForMyImplementation.getFirstPageForColumn(twiceIncrementColumn);
       RelationshipLevelFastForwardReader definitionLevelReader = page.definitionLevelReader();
@@ -115,7 +115,7 @@ public class TestRelationshipLevelFastForwardReaders extends UsesPersistence {
 
       QueryInfo queryInfo = TestTools.generateSchemaInfoFromPath(TestTools.TEST_FILE_PATH);
 
-      DiskInterfaceManager diskInterfaceManager = new DiskInterfaceManager(queryInfo);
+      DiskInterfaceManager_OLD diskInterfaceManager = new DiskInterfaceManager_OLD(queryInfo);
       ColumnDescriptor twiceIncrementColumn = queryInfo.getColumnDescriptorByPath(SingleDefinitionWriteContext.COLUMN_NAME);
       DataPageDecorator page = diskInterfaceManager.getFirstPageForColumn(twiceIncrementColumn);
       RelationshipLevelFastForwardReader reader = page.definitionLevelReader();
@@ -157,7 +157,7 @@ public class TestRelationshipLevelFastForwardReaders extends UsesPersistence {
 
       QueryInfo queryInfo = TestTools.generateSchemaInfoFromPath(TestTools.TEST_FILE_PATH);
 
-      DiskInterfaceManager diskInterfaceManager = new DiskInterfaceManager(queryInfo);
+      DiskInterfaceManager_OLD diskInterfaceManager = new DiskInterfaceManager_OLD(queryInfo);
       ColumnDescriptor twiceIncrementColumn = queryInfo.getColumnDescriptorByPath(VariableRepetitionLevelWriteContext32.COLUMN_NAME);
       DataPageDecorator page = diskInterfaceManager.getFirstPageForColumn(twiceIncrementColumn);
       RelationshipLevelFastForwardReader definitionLevelReader = page.definitionLevelReader();
@@ -227,7 +227,7 @@ public class TestRelationshipLevelFastForwardReaders extends UsesPersistence {
 
       QueryInfo queryInfo = TestTools.generateSchemaInfoFromPath(TestTools.TEST_FILE_PATH);
 
-      DiskInterfaceManager diskInterfaceManager = new DiskInterfaceManager(queryInfo);
+      DiskInterfaceManager_OLD diskInterfaceManager = new DiskInterfaceManager_OLD(queryInfo);
       ColumnDescriptor twiceIncrementColumn = queryInfo.getColumnDescriptorByPath(VariableRepetitionLevelWriteContext64.COLUMN_NAME);
       DataPageDecorator page = diskInterfaceManager.getFirstPageForColumn(twiceIncrementColumn);
       RelationshipLevelFastForwardReader definitionLevelReader = page.definitionLevelReader();

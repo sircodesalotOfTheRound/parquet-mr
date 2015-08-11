@@ -5,9 +5,14 @@ import org.apache.parquet.column.ParquetProperties;
 import org.apache.parquet.example.data.Group;
 import org.apache.parquet.example.data.simple.SimpleGroup;
 import org.apache.parquet.hadoop.ParquetWriter;
+import org.apache.parquet.parqour.ingest.disk.files.HDFSParquetFile;
+import org.apache.parquet.parqour.ingest.disk.files.HDFSParquetFileMetadata;
+import org.apache.parquet.parqour.ingest.disk.manager.DiskInterfaceManager;
+import org.apache.parquet.parqour.ingest.disk.pages.Page;
+import org.apache.parquet.parqour.ingest.disk.pages.Pager;
 import org.apache.parquet.parqour.ingest.ffreader.interfaces.Int32FastForwardReader;
 import org.apache.parquet.parqour.ingest.paging.DataPageDecorator;
-import org.apache.parquet.parqour.ingest.paging.DiskInterfaceManager;
+import org.apache.parquet.parqour.ingest.paging.DiskInterfaceManager_OLD;
 import org.apache.parquet.parqour.ingest.schema.QueryInfo;
 import org.apache.parquet.parqour.testtools.ParquetConfiguration;
 import org.apache.parquet.parqour.testtools.TestTools;
@@ -49,13 +54,32 @@ public class TestInt32FFReaders extends UsesPersistence {
     }
   }
 
+
+  @Test
+  public void testNewReader() throws Exception {
+    TestTools.generateTestData(new SingleIntegerColumnWriteContext(ParquetProperties.WriterVersion.PARQUET_1_0));
+    HDFSParquetFile file = new HDFSParquetFile(TestTools.EMPTY_CONFIGURATION, TestTools.TEST_FILE_PATH);
+    HDFSParquetFileMetadata metadata = new HDFSParquetFileMetadata(file);
+    DiskInterfaceManager diskInterfaceManager = new DiskInterfaceManager(metadata);
+    Pager pager = diskInterfaceManager.pagerFor(INCREMENT_COLUMN);
+
+    int index = 0;
+    for (Page page : pager) {
+      Int32FastForwardReader reader = page.contentReader();
+      while (!reader.isEof()) {
+        assertEquals(index * INCREMENT, reader.readi32());
+        index++;
+      }
+    }
+  }
+
   @Test
   public void testInt32FFReaderAgainstNoRLNoDLColumn() throws Exception {
     for (ParquetProperties.WriterVersion version : TestTools.PARQUET_VERSIONS) {
       TestTools.generateTestData(new SingleIntegerColumnWriteContext(version));
 
       QueryInfo queryInfo = TestTools.generateSchemaInfoFromPath(TestTools.TEST_FILE_PATH);
-      DiskInterfaceManager diskInterfaceManager = new DiskInterfaceManager(queryInfo);
+      DiskInterfaceManager_OLD diskInterfaceManager = new DiskInterfaceManager_OLD(queryInfo);
       ColumnDescriptor twiceIncrementColumn = queryInfo.getColumnDescriptorByPath(INCREMENT_COLUMN);
       DataPageDecorator page = diskInterfaceManager.getFirstPageForColumn(twiceIncrementColumn);
       Int32FastForwardReader reader = page.valuesReader();
@@ -93,7 +117,7 @@ public class TestInt32FFReaders extends UsesPersistence {
       TestTools.generateTestData(new SingleModuloizedIntWriterContext(configuration));
 
       QueryInfo queryInfo = TestTools.generateSchemaInfoFromPath(TestTools.TEST_FILE_PATH);
-      DiskInterfaceManager diskInterfaceManager = new DiskInterfaceManager(queryInfo);
+      DiskInterfaceManager_OLD diskInterfaceManager = new DiskInterfaceManager_OLD(queryInfo);
       ColumnDescriptor twiceIncrementColumn = queryInfo.getColumnDescriptorByPath(MODULO_COLUMN);
       DataPageDecorator page = diskInterfaceManager.getFirstPageForColumn(twiceIncrementColumn);
       Int32FastForwardReader ffReader = page.valuesReader();

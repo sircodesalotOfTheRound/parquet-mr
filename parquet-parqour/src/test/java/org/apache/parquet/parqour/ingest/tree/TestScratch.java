@@ -12,6 +12,7 @@ import org.apache.parquet.parqour.testtools.UsesPersistence;
 import org.apache.parquet.parqour.testtools.WriteTools;
 import org.apache.parquet.schema.GroupType;
 import org.apache.parquet.schema.PrimitiveType;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.util.logging.Handler;

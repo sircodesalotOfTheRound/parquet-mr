@@ -1,6 +1,7 @@
 package org.apache.parquet.parqour.ingest.ffreader;
 
 import org.apache.parquet.column.ValuesType;
+import org.apache.parquet.parqour.ingest.disk.pages.info.DataPageInfo;
 import org.apache.parquet.parqour.ingest.ffreader.delta.DeltaByteArrayBinaryFastForwardReader;
 import org.apache.parquet.parqour.ingest.ffreader.delta.DeltaPackedIntegerFastForwardReader;
 import org.apache.parquet.parqour.ingest.ffreader.dictionary.*;
@@ -24,6 +25,16 @@ public abstract class FastForwardReaderBase implements FastForwardReader {
   protected byte[] data;
   protected int dataOffset;
 
+  public FastForwardReaderBase(DataPageInfo info, ValuesType type) {
+    this.metadata = null;
+    this.type = type;
+    this.currentEntryNumber = 0;
+    this.totalItemsOnPage = info.entryCount();
+    this.data = info.data();
+    this.dataOffset = info.computeOffset(type) - 1;
+  }
+
+  @Deprecated
   public FastForwardReaderBase(DataPageMetadata metadata, ValuesType type) {
     this.metadata = metadata;
     this.type = type;
@@ -52,6 +63,62 @@ public abstract class FastForwardReaderBase implements FastForwardReader {
   @Override
   public boolean isEof() { return this.currentEntryNumber >= totalItemsOnPage;}
 
+  public static FastForwardReaderBase resolve(DataPageInfo info, ValuesType type) {
+    switch (type) {
+      case DEFINITION_LEVEL:
+      case REPETITION_LEVEL:
+        return resolveRLEBitPackedValuesReaderFromVersion(info, type);
+
+      case VALUES:
+        return resolveValuesReaderFromEncoding(info);
+
+      default:
+        throw new NotImplementedException();
+    }
+  }
+
+  private static FastForwardReaderBase resolveRLEBitPackedValuesReaderFromVersion(DataPageInfo info, ValuesType type) {
+    switch (info.version()) {
+      case PARQUET_1_0:
+        //return new RLEBitPackedHybridFastForwardIntReader(metadata, type);
+      case PARQUET_2_0:
+        //return new Parquet2RLEBitPackedHybridFastForwardIntReader(metadata, type);
+
+      default:
+        throw new NotImplementedException();
+    }
+  }
+
+  private static FastForwardReaderBase resolveValuesReaderFromEncoding(DataPageInfo info) {
+    switch (info.dataEncoding()) {
+      case PLAIN:
+        return new PlainInt32FastForwardReader(info, ValuesType.VALUES);
+        /*return resolvePlainValuesReader(metadata);
+
+      case PLAIN_DICTIONARY:
+        return resolvePlainDictionaryValuesReader(metadata);
+
+      case RLE:
+        return resolveRLEValuesReader(metadata);
+
+      case RLE_DICTIONARY:
+        return resolveRLEDictionaryValuesReader(metadata);
+
+      case DELTA_LENGTH_BYTE_ARRAY:
+        throw new NotImplementedException();
+
+      case DELTA_BYTE_ARRAY:
+        return resolveDeltaByteArrayValuesReader(metadata);
+
+      case DELTA_BINARY_PACKED:
+        return resolveDeltaBinaryPackedValuesReader(metadata);*/
+
+      default:
+        throw new NotImplementedException();
+    }
+  }
+
+  @Deprecated
   public static FastForwardReaderBase resolve(DataPageMetadata metadata, ValuesType type) {
     switch (type) {
       case DEFINITION_LEVEL:
@@ -65,6 +132,7 @@ public abstract class FastForwardReaderBase implements FastForwardReader {
     }
   }
 
+  @Deprecated
   private static FastForwardReaderBase resolveRLEBitPackedValuesReaderFromVersion(DataPageMetadata metadata, ValuesType type) {
     switch (metadata.version()) {
       case DATA_PAGE_VERSION_1_0:
@@ -78,6 +146,7 @@ public abstract class FastForwardReaderBase implements FastForwardReader {
   }
 
 
+  @Deprecated
   private static FastForwardReaderBase resolveValuesReaderFromEncoding(DataPageMetadata metadata) {
     switch (metadata.valuesEncoding()) {
       case PLAIN:
@@ -106,6 +175,7 @@ public abstract class FastForwardReaderBase implements FastForwardReader {
     }
   }
 
+  @Deprecated
   private static FastForwardReaderBase resolvePlainValuesReader(DataPageMetadata metadata) {
     switch (metadata.columnType()) {
       case BOOLEAN:
@@ -131,6 +201,7 @@ public abstract class FastForwardReaderBase implements FastForwardReader {
     }
   }
 
+  @Deprecated
   private static FastForwardReaderBase resolveRLEValuesReader(DataPageMetadata metadata) {
     switch (metadata.columnType()) {
       case BOOLEAN:
@@ -141,6 +212,7 @@ public abstract class FastForwardReaderBase implements FastForwardReader {
     }
   }
 
+  @Deprecated
   private static FastForwardReaderBase resolvePlainDictionaryValuesReader(DataPageMetadata metadata) {
     switch (metadata.columnType()) {
       case INT32:
@@ -160,6 +232,7 @@ public abstract class FastForwardReaderBase implements FastForwardReader {
     }
   }
 
+  @Deprecated
   private static FastForwardReaderBase resolveRLEDictionaryValuesReader(DataPageMetadata metadata) {
     switch (metadata.columnType()) {
       case FIXED_LEN_BYTE_ARRAY:
@@ -177,6 +250,7 @@ public abstract class FastForwardReaderBase implements FastForwardReader {
     }
   }
 
+  @Deprecated
   private static FastForwardReaderBase resolveDeltaByteArrayValuesReader(DataPageMetadata metadata) {
     switch (metadata.columnType()) {
       case BINARY:
@@ -190,6 +264,7 @@ public abstract class FastForwardReaderBase implements FastForwardReader {
     }
   }
 
+  @Deprecated
   private static FastForwardReaderBase resolveDeltaBinaryPackedValuesReader(DataPageMetadata metadata) {
     switch (metadata.columnType()) {
       case INT32:

@@ -2,6 +2,7 @@ package org.apache.parquet.parqour.ingest.paging;
 
 
 import org.apache.parquet.column.ColumnDescriptor;
+import org.apache.parquet.column.ParquetProperties;
 
 /**
  * Created by sircodesalot on 6/15/15.
@@ -13,44 +14,46 @@ public class ReadOffsetCalculator {
   private final int repetitionLevelOffset;
   private final int contentOffset;
 
-  public ReadOffsetCalculator(DataPageVersion pageVersion, byte[] data, ColumnDescriptor descriptor) {
-    this.repetitionLevelOffset = computeRepetitionLevelOffset();
-    this.definitionLevelOffset = computeDefinitionLevelOffset(pageVersion, data, descriptor);
-    this.contentOffset = computeContentOffset(pageVersion, data, descriptor);
+  public ReadOffsetCalculator(ParquetProperties.WriterVersion version, byte[] data, ColumnDescriptor descriptor, int startOffset) {
+    this.repetitionLevelOffset = computeRepetitionLevelOffset(startOffset);
+    this.definitionLevelOffset = computeDefinitionLevelOffset(version, data, descriptor, startOffset);
+    this.contentOffset = computeContentOffset(version, data, descriptor, startOffset);
   }
 
-  private int computeRepetitionLevelOffset() {
-    return 0;
+  private int computeRepetitionLevelOffset(int startOffset) {
+    return startOffset;
   }
 
-  private int computeDefinitionLevelOffset(DataPageVersion pageVersion, byte[] data, ColumnDescriptor descriptor) {
-    if (pageVersion != DataPageVersion.DATA_PAGE_VERSION_2_0) {
-      return computeRepetitionLevelLength(data, descriptor);
+  private int computeDefinitionLevelOffset(ParquetProperties.WriterVersion pageVersion, byte[] data, ColumnDescriptor descriptor, int startOffset) {
+    if (pageVersion != ParquetProperties.WriterVersion.PARQUET_2_0) {
+      return startOffset + computeRepetitionLevelLength(data, descriptor, startOffset);
     } else {
-      return 0;
+      return startOffset;
     }
   }
 
-  private int computeContentOffset(DataPageVersion pageVersion, byte[] data, ColumnDescriptor descriptor) {
-    if (pageVersion != DataPageVersion.DATA_PAGE_VERSION_2_0) {
-      return computeRepetitionLevelLength(data, descriptor) + computeDefinitionLevelLength(data, descriptor);
+  private int computeContentOffset(ParquetProperties.WriterVersion pageVersion, byte[] data, ColumnDescriptor descriptor, int startOffset) {
+    if (pageVersion != ParquetProperties.WriterVersion.PARQUET_2_0) {
+      return startOffset
+        + computeRepetitionLevelLength(data, descriptor, startOffset)
+        + computeDefinitionLevelLength(data, descriptor, startOffset);
     } else {
-      return 0;
+      return startOffset;
     }
   }
 
-  private int computeDefinitionLevelLength(byte[] data, ColumnDescriptor descriptor) {
+  private int computeDefinitionLevelLength(byte[] data, ColumnDescriptor descriptor, int startOffset) {
     if (descriptor.getMaxDefinitionLevel() != 0) {
-      int repetitionLevelLength = computeRepetitionLevelLength(data, descriptor);
-      return readLength(data, repetitionLevelLength) + SIZEOF_INT32;
+      int repetitionLevelLength = computeRepetitionLevelLength(data, descriptor, startOffset);
+      return readLength(data, startOffset + repetitionLevelLength) + SIZEOF_INT32;
     } else {
       return 0;
     }
   }
 
-  private int computeRepetitionLevelLength(byte[] data, ColumnDescriptor descriptor) {
+  private int computeRepetitionLevelLength(byte[] data, ColumnDescriptor descriptor, int startOffset) {
     if (descriptor.getMaxRepetitionLevel() != 0) {
-      return readLength(data, 0) + SIZEOF_INT32;
+      return readLength(data, startOffset) + SIZEOF_INT32;
     } else {
       return 0;
     }

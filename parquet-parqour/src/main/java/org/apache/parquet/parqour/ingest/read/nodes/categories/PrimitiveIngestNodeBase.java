@@ -6,7 +6,7 @@ import org.apache.parquet.parqour.exceptions.DataIngestException;
 import org.apache.parquet.parqour.ingest.ffreader.interfaces.FastForwardReader;
 import org.apache.parquet.parqour.ingest.ffreader.interfaces.RelationshipLevelFastForwardReader;
 import org.apache.parquet.parqour.ingest.paging.DataPageDecorator;
-import org.apache.parquet.parqour.ingest.paging.DiskInterfaceManager;
+import org.apache.parquet.parqour.ingest.paging.DiskInterfaceManager_OLD;
 import org.apache.parquet.parqour.ingest.schema.QueryInfo;
 import org.apache.parquet.schema.Type;
 
@@ -17,7 +17,7 @@ public abstract class PrimitiveIngestNodeBase<TFFReaderType extends FastForwardR
   protected static final int NEW_RECORD = 0;
 
   protected final ColumnDescriptor columnDescriptor;
-  protected final DiskInterfaceManager diskInterfaceManager;
+  protected final DiskInterfaceManager_OLD diskInterfaceManager;
 
   protected DataPageDecorator dataPage;
 
@@ -30,7 +30,7 @@ public abstract class PrimitiveIngestNodeBase<TFFReaderType extends FastForwardR
 
   public PrimitiveIngestNodeBase(QueryInfo queryInfo, AggregatingIngestNode parent,
                                  Type schemaNode, ColumnDescriptor columnDescriptor,
-                                 DiskInterfaceManager diskInterfaceManager, int childIndex) {
+                                 DiskInterfaceManager_OLD diskInterfaceManager, int childIndex) {
 
     super(queryInfo, parent, ColumnPath.get(columnDescriptor.getPath()).toDotString(),
       schemaNode, IngestNodeCategory.DATA_INGEST, childIndex);
@@ -44,7 +44,7 @@ public abstract class PrimitiveIngestNodeBase<TFFReaderType extends FastForwardR
     this.totalItemsOnThisPage = dataPage.totalItems();
   }
 
-  private DataPageDecorator readFirstPage(DiskInterfaceManager diskInterfaceManager) {
+  private DataPageDecorator readFirstPage(DiskInterfaceManager_OLD diskInterfaceManager) {
     DataPageDecorator page = diskInterfaceManager.getFirstPageForColumn(columnDescriptor);
     this.onPageRead(page);
 

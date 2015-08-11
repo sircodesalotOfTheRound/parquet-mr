@@ -1,9 +1,8 @@
-package org.apache.parquet.parqour.ingest.disk.pages;
+package org.apache.parquet.parqour.ingest.disk.pages.info;
 
 import org.apache.parquet.format.DictionaryPageHeader;
 import org.apache.parquet.format.PageHeader;
-import org.apache.parquet.parqour.ingest.disk.blocks.RowGroupColumnInfo;
-import org.apache.parquet.parqour.ingest.disk.files.HDFSParquetFile;
+import org.apache.parquet.parqour.ingest.disk.pagesets.RowGroupPageSetColumnInfo;
 import org.apache.parquet.parqour.ingest.disk.pages.slate.DataSlate;
 
 /**
@@ -12,7 +11,7 @@ import org.apache.parquet.parqour.ingest.disk.pages.slate.DataSlate;
 public class DictionaryPageInfo extends PageInfo {
   private final DictionaryPageHeader pageHeader;
 
-  public DictionaryPageInfo(RowGroupColumnInfo columnInfo, PageHeader header, DataSlate slate, long offset) {
+  public DictionaryPageInfo(RowGroupPageSetColumnInfo columnInfo, PageHeader header, DataSlate slate, int offset) {
     super(columnInfo, header, slate, offset);
     this.pageHeader = header.getDictionary_page_header();
   }
@@ -21,6 +20,8 @@ public class DictionaryPageInfo extends PageInfo {
   public boolean isDictionaryPage() {
     return true;
   }
+
+  public int startingOffset() { return super.offset; }
 
   @Override
   public long entryCount() {

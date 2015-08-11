@@ -1,9 +1,8 @@
-package org.apache.parquet.parqour.ingest.disk.pages;
+package org.apache.parquet.parqour.ingest.disk.pages.info;
 
 import org.apache.parquet.format.PageHeader;
 import org.apache.parquet.parqour.exceptions.DataIngestException;
-import org.apache.parquet.parqour.ingest.disk.blocks.RowGroupColumnInfo;
-import org.apache.parquet.parqour.ingest.disk.files.HDFSParquetFile;
+import org.apache.parquet.parqour.ingest.disk.pagesets.RowGroupPageSetColumnInfo;
 import org.apache.parquet.parqour.ingest.disk.files.HDFSParquetFileMetadata;
 import org.apache.parquet.parqour.ingest.disk.pages.slate.DataSlate;
 
@@ -11,12 +10,12 @@ import org.apache.parquet.parqour.ingest.disk.pages.slate.DataSlate;
  * Created by sircodesalot on 8/10/15.
  */
 public abstract class PageInfo {
-  protected final RowGroupColumnInfo columnInfo;
+  protected final RowGroupPageSetColumnInfo columnInfo;
   protected final PageHeader header;
   protected final DataSlate slate;
-  protected final long offset;
+  protected final int offset;
 
-  public PageInfo(RowGroupColumnInfo columnInfo, PageHeader header, DataSlate slate, long offset) {
+  public PageInfo(RowGroupPageSetColumnInfo columnInfo, PageHeader header, DataSlate slate, int offset) {
     this.columnInfo = columnInfo;
     this.header = header;
     this.slate = slate;
@@ -26,8 +25,12 @@ public abstract class PageInfo {
   public abstract boolean isDictionaryPage();
   public abstract long entryCount();
 
-  public static PageInfo readPage(RowGroupColumnInfo columnInfo, HDFSParquetFile file, HDFSParquetFileMetadata metadata,
-                                  PageHeader header, DataSlate slate, long offset) {
+  public byte[] data() {
+    return slate.data();
+  }
+
+  public static PageInfo readPage(RowGroupPageSetColumnInfo columnInfo, HDFSParquetFileMetadata metadata, PageHeader header,
+                                  DataSlate slate, int offset) {
     switch (header.getType()) {
       case DATA_PAGE:
         return new PageInfoV1(columnInfo, metadata, header, slate, offset);
