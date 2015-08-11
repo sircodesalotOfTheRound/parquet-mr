@@ -18,7 +18,7 @@ public class PageInfoV2 extends DataPageInfo {
   private final DataPageHeaderV2 pageHeader;
   private final HDFSParquetFileMetadata metadata;
 
-  public PageInfoV2(RowGroupColumnInfo columnInfo, HDFSParquetFileMetadata metadata, PageHeader header, DataSlate slate, long offset) {
+  public PageInfoV2(RowGroupColumnInfo columnInfo, HDFSParquetFileMetadata metadata, PageHeader header, DataSlate slate, int offset) {
     super(columnInfo, metadata, header, slate, offset);
 
     this.pageHeader = header.getData_page_header_v2();

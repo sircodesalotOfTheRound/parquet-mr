@@ -8,17 +8,27 @@ import org.apache.parquet.format.PageHeader;
 import org.apache.parquet.parqour.ingest.disk.blocks.RowGroupColumnInfo;
 import org.apache.parquet.parqour.ingest.disk.files.HDFSParquetFileMetadata;
 import org.apache.parquet.parqour.ingest.disk.pages.slate.DataSlate;
+import org.apache.parquet.parqour.ingest.paging.ReadOffsetCalculator;
 
 /**
  * Created by sircodesalot on 8/10/15.
  */
 public abstract class DataPageInfo extends PageInfo {
   protected ColumnDescriptor columnDescriptor;
+  protected ReadOffsetCalculator calculator;
 
-  public DataPageInfo(RowGroupColumnInfo columnInfo, HDFSParquetFileMetadata metadata, PageHeader header, DataSlate slate, long offset) {
+  public DataPageInfo(RowGroupColumnInfo columnInfo, HDFSParquetFileMetadata metadata, PageHeader header, DataSlate slate, int offset) {
     super(columnInfo, header, slate, offset);
 
     this.columnDescriptor = metadata.getColumnDescriptor(columnInfo.path());
+  }
+
+  private ReadOffsetCalculator offsetCalculator() {
+    if (this.calculator == null) {
+      this.calculator = new ReadOffsetCalculator(version(), data(), columnDescriptor(), offset);
+    }
+
+    return this.calculator;
   }
 
   public abstract ParquetProperties.WriterVersion version();
@@ -27,6 +37,10 @@ public abstract class DataPageInfo extends PageInfo {
   public abstract Encoding repetitionLevelEncoding();
   public abstract Encoding dataEncoding();
   public abstract Statistics statistics();
+
+  public int definitionLevelOffset() { return offsetCalculator().definitionLevelOffset(); }
+  public int repetitionLevelOffset() { return offsetCalculator().repetitionLevelOffset(); }
+  public int contentOffset() { return offsetCalculator().contentOffset(); }
 
   @Override
   public boolean isDictionaryPage() { return false; }

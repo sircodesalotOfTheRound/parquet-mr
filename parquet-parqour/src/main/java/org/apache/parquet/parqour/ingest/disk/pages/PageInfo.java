@@ -14,9 +14,11 @@ public abstract class PageInfo {
   protected final RowGroupColumnInfo columnInfo;
   protected final PageHeader header;
   protected final DataSlate slate;
-  protected final long offset;
+  protected final int offset;
 
-  public PageInfo(RowGroupColumnInfo columnInfo, PageHeader header, DataSlate slate, long offset) {
+  protected byte[] data;
+
+  public PageInfo(RowGroupColumnInfo columnInfo, PageHeader header, DataSlate slate, int offset) {
     this.columnInfo = columnInfo;
     this.header = header;
     this.slate = slate;
@@ -26,8 +28,16 @@ public abstract class PageInfo {
   public abstract boolean isDictionaryPage();
   public abstract long entryCount();
 
-  public static PageInfo readPage(RowGroupColumnInfo columnInfo, HDFSParquetFile file, HDFSParquetFileMetadata metadata,
-                                  PageHeader header, DataSlate slate, long offset) {
+  public byte[] data() {
+    if (data == null) {
+      this.data = slate.data();
+    }
+
+    return this.data;
+  }
+
+  public static PageInfo readPage(RowGroupColumnInfo columnInfo, HDFSParquetFileMetadata metadata, PageHeader header,
+                                  DataSlate slate, int offset) {
     switch (header.getType()) {
       case DATA_PAGE:
         return new PageInfoV1(columnInfo, metadata, header, slate, offset);

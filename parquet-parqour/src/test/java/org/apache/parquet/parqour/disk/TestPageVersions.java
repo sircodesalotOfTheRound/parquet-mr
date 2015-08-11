@@ -30,9 +30,9 @@ import static org.junit.Assert.assertEquals;
  * Created by sircodesalot on 8/8/15.
  */
 public class TestPageVersions {
-  private final int TOTAL_ROWS = TestTools.generateRandomInt(10);
+  private final int TOTAL_ROWS = TestTools.generateRandomInt(100);
   private final MessageType SCHEMA = new MessageType("schema",
-    new PrimitiveType(REQUIRED, INT32, "i32"),
+    new PrimitiveType(OPTIONAL, INT32, "i32"),
     new PrimitiveType(OPTIONAL, INT64, "i64"),
     new PrimitiveType(OPTIONAL, INT96, "i96"),
     new PrimitiveType(OPTIONAL, BOOLEAN, "boolean"),

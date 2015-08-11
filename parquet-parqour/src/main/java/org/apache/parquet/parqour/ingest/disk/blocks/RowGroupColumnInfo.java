@@ -9,6 +9,7 @@ import org.apache.parquet.hadoop.metadata.CompressionCodecName;
 import org.apache.parquet.parqour.exceptions.DataIngestException;
 import org.apache.parquet.parqour.ingest.disk.files.HDFSParquetFile;
 import org.apache.parquet.parqour.ingest.disk.files.HDFSParquetFileMetadata;
+import org.apache.parquet.parqour.ingest.disk.pages.DataPageInfo;
 import org.apache.parquet.parqour.ingest.disk.pages.DictionaryPageInfo;
 import org.apache.parquet.parqour.ingest.disk.pages.PageInfo;
 import org.apache.parquet.parqour.ingest.disk.pages.slate.DataSlate;
@@ -54,7 +55,8 @@ public class RowGroupColumnInfo {
       int totalEntriesRead = 0;
       while (totalEntriesRead < totalEntryCount()) {
         PageHeader header = Util.readPageHeader(stream);
-        PageInfo pageInfo = PageInfo.readPage(this, file, metadata, header, slate, stream.getPos());
+        int pageStartingOffset = (int)(stream.getPos() - startingOffset());
+        PageInfo pageInfo = PageInfo.readPage(this, metadata, header, slate, pageStartingOffset);
         if (pageInfo.isDictionaryPage()) {
           this.dictionaryPage = (DictionaryPageInfo)pageInfo;
         } else {

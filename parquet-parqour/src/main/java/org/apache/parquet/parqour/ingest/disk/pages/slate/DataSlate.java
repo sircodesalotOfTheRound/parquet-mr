@@ -43,7 +43,7 @@ public class DataSlate {
   public void construct() {
     try {
       int totalSize = (int)(endingOffset - startingOffset);
-      byte[] data = new byte[totalSize];
+      this.data = new byte[totalSize];
 
       stream.readFully(startingOffset, data);
       this.isBuilt = true;

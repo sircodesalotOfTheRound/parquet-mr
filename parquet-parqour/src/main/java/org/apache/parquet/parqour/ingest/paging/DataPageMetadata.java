@@ -26,7 +26,7 @@ public class DataPageMetadata {
   private final int startingEntryNumber;
   private final DataPageEncodings encodings;
 
-  private final ReadOffsetCalculator offsetCalculator;
+  private final ReadOffsetCalculator_OLD offsetCalculator;
 
   public DataPageMetadata(DataPage page, DictionaryPage dictionaryPage, ColumnDescriptor columnDescriptor, int startingEntryNumber) {
     this.page = page;
@@ -38,7 +38,7 @@ public class DataPageMetadata {
     this.totalItems = page.getValueCount();
     this.encodings = new DataPageEncodings(page);
 
-    this.offsetCalculator = new ReadOffsetCalculator(pageVersion, data, columnDescriptor);
+    this.offsetCalculator = new ReadOffsetCalculator_OLD(pageVersion, data, columnDescriptor);
   }
 
   private DataPageVersion determinePageVersion(DataPage page) {
