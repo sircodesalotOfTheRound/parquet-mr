@@ -16,6 +16,7 @@ import org.apache.parquet.schema.PrimitiveType;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.Iterator;
 
 import static org.apache.parquet.schema.PrimitiveType.PrimitiveTypeName.*;
 import static org.apache.parquet.schema.Type.Repetition.OPTIONAL;
@@ -66,20 +67,20 @@ public class TestPageMetaRecordCounts {
       HDFSParquetFileMetadata metadata = new HDFSParquetFileMetadata(file);
       DiskInterfaceManager diskInterfaceManager = new DiskInterfaceManager(metadata);
 
-      assertAllEntriesAccountedFor(diskInterfaceManager.getPageIteratorForColumn("i32"), TOTAL_ROWS);
-      assertAllEntriesAccountedFor(diskInterfaceManager.getPageIteratorForColumn("i64"), TOTAL_ROWS);
-      assertAllEntriesAccountedFor(diskInterfaceManager.getPageIteratorForColumn("i96"), TOTAL_ROWS);
-      assertAllEntriesAccountedFor(diskInterfaceManager.getPageIteratorForColumn("boolean"), TOTAL_ROWS);
-      assertAllEntriesAccountedFor(diskInterfaceManager.getPageIteratorForColumn("float"), TOTAL_ROWS);
-      assertAllEntriesAccountedFor(diskInterfaceManager.getPageIteratorForColumn("double"), TOTAL_ROWS);
-      assertAllEntriesAccountedFor(diskInterfaceManager.getPageIteratorForColumn("binary"), TOTAL_ROWS);
-      assertAllEntriesAccountedFor(diskInterfaceManager.getPageIteratorForColumn("fixed-binary"), TOTAL_ROWS);
+      assertAllEntriesAccountedFor(diskInterfaceManager.generatePageTraverserForPath("i32"), TOTAL_ROWS);
+      assertAllEntriesAccountedFor(diskInterfaceManager.generatePageTraverserForPath("i64"), TOTAL_ROWS);
+      assertAllEntriesAccountedFor(diskInterfaceManager.generatePageTraverserForPath("i96"), TOTAL_ROWS);
+      assertAllEntriesAccountedFor(diskInterfaceManager.generatePageTraverserForPath("boolean"), TOTAL_ROWS);
+      assertAllEntriesAccountedFor(diskInterfaceManager.generatePageTraverserForPath("float"), TOTAL_ROWS);
+      assertAllEntriesAccountedFor(diskInterfaceManager.generatePageTraverserForPath("double"), TOTAL_ROWS);
+      assertAllEntriesAccountedFor(diskInterfaceManager.generatePageTraverserForPath("binary"), TOTAL_ROWS);
+      assertAllEntriesAccountedFor(diskInterfaceManager.generatePageTraverserForPath("fixed-binary"), TOTAL_ROWS);
     }
   }
 
-  private void assertAllEntriesAccountedFor(Iterable<PageMeta> pages, int total) {
-    for (PageMeta pageMeta : pages) {
-      total -= pageMeta.totalEntryCount();
+  private void assertAllEntriesAccountedFor(Iterator<PageMeta> pages, int total) {
+    while (pages.hasNext()) {
+      total -= pages.next().totalEntryCount();
     }
 
     assertEquals(0, total);
