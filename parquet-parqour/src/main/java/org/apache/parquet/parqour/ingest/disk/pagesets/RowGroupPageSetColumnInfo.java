@@ -5,8 +5,8 @@ import org.apache.parquet.hadoop.metadata.ColumnChunkMetaData;
 import org.apache.parquet.hadoop.metadata.CompressionCodecName;
 import org.apache.parquet.parqour.ingest.disk.files.HDFSParquetFile;
 import org.apache.parquet.parqour.ingest.disk.files.HDFSParquetFileMetadata;
-import org.apache.parquet.parqour.ingest.disk.pages.DictionaryPageInfo;
-import org.apache.parquet.parqour.ingest.disk.pages.meta.PageMeta;
+import org.apache.parquet.parqour.ingest.disk.pages.info.DictionaryPageInfo;
+import org.apache.parquet.parqour.ingest.disk.pages.meta.pagemetas.PageMeta;
 import org.apache.parquet.schema.PrimitiveType;
 
 import java.util.Iterator;

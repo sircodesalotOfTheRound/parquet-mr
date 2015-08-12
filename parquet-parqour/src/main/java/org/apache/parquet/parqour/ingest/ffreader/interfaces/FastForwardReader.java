@@ -10,7 +10,6 @@ public interface FastForwardReader {
 
   ValuesType type();
 
-  @Deprecated
   boolean isEof();
 
   void fastForwardTo(int entryNumber);

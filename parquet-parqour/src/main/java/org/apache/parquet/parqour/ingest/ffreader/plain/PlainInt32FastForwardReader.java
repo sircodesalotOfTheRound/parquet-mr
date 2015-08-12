@@ -1,7 +1,7 @@
 package org.apache.parquet.parqour.ingest.ffreader.plain;
 
 import org.apache.parquet.column.ValuesType;
-import org.apache.parquet.parqour.ingest.disk.pages.DataPageInfo;
+import org.apache.parquet.parqour.ingest.disk.pages.info.DataPageInfo;
 import org.apache.parquet.parqour.ingest.ffreader.FastForwardReaderBase;
 import org.apache.parquet.parqour.ingest.ffreader.interfaces.Int32FastForwardReader;
 import org.apache.parquet.parqour.ingest.paging.DataPageMetadata;

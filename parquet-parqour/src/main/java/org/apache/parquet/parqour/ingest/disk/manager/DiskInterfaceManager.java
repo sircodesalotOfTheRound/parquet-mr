@@ -2,7 +2,7 @@ package org.apache.parquet.parqour.ingest.disk.manager;
 
 import org.apache.parquet.parqour.exceptions.DataIngestException;
 import org.apache.parquet.parqour.ingest.disk.files.HDFSParquetFileMetadata;
-import org.apache.parquet.parqour.ingest.disk.pages.meta.PageMetaTraverser;
+import org.apache.parquet.parqour.ingest.disk.pages.Pager;
 import org.apache.parquet.parqour.ingest.disk.pages.queue.BlockPageSetQueue;
 import org.apache.parquet.parqour.ingest.disk.blocks.RowGroupBlockInfo;
 import org.apache.parquet.parqour.ingest.disk.pagesets.RowGroupPageSetColumnInfo;
@@ -40,14 +40,14 @@ public class DiskInterfaceManager {
     return queues;
   }
 
-  public boolean containsPageSetQueueForColumn(String path) {
+  public boolean containsPagerFor(String path) {
     return pageSetsByPath.containsKey(path);
   }
 
-  public PageMetaTraverser generatePageTraverserForPath(String path) {
+  public Pager pagerFor(String path) {
     if (pageSetsByPath.containsKey(path)) {
       BlockPageSetQueue blockChain = pageSetsByPath.get(path);
-      return new PageMetaTraverser(blockChain);
+      return new Pager(blockChain);
     } else {
       throw new DataIngestException("No Page-Queue for Path");
     }

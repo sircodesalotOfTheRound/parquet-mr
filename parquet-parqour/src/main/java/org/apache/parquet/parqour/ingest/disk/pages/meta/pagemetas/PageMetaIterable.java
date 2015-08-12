@@ -1,4 +1,4 @@
-package org.apache.parquet.parqour.ingest.disk.pages.meta;
+package org.apache.parquet.parqour.ingest.disk.pages.meta.pagemetas;
 
 import org.apache.parquet.parqour.ingest.disk.pages.queue.BlockPageSetQueue;
 

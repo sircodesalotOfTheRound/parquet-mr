@@ -1,4 +1,4 @@
-package org.apache.parquet.parqour.ingest.disk.pages;
+package org.apache.parquet.parqour.ingest.disk.pages.info;
 
 import org.apache.parquet.format.DictionaryPageHeader;
 import org.apache.parquet.format.PageHeader;

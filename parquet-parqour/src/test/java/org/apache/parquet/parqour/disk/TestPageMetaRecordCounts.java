@@ -8,8 +8,8 @@ import org.apache.parquet.io.api.Binary;
 import org.apache.parquet.parqour.ingest.disk.files.HDFSParquetFile;
 import org.apache.parquet.parqour.ingest.disk.files.HDFSParquetFileMetadata;
 import org.apache.parquet.parqour.ingest.disk.manager.DiskInterfaceManager;
-import org.apache.parquet.parqour.ingest.disk.pages.PageInfo;
-import org.apache.parquet.parqour.ingest.disk.pages.meta.PageMeta;
+import org.apache.parquet.parqour.ingest.disk.pages.Page;
+import org.apache.parquet.parqour.ingest.disk.pages.Pager;
 import org.apache.parquet.parqour.testtools.TestTools;
 import org.apache.parquet.parqour.testtools.WriteTools;
 import org.apache.parquet.schema.MessageType;
@@ -17,7 +17,6 @@ import org.apache.parquet.schema.PrimitiveType;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.util.Iterator;
 
 import static org.apache.parquet.schema.PrimitiveType.PrimitiveTypeName.*;
 import static org.apache.parquet.schema.Type.Repetition.OPTIONAL;
@@ -48,7 +47,7 @@ public class TestPageMetaRecordCounts {
           entry.append("i64", (long) 2);
           entry.append("i96", Binary.fromConstantByteArray(new byte[12]));
           entry.append("boolean", true);
-          entry.append("float", (float)1.2345);
+          entry.append("float", (float) 1.2345);
           entry.append("double", 2.46810);
           entry.append("binary", "something");
           entry.append("fixed-binary", "fiver");
@@ -63,34 +62,24 @@ public class TestPageMetaRecordCounts {
   public void testPagination() throws Exception {
     for (ParquetProperties.WriterVersion version : TestTools.PARQUET_VERSIONS) {
       this.generateTestData(version);
+      HDFSParquetFile file = new HDFSParquetFile(TestTools.EMPTY_CONFIGURATION, TestTools.TEST_FILE_PATH);
+      HDFSParquetFileMetadata metadata = new HDFSParquetFileMetadata(file);
+      DiskInterfaceManager diskInterfaceManager = new DiskInterfaceManager(metadata);
 
-      TestTools.repeat(10000, new TestTools.RepeatCallback() {
-        @Override
-        public void execute() throws Exception {
-          HDFSParquetFile file = new HDFSParquetFile(TestTools.EMPTY_CONFIGURATION, TestTools.TEST_FILE_PATH);
-          HDFSParquetFileMetadata metadata = new HDFSParquetFileMetadata(file);
-          DiskInterfaceManager diskInterfaceManager = new DiskInterfaceManager(metadata);
-
-          assertAllEntriesAccountedFor(diskInterfaceManager.generatePageTraverserForPath("i32"), TOTAL_ROWS);
-          assertAllEntriesAccountedFor(diskInterfaceManager.generatePageTraverserForPath("i64"), TOTAL_ROWS);
-          assertAllEntriesAccountedFor(diskInterfaceManager.generatePageTraverserForPath("i96"), TOTAL_ROWS);
-          assertAllEntriesAccountedFor(diskInterfaceManager.generatePageTraverserForPath("boolean"), TOTAL_ROWS);
-          assertAllEntriesAccountedFor(diskInterfaceManager.generatePageTraverserForPath("float"), TOTAL_ROWS);
-          assertAllEntriesAccountedFor(diskInterfaceManager.generatePageTraverserForPath("double"), TOTAL_ROWS);
-          assertAllEntriesAccountedFor(diskInterfaceManager.generatePageTraverserForPath("binary"), TOTAL_ROWS);
-          assertAllEntriesAccountedFor(diskInterfaceManager.generatePageTraverserForPath("fixed-binary"), TOTAL_ROWS);
-        }
-      });
+      assertAllEntriesAccountedFor(diskInterfaceManager.pagerFor("i32"), TOTAL_ROWS);
+      assertAllEntriesAccountedFor(diskInterfaceManager.pagerFor("i64"), TOTAL_ROWS);
+      assertAllEntriesAccountedFor(diskInterfaceManager.pagerFor("i96"), TOTAL_ROWS);
+      assertAllEntriesAccountedFor(diskInterfaceManager.pagerFor("boolean"), TOTAL_ROWS);
+      assertAllEntriesAccountedFor(diskInterfaceManager.pagerFor("float"), TOTAL_ROWS);
+      assertAllEntriesAccountedFor(diskInterfaceManager.pagerFor("double"), TOTAL_ROWS);
+      assertAllEntriesAccountedFor(diskInterfaceManager.pagerFor("binary"), TOTAL_ROWS);
+      assertAllEntriesAccountedFor(diskInterfaceManager.pagerFor("fixed-binary"), TOTAL_ROWS);
     }
   }
 
-  private void assertAllEntriesAccountedFor(Iterator<PageMeta> pageMetas, int total) {
-    while (pageMetas.hasNext()) {
-      PageMeta pageMeta = pageMetas.next();
-      PageInfo info = pageMeta.pageInfo();
-      byte[] data = info.data();
-
-      total -= pageMeta.totalEntryCount();
+  private void assertAllEntriesAccountedFor(Pager pager, int total) {
+    for (Page page : pager) {
+      total -= page.totalEntries();
     }
 
     assertEquals(0, total);
