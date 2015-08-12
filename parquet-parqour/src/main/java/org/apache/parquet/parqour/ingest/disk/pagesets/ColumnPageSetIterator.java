@@ -18,7 +18,7 @@ import java.util.Iterator;
  * Created by sircodesalot on 8/11/15.
  */
 public class ColumnPageSetIterator implements Iterator<PageMeta> {
-  private final RowGroupColumnPageSetInfo columnInfo;
+  private final RowGroupPageSetColumnInfo columnInfo;
   private final HDFSParquetFile file;
   private final HDFSParquetFileMetadata metadata;
   private final FSDataInputStream stream;
@@ -29,7 +29,7 @@ public class ColumnPageSetIterator implements Iterator<PageMeta> {
 
   private DictionaryPageInfo dictionaryPageInfo;
 
-  public ColumnPageSetIterator(RowGroupColumnPageSetInfo columnInfo, HDFSParquetFile file, HDFSParquetFileMetadata metadata) {
+  public ColumnPageSetIterator(RowGroupPageSetColumnInfo columnInfo, HDFSParquetFile file, HDFSParquetFileMetadata metadata) {
     this.file = file;
     this.metadata = metadata;
     this.stream = file.stream();
@@ -58,7 +58,7 @@ public class ColumnPageSetIterator implements Iterator<PageMeta> {
       PageHeader header = Util.readPageHeader(stream);
       int pageStartingOffset = (int) (stream.getPos() - currentOffset);
 
-      DataSlate slate = new DataSlate(file, pageStartingOffset);
+      DataSlate slate = new DataSlate(file, stream.getPos());
       PageInfo pageInfo = PageInfo.readPage(columnInfo, metadata, header, slate, pageStartingOffset);
 
       PageMeta pageMeta = new PageMeta(header, pageInfo);

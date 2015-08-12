@@ -2,7 +2,7 @@ package org.apache.parquet.parqour.ingest.disk.pages;
 
 import org.apache.parquet.format.DictionaryPageHeader;
 import org.apache.parquet.format.PageHeader;
-import org.apache.parquet.parqour.ingest.disk.pagesets.RowGroupColumnPageSetInfo;
+import org.apache.parquet.parqour.ingest.disk.pagesets.RowGroupPageSetColumnInfo;
 import org.apache.parquet.parqour.ingest.disk.pages.slate.DataSlate;
 
 /**
@@ -11,7 +11,7 @@ import org.apache.parquet.parqour.ingest.disk.pages.slate.DataSlate;
 public class DictionaryPageInfo extends PageInfo {
   private final DictionaryPageHeader pageHeader;
 
-  public DictionaryPageInfo(RowGroupColumnPageSetInfo columnInfo, PageHeader header, DataSlate slate, int offset) {
+  public DictionaryPageInfo(RowGroupPageSetColumnInfo columnInfo, PageHeader header, DataSlate slate, int offset) {
     super(columnInfo, header, slate, offset);
     this.pageHeader = header.getDictionary_page_header();
   }

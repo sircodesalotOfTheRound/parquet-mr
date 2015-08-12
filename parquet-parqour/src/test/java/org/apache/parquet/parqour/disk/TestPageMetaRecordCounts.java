@@ -8,6 +8,7 @@ import org.apache.parquet.io.api.Binary;
 import org.apache.parquet.parqour.ingest.disk.files.HDFSParquetFile;
 import org.apache.parquet.parqour.ingest.disk.files.HDFSParquetFileMetadata;
 import org.apache.parquet.parqour.ingest.disk.manager.DiskInterfaceManager;
+import org.apache.parquet.parqour.ingest.disk.pages.PageInfo;
 import org.apache.parquet.parqour.ingest.disk.pages.meta.PageMeta;
 import org.apache.parquet.parqour.testtools.TestTools;
 import org.apache.parquet.parqour.testtools.WriteTools;
@@ -63,24 +64,33 @@ public class TestPageMetaRecordCounts {
     for (ParquetProperties.WriterVersion version : TestTools.PARQUET_VERSIONS) {
       this.generateTestData(version);
 
-      HDFSParquetFile file = new HDFSParquetFile(TestTools.EMPTY_CONFIGURATION, TestTools.TEST_FILE_PATH);
-      HDFSParquetFileMetadata metadata = new HDFSParquetFileMetadata(file);
-      DiskInterfaceManager diskInterfaceManager = new DiskInterfaceManager(metadata);
+      TestTools.repeat(10000, new TestTools.RepeatCallback() {
+        @Override
+        public void execute() throws Exception {
+          HDFSParquetFile file = new HDFSParquetFile(TestTools.EMPTY_CONFIGURATION, TestTools.TEST_FILE_PATH);
+          HDFSParquetFileMetadata metadata = new HDFSParquetFileMetadata(file);
+          DiskInterfaceManager diskInterfaceManager = new DiskInterfaceManager(metadata);
 
-      assertAllEntriesAccountedFor(diskInterfaceManager.generatePageTraverserForPath("i32"), TOTAL_ROWS);
-      assertAllEntriesAccountedFor(diskInterfaceManager.generatePageTraverserForPath("i64"), TOTAL_ROWS);
-      assertAllEntriesAccountedFor(diskInterfaceManager.generatePageTraverserForPath("i96"), TOTAL_ROWS);
-      assertAllEntriesAccountedFor(diskInterfaceManager.generatePageTraverserForPath("boolean"), TOTAL_ROWS);
-      assertAllEntriesAccountedFor(diskInterfaceManager.generatePageTraverserForPath("float"), TOTAL_ROWS);
-      assertAllEntriesAccountedFor(diskInterfaceManager.generatePageTraverserForPath("double"), TOTAL_ROWS);
-      assertAllEntriesAccountedFor(diskInterfaceManager.generatePageTraverserForPath("binary"), TOTAL_ROWS);
-      assertAllEntriesAccountedFor(diskInterfaceManager.generatePageTraverserForPath("fixed-binary"), TOTAL_ROWS);
+          assertAllEntriesAccountedFor(diskInterfaceManager.generatePageTraverserForPath("i32"), TOTAL_ROWS);
+          assertAllEntriesAccountedFor(diskInterfaceManager.generatePageTraverserForPath("i64"), TOTAL_ROWS);
+          assertAllEntriesAccountedFor(diskInterfaceManager.generatePageTraverserForPath("i96"), TOTAL_ROWS);
+          assertAllEntriesAccountedFor(diskInterfaceManager.generatePageTraverserForPath("boolean"), TOTAL_ROWS);
+          assertAllEntriesAccountedFor(diskInterfaceManager.generatePageTraverserForPath("float"), TOTAL_ROWS);
+          assertAllEntriesAccountedFor(diskInterfaceManager.generatePageTraverserForPath("double"), TOTAL_ROWS);
+          assertAllEntriesAccountedFor(diskInterfaceManager.generatePageTraverserForPath("binary"), TOTAL_ROWS);
+          assertAllEntriesAccountedFor(diskInterfaceManager.generatePageTraverserForPath("fixed-binary"), TOTAL_ROWS);
+        }
+      });
     }
   }
 
-  private void assertAllEntriesAccountedFor(Iterator<PageMeta> pages, int total) {
-    while (pages.hasNext()) {
-      total -= pages.next().totalEntryCount();
+  private void assertAllEntriesAccountedFor(Iterator<PageMeta> pageMetas, int total) {
+    while (pageMetas.hasNext()) {
+      PageMeta pageMeta = pageMetas.next();
+      PageInfo info = pageMeta.pageInfo();
+      byte[] data = info.data();
+
+      total -= pageMeta.totalEntryCount();
     }
 
     assertEquals(0, total);

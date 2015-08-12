@@ -14,7 +14,7 @@ import java.util.Iterator;
 /**
  * Created by sircodesalot on 8/10/15.
  */
-public class RowGroupColumnPageSetInfo implements Iterable<PageMeta> {
+public class RowGroupPageSetColumnInfo implements Iterable<PageMeta> {
   private final HDFSParquetFile file;
   private final ColumnChunkMetaData column;
   private final HDFSParquetFileMetadata metadata;
@@ -22,7 +22,7 @@ public class RowGroupColumnPageSetInfo implements Iterable<PageMeta> {
 
   private DictionaryPageInfo dictionaryPage;
 
-  public RowGroupColumnPageSetInfo(HDFSParquetFile file, HDFSParquetFileMetadata metadata, ColumnChunkMetaData column) {
+  public RowGroupPageSetColumnInfo(HDFSParquetFile file, HDFSParquetFileMetadata metadata, ColumnChunkMetaData column) {
     this.file = file;
     this.column = column;
     this.metadata = metadata;

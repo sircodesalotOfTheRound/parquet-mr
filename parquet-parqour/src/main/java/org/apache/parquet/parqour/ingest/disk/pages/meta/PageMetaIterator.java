@@ -2,7 +2,7 @@ package org.apache.parquet.parqour.ingest.disk.pages.meta;
 
 import org.apache.parquet.parqour.exceptions.DataIngestException;
 import org.apache.parquet.parqour.ingest.disk.pages.queue.BlockPageSetQueue;
-import org.apache.parquet.parqour.ingest.disk.pagesets.RowGroupColumnPageSetInfo;
+import org.apache.parquet.parqour.ingest.disk.pagesets.RowGroupPageSetColumnInfo;
 
 import java.util.Iterator;
 
@@ -10,7 +10,7 @@ import java.util.Iterator;
  * Created by sircodesalot on 8/11/15.
  */
 public class PageMetaIterator implements Iterator<PageMeta> {
-  private final Iterator<RowGroupColumnPageSetInfo> pageSetIterator;
+  private final Iterator<RowGroupPageSetColumnInfo> pageSetIterator;
   private Iterator<PageMeta> pageMetaIterator;
 
   public PageMetaIterator(BlockPageSetQueue pageSetQueue) {
@@ -18,7 +18,7 @@ public class PageMetaIterator implements Iterator<PageMeta> {
     this.pageMetaIterator = intializePagingIterator(pageSetIterator);
   }
 
-  private Iterator<PageMeta> intializePagingIterator(Iterator<RowGroupColumnPageSetInfo> pageSetIterator) {
+  private Iterator<PageMeta> intializePagingIterator(Iterator<RowGroupPageSetColumnInfo> pageSetIterator) {
     if (pageSetIterator.hasNext()) {
       return pageSetIterator.next().iterator();
     } else {

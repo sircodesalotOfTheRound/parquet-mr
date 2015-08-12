@@ -6,7 +6,7 @@ import org.apache.parquet.column.ParquetProperties;
 import org.apache.parquet.column.ValuesType;
 import org.apache.parquet.column.statistics.Statistics;
 import org.apache.parquet.format.PageHeader;
-import org.apache.parquet.parqour.ingest.disk.pagesets.RowGroupColumnPageSetInfo;
+import org.apache.parquet.parqour.ingest.disk.pagesets.RowGroupPageSetColumnInfo;
 import org.apache.parquet.parqour.ingest.disk.files.HDFSParquetFileMetadata;
 import org.apache.parquet.parqour.ingest.disk.pages.slate.DataSlate;
 import org.apache.parquet.parqour.ingest.paging.ReadOffsetCalculator;
@@ -19,7 +19,7 @@ public abstract class DataPageInfo extends PageInfo {
   protected ColumnDescriptor columnDescriptor;
   protected ReadOffsetCalculator calculator;
 
-  public DataPageInfo(RowGroupColumnPageSetInfo columnInfo, HDFSParquetFileMetadata metadata, PageHeader header, DataSlate slate, int offset) {
+  public DataPageInfo(RowGroupPageSetColumnInfo columnInfo, HDFSParquetFileMetadata metadata, PageHeader header, DataSlate slate, int offset) {
     super(columnInfo, header, slate, offset);
 
     this.columnDescriptor = metadata.getColumnDescriptor(columnInfo.path());

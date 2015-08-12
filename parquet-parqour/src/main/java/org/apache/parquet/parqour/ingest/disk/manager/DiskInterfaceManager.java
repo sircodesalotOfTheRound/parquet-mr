@@ -2,11 +2,10 @@ package org.apache.parquet.parqour.ingest.disk.manager;
 
 import org.apache.parquet.parqour.exceptions.DataIngestException;
 import org.apache.parquet.parqour.ingest.disk.files.HDFSParquetFileMetadata;
-import org.apache.parquet.parqour.ingest.disk.pages.meta.PageMetaIterable;
 import org.apache.parquet.parqour.ingest.disk.pages.meta.PageMetaTraverser;
 import org.apache.parquet.parqour.ingest.disk.pages.queue.BlockPageSetQueue;
 import org.apache.parquet.parqour.ingest.disk.blocks.RowGroupBlockInfo;
-import org.apache.parquet.parqour.ingest.disk.pagesets.RowGroupColumnPageSetInfo;
+import org.apache.parquet.parqour.ingest.disk.pagesets.RowGroupPageSetColumnInfo;
 import org.apache.parquet.parqour.tools.TransformCollection;
 
 import java.util.HashMap;
@@ -28,7 +27,7 @@ public class DiskInterfaceManager {
     Map<String, BlockPageSetQueue> queues = new HashMap<String, BlockPageSetQueue>();
 
     for (RowGroupBlockInfo block : blocks) {
-      for (RowGroupColumnPageSetInfo column : block.columnMetadata()) {
+      for (RowGroupPageSetColumnInfo column : block.columnMetadata()) {
         if (!queues.containsKey(column.path())) {
           queues.put(column.path(), new BlockPageSetQueue());
         }

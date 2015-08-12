@@ -16,4 +16,5 @@ public class PageMeta {
   }
 
   public long totalEntryCount() { return pageInfo.entryCount(); }
+  public PageInfo pageInfo() { return pageInfo; }
 }
