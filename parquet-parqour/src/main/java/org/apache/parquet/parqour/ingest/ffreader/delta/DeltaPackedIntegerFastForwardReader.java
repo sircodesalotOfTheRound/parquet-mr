@@ -1,6 +1,7 @@
 package org.apache.parquet.parqour.ingest.ffreader.delta;
 
 import org.apache.parquet.column.ValuesType;
+import org.apache.parquet.parqour.ingest.disk.pages.info.DataPageInfo;
 import org.apache.parquet.parqour.ingest.ffreader.FastForwardReaderBase;
 import org.apache.parquet.parqour.ingest.ffreader.interfaces.Int32FastForwardReader;
 import org.apache.parquet.parqour.ingest.ffreader.interfaces.Int64FastForwardReader;
@@ -17,6 +18,12 @@ public class DeltaPackedIntegerFastForwardReader extends FastForwardReaderBase
 
   public DeltaPackedIntegerFastForwardReader(DataPageMetadata metadata, ValuesType type) {
     super(metadata, type);
+
+    this.deltaPackedSegment = new DeltaPackedSegmentReader(data);
+  }
+
+  public DeltaPackedIntegerFastForwardReader(DataPageInfo info, ValuesType values) {
+    super(info, values);
 
     this.deltaPackedSegment = new DeltaPackedSegmentReader(data);
   }

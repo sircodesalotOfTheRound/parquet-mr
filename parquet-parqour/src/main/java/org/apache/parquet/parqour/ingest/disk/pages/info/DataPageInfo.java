@@ -10,6 +10,7 @@ import org.apache.parquet.parqour.ingest.disk.pagesets.RowGroupPageSetColumnInfo
 import org.apache.parquet.parqour.ingest.disk.files.HDFSParquetFileMetadata;
 import org.apache.parquet.parqour.ingest.disk.pages.slate.DataSlate;
 import org.apache.parquet.parqour.ingest.paging.ReadOffsetCalculator;
+import org.apache.parquet.schema.PrimitiveType;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
@@ -37,9 +38,10 @@ public abstract class DataPageInfo extends PageInfo {
 
   public abstract Encoding definitionLevelEncoding();
   public abstract Encoding repetitionLevelEncoding();
-  public abstract Encoding dataEncoding();
+  public abstract Encoding contentEncoding();
   public abstract Statistics statistics();
 
+  public PrimitiveType.PrimitiveTypeName type() { return columnInfo.type(); }
   public int definitionLevelOffset() { return offsetCalculator().definitionLevelOffset(); }
   public int repetitionLevelOffset() { return offsetCalculator().repetitionLevelOffset(); }
   public int contentOffset() { return offsetCalculator().contentOffset(); }

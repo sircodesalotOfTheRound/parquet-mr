@@ -57,18 +57,21 @@ public class TestInt32FFReaders extends UsesPersistence {
 
   @Test
   public void testNewReader() throws Exception {
-    TestTools.generateTestData(new SingleIntegerColumnWriteContext(ParquetProperties.WriterVersion.PARQUET_1_0));
-    HDFSParquetFile file = new HDFSParquetFile(TestTools.EMPTY_CONFIGURATION, TestTools.TEST_FILE_PATH);
-    HDFSParquetFileMetadata metadata = new HDFSParquetFileMetadata(file);
-    DiskInterfaceManager diskInterfaceManager = new DiskInterfaceManager(metadata);
-    Pager pager = diskInterfaceManager.pagerFor(INCREMENT_COLUMN);
+    // TODO: Change to parquet configurations.
+    for (ParquetProperties.WriterVersion version : TestTools.PARQUET_VERSIONS) {
+      TestTools.generateTestData(new SingleIntegerColumnWriteContext(version));
+      HDFSParquetFile file = new HDFSParquetFile(TestTools.EMPTY_CONFIGURATION, TestTools.TEST_FILE_PATH);
+      HDFSParquetFileMetadata metadata = new HDFSParquetFileMetadata(file);
+      DiskInterfaceManager diskInterfaceManager = new DiskInterfaceManager(metadata);
+      Pager pager = diskInterfaceManager.pagerFor(INCREMENT_COLUMN);
 
-    int index = 0;
-    for (Page page : pager) {
-      Int32FastForwardReader reader = page.contentReader();
-      while (!reader.isEof()) {
-        assertEquals(index * INCREMENT, reader.readi32());
-        index++;
+      int index = 0;
+      for (Page page : pager) {
+        Int32FastForwardReader reader = page.contentReader();
+        while (!reader.isEof()) {
+          assertEquals(index * INCREMENT, reader.readi32());
+          index++;
+        }
       }
     }
   }

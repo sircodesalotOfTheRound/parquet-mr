@@ -90,11 +90,11 @@ public abstract class FastForwardReaderBase implements FastForwardReader {
   }
 
   private static FastForwardReaderBase resolveValuesReaderFromEncoding(DataPageInfo info) {
-    switch (info.dataEncoding()) {
+    switch (info.contentEncoding()) {
       case PLAIN:
-        return new PlainInt32FastForwardReader(info, ValuesType.VALUES);
-        /*return resolvePlainValuesReader(metadata);
+        return resolvePlainValuesReader(info);
 
+      /*
       case PLAIN_DICTIONARY:
         return resolvePlainDictionaryValuesReader(metadata);
 
@@ -109,9 +109,48 @@ public abstract class FastForwardReaderBase implements FastForwardReader {
 
       case DELTA_BYTE_ARRAY:
         return resolveDeltaByteArrayValuesReader(metadata);
-
+      */
       case DELTA_BINARY_PACKED:
-        return resolveDeltaBinaryPackedValuesReader(metadata);*/
+        return resolveDeltaBinaryPackedValuesReader(info);
+
+      default:
+        throw new NotImplementedException();
+    }
+  }
+
+  private static FastForwardReaderBase resolvePlainValuesReader(DataPageInfo info) {
+    switch (info.type()) {
+      case INT32:
+        return new PlainInt32FastForwardReader(info, ValuesType.VALUES);
+
+      /*case BOOLEAN:
+        return new PlainBooleanFastForwardReader(metadata, ValuesType.VALUES);
+
+      case INT32:
+        return new PlainInt32FastForwardReader(metadata, ValuesType.VALUES);
+      case INT64:
+        return new PlainInt64FastForwardReader(metadata, ValuesType.VALUES);
+
+      case FLOAT:
+        return new PlainSingleFastForwardReader(metadata, ValuesType.VALUES);
+      case DOUBLE:
+        return new PlainDoubleFastForwardReader(metadata, ValuesType.VALUES);
+
+      case BINARY:
+        return new PlainBinaryFastForwardReader(metadata, ValuesType.VALUES);
+      case FIXED_LEN_BYTE_ARRAY:
+        return new PlainFixedBinaryFastForwardReader(metadata, ValuesType.VALUES);
+        */
+
+      default:
+        throw new NotImplementedException();
+    }
+  }
+
+  private static FastForwardReaderBase resolveDeltaBinaryPackedValuesReader(DataPageInfo info) {
+    switch (info.type()) {
+      case INT32:
+        return new DeltaPackedIntegerFastForwardReader(info, ValuesType.VALUES);
 
       default:
         throw new NotImplementedException();

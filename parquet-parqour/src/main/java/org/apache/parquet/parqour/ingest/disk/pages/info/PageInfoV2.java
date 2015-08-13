@@ -51,7 +51,7 @@ public class PageInfoV2 extends DataPageInfo {
   }
 
   @Override
-  public Encoding dataEncoding() {
+  public Encoding contentEncoding() {
     return converter.getEncoding(pageHeader.getEncoding());
   }
 
