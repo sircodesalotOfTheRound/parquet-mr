@@ -54,26 +54,28 @@ public class ColumnPageSetIterator implements Iterator<PageMeta> {
 
   private PageMeta nextPageMeta() {
     try {
-      stream.seek(currentOffset);
-
-      PageHeader header = Util.readPageHeader(stream);
-
-      DataSlate slate = new DataSlate(file, stream.getPos());
-      PageInfo pageInfo = PageInfo.readPage(columnInfo, metadata, header, slate, 0);
-
-      // If the current page is a dictionary page, read it then read another page.
-      if (pageInfo.isDictionaryPage()) {
-        this.dictionaryPageInfo = (DictionaryPageInfo) pageInfo;
-        pageInfo = PageInfo.readPage(columnInfo, metadata, header, slate, 0);
-      }
-
-      slate.addSegment(stream, header);
-      totalEntriesRead += pageInfo.entryCount();
-
-      currentOffset = (stream.getPos() + header.getCompressed_page_size());
-      return new PageMeta(header, (DataPageInfo)pageInfo);
+      return readDataPage();
     } catch (IOException ex) {
       throw new DataIngestException("Unable to read pages for column: '%s'", columnInfo.path());
     }
+  }
+
+  private PageMeta readDataPage() throws IOException {
+    stream.seek(currentOffset);
+    PageHeader header = Util.readPageHeader(stream);
+    DataSlate slate = new DataSlate(file, stream.getPos());
+    PageInfo pageInfo = PageInfo.readPage(columnInfo, metadata, header, slate, 0);
+
+    // If the current page is a dictionary page, read it then read another page.
+    if (pageInfo.isDictionaryPage()) {
+      this.dictionaryPageInfo = (DictionaryPageInfo) pageInfo;
+      pageInfo = PageInfo.readPage(columnInfo, metadata, header, slate, 0);
+    }
+
+    slate.addSegment(stream, header);
+    totalEntriesRead += pageInfo.entryCount();
+    currentOffset = (stream.getPos() + header.getCompressed_page_size());
+
+    return new PageMeta(header, (DataPageInfo)pageInfo);
   }
 }

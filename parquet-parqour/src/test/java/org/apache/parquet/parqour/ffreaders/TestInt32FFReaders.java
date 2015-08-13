@@ -1,7 +1,5 @@
 package org.apache.parquet.parqour.ffreaders;
 
-import org.apache.parquet.column.ColumnDescriptor;
-import org.apache.parquet.column.ParquetProperties;
 import org.apache.parquet.example.data.Group;
 import org.apache.parquet.example.data.simple.SimpleGroup;
 import org.apache.parquet.hadoop.ParquetWriter;
@@ -9,11 +7,7 @@ import org.apache.parquet.parqour.ingest.disk.files.HDFSParquetFile;
 import org.apache.parquet.parqour.ingest.disk.files.HDFSParquetFileMetadata;
 import org.apache.parquet.parqour.ingest.disk.manager.DiskInterfaceManager;
 import org.apache.parquet.parqour.ingest.disk.pages.Page;
-import org.apache.parquet.parqour.ingest.disk.pages.Pager;
 import org.apache.parquet.parqour.ingest.ffreader.interfaces.Int32FastForwardReader;
-import org.apache.parquet.parqour.ingest.paging.DataPageDecorator;
-import org.apache.parquet.parqour.ingest.paging.DiskInterfaceManager_OLD;
-import org.apache.parquet.parqour.ingest.schema.QueryInfo;
 import org.apache.parquet.parqour.testtools.ParquetConfiguration;
 import org.apache.parquet.parqour.testtools.TestTools;
 import org.apache.parquet.parqour.testtools.UsesPersistence;
@@ -33,6 +27,7 @@ import static org.junit.Assert.assertEquals;
  */
 public class TestInt32FFReaders extends UsesPersistence {
   private static int TOTAL = TestTools.generateRandomInt(50000);
+  private static int ROW_TO_FAST_FORWARD_TO = TestTools.generateRandomInt(TOTAL);
   private static int INCREMENT = TestTools.generateRandomInt(10);
   private static String INCREMENT_COLUMN = "increment";
 
@@ -40,8 +35,8 @@ public class TestInt32FFReaders extends UsesPersistence {
     private static final GroupType SCHEMA = new GroupType(REQUIRED, "count",
       new PrimitiveType(REQUIRED, INT32, INCREMENT_COLUMN));
 
-    public SingleIntegerColumnWriteContext(ParquetProperties.WriterVersion version) {
-      super(SCHEMA, version, 1, 1, false);
+    public SingleIntegerColumnWriteContext(ParquetConfiguration configuration) {
+      super(SCHEMA, configuration.version(), 1, 1, configuration.useDictionary());
     }
 
     @Override
@@ -57,79 +52,37 @@ public class TestInt32FFReaders extends UsesPersistence {
 
   @Test
   public void testNewReader() throws Exception {
-    // TODO: Change to parquet configurations.
-    for (ParquetProperties.WriterVersion version : TestTools.PARQUET_VERSIONS) {
-      TestTools.generateTestData(new SingleIntegerColumnWriteContext(version));
+    for (ParquetConfiguration configuration : TestTools.CONFIGURATIONS) {
+      TestTools.generateTestData(new SingleIntegerColumnWriteContext(configuration));
       HDFSParquetFile file = new HDFSParquetFile(TestTools.EMPTY_CONFIGURATION, TestTools.TEST_FILE_PATH);
       HDFSParquetFileMetadata metadata = new HDFSParquetFileMetadata(file);
       DiskInterfaceManager diskInterfaceManager = new DiskInterfaceManager(metadata);
-      Pager pager = diskInterfaceManager.pagerFor(INCREMENT_COLUMN);
+      Page page = diskInterfaceManager.pagerFor(INCREMENT_COLUMN).iterator().next();
+
+      Int32FastForwardReader reader = page.contentReader();
 
       int index = 0;
-      for (Page page : pager) {
-        Int32FastForwardReader reader = page.contentReader();
-        while (!reader.isEof()) {
-          assertEquals(index * INCREMENT, reader.readi32());
-          index++;
-        }
-      }
-    }
-  }
-
-  @Test
-  public void testInt32FFReaderAgainstNoRLNoDLColumn() throws Exception {
-    for (ParquetProperties.WriterVersion version : TestTools.PARQUET_VERSIONS) {
-      TestTools.generateTestData(new SingleIntegerColumnWriteContext(version));
-
-      QueryInfo queryInfo = TestTools.generateSchemaInfoFromPath(TestTools.TEST_FILE_PATH);
-      DiskInterfaceManager_OLD diskInterfaceManager = new DiskInterfaceManager_OLD(queryInfo);
-      ColumnDescriptor twiceIncrementColumn = queryInfo.getColumnDescriptorByPath(INCREMENT_COLUMN);
-      DataPageDecorator page = diskInterfaceManager.getFirstPageForColumn(twiceIncrementColumn);
-      Int32FastForwardReader reader = page.valuesReader();
-
-      for (int index = 0; index < TOTAL; index++) {
+      while (!reader.isEof()) {
         assertEquals(index * INCREMENT, reader.readi32());
-      }
-    }
-  }
-
-  private static int MODULUS = TestTools.generateRandomInt(20000);
-  private static String MODULO_COLUMN = "moduloizedColumn";
-
-  public static class SingleModuloizedIntWriterContext extends WriteTools.ParquetWriteContext {
-    private static final GroupType SCHEMA = new GroupType(REQUIRED, "count",
-      new PrimitiveType(REQUIRED, INT32, MODULO_COLUMN));
-
-    public SingleModuloizedIntWriterContext(ParquetConfiguration configuration) {
-      super(SCHEMA, configuration.version(), 1, 1, configuration.useDictionary());
-    }
-
-    @Override
-    public void write(ParquetWriter<Group> writer) throws IOException {
-      for (int index = 0; index < TOTAL; index++) {
-        SimpleGroup column = new SimpleGroup(SCHEMA);
-        column.append(MODULO_COLUMN, index + (index * index % MODULUS));
-        writer.write(column);
+        index++;
       }
     }
   }
 
   @Test
-  public void testDeltaReading() throws Exception {
+  public void testFastForwarding() throws Exception {
     for (ParquetConfiguration configuration : TestTools.CONFIGURATIONS) {
-      TestTools.generateTestData(new SingleModuloizedIntWriterContext(configuration));
+      TestTools.generateTestData(new SingleIntegerColumnWriteContext(configuration));
+      HDFSParquetFile file = new HDFSParquetFile(TestTools.EMPTY_CONFIGURATION, TestTools.TEST_FILE_PATH);
+      HDFSParquetFileMetadata metadata = new HDFSParquetFileMetadata(file);
+      DiskInterfaceManager diskInterfaceManager = new DiskInterfaceManager(metadata);
+      Page page = diskInterfaceManager.pagerFor(INCREMENT_COLUMN).iterator().next();
 
-      QueryInfo queryInfo = TestTools.generateSchemaInfoFromPath(TestTools.TEST_FILE_PATH);
-      DiskInterfaceManager_OLD diskInterfaceManager = new DiskInterfaceManager_OLD(queryInfo);
-      ColumnDescriptor twiceIncrementColumn = queryInfo.getColumnDescriptorByPath(MODULO_COLUMN);
-      DataPageDecorator page = diskInterfaceManager.getFirstPageForColumn(twiceIncrementColumn);
-      Int32FastForwardReader ffReader = page.valuesReader();
+      Int32FastForwardReader reader = page.contentReader();
 
-      System.out.println(ffReader);
-      System.out.println(String.format("%s:%s", TOTAL, MODULUS));
-      for (int index = 0; index < TOTAL; index++) {
-        assertEquals(index + (index * index % MODULUS), ffReader.readi32());
-      }
+      reader.fastForwardTo(ROW_TO_FAST_FORWARD_TO);
+      assertEquals(ROW_TO_FAST_FORWARD_TO * INCREMENT, reader.readi32());
     }
   }
+
 }
