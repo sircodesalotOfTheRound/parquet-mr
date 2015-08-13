@@ -4,11 +4,12 @@ import org.apache.parquet.column.ColumnDescriptor;
 import org.apache.parquet.column.Encoding;
 import org.apache.parquet.column.ParquetProperties;
 import org.apache.parquet.column.ValuesType;
+import org.apache.parquet.column.page.DictionaryPage;
 import org.apache.parquet.column.statistics.Statistics;
 import org.apache.parquet.format.PageHeader;
-import org.apache.parquet.parqour.ingest.disk.pagesets.RowGroupPageSetColumnInfo;
 import org.apache.parquet.parqour.ingest.disk.files.HDFSParquetFileMetadata;
 import org.apache.parquet.parqour.ingest.disk.pages.slate.DataSlate;
+import org.apache.parquet.parqour.ingest.disk.pagesets.RowGroupPageSetColumnInfo;
 import org.apache.parquet.parqour.ingest.paging.ReadOffsetCalculator;
 import org.apache.parquet.schema.PrimitiveType;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
@@ -19,11 +20,15 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 public abstract class DataPageInfo extends PageInfo {
   protected ColumnDescriptor columnDescriptor;
   protected ReadOffsetCalculator calculator;
+  protected final DictionaryPageInfo dictionaryPage;
 
-  public DataPageInfo(RowGroupPageSetColumnInfo columnInfo, HDFSParquetFileMetadata metadata, PageHeader header, DataSlate slate, int offset) {
+  public DataPageInfo(RowGroupPageSetColumnInfo columnInfo, HDFSParquetFileMetadata metadata,
+                      PageHeader header, DataSlate slate, DictionaryPageInfo dictionaryPage,
+                      int offset) {
     super(columnInfo, header, slate, offset);
 
     this.columnDescriptor = metadata.getColumnDescriptor(columnInfo.path());
+    this.dictionaryPage = dictionaryPage;
   }
 
   private ReadOffsetCalculator offsetCalculator() {
@@ -45,6 +50,7 @@ public abstract class DataPageInfo extends PageInfo {
   public int definitionLevelOffset() { return offsetCalculator().definitionLevelOffset(); }
   public int repetitionLevelOffset() { return offsetCalculator().repetitionLevelOffset(); }
   public int contentOffset() { return offsetCalculator().contentOffset(); }
+  public DictionaryPageInfo dictionaryPage() { return this.dictionaryPage; }
 
   public int computeOffset(ValuesType type) {
     switch (type) {

@@ -62,4 +62,6 @@ public class DataSlate {
       throw new DataIngestException("Unable to read pages for file.");
     }
   }
+
+  public long startingOffset() { return startingOffset; }
 }

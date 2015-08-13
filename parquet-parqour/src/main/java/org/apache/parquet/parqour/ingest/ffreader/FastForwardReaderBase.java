@@ -94,16 +94,18 @@ public abstract class FastForwardReaderBase implements FastForwardReader {
       case PLAIN:
         return resolvePlainValuesReader(info);
 
-      /*
       case PLAIN_DICTIONARY:
-        return resolvePlainDictionaryValuesReader(metadata);
+        return resolvePlainDictionaryValuesReader(info);
 
+      /*
       case RLE:
         return resolveRLEValuesReader(metadata);
+      */
 
       case RLE_DICTIONARY:
-        return resolveRLEDictionaryValuesReader(metadata);
+        return resolveRLEDictionaryValuesReader(info);
 
+      /*
       case DELTA_LENGTH_BYTE_ARRAY:
         throw new NotImplementedException();
 
@@ -147,11 +149,49 @@ public abstract class FastForwardReaderBase implements FastForwardReader {
     }
   }
 
+  private static FastForwardReaderBase resolvePlainDictionaryValuesReader(DataPageInfo info) {
+    switch (info.type()) {
+      case INT32:
+        return new Int32DictionaryFastForwardReader(info, ValuesType.VALUES);
+/*
+      case INT64:
+        return new Int64DictionaryFastForwardReader(metadata, ValuesType.VALUES);
+
+      case BINARY:
+        return new PlainBinaryDictionaryFastForwardReader(metadata, ValuesType.VALUES);
+
+      case FIXED_LEN_BYTE_ARRAY:
+        return new PlainBinaryDictionaryFastForwardReader(metadata, ValuesType.VALUES);*/
+
+      default:
+        throw new NotImplementedException();
+    }
+  }
+
   private static FastForwardReaderBase resolveDeltaBinaryPackedValuesReader(DataPageInfo info) {
     switch (info.type()) {
       case INT32:
         return new DeltaPackedIntegerFastForwardReader(info, ValuesType.VALUES);
 
+      default:
+        throw new NotImplementedException();
+    }
+  }
+
+  private static FastForwardReaderBase resolveRLEDictionaryValuesReader(DataPageInfo info) {
+    switch (info.type()) {
+      case INT32:
+        return new Int32DictionaryFastForwardReader(info, ValuesType.VALUES);
+
+      /*
+      case INT64:
+        return new Int64DictionaryFastForwardReader(metadata, ValuesType.VALUES);
+
+      case FIXED_LEN_BYTE_ARRAY:
+        return new RLEFixedBinaryDictionaryFastForwardReader(metadata, ValuesType.VALUES);
+      case BINARY:
+        return new RLEBinaryDictionaryFastForwardReader(metadata, ValuesType.VALUES);
+      */
       default:
         throw new NotImplementedException();
     }

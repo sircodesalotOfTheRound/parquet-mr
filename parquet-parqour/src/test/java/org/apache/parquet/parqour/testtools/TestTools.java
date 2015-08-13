@@ -176,6 +176,14 @@ public class TestTools {
     return list.get(index);
   }
 
+  public static void println(String format, Object ... args) {
+    System.out.println(String.format(format, args));
+  }
+
+  public static void printerr(String format, Object ... args) {
+    System.out.println(String.format(format, args));
+  }
+
   public static void deleteTestData() {
     WriteTools.deleteTestData();
   }

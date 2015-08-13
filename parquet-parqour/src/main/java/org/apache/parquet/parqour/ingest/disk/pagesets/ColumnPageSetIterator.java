@@ -28,13 +28,13 @@ public class ColumnPageSetIterator implements Iterator<PageMeta> {
   private long currentOffset;
   private long totalEntriesRead;
 
-  private DictionaryPageInfo dictionaryPageInfo;
+  private DictionaryPageInfo dictionaryPage;
 
   public ColumnPageSetIterator(RowGroupPageSetColumnInfo columnInfo, HDFSParquetFile file, HDFSParquetFileMetadata metadata) {
     this.file = file;
     this.metadata = metadata;
     this.stream = file.stream();
-    this.dictionaryPageInfo = null;
+    this.dictionaryPage = null;
     this.columnInfo = columnInfo;
     this.currentOffset = columnInfo.startingOffset();
 
@@ -64,12 +64,19 @@ public class ColumnPageSetIterator implements Iterator<PageMeta> {
     stream.seek(currentOffset);
     PageHeader header = Util.readPageHeader(stream);
     DataSlate slate = new DataSlate(file, stream.getPos());
-    PageInfo pageInfo = PageInfo.readPage(columnInfo, metadata, header, slate, 0);
+    PageInfo pageInfo = PageInfo.readPage(columnInfo, metadata, header, slate, dictionaryPage, 0);
 
     // If the current page is a dictionary page, read it then read another page.
+    // Reuse the same slate to reduce the number of disk transfers.
     if (pageInfo.isDictionaryPage()) {
-      this.dictionaryPageInfo = (DictionaryPageInfo) pageInfo;
-      pageInfo = PageInfo.readPage(columnInfo, metadata, header, slate, 0);
+      slate.addSegment(stream, header);
+      this.dictionaryPage = (DictionaryPageInfo) pageInfo;
+      currentOffset = (stream.getPos() + header.getCompressed_page_size());
+
+      stream.seek(currentOffset);
+      header = Util.readPageHeader(stream);
+      int offsetFromStartOfSlate = (int)(stream.getPos() - slate.startingOffset());
+      pageInfo = PageInfo.readPage(columnInfo, metadata, header, slate, dictionaryPage, offsetFromStartOfSlate);
     }
 
     slate.addSegment(stream, header);

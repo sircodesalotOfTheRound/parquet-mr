@@ -30,12 +30,13 @@ public abstract class PageInfo {
   }
 
   public static PageInfo readPage(RowGroupPageSetColumnInfo columnInfo, HDFSParquetFileMetadata metadata, PageHeader header,
-                                  DataSlate slate, int offset) {
+                                  DataSlate slate, DictionaryPageInfo dictionaryPage, int offset) {
+
     switch (header.getType()) {
       case DATA_PAGE:
-        return new PageInfoV1(columnInfo, metadata, header, slate, offset);
+        return new PageInfoV1(columnInfo, metadata, header, slate, dictionaryPage, offset);
       case DATA_PAGE_V2:
-        return new PageInfoV2(columnInfo, metadata, header, slate, offset);
+        return new PageInfoV2(columnInfo, metadata, header, slate, dictionaryPage, offset);
       case DICTIONARY_PAGE:
         return new DictionaryPageInfo(columnInfo, header, slate, offset);
     }

@@ -28,7 +28,7 @@ import static org.junit.Assert.assertEquals;
 public class TestInt32FFReaders extends UsesPersistence {
   private static int TOTAL = TestTools.generateRandomInt(50000);
   private static int ROW_TO_FAST_FORWARD_TO = TestTools.generateRandomInt(TOTAL);
-  private static int INCREMENT = TestTools.generateRandomInt(10);
+  private static int INCREMENT = TestTools.generateRandomInt(21);
   private static String INCREMENT_COLUMN = "increment";
 
   public static class SingleIntegerColumnWriteContext extends WriteTools.ParquetWriteContext {
@@ -53,6 +53,7 @@ public class TestInt32FFReaders extends UsesPersistence {
   @Test
   public void testNewReader() throws Exception {
     for (ParquetConfiguration configuration : TestTools.CONFIGURATIONS) {
+      TestTools.printerr("CONFIG %s: TOTAL: %s, INCREMENT: %s", configuration, TOTAL, INCREMENT);
       TestTools.generateTestData(new SingleIntegerColumnWriteContext(configuration));
       HDFSParquetFile file = new HDFSParquetFile(TestTools.EMPTY_CONFIGURATION, TestTools.TEST_FILE_PATH);
       HDFSParquetFileMetadata metadata = new HDFSParquetFileMetadata(file);
@@ -72,6 +73,7 @@ public class TestInt32FFReaders extends UsesPersistence {
   @Test
   public void testFastForwarding() throws Exception {
     for (ParquetConfiguration configuration : TestTools.CONFIGURATIONS) {
+      TestTools.printerr("CONFIG %s: TOTAL: %s, INCREMENT: %s", configuration, TOTAL, INCREMENT);
       TestTools.generateTestData(new SingleIntegerColumnWriteContext(configuration));
       HDFSParquetFile file = new HDFSParquetFile(TestTools.EMPTY_CONFIGURATION, TestTools.TEST_FILE_PATH);
       HDFSParquetFileMetadata metadata = new HDFSParquetFileMetadata(file);

@@ -3,6 +3,7 @@ package org.apache.parquet.parqour.ingest.ffreader.dictionary;
 import org.apache.parquet.column.ValuesType;
 import org.apache.parquet.column.page.DictionaryPage;
 import org.apache.parquet.parqour.exceptions.DataIngestException;
+import org.apache.parquet.parqour.ingest.disk.pages.info.DataPageInfo;
 import org.apache.parquet.parqour.ingest.ffreader.FastForwardReaderBase;
 import org.apache.parquet.parqour.ingest.ffreader.interfaces.Int32FastForwardReader;
 import org.apache.parquet.parqour.ingest.ffreader.segments.PackedEncodingSegmentReader;
@@ -25,6 +26,33 @@ public class Int32DictionaryFastForwardReader extends FastForwardReaderBase impl
     this.dictionaryEntries = collectDictionaryEntries(metadata);
   }
 
+  public Int32DictionaryFastForwardReader(DataPageInfo info, ValuesType values) {
+    super(info, values);
+
+    this.dataOffset = ++dataOffset;
+    this.segment = PackedEncodingSegmentReader.createPackedEncodingSegmentReader(data, dataOffset, expandToBitWidth());
+    this.dictionaryEntries = collectDictionaryEntries(info);
+  }
+
+  private int[] collectDictionaryEntries(DataPageInfo info) {
+    byte[] dictionaryData = info.dictionaryPage().data();
+    int entryCount = (int)info.dictionaryPage().entryCount();
+    int[] entries = new int[entryCount];
+    int dictionaryDataOffset = -1;
+
+    for (int index = 0; index < entryCount; index++) {
+      int value = (dictionaryData[++dictionaryDataOffset] & 0xFF)
+        | (dictionaryData[++dictionaryDataOffset] & 0xFF) << 8
+        | (dictionaryData[++dictionaryDataOffset] & 0xFF) << 16
+        | (dictionaryData[++dictionaryDataOffset] & 0xFF) << 24;
+
+      entries[index] = value;
+    }
+
+    return entries;
+  }
+
+  @Deprecated
   private int[] collectDictionaryEntries(DataPageMetadata metadata) {
     byte[] dictionaryData = collectDictionaryPageData(metadata.dictionaryPage());
     int entryCount = metadata.dictionaryPage().getDictionarySize();
@@ -43,6 +71,7 @@ public class Int32DictionaryFastForwardReader extends FastForwardReaderBase impl
     return entries;
   }
 
+  @Deprecated
   private byte[] collectDictionaryPageData(DictionaryPage dictionaryPage) {
     try {
       return dictionaryPage.getBytes().toByteArray();
