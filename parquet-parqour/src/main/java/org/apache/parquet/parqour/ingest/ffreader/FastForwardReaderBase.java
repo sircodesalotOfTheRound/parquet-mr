@@ -97,10 +97,8 @@ public abstract class FastForwardReaderBase implements FastForwardReader {
       case PLAIN_DICTIONARY:
         return resolvePlainDictionaryValuesReader(info);
 
-      /*
       case RLE:
-        return resolveRLEValuesReader(metadata);
-      */
+        return resolveRLEValuesReader(info);
 
       case RLE_DICTIONARY:
         return resolveRLEDictionaryValuesReader(info);
@@ -125,9 +123,9 @@ public abstract class FastForwardReaderBase implements FastForwardReader {
       case INT32:
         return new PlainInt32FastForwardReader(info, ValuesType.VALUES);
 
-      /*case BOOLEAN:
-        return new PlainBooleanFastForwardReader(metadata, ValuesType.VALUES);
-
+      case BOOLEAN:
+        return new PlainBooleanFastForwardReader(info, ValuesType.VALUES);
+/*
       case INT32:
         return new PlainInt32FastForwardReader(metadata, ValuesType.VALUES);
       case INT64:
@@ -143,6 +141,16 @@ public abstract class FastForwardReaderBase implements FastForwardReader {
       case FIXED_LEN_BYTE_ARRAY:
         return new PlainFixedBinaryFastForwardReader(metadata, ValuesType.VALUES);
         */
+
+      default:
+        throw new NotImplementedException();
+    }
+  }
+
+  private static FastForwardReaderBase resolveRLEValuesReader(DataPageInfo info) {
+    switch (info.type()) {
+      case BOOLEAN:
+        return new RLEBooleanFastForwardReader(info, ValuesType.VALUES);
 
       default:
         throw new NotImplementedException();

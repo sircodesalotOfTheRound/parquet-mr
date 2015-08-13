@@ -1,6 +1,7 @@
 package org.apache.parquet.parqour.ingest.ffreader.packed.rle;
 
 import org.apache.parquet.column.ValuesType;
+import org.apache.parquet.parqour.ingest.disk.pages.info.DataPageInfo;
 import org.apache.parquet.parqour.ingest.ffreader.FastForwardReaderBase;
 import org.apache.parquet.parqour.ingest.ffreader.interfaces.BooleanFastForwardReader;
 import org.apache.parquet.parqour.ingest.ffreader.segments.PackedEncodingSegmentReader;
@@ -16,8 +17,16 @@ public final class RLEBooleanFastForwardReader extends FastForwardReaderBase imp
 
   private PackedEncodingSegmentReader segment;
 
+  @Deprecated
   public RLEBooleanFastForwardReader(DataPageMetadata metadata, ValuesType type) {
     super(metadata, type);
+
+    this.segment = PackedEncodingSegmentReader
+      .createPackedEncodingSegmentReader(data, dataOffset + SECTION_LENGTH_INT32_SIZE, SIZEOF_BOOLEAN);
+  }
+
+  public RLEBooleanFastForwardReader(DataPageInfo info, ValuesType values) {
+    super(info, values);
 
     this.segment = PackedEncodingSegmentReader
       .createPackedEncodingSegmentReader(data, dataOffset + SECTION_LENGTH_INT32_SIZE, SIZEOF_BOOLEAN);
@@ -31,7 +40,7 @@ public final class RLEBooleanFastForwardReader extends FastForwardReaderBase imp
 
     super.advanceEntryNumber();
     int value = segment.readNext();
-    return value == TRUE;
+    return (value == TRUE);
   }
 
   @Override

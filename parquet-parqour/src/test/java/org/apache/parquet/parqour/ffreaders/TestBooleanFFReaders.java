@@ -1,13 +1,14 @@
 package org.apache.parquet.parqour.ffreaders;
 
-import org.apache.parquet.column.ColumnDescriptor;
 import org.apache.parquet.example.data.Group;
 import org.apache.parquet.example.data.simple.SimpleGroup;
 import org.apache.parquet.hadoop.ParquetWriter;
+import org.apache.parquet.parqour.ingest.disk.files.HDFSParquetFile;
+import org.apache.parquet.parqour.ingest.disk.files.HDFSParquetFileMetadata;
+import org.apache.parquet.parqour.ingest.disk.manager.DiskInterfaceManager;
+import org.apache.parquet.parqour.ingest.disk.pages.Page;
 import org.apache.parquet.parqour.ingest.ffreader.interfaces.BooleanFastForwardReader;
-import org.apache.parquet.parqour.ingest.paging.DataPageDecorator;
-import org.apache.parquet.parqour.ingest.paging.DiskInterfaceManager_OLD;
-import org.apache.parquet.parqour.ingest.schema.QueryInfo;
+import org.apache.parquet.parqour.ingest.ffreader.interfaces.Int32FastForwardReader;
 import org.apache.parquet.parqour.testtools.ParquetConfiguration;
 import org.apache.parquet.parqour.testtools.TestTools;
 import org.apache.parquet.parqour.testtools.UsesPersistence;
@@ -27,14 +28,15 @@ import static org.junit.Assert.assertEquals;
  */
 public class TestBooleanFFReaders extends UsesPersistence {
   private static int TOTAL = TestTools.generateRandomInt(50000);
+  private static int ROW_TO_FAST_FORWARD_TO = TestTools.generateRandomInt(TOTAL);
   private static int MODULO = TestTools.generateRandomInt(1000) + 1;
   private static String COLUMN_NAME = "truefalse";
 
-  public static class SingleBitWriteContext extends WriteTools.ParquetWriteContext {
+  public static class SingleBooleanWriteContext extends WriteTools.ParquetWriteContext {
     private static final GroupType SCHEMA = new GroupType(REQUIRED, "count",
       new PrimitiveType(REQUIRED, BOOLEAN, COLUMN_NAME));
 
-    public SingleBitWriteContext(ParquetConfiguration configuration) {
+    public SingleBooleanWriteContext(ParquetConfiguration configuration) {
       super(SCHEMA, configuration.version(), 1, 1, configuration.useDictionary());
     }
 
@@ -49,19 +51,40 @@ public class TestBooleanFFReaders extends UsesPersistence {
   }
 
   @Test
-  public void testBooleanFFReader() throws Exception {
+  public void testNewReader() throws Exception {
     for (ParquetConfiguration configuration : TestTools.CONFIGURATIONS) {
-      TestTools.generateTestData(new SingleBitWriteContext(configuration));
+      TestTools.printerr("CONFIG %s: TOTAL: %s, MODULO: %s", configuration, TOTAL, MODULO);
+      TestTools.generateTestData(new SingleBooleanWriteContext(configuration));
+      HDFSParquetFile file = new HDFSParquetFile(TestTools.EMPTY_CONFIGURATION, TestTools.TEST_FILE_PATH);
+      HDFSParquetFileMetadata metadata = new HDFSParquetFileMetadata(file);
+      DiskInterfaceManager diskInterfaceManager = new DiskInterfaceManager(metadata);
+      Page page = diskInterfaceManager.pagerFor(COLUMN_NAME).iterator().next();
 
-      QueryInfo queryInfo = TestTools.generateSchemaInfoFromPath(TestTools.TEST_FILE_PATH);
-      DiskInterfaceManager_OLD diskInterfaceManager = new DiskInterfaceManager_OLD(queryInfo);
-      ColumnDescriptor moduloBitColumn = queryInfo.getColumnDescriptorByPath(COLUMN_NAME);
-      DataPageDecorator page = diskInterfaceManager.getFirstPageForColumn(moduloBitColumn);
-      BooleanFastForwardReader reader = page.valuesReader();
+      BooleanFastForwardReader reader = page.contentReader();
 
-      for (int index = 0; index < TOTAL; index++) {
-        assertEquals(index % MODULO == 0, reader.readtf());
+      int index = 0;
+      while (!reader.isEof()) {
+        assertEquals((index % MODULO) == 0, reader.readtf());
+        index++;
       }
+    }
+  }
+
+  @Test
+  public void testFastForwarding() throws Exception {
+    for (ParquetConfiguration configuration : TestTools.CONFIGURATIONS) {
+      TestTools.printerr("CONFIG %s: TOTAL: %s, MODULO: %s, FAST-FORWARD-TO: %s",
+        configuration, TOTAL, MODULO, ROW_TO_FAST_FORWARD_TO);
+      TestTools.generateTestData(new SingleBooleanWriteContext(configuration));
+      HDFSParquetFile file = new HDFSParquetFile(TestTools.EMPTY_CONFIGURATION, TestTools.TEST_FILE_PATH);
+      HDFSParquetFileMetadata metadata = new HDFSParquetFileMetadata(file);
+      DiskInterfaceManager diskInterfaceManager = new DiskInterfaceManager(metadata);
+      Page page = diskInterfaceManager.pagerFor(COLUMN_NAME).iterator().next();
+
+      BooleanFastForwardReader reader = page.contentReader();
+
+      reader.fastForwardTo(ROW_TO_FAST_FORWARD_TO);
+      assertEquals(ROW_TO_FAST_FORWARD_TO % MODULO == 0, reader.readtf());
     }
   }
 }
