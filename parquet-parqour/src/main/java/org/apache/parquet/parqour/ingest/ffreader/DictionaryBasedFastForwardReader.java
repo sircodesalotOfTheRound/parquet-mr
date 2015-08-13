@@ -1,6 +1,7 @@
 package org.apache.parquet.parqour.ingest.ffreader;
 
 import org.apache.parquet.column.ValuesType;
+import org.apache.parquet.parqour.ingest.disk.pages.info.DataPageInfo;
 import org.apache.parquet.parqour.ingest.paging.DataPageMetadata;
 
 /**
@@ -10,6 +11,10 @@ import org.apache.parquet.parqour.ingest.paging.DataPageMetadata;
 public abstract class DictionaryBasedFastForwardReader extends FastForwardReaderBase {
   public DictionaryBasedFastForwardReader(DataPageMetadata metadata, ValuesType type) {
     super(metadata, type);
+  }
+
+  public DictionaryBasedFastForwardReader(DataPageInfo info, ValuesType type) {
+    super(info, type);
   }
 
   public abstract int readNextDictionaryEntryIndex();

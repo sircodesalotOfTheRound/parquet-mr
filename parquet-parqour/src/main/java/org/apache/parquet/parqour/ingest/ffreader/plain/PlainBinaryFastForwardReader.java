@@ -1,6 +1,7 @@
 package org.apache.parquet.parqour.ingest.ffreader.plain;
 
 import org.apache.parquet.column.ValuesType;
+import org.apache.parquet.parqour.ingest.disk.pages.info.DataPageInfo;
 import org.apache.parquet.parqour.ingest.ffreader.FastForwardReaderBase;
 import org.apache.parquet.parqour.ingest.ffreader.binary.BinaryTrie;
 import org.apache.parquet.parqour.ingest.ffreader.interfaces.BinaryFastForwardReader;
@@ -17,8 +18,13 @@ public final class PlainBinaryFastForwardReader extends FastForwardReaderBase
   private final BinaryTrie trie = new BinaryTrie(45, 5000);
   private static final int SIZEOF_INT = 4;
 
+  @Deprecated
   public PlainBinaryFastForwardReader(DataPageMetadata metadata, ValuesType type) {
     super(metadata, type);
+  }
+
+  public PlainBinaryFastForwardReader(DataPageInfo info, ValuesType values) {
+    super(info, values);
   }
 
   @Deprecated
@@ -53,19 +59,25 @@ public final class PlainBinaryFastForwardReader extends FastForwardReaderBase
 
   @Override
   public String readString() {
+    super.advanceEntryNumber();
+
     int startingOffset = ++dataOffset;
     int length = this.readInt32AndImplictlyAdvanceOffset();
     dataOffset += length;
 
+    // TODO: Don't do this.
     return trie.getString(data, startingOffset + SIZEOF_INT, length);
   }
 
   @Override
   public byte[] readBytes() {
+    super.advanceEntryNumber();
+
     int startingOffset = ++dataOffset;
     int length = this.readInt32AndImplictlyAdvanceOffset();
     dataOffset += length;
 
+    // TODO: Don't do this.
     return trie.getByteArray(data, startingOffset + SIZEOF_INT, length);
   }
 }
