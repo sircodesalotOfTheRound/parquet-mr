@@ -19,9 +19,9 @@ public class PageInfoV1 extends DataPageInfo {
   private final HDFSParquetFileMetadata metadata;
 
   public PageInfoV1(RowGroupPageSetColumnInfo columnInfo, HDFSParquetFileMetadata metadata, PageHeader header,
-                    DataSlate slate, DictionaryPageInfo dictionaryPage, int offset) {
+                    DataSlate slate, DictionaryPageInfo dictionaryPage) {
 
-    super(columnInfo, metadata, header, slate, dictionaryPage, offset);
+    super(columnInfo, metadata, header, slate, dictionaryPage);
 
     this.metadata = metadata;
     this.pageHeader = header.getData_page_header();
@@ -63,5 +63,15 @@ public class PageInfoV1 extends DataPageInfo {
       metadata.createdBy(),
       pageHeader.getStatistics(),
       super.columnDescriptor.getType());
+  }
+
+  @Override
+  public byte[] repetitionLevelData() {
+    return super.data();
+  }
+
+  @Override
+  public byte[] definitionLevelData() {
+    return super.data();
   }
 }

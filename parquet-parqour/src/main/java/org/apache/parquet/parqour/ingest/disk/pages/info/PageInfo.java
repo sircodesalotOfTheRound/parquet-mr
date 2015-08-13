@@ -15,11 +15,11 @@ public abstract class PageInfo {
   protected final DataSlate slate;
   protected final int offset;
 
-  public PageInfo(RowGroupPageSetColumnInfo columnInfo, PageHeader header, DataSlate slate, int offset) {
+  public PageInfo(RowGroupPageSetColumnInfo columnInfo, PageHeader header, DataSlate slate) {
     this.columnInfo = columnInfo;
     this.header = header;
     this.slate = slate;
-    this.offset = offset;
+    this.offset = slate.addSegment(header);
   }
 
   public abstract boolean isDictionaryPage();
@@ -30,15 +30,15 @@ public abstract class PageInfo {
   }
 
   public static PageInfo readPage(RowGroupPageSetColumnInfo columnInfo, HDFSParquetFileMetadata metadata, PageHeader header,
-                                  DataSlate slate, DictionaryPageInfo dictionaryPage, int offset) {
+                                  DataSlate slate, DictionaryPageInfo dictionaryPage) {
 
     switch (header.getType()) {
       case DATA_PAGE:
-        return new PageInfoV1(columnInfo, metadata, header, slate, dictionaryPage, offset);
+        return new PageInfoV1(columnInfo, metadata, header, slate, dictionaryPage);
       case DATA_PAGE_V2:
-        return new PageInfoV2(columnInfo, metadata, header, slate, dictionaryPage, offset);
+        return new PageInfoV2(columnInfo, metadata, header, slate, dictionaryPage);
       case DICTIONARY_PAGE:
-        return new DictionaryPageInfo(columnInfo, header, slate, offset);
+        return new DictionaryPageInfo(columnInfo, header, slate);
     }
 
     throw new DataIngestException("Invalid page type");

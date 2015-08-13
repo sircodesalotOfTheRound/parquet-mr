@@ -103,12 +103,13 @@ public abstract class FastForwardReaderBase implements FastForwardReader {
       case RLE_DICTIONARY:
         return resolveRLEDictionaryValuesReader(info);
 
+      case DELTA_BYTE_ARRAY:
+        return resolveDeltaByteArrayValuesReader(info);
+
       /*
       case DELTA_LENGTH_BYTE_ARRAY:
         throw new NotImplementedException();
 
-      case DELTA_BYTE_ARRAY:
-        return resolveDeltaByteArrayValuesReader(metadata);
       */
       case DELTA_BINARY_PACKED:
         return resolveDeltaBinaryPackedValuesReader(info);
@@ -192,15 +193,30 @@ public abstract class FastForwardReaderBase implements FastForwardReader {
       case INT32:
         return new Int32DictionaryFastForwardReader(info, ValuesType.VALUES);
 
+      case BINARY:
+        return new RLEBinaryDictionaryFastForwardReader(info, ValuesType.VALUES);
       /*
       case INT64:
         return new Int64DictionaryFastForwardReader(metadata, ValuesType.VALUES);
 
       case FIXED_LEN_BYTE_ARRAY:
         return new RLEFixedBinaryDictionaryFastForwardReader(metadata, ValuesType.VALUES);
-      case BINARY:
-        return new RLEBinaryDictionaryFastForwardReader(metadata, ValuesType.VALUES);
       */
+      default:
+        throw new NotImplementedException();
+    }
+  }
+
+  private static FastForwardReaderBase resolveDeltaByteArrayValuesReader(DataPageInfo info) {
+    switch (info.type()) {
+      case BINARY:
+        return new DeltaByteArrayBinaryFastForwardReader(info, ValuesType.VALUES);
+
+      /*
+      case FIXED_LEN_BYTE_ARRAY:
+        return new DeltaByteArrayBinaryFastForwardReader(metadata, ValuesType.VALUES);
+        */
+
       default:
         throw new NotImplementedException();
     }

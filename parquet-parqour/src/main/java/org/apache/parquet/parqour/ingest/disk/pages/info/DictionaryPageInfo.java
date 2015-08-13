@@ -11,8 +11,9 @@ import org.apache.parquet.parqour.ingest.disk.pages.slate.DataSlate;
 public class DictionaryPageInfo extends PageInfo {
   private final DictionaryPageHeader pageHeader;
 
-  public DictionaryPageInfo(RowGroupPageSetColumnInfo columnInfo, PageHeader header, DataSlate slate, int offset) {
-    super(columnInfo, header, slate, offset);
+  public DictionaryPageInfo(RowGroupPageSetColumnInfo columnInfo, PageHeader header, DataSlate slate) {
+    super(columnInfo, header, slate);
+
     this.pageHeader = header.getDictionary_page_header();
   }
 

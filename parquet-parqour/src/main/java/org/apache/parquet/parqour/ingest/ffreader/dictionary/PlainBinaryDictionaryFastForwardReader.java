@@ -34,6 +34,7 @@ public final class PlainBinaryDictionaryFastForwardReader extends DictionaryBase
     this.dictionaryPageData = collectDictionaryPageData(metadata.dictionaryPage());
     this.dictionaryEntries = this.readDictionaryEntries(metadata.dictionaryPage());
     this.dictionaryEntriesAsStrings = new String[metadata.dictionaryPage().getDictionarySize()];
+    // TODO: Length should not be fixed.
     this.segment = PackedEncodingSegmentReader.createPackedEncodingSegmentReader(data, 0, 10);
   }
 
@@ -41,9 +42,12 @@ public final class PlainBinaryDictionaryFastForwardReader extends DictionaryBase
     super(info, values);
 
     this.dictionaryPageData = info.dictionaryPage().data();
+    this.dictionaryPageOffset = info.dictionaryPage().startingOffset() - 1;
     this.dictionaryEntries = this.readDictionaryEntries(info.dictionaryPage());
     this.dictionaryEntriesAsStrings = new String[(int)info.dictionaryPage().entryCount()];
-    this.segment = PackedEncodingSegmentReader.createPackedEncodingSegmentReader(data, 0, 10);
+    // TODO: Length should not be fixed.
+
+    this.segment = PackedEncodingSegmentReader.createPackedEncodingSegmentReader(data, info.contentOffset(), 10);
   }
 
   private byte[] collectDictionaryPageData(DictionaryPage dictionaryPage) {

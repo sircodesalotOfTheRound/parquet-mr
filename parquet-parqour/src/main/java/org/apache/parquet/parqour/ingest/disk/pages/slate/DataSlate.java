@@ -12,7 +12,7 @@ import java.io.IOException;
  */
 public class DataSlate {
   private final long startingOffset;
-  private long endingOffset = 0;
+  private long finalOffset = 0;
 
   private final FSDataInputStream stream;
   private boolean isBuilt = false;
@@ -24,9 +24,21 @@ public class DataSlate {
     this.stream = file.stream();
   }
 
-  public void addSegment(FSDataInputStream stream, PageHeader header) {
+  public int addSegment(PageHeader header) {
     if (!isBuilt) {
-      this.endingOffset += computeEndingOffset(stream, header);
+      int startOfPageOffset = computeStartOfPageOffset();
+      this.finalOffset += computeEndingOffset(stream, header);
+      return startOfPageOffset;
+    } else {
+      throw new DataIngestException("Data Slate is already built.");
+    }
+  }
+
+  public int addSegment(int length) {
+    if (!isBuilt) {
+      int segmentStartOffset = (int) this.finalOffset;
+      this.finalOffset += length;
+      return segmentStartOffset;
     } else {
       throw new DataIngestException("Data Slate is already built.");
     }
@@ -43,7 +55,7 @@ public class DataSlate {
 
   public byte[] construct() {
     try {
-      int totalSize = (int)(endingOffset - startingOffset);
+      int totalSize = (int)(finalOffset - startingOffset);
       byte[] data = new byte[totalSize];
 
       stream.readFully(startingOffset, data);
@@ -52,6 +64,14 @@ public class DataSlate {
       return data;
     } catch (IOException ex) {
       throw new DataIngestException("Unable to read pages for file");
+    }
+  }
+
+  private int computeStartOfPageOffset() {
+    try {
+      return (int)(stream.getPos() - startingOffset);
+    } catch (IOException ex) {
+      throw new DataIngestException("Unable to read pages for file.");
     }
   }
 
@@ -64,4 +84,5 @@ public class DataSlate {
   }
 
   public long startingOffset() { return startingOffset; }
+
 }

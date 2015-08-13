@@ -3,6 +3,8 @@ package org.apache.parquet.parqour.ingest.ffreader.dictionary;
 import org.apache.parquet.column.ValuesType;
 import org.apache.parquet.column.page.DictionaryPage;
 import org.apache.parquet.parqour.exceptions.DataIngestException;
+import org.apache.parquet.parqour.ingest.disk.pages.info.DataPageInfo;
+import org.apache.parquet.parqour.ingest.disk.pages.info.DictionaryPageInfo;
 import org.apache.parquet.parqour.ingest.ffreader.FastForwardReaderBase;
 import org.apache.parquet.parqour.ingest.ffreader.interfaces.BinaryFastForwardReader;
 import org.apache.parquet.parqour.ingest.ffreader.segments.PackedEncodingSegmentReader;
@@ -28,6 +30,40 @@ public final class RLEBinaryDictionaryFastForwardReader extends FastForwardReade
     this.segment = PackedEncodingSegmentReader.createPackedEncodingSegmentReader(data, 0, expandToBitWidth());
   }
 
+  public RLEBinaryDictionaryFastForwardReader(DataPageInfo info, ValuesType values) {
+    super(info, values);
+
+    this.dictionaryEntries = this.readDictionaryEntries(info);
+    this.dictionaryEntriesAsStrings = new String[(int) info.dictionaryPage().entryCount()];
+    this.segment = PackedEncodingSegmentReader
+      .createPackedEncodingSegmentReader(data, info.contentOffset(), expandToBitWidth(info));
+  }
+
+
+  private byte[][] readDictionaryEntries(DataPageInfo info) {
+    DictionaryPageInfo dictionaryPage = info.dictionaryPage();
+    int dictionarySize = (int)dictionaryPage.entryCount();
+    byte[] dictionaryData = dictionaryPage.data();
+
+    int dictionaryOffset = dictionaryPage.startingOffset();
+    byte[][] dictionaryEntries = new byte[dictionarySize][];
+    for (int entry = 0; entry < dictionarySize; entry++) {
+
+      int entryLength = (dictionaryData[dictionaryOffset++] & 0xFF)
+        | (dictionaryData[dictionaryOffset++] & 0xFF) << 8
+        | (dictionaryData[dictionaryOffset++] & 0xFF) << 16
+        | (dictionaryData[dictionaryOffset++] & 0xFF) << 24;
+
+      dictionaryEntries[entry] = new byte[entryLength];
+      for (int index = 0; index < entryLength; index++) {
+        dictionaryEntries[entry][index] = dictionaryData[dictionaryOffset++];
+      }
+    }
+
+    return dictionaryEntries;
+  }
+
+  @Deprecated
   private byte[][] readDictionaryEntries(DataPageMetadata metadata) {
     DictionaryPage dictionaryPage = metadata.dictionaryPage();
     int dictionarySize = dictionaryPage.getDictionarySize();
@@ -59,6 +95,17 @@ public final class RLEBinaryDictionaryFastForwardReader extends FastForwardReade
     }
   }
 
+
+  private int expandToBitWidth(DataPageInfo info) {
+    int bitWidth = data[info.contentOffset()];
+    if (bitWidth == 0) {
+      return 0;
+    } else {
+      return 1 << (bitWidth - 1);
+    }
+  }
+
+  @Deprecated
   private int expandToBitWidth() {
     int bitWidth = data[0];
     if (bitWidth == 0) {

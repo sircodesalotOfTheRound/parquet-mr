@@ -63,23 +63,20 @@ public class ColumnPageSetIterator implements Iterator<PageMeta> {
   private PageMeta readDataPage() throws IOException {
     stream.seek(currentOffset);
     PageHeader header = Util.readPageHeader(stream);
-    DataSlate slate = new DataSlate(file, stream.getPos());
-    PageInfo pageInfo = PageInfo.readPage(columnInfo, metadata, header, slate, dictionaryPage, 0);
+    DataSlate slate = new DataSlate(file, columnInfo.startingOffset());
+    PageInfo pageInfo = PageInfo.readPage(columnInfo, metadata, header, slate, dictionaryPage);
 
     // If the current page is a dictionary page, read it then read another page.
     // Reuse the same slate to reduce the number of disk transfers.
     if (pageInfo.isDictionaryPage()) {
-      slate.addSegment(stream, header);
       this.dictionaryPage = (DictionaryPageInfo) pageInfo;
       currentOffset = (stream.getPos() + header.getCompressed_page_size());
 
       stream.seek(currentOffset);
       header = Util.readPageHeader(stream);
-      int offsetFromStartOfSlate = (int)(stream.getPos() - slate.startingOffset());
-      pageInfo = PageInfo.readPage(columnInfo, metadata, header, slate, dictionaryPage, offsetFromStartOfSlate);
+      pageInfo = PageInfo.readPage(columnInfo, metadata, header, slate, dictionaryPage);
     }
 
-    slate.addSegment(stream, header);
     totalEntriesRead += pageInfo.entryCount();
     currentOffset = (stream.getPos() + header.getCompressed_page_size());
 
