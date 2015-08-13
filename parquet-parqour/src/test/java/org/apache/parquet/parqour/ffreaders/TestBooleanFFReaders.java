@@ -51,7 +51,7 @@ public class TestBooleanFFReaders extends UsesPersistence {
   }
 
   @Test
-  public void testNewReader() throws Exception {
+  public void testReaders() throws Exception {
     for (ParquetConfiguration configuration : TestTools.CONFIGURATIONS) {
       TestTools.printerr("CONFIG %s: TOTAL: %s, MODULO: %s", configuration, TOTAL, MODULO);
       TestTools.generateTestData(new SingleBooleanWriteContext(configuration));

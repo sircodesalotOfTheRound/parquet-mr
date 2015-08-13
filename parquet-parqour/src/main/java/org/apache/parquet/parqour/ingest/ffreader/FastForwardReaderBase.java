@@ -123,16 +123,18 @@ public abstract class FastForwardReaderBase implements FastForwardReader {
       case INT32:
         return new PlainInt32FastForwardReader(info, ValuesType.VALUES);
 
+      case INT64:
+        return new PlainInt64FastForwardReader(info, ValuesType.VALUES);
+
       case BOOLEAN:
         return new PlainBooleanFastForwardReader(info, ValuesType.VALUES);
+
+      case FLOAT:
+        return new PlainSingleFastForwardReader(info, ValuesType.VALUES);
 /*
       case INT32:
         return new PlainInt32FastForwardReader(metadata, ValuesType.VALUES);
-      case INT64:
-        return new PlainInt64FastForwardReader(metadata, ValuesType.VALUES);
 
-      case FLOAT:
-        return new PlainSingleFastForwardReader(metadata, ValuesType.VALUES);
       case DOUBLE:
         return new PlainDoubleFastForwardReader(metadata, ValuesType.VALUES);
 

@@ -51,7 +51,7 @@ public class TestInt32FFReaders extends UsesPersistence {
 
 
   @Test
-  public void testNewReader() throws Exception {
+  public void testReaders() throws Exception {
     for (ParquetConfiguration configuration : TestTools.CONFIGURATIONS) {
       TestTools.printerr("CONFIG %s: TOTAL: %s, INCREMENT: %s", configuration, TOTAL, INCREMENT);
       TestTools.generateTestData(new SingleIntegerColumnWriteContext(configuration));
@@ -73,7 +73,8 @@ public class TestInt32FFReaders extends UsesPersistence {
   @Test
   public void testFastForwarding() throws Exception {
     for (ParquetConfiguration configuration : TestTools.CONFIGURATIONS) {
-      TestTools.printerr("CONFIG %s: TOTAL: %s, INCREMENT: %s", configuration, TOTAL, INCREMENT);
+      TestTools.printerr("CONFIG %s: TOTAL: %s, INCREMENT: %s, FAST-FORWARD-TO: %s",
+        configuration, TOTAL, INCREMENT, ROW_TO_FAST_FORWARD_TO);
       TestTools.generateTestData(new SingleIntegerColumnWriteContext(configuration));
       HDFSParquetFile file = new HDFSParquetFile(TestTools.EMPTY_CONFIGURATION, TestTools.TEST_FILE_PATH);
       HDFSParquetFileMetadata metadata = new HDFSParquetFileMetadata(file);

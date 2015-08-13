@@ -1,6 +1,7 @@
 package org.apache.parquet.parqour.ingest.ffreader.plain;
 
 import org.apache.parquet.column.ValuesType;
+import org.apache.parquet.parqour.ingest.disk.pages.info.DataPageInfo;
 import org.apache.parquet.parqour.ingest.ffreader.FastForwardReaderBase;
 import org.apache.parquet.parqour.ingest.paging.DataPageMetadata;
 
@@ -8,8 +9,13 @@ import org.apache.parquet.parqour.ingest.paging.DataPageMetadata;
  * Created by sircodesalot on 6/13/15.
  */
 public final class PlainSingleFastForwardReader extends FastForwardReaderBase {
+  private static final int SIZEOF_SINGLE = 4;
   public PlainSingleFastForwardReader(DataPageMetadata metadata, ValuesType type) {
     super(metadata, type);
+  }
+
+  public PlainSingleFastForwardReader(DataPageInfo info, ValuesType values) {
+    super(info, values);
   }
 
   public float readSingle() {
@@ -25,7 +31,10 @@ public final class PlainSingleFastForwardReader extends FastForwardReaderBase {
 
   @Override
   public void fastForwardTo(int entryNumber) {
+    long jumpDistance = (entryNumber - currentEntryNumber) * SIZEOF_SINGLE;
 
+    dataOffset += jumpDistance;
+    currentEntryNumber = entryNumber;
   }
 }
 
