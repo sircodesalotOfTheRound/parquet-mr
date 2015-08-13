@@ -12,6 +12,7 @@ import org.apache.parquet.parqour.ingest.paging.DataPageMetadata;
  * Created by sircodesalot on 6/25/15.
  */
 public class DeltaByteArrayBinaryFastForwardReader extends FastForwardReaderBase implements BinaryFastForwardReader {
+  // TODO: Remove tries.
   private final BinaryTrie trie;
   private final DeltaPackedSegmentReader prefixReader;
   private final DeltaPackedSegmentReader suffixReader;
@@ -52,7 +53,6 @@ public class DeltaByteArrayBinaryFastForwardReader extends FastForwardReaderBase
     int length = prefixLength + suffixReader.readi32();
 
     String result = new String(data, dataOffset, length);
-    //String result = trie.getString(data, dataOffset, length);
     dataOffset += length;
 
     return result;
@@ -72,7 +72,13 @@ public class DeltaByteArrayBinaryFastForwardReader extends FastForwardReaderBase
 
   @Override
   public void fastForwardTo(int entryNumber) {
+    for (long index = currentEntryNumber; index < entryNumber; index++) {
+      int prefixLength = prefixReader.readi32();
+      int length = prefixLength + suffixReader.readi32();
+      dataOffset += length;
+    }
 
+    this.currentEntryNumber = entryNumber;
   }
 
 }

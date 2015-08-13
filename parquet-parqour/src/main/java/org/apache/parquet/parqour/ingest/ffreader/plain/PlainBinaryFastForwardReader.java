@@ -54,7 +54,13 @@ public final class PlainBinaryFastForwardReader extends FastForwardReaderBase
 
   @Override
   public void fastForwardTo(int entryNumber) {
+    for (int index = (int)currentEntryNumber; index < entryNumber; index++) {
+      dataOffset += 1;
+      int length = this.readInt32AndImplictlyAdvanceOffset();
+      dataOffset += length;
+    }
 
+    super.currentEntryNumber = entryNumber;
   }
 
   @Override

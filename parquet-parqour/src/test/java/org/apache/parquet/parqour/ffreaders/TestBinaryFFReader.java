@@ -1,6 +1,5 @@
 package org.apache.parquet.parqour.ffreaders;
 
-import org.apache.parquet.column.ColumnDescriptor;
 import org.apache.parquet.example.data.Group;
 import org.apache.parquet.example.data.simple.SimpleGroup;
 import org.apache.parquet.hadoop.ParquetWriter;
@@ -9,10 +8,6 @@ import org.apache.parquet.parqour.ingest.disk.files.HDFSParquetFileMetadata;
 import org.apache.parquet.parqour.ingest.disk.manager.DiskInterfaceManager;
 import org.apache.parquet.parqour.ingest.disk.pages.Page;
 import org.apache.parquet.parqour.ingest.ffreader.interfaces.BinaryFastForwardReader;
-import org.apache.parquet.parqour.ingest.ffreader.interfaces.Int32FastForwardReader;
-import org.apache.parquet.parqour.ingest.paging.DataPageDecorator;
-import org.apache.parquet.parqour.ingest.paging.DiskInterfaceManager_OLD;
-import org.apache.parquet.parqour.ingest.schema.QueryInfo;
 import org.apache.parquet.parqour.testtools.ParquetConfiguration;
 import org.apache.parquet.parqour.testtools.TestTools;
 import org.apache.parquet.parqour.testtools.UsesPersistence;

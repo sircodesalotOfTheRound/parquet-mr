@@ -19,6 +19,7 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 public abstract class FastForwardReaderBase implements FastForwardReader {
   protected final DataPageMetadata metadata;
   protected final ValuesType type;
+  // TODO: Make this an int.
   protected long currentEntryNumber;
   protected long totalItemsOnPage;
 

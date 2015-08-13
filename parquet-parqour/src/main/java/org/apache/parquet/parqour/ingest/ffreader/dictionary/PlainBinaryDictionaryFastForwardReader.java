@@ -109,7 +109,15 @@ public final class PlainBinaryDictionaryFastForwardReader extends DictionaryBase
 
   @Override
   public void fastForwardTo(int entryNumber) {
+    for (int index = (int)currentEntryNumber; index < entryNumber; index++) {
+      if (!segment.any()) {
+        this.segment = segment.generateReaderForNextSection();
+      }
 
+      segment.readNext();
+    }
+
+    super.currentEntryNumber = entryNumber;
   }
 
   @Override
