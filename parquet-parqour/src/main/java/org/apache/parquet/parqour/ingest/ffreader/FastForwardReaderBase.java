@@ -131,12 +131,13 @@ public abstract class FastForwardReaderBase implements FastForwardReader {
 
       case FLOAT:
         return new PlainSingleFastForwardReader(info, ValuesType.VALUES);
+
+      case DOUBLE:
+        return new PlainDoubleFastForwardReader(info, ValuesType.VALUES);
 /*
       case INT32:
         return new PlainInt32FastForwardReader(metadata, ValuesType.VALUES);
 
-      case DOUBLE:
-        return new PlainDoubleFastForwardReader(metadata, ValuesType.VALUES);
 
       case BINARY:
         return new PlainBinaryFastForwardReader(metadata, ValuesType.VALUES);
