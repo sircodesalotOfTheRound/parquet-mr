@@ -96,16 +96,6 @@ public final class PlainBinaryDictionaryFastForwardReader extends DictionaryBase
       | (dictionaryPageData[++dictionaryPageOffset] & 0xFF) << 24;
   }
 
-  @Deprecated
-  public int readNextDictionaryEntryIndex() {
-    throw new NotImplementedException();
-  }
-
-  @Deprecated
-  public byte[] getDictionaryEntryIndexAsBytes(int index) {
-    throw new NotImplementedException();
-  }
-
 
   @Override
   public void fastForwardTo(int entryNumber) {
@@ -141,7 +131,11 @@ public final class PlainBinaryDictionaryFastForwardReader extends DictionaryBase
   public byte[] readBytes() {
     super.advanceEntryNumber();
 
-    return new byte[0];
+    if (!segment.any()) {
+      this.segment = segment.generateReaderForNextSection();
+    }
+
+    return dictionaryEntries[segment.readNext()];
   }
 }
 

@@ -151,7 +151,12 @@ public final class RLEBinaryDictionaryFastForwardReader extends FastForwardReade
 
   @Override
   public byte[] readBytes() {
-    return new byte[0];
+    super.advanceEntryNumber();
+    if (!segment.any()) {
+      this.segment = segment.generateReaderForNextSection();
+    }
+
+    return dictionaryEntries[segment.readNext()];
   }
 }
 

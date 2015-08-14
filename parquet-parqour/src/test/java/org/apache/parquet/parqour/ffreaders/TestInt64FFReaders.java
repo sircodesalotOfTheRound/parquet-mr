@@ -73,7 +73,7 @@ public class TestInt64FFReaders extends UsesPersistence {
   @Test
   public void testFastForwarding() throws Exception {
     for (ParquetConfiguration configuration : TestTools.CONFIGURATIONS) {
-      TestTools.printerr("CONFIG %s: TOTAL: %s, FAST-FORWARD-TO", configuration, TOTAL, ROW_TO_FAST_FORWARD_TO);
+      TestTools.printerr("CONFIG %s: TOTAL: %s, FAST-FORWARD-TO %s", configuration, TOTAL, ROW_TO_FAST_FORWARD_TO);
       TestTools.generateTestData(new SingleInt64WriteContext(configuration));
       HDFSParquetFile file = new HDFSParquetFile(TestTools.EMPTY_CONFIGURATION, TestTools.TEST_FILE_PATH);
       HDFSParquetFileMetadata metadata = new HDFSParquetFileMetadata(file);

@@ -14,6 +14,7 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 public final class PlainFixedBinaryFastForwardReader extends FastForwardReaderBase
   implements BinaryFastForwardReader {
 
+  // Move trie to column.
   private final BinaryTrie trie = new BinaryTrie(45, 5000);
   private final int fieldLength;
 
@@ -40,12 +41,17 @@ public final class PlainFixedBinaryFastForwardReader extends FastForwardReaderBa
 
     int startingOffset = ++dataOffset;
     dataOffset += fieldLength - 1;
+    // Todo: remove tries.
     return trie.getString(data, startingOffset, fieldLength);
   }
 
   @Override
   public byte[] readBytes() {
-    return new byte[0];
+    super.advanceEntryNumber();
+
+    int startingOffset = ++dataOffset;
+    dataOffset += fieldLength - 1;
+    return trie.getByteArray(data, startingOffset, fieldLength);
   }
 
   @Deprecated
