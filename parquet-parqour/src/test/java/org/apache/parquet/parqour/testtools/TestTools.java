@@ -11,6 +11,7 @@ import org.apache.parquet.hadoop.ParquetFileReader;
 import org.apache.parquet.hadoop.metadata.BlockMetaData;
 import org.apache.parquet.hadoop.metadata.FileMetaData;
 import org.apache.parquet.hadoop.metadata.ParquetMetadata;
+import org.apache.parquet.parqour.ingest.disk.manager.DiskInterfaceManager;
 import org.apache.parquet.parqour.ingest.ffreader.interfaces.RelationshipLevelFastForwardReader;
 import org.apache.parquet.parqour.ingest.paging.DataPageDecorator;
 import org.apache.parquet.parqour.ingest.paging.DiskInterfaceManager_OLD;
@@ -126,16 +127,16 @@ public class TestTools {
     WriteTools.withParquetWriter(context);
   }
 
-  private static DiskInterfaceManager_OLD mockDiskInterfaceManager() {
-    DiskInterfaceManager_OLD diskInterfaceManager = mock(DiskInterfaceManager_OLD.class);
-    DataPageDecorator dataPageDecorator = mock(DataPageDecorator.class);
+  private static DiskInterfaceManager mockDiskInterfaceManager() {
+    DiskInterfaceManager diskInterfaceManager = mock(DiskInterfaceManager.class);
+    /*DataPageDecorator dataPageDecorator = mock(DataPageDecorator.class);
 
     RelationshipLevelFastForwardReader mockDlRlReader = mockDlRlReader();
     when (dataPageDecorator.definitionLevelReader()).thenReturn(mockDlRlReader);
     when (dataPageDecorator.repetitionLevelReader()).thenReturn(mockDlRlReader);
 
     when(diskInterfaceManager.getFirstPageForColumn(any(ColumnDescriptor.class))).thenReturn(dataPageDecorator);
-    when(dataPageDecorator.totalItems()).thenReturn((long)0);
+    when(dataPageDecorator.totalItems()).thenReturn((long)0);*/
 
     return diskInterfaceManager;
   }

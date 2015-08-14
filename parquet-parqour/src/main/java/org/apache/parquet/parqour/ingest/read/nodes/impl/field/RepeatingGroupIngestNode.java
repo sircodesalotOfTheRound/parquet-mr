@@ -3,7 +3,7 @@ package org.apache.parquet.parqour.ingest.read.nodes.impl.field;
 import org.apache.parquet.parqour.cursor.iface.AdvanceableCursor;
 import org.apache.parquet.parqour.cursor.implementations.iterable.field.GroupIterableCursor;
 import org.apache.parquet.parqour.cursor.implementations.noniterable.field.GroupCursor;
-import org.apache.parquet.parqour.ingest.paging.DiskInterfaceManager_OLD;
+import org.apache.parquet.parqour.ingest.disk.manager.DiskInterfaceManager;
 import org.apache.parquet.parqour.ingest.read.nodes.IngestNodeSet;
 import org.apache.parquet.parqour.ingest.read.nodes.categories.AggregatingIngestNode;
 import org.apache.parquet.parqour.ingest.read.nodes.categories.IngestNode;
@@ -20,7 +20,7 @@ public final class RepeatingGroupIngestNode extends GroupIngestNode {
   // Todo: Make these an array, not a single item.
   private int listHeaderIndex;
 
-  public RepeatingGroupIngestNode(QueryInfo queryInfo, AggregatingIngestNode aggregatingIngestNode, String childPath, GroupType child, DiskInterfaceManager_OLD diskInterfaceManager, int childColumnIndex) {
+  public RepeatingGroupIngestNode(QueryInfo queryInfo, AggregatingIngestNode aggregatingIngestNode, String childPath, GroupType child, DiskInterfaceManager diskInterfaceManager, int childColumnIndex) {
     super(queryInfo, aggregatingIngestNode, childPath, child, diskInterfaceManager, childColumnIndex);
 
     this.listHeaderIndex = -1;

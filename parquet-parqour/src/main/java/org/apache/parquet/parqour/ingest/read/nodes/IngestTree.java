@@ -1,7 +1,7 @@
 package org.apache.parquet.parqour.ingest.read.nodes;
 
 import org.apache.parquet.parqour.exceptions.DataIngestException;
-import org.apache.parquet.parqour.ingest.paging.DiskInterfaceManager_OLD;
+import org.apache.parquet.parqour.ingest.disk.manager.DiskInterfaceManager;
 import org.apache.parquet.parqour.ingest.read.nodes.categories.AggregatingIngestNode;
 import org.apache.parquet.parqour.ingest.read.nodes.categories.IngestNode;
 import org.apache.parquet.parqour.ingest.read.nodes.categories.IngestNodeCategory;
@@ -19,7 +19,7 @@ public class IngestTree {
   private final Map<String, IngestNode> ingestNodesByPath;
   private final Iterable<IngestNode> ingestNodeList;
 
-  public IngestTree(QueryInfo queryInfo, DiskInterfaceManager_OLD diskInterfaceManager) {
+  public IngestTree(QueryInfo queryInfo, DiskInterfaceManager diskInterfaceManager) {
     this.queryInfo = queryInfo;
     this.root = new RootIngestNode(queryInfo, diskInterfaceManager);
     this.ingestNodesByPath = collectIngestNodesByPath(root);

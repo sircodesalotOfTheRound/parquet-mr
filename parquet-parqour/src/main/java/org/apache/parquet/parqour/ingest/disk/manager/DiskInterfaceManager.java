@@ -1,11 +1,14 @@
 package org.apache.parquet.parqour.ingest.disk.manager;
 
+import org.apache.hadoop.conf.Configuration;
 import org.apache.parquet.parqour.exceptions.DataIngestException;
+import org.apache.parquet.parqour.ingest.disk.files.HDFSParquetFile;
 import org.apache.parquet.parqour.ingest.disk.files.HDFSParquetFileMetadata;
 import org.apache.parquet.parqour.ingest.disk.pages.Pager;
 import org.apache.parquet.parqour.ingest.disk.pages.queue.BlockPageSetQueue;
 import org.apache.parquet.parqour.ingest.disk.blocks.RowGroupBlockInfo;
 import org.apache.parquet.parqour.ingest.disk.pagesets.RowGroupPageSetColumnInfo;
+import org.apache.parquet.parqour.ingest.schema.QueryInfo;
 import org.apache.parquet.parqour.tools.TransformCollection;
 
 import java.util.HashMap;
@@ -15,11 +18,20 @@ import java.util.Map;
  * Created by sircodesalot on 8/11/15.
  */
 public class DiskInterfaceManager {
+  private final HDFSParquetFile file;
   private final HDFSParquetFileMetadata metadata;
   private final Map<String, BlockPageSetQueue> pageSetsByPath;
 
+  @Deprecated
   public DiskInterfaceManager(HDFSParquetFileMetadata metadata) {
+    this.file = null;
     this.metadata = metadata;
+    this.pageSetsByPath = collectPageSets(metadata.blocks());
+  }
+
+  public DiskInterfaceManager(QueryInfo queryInfo) {
+    this.file = new HDFSParquetFile(new Configuration(), queryInfo.path());
+    this.metadata = new HDFSParquetFileMetadata(file);
     this.pageSetsByPath = collectPageSets(metadata.blocks());
   }
 
@@ -40,6 +52,7 @@ public class DiskInterfaceManager {
     return queues;
   }
 
+  @Deprecated
   public boolean containsPagerFor(String path) {
     return pageSetsByPath.containsKey(path);
   }

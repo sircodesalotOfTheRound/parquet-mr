@@ -29,7 +29,8 @@ public class QueryInfo {
   private final Map<String, ColumnDescriptor> columnDescriptorsByPath;
   private final Map<String, Type> schemaNodeByPath;
   private final Configuration configuration;
-  private final Path path;
+  private final String path;
+  private final Path fsPath;
   private final ParquetMetadata metadata;
   private final MessageType projectionSchema;
   private final FilterPredicate predicate;
@@ -38,10 +39,11 @@ public class QueryInfo {
 
   public QueryInfo(TextQueryTreeRootExpression expression) {
     this.schema = null;
+    this.path = null;
     this.columnDescriptorsByPath = null;
     this.schemaNodeByPath = null;
     this.configuration = null;
-    this.path = null;
+    this.fsPath = null;
 
     this.metadata = null;
     this.projectionSchema = null;
@@ -58,7 +60,8 @@ public class QueryInfo {
   @Deprecated
   public QueryInfo(Configuration configuration, Path path, ParquetMetadata metadata, GroupType projectionSchema, FilterPredicate predicate) {
     this.configuration = configuration;
-    this.path = path;
+    this.fsPath = path;
+    this.path = fsPath.toString();
     this.metadata = metadata;
     this.projectionSchema = toMessageType(projectionSchema);
     this.predicate = predicate;
@@ -177,7 +180,8 @@ public class QueryInfo {
   public long totalRowCount() { return this.totalNumberOfRows; }
   public MessageType schema() { return this.schema; }
   public Configuration configuration() { return this.configuration; }
-  public Path path() { return this.path; }
+  public String path() { return this.path; }
+  public Path fsPath() { return this.fsPath; }
   public ParquetMetadata metadata() { return this.metadata; }
   public List<BlockMetaData> blocks() { return this.blocks; }
   public MessageType projectionSchema() { return this.projectionSchema; }

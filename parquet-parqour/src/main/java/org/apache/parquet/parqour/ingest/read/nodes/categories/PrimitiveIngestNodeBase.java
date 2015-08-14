@@ -3,12 +3,15 @@ package org.apache.parquet.parqour.ingest.read.nodes.categories;
 import org.apache.parquet.column.ColumnDescriptor;
 import org.apache.parquet.hadoop.metadata.ColumnPath;
 import org.apache.parquet.parqour.exceptions.DataIngestException;
+import org.apache.parquet.parqour.ingest.disk.manager.DiskInterfaceManager;
+import org.apache.parquet.parqour.ingest.disk.pages.Page;
 import org.apache.parquet.parqour.ingest.ffreader.interfaces.FastForwardReader;
 import org.apache.parquet.parqour.ingest.ffreader.interfaces.RelationshipLevelFastForwardReader;
 import org.apache.parquet.parqour.ingest.paging.DataPageDecorator;
-import org.apache.parquet.parqour.ingest.paging.DiskInterfaceManager_OLD;
 import org.apache.parquet.parqour.ingest.schema.QueryInfo;
 import org.apache.parquet.schema.Type;
+
+import java.util.Iterator;
 
 /**
  * Created by sircodesalot on 6/2/15.
@@ -17,9 +20,10 @@ public abstract class PrimitiveIngestNodeBase<TFFReaderType extends FastForwardR
   protected static final int NEW_RECORD = 0;
 
   protected final ColumnDescriptor columnDescriptor;
-  protected final DiskInterfaceManager_OLD diskInterfaceManager;
+  protected final DiskInterfaceManager diskInterfaceManager;
 
-  protected DataPageDecorator dataPage;
+  protected Iterator<Page> pager;
+  protected Page page;
 
   protected RelationshipLevelFastForwardReader definitionLevelReader;
   protected RelationshipLevelFastForwardReader repetitionLevelReader;
@@ -30,7 +34,7 @@ public abstract class PrimitiveIngestNodeBase<TFFReaderType extends FastForwardR
 
   public PrimitiveIngestNodeBase(QueryInfo queryInfo, AggregatingIngestNode parent,
                                  Type schemaNode, ColumnDescriptor columnDescriptor,
-                                 DiskInterfaceManager_OLD diskInterfaceManager, int childIndex) {
+                                 DiskInterfaceManager diskInterfaceManager, int childIndex) {
 
     super(queryInfo, parent, ColumnPath.get(columnDescriptor.getPath()).toDotString(),
       schemaNode, IngestNodeCategory.DATA_INGEST, childIndex);
@@ -39,15 +43,17 @@ public abstract class PrimitiveIngestNodeBase<TFFReaderType extends FastForwardR
 
     this.diskInterfaceManager = diskInterfaceManager;
     this.columnDescriptor = columnDescriptor;
-    this.dataPage = readFirstPage(diskInterfaceManager);
-
-    this.totalItemsOnThisPage = dataPage.totalItems();
+    this.pager = getPager(diskInterfaceManager);
+    this.page = readFirstPage(pager);
   }
 
-  private DataPageDecorator readFirstPage(DiskInterfaceManager_OLD diskInterfaceManager) {
-    DataPageDecorator page = diskInterfaceManager.getFirstPageForColumn(columnDescriptor);
-    this.onPageRead(page);
+  private Iterator<Page> getPager(DiskInterfaceManager diskInterfaceManager) {
+    return diskInterfaceManager.pagerFor(path).iterator();
+  }
 
+  private Page readFirstPage(Iterator<Page> pager) {
+    Page page = pager.next();
+    this.onPageRead(page);
     return page;
   }
 
@@ -75,24 +81,22 @@ public abstract class PrimitiveIngestNodeBase<TFFReaderType extends FastForwardR
 
       this.onPreReadFirstRecordOnPage();
 
-      this.currentEntryOnPage = (rowNumber - dataPage.startingEntryNumber());
+      this.currentEntryOnPage = (rowNumber - page.firstEntry());
     }
   }
 
   protected final void moveToNextPage() {
-    this.dataPage = diskInterfaceManager.getNextPageForColumn(dataPage);
-    this.totalItemsOnThisPage = dataPage.totalItems();
-
-    this.onPageRead(dataPage);
+    this.page = pager.next();
+    this.onPageRead(page);
   }
 
-  private void moveToPageContainingRowNumber(int rowNumber) {
-    while (!this.dataPage.containsRow(rowNumber)) {
-      this.dataPage = diskInterfaceManager.getNextPageForColumn(dataPage);
+  private void moveToPageContainingRowNumber(int entryNumber) {
+    while (!this.page.containsEntry(entryNumber)) {
+      this.page = pager.next();
     }
 
-    this.totalItemsOnThisPage = dataPage.totalItems();
-    this.onPageRead(dataPage);
+    this.totalItemsOnThisPage = page.totalEntries();
+    this.onPageRead(page);
   }
 
   private void performSlowForwardTo(long rowNumber) {
@@ -135,12 +139,13 @@ public abstract class PrimitiveIngestNodeBase<TFFReaderType extends FastForwardR
 
   protected abstract void updateValuesReaderValue();
 
-  private void onPageRead(DataPageDecorator page) {
+  private void onPageRead(Page page) {
     this.definitionLevelReader = page.definitionLevelReader();
     this.repetitionLevelReader = page.repetitionLevelReader();
-    this.valuesReader = page.valuesReader();
+    this.valuesReader = page.contentReader();
 
     this.currentEntryOnPage = 0;
+    this.totalItemsOnThisPage = page.totalEntries();
     this.onPreReadFirstRecordOnPage();
   }
 
