@@ -9,6 +9,7 @@ import org.apache.parquet.format.converter.ParquetMetadataConverter;
 import org.apache.parquet.parqour.ingest.disk.pagesets.RowGroupPageSetColumnInfo;
 import org.apache.parquet.parqour.ingest.disk.files.HDFSParquetFileMetadata;
 import org.apache.parquet.parqour.ingest.disk.pages.slate.DataSlate;
+import org.apache.parquet.parqour.ingest.paging.ReadOffsetCalculator;
 
 /**
  * Created by sircodesalot on 8/10/15.
@@ -16,6 +17,7 @@ import org.apache.parquet.parqour.ingest.disk.pages.slate.DataSlate;
 public class PageInfoV1 extends DataPageInfo {
   private final ParquetMetadataConverter converter = new ParquetMetadataConverter();
   private final DataPageHeader pageHeader;
+  protected ReadOffsetCalculator calculator;
   private final HDFSParquetFileMetadata metadata;
 
   public PageInfoV1(RowGroupPageSetColumnInfo columnInfo, HDFSParquetFileMetadata metadata, PageHeader header,
@@ -38,7 +40,7 @@ public class PageInfoV1 extends DataPageInfo {
   }
 
   @Override
-  public long entryCount() {
+  public int entryCount() {
     return pageHeader.getNum_values();
   }
 
@@ -55,6 +57,18 @@ public class PageInfoV1 extends DataPageInfo {
   @Override
   public Encoding contentEncoding() {
     return converter.getEncoding(pageHeader.getEncoding());
+  }
+
+  public int definitionLevelOffset() { return offsetCalculator().definitionLevelOffset(); }
+  public int repetitionLevelOffset() { return offsetCalculator().repetitionLevelOffset(); }
+  public int contentOffset() { return offsetCalculator().contentOffset(); }
+
+  private ReadOffsetCalculator offsetCalculator() {
+    if (this.calculator == null) {
+      this.calculator = new ReadOffsetCalculator(version(), data(), columnDescriptor(), offset);
+    }
+
+    return this.calculator;
   }
 
   @Override

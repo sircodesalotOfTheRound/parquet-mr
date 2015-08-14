@@ -6,12 +6,9 @@ import org.apache.parquet.column.statistics.Statistics;
 import org.apache.parquet.format.DataPageHeaderV2;
 import org.apache.parquet.format.PageHeader;
 import org.apache.parquet.format.converter.ParquetMetadataConverter;
-import org.apache.parquet.parqour.exceptions.DataIngestException;
 import org.apache.parquet.parqour.ingest.disk.pagesets.RowGroupPageSetColumnInfo;
 import org.apache.parquet.parqour.ingest.disk.files.HDFSParquetFileMetadata;
 import org.apache.parquet.parqour.ingest.disk.pages.slate.DataSlate;
-
-import java.io.IOException;
 
 /**
  * Created by sircodesalot on 8/10/15.
@@ -21,11 +18,13 @@ public class PageInfoV2 extends DataPageInfo {
   private final DataPageHeaderV2 pageHeader;
   private final HDFSParquetFileMetadata metadata;
 
+  // TODO: Separate this
   private byte[] repetitionLevelData;
   private byte[] definitionLevelData;
 
   private final int repetitionLevelOffset;
   private final int definitionLevelOffset;
+  private final int contentOffset;
 
   public PageInfoV2(RowGroupPageSetColumnInfo columnInfo, HDFSParquetFileMetadata metadata, PageHeader header,
                     DataSlate slate, DictionaryPageInfo dictionaryPage) {
@@ -34,12 +33,21 @@ public class PageInfoV2 extends DataPageInfo {
     this.pageHeader = header.getData_page_header_v2();
     this.metadata = metadata;
 
-    this.repetitionLevelOffset = addSegment(pageHeader.getRepetition_levels_byte_length());
-    this.definitionLevelOffset = addSegment(pageHeader.getDefinition_levels_byte_length());
+    this.repetitionLevelOffset = computeRepetitionLevelOffset(header, pageHeader);
+    this.definitionLevelOffset = computeDefinitionLevelOffset(header, pageHeader);
+    this.contentOffset = computeContentOffset(header, pageHeader);
   }
 
-  private int addSegment(int length) {
-    return slate.addSegment(length);
+  private int computeRepetitionLevelOffset(PageHeader header, DataPageHeaderV2 pageHeader) {
+    return offset;
+  }
+
+  private int computeDefinitionLevelOffset(PageHeader header, DataPageHeaderV2 pageHeader) {
+    return computeRepetitionLevelOffset(header, pageHeader) + pageHeader.getRepetition_levels_byte_length();
+  }
+
+  private int computeContentOffset(PageHeader header, DataPageHeaderV2 pageHeader) {
+    return computeDefinitionLevelOffset(header, pageHeader) + pageHeader.getDefinition_levels_byte_length();
   }
 
   @Override
@@ -53,7 +61,7 @@ public class PageInfoV2 extends DataPageInfo {
   }
 
   @Override
-  public long entryCount() {
+  public int entryCount() {
     return pageHeader.getNum_values();
   }
 
@@ -79,6 +87,10 @@ public class PageInfoV2 extends DataPageInfo {
       pageHeader.getStatistics(),
       super.columnDescriptor.getType());
   }
+
+  public int definitionLevelOffset() { return definitionLevelOffset; }
+  public int repetitionLevelOffset() { return repetitionLevelOffset; }
+  public int contentOffset() { return contentOffset; }
 
   @Override
   public byte[] repetitionLevelData() {

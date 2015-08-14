@@ -23,7 +23,7 @@ public abstract class PageInfo {
   }
 
   public abstract boolean isDictionaryPage();
-  public abstract long entryCount();
+  public abstract int entryCount();
 
   public byte[] data() {
     return slate.data();

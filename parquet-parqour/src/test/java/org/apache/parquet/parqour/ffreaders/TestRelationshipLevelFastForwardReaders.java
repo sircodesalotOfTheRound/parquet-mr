@@ -1,10 +1,17 @@
 package org.apache.parquet.parqour.ffreaders;
 
+import org.apache.hadoop.fs.Path;
 import org.apache.parquet.column.ColumnDescriptor;
 import org.apache.parquet.column.ParquetProperties;
 import org.apache.parquet.example.data.Group;
 import org.apache.parquet.example.data.simple.SimpleGroup;
+import org.apache.parquet.hadoop.ParquetFileReader;
 import org.apache.parquet.hadoop.ParquetWriter;
+import org.apache.parquet.hadoop.metadata.ParquetMetadata;
+import org.apache.parquet.parqour.ingest.disk.files.HDFSParquetFile;
+import org.apache.parquet.parqour.ingest.disk.files.HDFSParquetFileMetadata;
+import org.apache.parquet.parqour.ingest.disk.manager.DiskInterfaceManager;
+import org.apache.parquet.parqour.ingest.disk.pages.Page;
 import org.apache.parquet.parqour.ingest.ffreader.interfaces.Int32FastForwardReader;
 import org.apache.parquet.parqour.ingest.ffreader.interfaces.Int64FastForwardReader;
 import org.apache.parquet.parqour.ingest.ffreader.interfaces.RelationshipLevelFastForwardReader;
@@ -38,12 +45,12 @@ public class TestRelationshipLevelFastForwardReaders extends UsesPersistence {
     private static final GroupType SCHEMA = new GroupType(REQUIRED, "count",
       new GroupType(OPTIONAL, NODE,
         new GroupType(OPTIONAL, NODE,
-          new GroupType(OPTIONAL, NODE,
+          new GroupType(REPEATED, NODE,
             new GroupType(OPTIONAL, NODE,
               new PrimitiveType(OPTIONAL, INT32, NODE))))));
 
-    public VaryingDefinitionLevelWriteContext(ParquetProperties.WriterVersion version) {
-      super(SCHEMA, version, 1, 1, false);
+    public VaryingDefinitionLevelWriteContext(ParquetConfiguration configuration) {
+      super(SCHEMA, configuration.version(), 1, 1, configuration.useDictionary());
     }
 
     @Override
@@ -67,15 +74,17 @@ public class TestRelationshipLevelFastForwardReaders extends UsesPersistence {
 
   @Test
   public void testVariableDefinitionLevels() throws Exception {
-    for (ParquetProperties.WriterVersion version : TestTools.PARQUET_VERSIONS) {
-      TestTools.generateTestData(new VaryingDefinitionLevelWriteContext(version));
+    for (ParquetConfiguration configuration : TestTools.CONFIGURATIONS) {
+      TestTools.printerr("CONFIGURATION %s: TOTAL: %s", configuration, TOTAL);
+      TestTools.generateTestData(new VaryingDefinitionLevelWriteContext(configuration));
 
-      QueryInfo queryInfo = TestTools.generateSchemaInfoFromPath(TestTools.TEST_FILE_PATH);
-      DiskInterfaceManager_OLD diskManagerForMyImplementation = new DiskInterfaceManager_OLD(queryInfo);
-      ColumnDescriptor twiceIncrementColumn = queryInfo.getColumnDescriptorByPath(LEAF);
-      DataPageDecorator page = diskManagerForMyImplementation.getFirstPageForColumn(twiceIncrementColumn);
-      RelationshipLevelFastForwardReader definitionLevelReader = page.definitionLevelReader();
+      HDFSParquetFile file = new HDFSParquetFile(TestTools.EMPTY_CONFIGURATION, TestTools.TEST_FILE_PATH);
+      HDFSParquetFileMetadata metadata = new HDFSParquetFileMetadata(file);
+      DiskInterfaceManager diskInterfaceManager = new DiskInterfaceManager(metadata);
+      Page page = diskInterfaceManager.pagerFor(LEAF).iterator().next();
+
       RelationshipLevelFastForwardReader repetitionLevelReader = page.repetitionLevelReader();
+      RelationshipLevelFastForwardReader definitionLevelReader = page.definitionLevelReader();
 
       for (int index = 0; index < TOTAL; index++) {
         int definitionLevel = (index % 5) + 1;
@@ -109,19 +118,18 @@ public class TestRelationshipLevelFastForwardReaders extends UsesPersistence {
   @Test
   public void testSingleDefinitionLevelColumn() throws Exception {
     for (ParquetConfiguration configuration : TestTools.CONFIGURATIONS) {
-      System.out.println(configuration);
-      System.out.println(TOTAL);
+      TestTools.printerr("CONFIGURATION %s: TOTAL: %s", configuration, TOTAL);
       TestTools.generateTestData(new SingleDefinitionWriteContext(configuration));
 
-      QueryInfo queryInfo = TestTools.generateSchemaInfoFromPath(TestTools.TEST_FILE_PATH);
+      HDFSParquetFile file = new HDFSParquetFile(TestTools.EMPTY_CONFIGURATION, TestTools.TEST_FILE_PATH);
+      HDFSParquetFileMetadata metadata = new HDFSParquetFileMetadata(file);
+      DiskInterfaceManager diskInterfaceManager = new DiskInterfaceManager(metadata);
+      Page page = diskInterfaceManager.pagerFor(SingleDefinitionWriteContext.COLUMN_NAME).iterator().next();
 
-      DiskInterfaceManager_OLD diskInterfaceManager = new DiskInterfaceManager_OLD(queryInfo);
-      ColumnDescriptor twiceIncrementColumn = queryInfo.getColumnDescriptorByPath(SingleDefinitionWriteContext.COLUMN_NAME);
-      DataPageDecorator page = diskInterfaceManager.getFirstPageForColumn(twiceIncrementColumn);
-      RelationshipLevelFastForwardReader reader = page.definitionLevelReader();
+      RelationshipLevelFastForwardReader definitionLevelReader = page.definitionLevelReader();
 
       for (int index = 0; index < TOTAL; index++) {
-        assertEquals(1, reader.nextRelationshipLevel());
+        assertEquals(1, definitionLevelReader.nextRelationshipLevel());
       }
     }
   }
@@ -151,23 +159,21 @@ public class TestRelationshipLevelFastForwardReaders extends UsesPersistence {
   @Test
   public void testVariableRepetitionLevelsInt32() throws Exception {
     for (ParquetConfiguration configuration : TestTools.CONFIGURATIONS) {
-      System.out.println(configuration);
-      System.out.println(TOTAL);
+      TestTools.printerr("CONFIGURATION %s: TOTAL: %s", configuration, TOTAL);
       TestTools.generateTestData(new VariableRepetitionLevelWriteContext32(configuration));
 
-      QueryInfo queryInfo = TestTools.generateSchemaInfoFromPath(TestTools.TEST_FILE_PATH);
+      HDFSParquetFile file = new HDFSParquetFile(TestTools.EMPTY_CONFIGURATION, TestTools.TEST_FILE_PATH);
+      HDFSParquetFileMetadata metadata = new HDFSParquetFileMetadata(file);
+      DiskInterfaceManager diskInterfaceManager = new DiskInterfaceManager(metadata);
+      Page page = diskInterfaceManager.pagerFor(VariableRepetitionLevelWriteContext32.COLUMN_NAME).iterator().next();
 
-      DiskInterfaceManager_OLD diskInterfaceManager = new DiskInterfaceManager_OLD(queryInfo);
-      ColumnDescriptor twiceIncrementColumn = queryInfo.getColumnDescriptorByPath(VariableRepetitionLevelWriteContext32.COLUMN_NAME);
-      DataPageDecorator page = diskInterfaceManager.getFirstPageForColumn(twiceIncrementColumn);
-      RelationshipLevelFastForwardReader definitionLevelReader = page.definitionLevelReader();
       RelationshipLevelFastForwardReader repetitionLevelReader = page.repetitionLevelReader();
-      Int32FastForwardReader valuesReader = page.valuesReader();
+      RelationshipLevelFastForwardReader definitionLevelReader = page.definitionLevelReader();
+      Int32FastForwardReader valuesReader = page.contentReader();
 
       int totalRead = 0;
       int index = 0;
       while (totalRead < TOTAL) {
-
         int definitionLevelFromReader = definitionLevelReader.nextRelationshipLevel();
         int repetitionLevelFromReader = repetitionLevelReader.nextRelationshipLevel();
         int value = valuesReader.readi32();
@@ -221,18 +227,17 @@ public class TestRelationshipLevelFastForwardReaders extends UsesPersistence {
   @Test
   public void testVariableRepetitionLevelsInt64() throws Exception {
     for (ParquetConfiguration configuration : TestTools.CONFIGURATIONS) {
-      System.out.println(configuration);
-      System.out.println(TOTAL);
+      TestTools.printerr("CONFIGURATION %s: TOTAL: %s", configuration, TOTAL);
       TestTools.generateTestData(new VariableRepetitionLevelWriteContext64(configuration));
 
-      QueryInfo queryInfo = TestTools.generateSchemaInfoFromPath(TestTools.TEST_FILE_PATH);
 
-      DiskInterfaceManager_OLD diskInterfaceManager = new DiskInterfaceManager_OLD(queryInfo);
-      ColumnDescriptor twiceIncrementColumn = queryInfo.getColumnDescriptorByPath(VariableRepetitionLevelWriteContext64.COLUMN_NAME);
-      DataPageDecorator page = diskInterfaceManager.getFirstPageForColumn(twiceIncrementColumn);
+      HDFSParquetFile file = new HDFSParquetFile(TestTools.EMPTY_CONFIGURATION, TestTools.TEST_FILE_PATH);
+      HDFSParquetFileMetadata metadata = new HDFSParquetFileMetadata(file);
+      DiskInterfaceManager diskInterfaceManager = new DiskInterfaceManager(metadata);
+      Page page = diskInterfaceManager.pagerFor(VariableRepetitionLevelWriteContext64.COLUMN_NAME).iterator().next();
       RelationshipLevelFastForwardReader definitionLevelReader = page.definitionLevelReader();
       RelationshipLevelFastForwardReader repetitionLevelReader = page.repetitionLevelReader();
-      Int64FastForwardReader valuesReader = page.valuesReader();
+      Int64FastForwardReader valuesReader = page.contentReader();
 
       int totalRead = 0;
       int index = 0;

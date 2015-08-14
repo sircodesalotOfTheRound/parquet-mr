@@ -34,16 +34,6 @@ public class DataSlate {
     }
   }
 
-  public int addSegment(int length) {
-    if (!isBuilt) {
-      int segmentStartOffset = (int) this.finalOffset;
-      this.finalOffset += length;
-      return segmentStartOffset;
-    } else {
-      throw new DataIngestException("Data Slate is already built.");
-    }
-  }
-
   public byte[] data() {
     if (!isBuilt) {
       this.data = this.construct();
@@ -63,7 +53,7 @@ public class DataSlate {
 
       return data;
     } catch (IOException ex) {
-      throw new DataIngestException("Unable to read pages for file");
+      throw new DataIngestException(ex, "Unable to read pages for file");
     }
   }
 

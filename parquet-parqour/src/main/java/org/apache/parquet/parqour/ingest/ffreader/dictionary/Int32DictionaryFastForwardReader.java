@@ -26,11 +26,11 @@ public class Int32DictionaryFastForwardReader extends FastForwardReaderBase impl
     this.dictionaryEntries = collectDictionaryEntries(metadata);
   }
 
-  public Int32DictionaryFastForwardReader(DataPageInfo info, ValuesType values) {
-    super(info, values);
+  public Int32DictionaryFastForwardReader(DataPageInfo info, ValuesType type) {
+    super(info, type);
 
-    this.dataOffset = ++dataOffset;
-    this.segment = PackedEncodingSegmentReader.createPackedEncodingSegmentReader(data, dataOffset, expandToBitWidth());
+    this.dataOffset = info.computeOffset(type);
+    this.segment = PackedEncodingSegmentReader.createPackedEncodingSegmentReader(data, dataOffset, expandToBitWidth(info, type));
     this.dictionaryEntries = collectDictionaryEntries(info);
   }
 
@@ -38,7 +38,7 @@ public class Int32DictionaryFastForwardReader extends FastForwardReaderBase impl
     byte[] dictionaryData = info.dictionaryPage().data();
     int entryCount = (int)info.dictionaryPage().entryCount();
     int[] entries = new int[entryCount];
-    int dictionaryDataOffset = -1;
+    int dictionaryDataOffset = info.dictionaryPage().startingOffset() - 1;
 
     for (int index = 0; index < entryCount; index++) {
       int value = (dictionaryData[++dictionaryDataOffset] & 0xFF)
@@ -80,6 +80,17 @@ public class Int32DictionaryFastForwardReader extends FastForwardReaderBase impl
     }
   }
 
+
+  private int expandToBitWidth(DataPageInfo info, ValuesType type) {
+    int bitWidth = data[info.computeOffset(type)];
+    if (bitWidth == 0) {
+      return 0;
+    } else {
+      return 1 << (bitWidth - 1);
+    }
+  }
+
+  @Deprecated
   private int expandToBitWidth() {
     int bitWidth = data[dataOffset];
     if (bitWidth == 0) {

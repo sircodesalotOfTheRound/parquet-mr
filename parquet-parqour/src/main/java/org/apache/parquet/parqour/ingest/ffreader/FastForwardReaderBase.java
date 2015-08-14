@@ -31,7 +31,7 @@ public abstract class FastForwardReaderBase implements FastForwardReader {
     this.type = type;
     this.currentEntryNumber = 0;
     this.totalItemsOnPage = info.entryCount();
-    this.data = info.data();
+    this.data = info.dataForType(type);
     this.dataOffset = info.computeOffset(type) - 1;
   }
 
@@ -81,9 +81,9 @@ public abstract class FastForwardReaderBase implements FastForwardReader {
   private static FastForwardReaderBase resolveRLEBitPackedValuesReaderFromVersion(DataPageInfo info, ValuesType type) {
     switch (info.version()) {
       case PARQUET_1_0:
-        //return new RLEBitPackedHybridFastForwardIntReader(metadata, type);
+        return new RLEBitPackedHybridFastForwardIntReader(info, type);
       case PARQUET_2_0:
-        //return new Parquet2RLEBitPackedHybridFastForwardIntReader(metadata, type);
+        return new Parquet2RLEBitPackedHybridFastForwardIntReader(info, type);
 
       default:
         throw new NotImplementedException();
@@ -163,13 +163,13 @@ public abstract class FastForwardReaderBase implements FastForwardReader {
       case INT32:
         return new Int32DictionaryFastForwardReader(info, ValuesType.VALUES);
 
+      case INT64:
+        return new Int64DictionaryFastForwardReader(info, ValuesType.VALUES);
+
       case BINARY:
         return new PlainBinaryDictionaryFastForwardReader(info, ValuesType.VALUES);
-/*
-      case INT64:
-        return new Int64DictionaryFastForwardReader(metadata, ValuesType.VALUES);
 
-
+      /*
       case FIXED_LEN_BYTE_ARRAY:
         return new PlainBinaryDictionaryFastForwardReader(metadata, ValuesType.VALUES);*/
 
@@ -192,17 +192,15 @@ public abstract class FastForwardReaderBase implements FastForwardReader {
     switch (info.type()) {
       case INT32:
         return new Int32DictionaryFastForwardReader(info, ValuesType.VALUES);
+      case INT64:
+        return new Int64DictionaryFastForwardReader(info, ValuesType.VALUES);
 
       case BINARY:
         return new RLEBinaryDictionaryFastForwardReader(info, ValuesType.VALUES);
 
       case FIXED_LEN_BYTE_ARRAY:
         return new RLEFixedBinaryDictionaryFastForwardReader(info, ValuesType.VALUES);
-      /*
-      case INT64:
-        return new Int64DictionaryFastForwardReader(metadata, ValuesType.VALUES);
 
-      */
       default:
         throw new NotImplementedException();
     }

@@ -1,6 +1,7 @@
 package org.apache.parquet.parqour.ingest.ffreader.packed.rle;
 
 import org.apache.parquet.column.ValuesType;
+import org.apache.parquet.parqour.ingest.disk.pages.info.DataPageInfo;
 import org.apache.parquet.parqour.ingest.ffreader.FastForwardReaderBase;
 import org.apache.parquet.parqour.ingest.ffreader.interfaces.RelationshipLevelFastForwardReader;
 import org.apache.parquet.parqour.ingest.ffreader.segments.PackedEncodingSegmentReader;
@@ -19,6 +20,17 @@ public final class RLEBitPackedHybridFastForwardIntReader extends FastForwardRea
     super(metadata, type);
 
     this.maximumValue = super.metadata.computeMaximumValueForValueType(type);
+    this.segment = PackedEncodingSegmentReader
+      .createPackedEncodingSegmentReader(data, dataOffset + SECTION_LENGTH_INT32_SIZE, maximumValue);
+  }
+
+  public RLEBitPackedHybridFastForwardIntReader(DataPageInfo info, ValuesType type) {
+    super(info, type);
+
+    this.maximumValue = info.relationshipLevelForType(type);
+    this.data = info.dataForType(type);
+    this.dataOffset = info.computeOffset(type) - 1;
+
     this.segment = PackedEncodingSegmentReader
       .createPackedEncodingSegmentReader(data, dataOffset + SECTION_LENGTH_INT32_SIZE, maximumValue);
   }

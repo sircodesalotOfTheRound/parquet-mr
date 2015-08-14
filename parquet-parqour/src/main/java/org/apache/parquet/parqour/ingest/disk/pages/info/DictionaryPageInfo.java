@@ -25,7 +25,7 @@ public class DictionaryPageInfo extends PageInfo {
   public int startingOffset() { return super.offset; }
 
   @Override
-  public long entryCount() {
+  public int entryCount() {
     return pageHeader.getNum_values();
   }
 }

@@ -19,7 +19,6 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
  */
 public abstract class DataPageInfo extends PageInfo {
   protected ColumnDescriptor columnDescriptor;
-  protected ReadOffsetCalculator calculator;
   protected final DictionaryPageInfo dictionaryPage;
 
   public DataPageInfo(RowGroupPageSetColumnInfo columnInfo, HDFSParquetFileMetadata metadata,
@@ -30,13 +29,6 @@ public abstract class DataPageInfo extends PageInfo {
     this.dictionaryPage = dictionaryPage;
   }
 
-  private ReadOffsetCalculator offsetCalculator() {
-    if (this.calculator == null) {
-      this.calculator = new ReadOffsetCalculator(version(), data(), columnDescriptor(), offset);
-    }
-
-    return this.calculator;
-  }
 
   public abstract ParquetProperties.WriterVersion version();
 
@@ -51,20 +43,20 @@ public abstract class DataPageInfo extends PageInfo {
 
   public PrimitiveType.PrimitiveTypeName type() { return columnInfo.type(); }
 
-  public int definitionLevelOffset() { return offsetCalculator().definitionLevelOffset(); }
-  public int repetitionLevelOffset() { return offsetCalculator().repetitionLevelOffset(); }
+  public abstract int definitionLevelOffset();
+  public abstract int repetitionLevelOffset();
+  public abstract int contentOffset();
 
-  public int contentOffset() { return offsetCalculator().contentOffset(); }
   public DictionaryPageInfo dictionaryPage() { return this.dictionaryPage; }
 
   public int computeOffset(ValuesType type) {
     switch (type) {
       case REPETITION_LEVEL:
-        return offsetCalculator().repetitionLevelOffset();
+        return repetitionLevelOffset();
       case DEFINITION_LEVEL:
-        return offsetCalculator().definitionLevelOffset();
+        return definitionLevelOffset();
       case VALUES:
-        return offsetCalculator().contentOffset();
+        return contentOffset();
     }
 
     throw new NotImplementedException();
@@ -73,6 +65,30 @@ public abstract class DataPageInfo extends PageInfo {
   public int repetitionLevel() { return columnDescriptor.getMaxRepetitionLevel(); }
   public int definitionLevel() { return columnDescriptor.getMaxDefinitionLevel(); }
   public int typeLength() { return columnDescriptor.getTypeLength(); }
+
+  public int relationshipLevelForType(ValuesType type) {
+    switch (type) {
+      case REPETITION_LEVEL:
+        return this.repetitionLevel();
+      case DEFINITION_LEVEL:
+        return this.definitionLevel();
+    }
+
+    throw new NotImplementedException();
+  }
+
+  public byte[] dataForType(ValuesType type) {
+    switch (type) {
+      case REPETITION_LEVEL:
+        return repetitionLevelData();
+      case DEFINITION_LEVEL:
+        return definitionLevelData();
+      case VALUES:
+        return data();
+    }
+
+    throw new NotImplementedException();
+  }
 
   @Override
   public boolean isDictionaryPage() { return false; }

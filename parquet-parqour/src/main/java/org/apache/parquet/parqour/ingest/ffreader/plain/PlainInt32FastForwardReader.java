@@ -14,7 +14,6 @@ public final class PlainInt32FastForwardReader extends FastForwardReaderBase imp
 
   public PlainInt32FastForwardReader(DataPageInfo info, ValuesType type) {
     super(info, type);
-
   }
 
   @Deprecated
