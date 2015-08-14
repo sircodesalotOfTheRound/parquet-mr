@@ -70,6 +70,10 @@ public abstract class DataPageInfo extends PageInfo {
     throw new NotImplementedException();
   }
 
+  public int repetitionLevel() { return columnDescriptor.getMaxRepetitionLevel(); }
+  public int definitionLevel() { return columnDescriptor.getMaxDefinitionLevel(); }
+  public int typeLength() { return columnDescriptor.getTypeLength(); }
+
   @Override
   public boolean isDictionaryPage() { return false; }
 

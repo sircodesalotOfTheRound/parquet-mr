@@ -1,6 +1,7 @@
 package org.apache.parquet.parqour.ingest.ffreader.plain;
 
 import org.apache.parquet.column.ValuesType;
+import org.apache.parquet.parqour.ingest.disk.pages.info.DataPageInfo;
 import org.apache.parquet.parqour.ingest.ffreader.FastForwardReaderBase;
 import org.apache.parquet.parqour.ingest.ffreader.binary.BinaryTrie;
 import org.apache.parquet.parqour.ingest.ffreader.interfaces.BinaryFastForwardReader;
@@ -19,6 +20,12 @@ public final class PlainFixedBinaryFastForwardReader extends FastForwardReaderBa
   public PlainFixedBinaryFastForwardReader(DataPageMetadata metadata, ValuesType type) {
     super(metadata, type);
     this.fieldLength = super.metadata.typeLength();
+  }
+
+  public PlainFixedBinaryFastForwardReader(DataPageInfo info, ValuesType values) {
+    super(info, values);
+
+    this.fieldLength = info.typeLength();
   }
 
   // TODO: Remove deprecated code.
@@ -46,7 +53,10 @@ public final class PlainFixedBinaryFastForwardReader extends FastForwardReaderBa
 
   @Override
   public void fastForwardTo(int entryNumber) {
+    long jumpDistance = (entryNumber - currentEntryNumber) * fieldLength;
 
+    dataOffset += jumpDistance;
+    currentEntryNumber = entryNumber;
   }
 }
 

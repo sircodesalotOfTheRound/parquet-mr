@@ -139,10 +139,9 @@ public abstract class FastForwardReaderBase implements FastForwardReader {
 
       case BINARY:
         return new PlainBinaryFastForwardReader(info, ValuesType.VALUES);
-/*
+
       case FIXED_LEN_BYTE_ARRAY:
-        return new PlainFixedBinaryFastForwardReader(metadata, ValuesType.VALUES);
-        */
+        return new PlainFixedBinaryFastForwardReader(info, ValuesType.VALUES);
 
       default:
         throw new NotImplementedException();
@@ -196,12 +195,13 @@ public abstract class FastForwardReaderBase implements FastForwardReader {
 
       case BINARY:
         return new RLEBinaryDictionaryFastForwardReader(info, ValuesType.VALUES);
+
+      case FIXED_LEN_BYTE_ARRAY:
+        return new RLEFixedBinaryDictionaryFastForwardReader(info, ValuesType.VALUES);
       /*
       case INT64:
         return new Int64DictionaryFastForwardReader(metadata, ValuesType.VALUES);
 
-      case FIXED_LEN_BYTE_ARRAY:
-        return new RLEFixedBinaryDictionaryFastForwardReader(metadata, ValuesType.VALUES);
       */
       default:
         throw new NotImplementedException();
@@ -213,10 +213,8 @@ public abstract class FastForwardReaderBase implements FastForwardReader {
       case BINARY:
         return new DeltaByteArrayBinaryFastForwardReader(info, ValuesType.VALUES);
 
-      /*
       case FIXED_LEN_BYTE_ARRAY:
-        return new DeltaByteArrayBinaryFastForwardReader(metadata, ValuesType.VALUES);
-        */
+        return new DeltaByteArrayBinaryFastForwardReader(info, ValuesType.VALUES);
 
       default:
         throw new NotImplementedException();

@@ -13,6 +13,7 @@ import org.apache.parquet.parqour.testtools.TestTools;
 import org.apache.parquet.parqour.testtools.UsesPersistence;
 import org.apache.parquet.parqour.testtools.WriteTools;
 import org.apache.parquet.schema.GroupType;
+import org.apache.parquet.schema.MessageType;
 import org.apache.parquet.schema.PrimitiveType;
 import org.junit.Test;
 
@@ -26,12 +27,12 @@ import static org.junit.Assert.assertEquals;
  * Created by sircodesalot on 6/13/15.
  */
 public class TestBinaryFFReader extends UsesPersistence {
-  private static int TOTAL = TestTools.generateRandomInt(31000);
+  private static int TOTAL = TestTools.generateRandomInt(50000);
   private static int ROW_TO_FAST_FORWARD_TO = TestTools.generateRandomInt(TOTAL);
   private static String COLUMN_NAME = "name";
 
   public static class SingleBinaryColumnWriter extends WriteTools.ParquetWriteContext {
-    private static final GroupType SCHEMA = new GroupType(REQUIRED, "names",
+    private static final MessageType SCHEMA = new MessageType("names",
       new PrimitiveType(REQUIRED, BINARY, COLUMN_NAME));
 
     public SingleBinaryColumnWriter(ParquetConfiguration configuration) {
