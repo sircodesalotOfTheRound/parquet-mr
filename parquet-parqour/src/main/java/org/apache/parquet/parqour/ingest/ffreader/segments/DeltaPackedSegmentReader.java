@@ -52,7 +52,6 @@ public class DeltaPackedSegmentReader extends PackedEncodingSegmentReader {
     this(data, -1);
   }
 
-
   private int readVariableLengthInteger() {
     int value = 0;
     int i = 0;

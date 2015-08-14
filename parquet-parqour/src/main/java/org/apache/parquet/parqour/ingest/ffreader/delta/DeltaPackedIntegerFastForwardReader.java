@@ -25,7 +25,7 @@ public class DeltaPackedIntegerFastForwardReader extends FastForwardReaderBase
   public DeltaPackedIntegerFastForwardReader(DataPageInfo info, ValuesType values) {
     super(info, values);
 
-    this.deltaPackedSegment = new DeltaPackedSegmentReader(data);
+    this.deltaPackedSegment = new DeltaPackedSegmentReader(data, info.contentOffset() - 1);
   }
 
   @Override
@@ -41,6 +41,7 @@ public class DeltaPackedIntegerFastForwardReader extends FastForwardReaderBase
 
   @Override
   public void fastForwardTo(int entryNumber) {
+    // Todo: make this more efficient.
     for (long index = currentEntryNumber; index < entryNumber; index++) {
       deltaPackedSegment.readi64();
     }

@@ -23,9 +23,8 @@ public abstract class DataPageInfo extends PageInfo {
   protected final DictionaryPageInfo dictionaryPage;
 
   public DataPageInfo(RowGroupPageSetColumnInfo columnInfo, HDFSParquetFileMetadata metadata,
-                      PageHeader header, DataSlate slate, DictionaryPageInfo dictionaryPage,
-                      int offset) {
-    super(columnInfo, header, slate, offset);
+                      PageHeader header, DataSlate slate, DictionaryPageInfo dictionaryPage) {
+    super(columnInfo, header, slate);
 
     this.columnDescriptor = metadata.getColumnDescriptor(columnInfo.path());
     this.dictionaryPage = dictionaryPage;
@@ -46,9 +45,15 @@ public abstract class DataPageInfo extends PageInfo {
   public abstract Encoding contentEncoding();
   public abstract Statistics statistics();
 
+
+  public abstract byte[] repetitionLevelData();
+  public abstract byte[] definitionLevelData();
+
   public PrimitiveType.PrimitiveTypeName type() { return columnInfo.type(); }
+
   public int definitionLevelOffset() { return offsetCalculator().definitionLevelOffset(); }
   public int repetitionLevelOffset() { return offsetCalculator().repetitionLevelOffset(); }
+
   public int contentOffset() { return offsetCalculator().contentOffset(); }
   public DictionaryPageInfo dictionaryPage() { return this.dictionaryPage; }
 
@@ -64,6 +69,10 @@ public abstract class DataPageInfo extends PageInfo {
 
     throw new NotImplementedException();
   }
+
+  public int repetitionLevel() { return columnDescriptor.getMaxRepetitionLevel(); }
+  public int definitionLevel() { return columnDescriptor.getMaxDefinitionLevel(); }
+  public int typeLength() { return columnDescriptor.getTypeLength(); }
 
   @Override
   public boolean isDictionaryPage() { return false; }

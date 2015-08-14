@@ -28,7 +28,7 @@ import static org.junit.Assert.assertEquals;
  * Created by sircodesalot on 6/13/15.
  */
 public class TestInt64FFReaders extends UsesPersistence {
-  private static int TOTAL = TestTools.generateRandomInt(50000);
+  private static int TOTAL = 46731;//TestTools.generateRandomInt(50000);
   private static int ROW_TO_FAST_FORWARD_TO = TestTools.generateRandomInt(TOTAL);
   private static String COLUMN_NAME = "squared";
 
@@ -44,7 +44,7 @@ public class TestInt64FFReaders extends UsesPersistence {
     public void write(ParquetWriter<Group> writer) throws IOException {
       for (long index = 0; index < TOTAL; index++) {
         SimpleGroup column = new SimpleGroup(SCHEMA);
-        column.append(COLUMN_NAME, index * index);
+        column.append(COLUMN_NAME, (index * index));
         writer.write(column);
       }
     }
@@ -62,9 +62,9 @@ public class TestInt64FFReaders extends UsesPersistence {
 
       Int64FastForwardReader reader = page.contentReader();
 
-      int index = 0;
+      long index = 0;
       while (!reader.isEof()) {
-        assertEquals(index * index, reader.readi64());
+        assertEquals((index * index), reader.readi64());
         index++;
       }
     }

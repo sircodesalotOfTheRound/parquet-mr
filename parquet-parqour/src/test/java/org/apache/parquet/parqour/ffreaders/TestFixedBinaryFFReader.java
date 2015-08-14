@@ -4,6 +4,10 @@ import org.apache.parquet.column.ColumnDescriptor;
 import org.apache.parquet.example.data.Group;
 import org.apache.parquet.example.data.simple.SimpleGroup;
 import org.apache.parquet.hadoop.ParquetWriter;
+import org.apache.parquet.parqour.ingest.disk.files.HDFSParquetFile;
+import org.apache.parquet.parqour.ingest.disk.files.HDFSParquetFileMetadata;
+import org.apache.parquet.parqour.ingest.disk.manager.DiskInterfaceManager;
+import org.apache.parquet.parqour.ingest.disk.pages.Page;
 import org.apache.parquet.parqour.ingest.ffreader.interfaces.BinaryFastForwardReader;
 import org.apache.parquet.parqour.ingest.paging.DataPageDecorator;
 import org.apache.parquet.parqour.ingest.paging.DiskInterfaceManager_OLD;
@@ -13,6 +17,7 @@ import org.apache.parquet.parqour.testtools.TestTools;
 import org.apache.parquet.parqour.testtools.UsesPersistence;
 import org.apache.parquet.parqour.testtools.WriteTools;
 import org.apache.parquet.schema.GroupType;
+import org.apache.parquet.schema.MessageType;
 import org.apache.parquet.schema.PrimitiveType;
 import org.junit.Test;
 
@@ -27,8 +32,9 @@ import static org.junit.Assert.assertEquals;
 /**
  * Created by sircodesalot on 6/13/15.
  */
-public class TestPlainFixedBinaryFFReader extends UsesPersistence {
+public class TestFixedBinaryFFReader extends UsesPersistence {
   private static int TOTAL = TestTools.generateRandomInt(50000);
+  private static int ROW_TO_FAST_FORWARD_TO = TestTools.generateRandomInt(TOTAL);
   private static String COLUMN_NAME = "name";
   private static int FIELD_LENGTH = 12;
 
@@ -46,7 +52,7 @@ public class TestPlainFixedBinaryFFReader extends UsesPersistence {
   }};
 
   public static class SingleNameWriteContext extends WriteTools.ParquetWriteContext {
-    private static final GroupType SCHEMA = new GroupType(REQUIRED, "names",
+    private static final MessageType SCHEMA = new MessageType("names",
       new PrimitiveType(REQUIRED, FIXED_LEN_BYTE_ARRAY, FIELD_LENGTH, COLUMN_NAME));
 
     public SingleNameWriteContext(ParquetConfiguration configuration) {
@@ -64,19 +70,40 @@ public class TestPlainFixedBinaryFFReader extends UsesPersistence {
   }
 
   @Test
-  public void testIntegerFFReaderAgainstNoRLNoDLColumn() throws Exception {
+  public void testReaders() throws Exception {
     for (ParquetConfiguration configuration : TestTools.CONFIGURATIONS) {
+      TestTools.printerr("CONFIG %s: TOTAL: %s", configuration, TOTAL);
       TestTools.generateTestData(new SingleNameWriteContext(configuration));
+      HDFSParquetFile file = new HDFSParquetFile(TestTools.EMPTY_CONFIGURATION, TestTools.TEST_FILE_PATH);
+      HDFSParquetFileMetadata metadata = new HDFSParquetFileMetadata(file);
+      DiskInterfaceManager diskInterfaceManager = new DiskInterfaceManager(metadata);
+      Page page = diskInterfaceManager.pagerFor(COLUMN_NAME).iterator().next();
 
-      QueryInfo queryInfo = TestTools.generateSchemaInfoFromPath(TestTools.TEST_FILE_PATH);
-      DiskInterfaceManager_OLD diskInterfaceManager = new DiskInterfaceManager_OLD(queryInfo);
-      ColumnDescriptor doubleIncrementColumn = queryInfo.getColumnDescriptorByPath(COLUMN_NAME);
-      DataPageDecorator page = diskInterfaceManager.getFirstPageForColumn(doubleIncrementColumn);
-      BinaryFastForwardReader reader = page.valuesReader();
+      BinaryFastForwardReader reader = page.contentReader();
 
-      for (int index = 0; index < TOTAL; index++) {
+      int index = 0;
+      while (!reader.isEof()) {
         assertEquals(NAMES.get(index % NAMES.size()), reader.readString());
+        index++;
       }
+    }
+  }
+
+  @Test
+  public void testFastForwarding() throws Exception {
+    for (ParquetConfiguration configuration : TestTools.CONFIGURATIONS) {
+      TestTools.printerr("CONFIG %s: TOTAL: %s, FAST-FORWARD-TO: %s",
+        configuration, TOTAL, ROW_TO_FAST_FORWARD_TO);
+      TestTools.generateTestData(new SingleNameWriteContext(configuration));
+      HDFSParquetFile file = new HDFSParquetFile(TestTools.EMPTY_CONFIGURATION, TestTools.TEST_FILE_PATH);
+      HDFSParquetFileMetadata metadata = new HDFSParquetFileMetadata(file);
+      DiskInterfaceManager diskInterfaceManager = new DiskInterfaceManager(metadata);
+      Page page = diskInterfaceManager.pagerFor(COLUMN_NAME).iterator().next();
+
+      BinaryFastForwardReader reader = page.contentReader();
+
+      reader.fastForwardTo(ROW_TO_FAST_FORWARD_TO);
+      assertEquals(NAMES.get(ROW_TO_FAST_FORWARD_TO % NAMES.size()), reader.readString());
     }
   }
 }
