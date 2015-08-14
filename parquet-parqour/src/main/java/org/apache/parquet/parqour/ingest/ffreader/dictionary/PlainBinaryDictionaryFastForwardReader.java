@@ -60,7 +60,7 @@ public final class PlainBinaryDictionaryFastForwardReader extends DictionaryBase
 
 
   private byte[][] readDictionaryEntries(DictionaryPageInfo dictionaryPage) {
-    int dictionaryPageSize = (int) dictionaryPage.entryCount();
+    int dictionaryPageSize = dictionaryPage.entryCount();
     byte[][] entries = new byte[dictionaryPageSize][];
     for (int index = 0; index < dictionaryPageSize; index++) {
       int length = readDictionaryPageData();

@@ -28,8 +28,8 @@ import static org.junit.Assert.assertEquals;
  * Created by sircodesalot on 6/13/15.
  */
 public class TestInt64FFReaders extends UsesPersistence {
-  private static int TOTAL = 46731;//TestTools.generateRandomInt(50000);
-  private static int ROW_TO_FAST_FORWARD_TO = TestTools.generateRandomInt(TOTAL);
+  private static int TOTAL = TestTools.generateRandomInt(50000);
+  private static long ROW_TO_FAST_FORWARD_TO = TestTools.generateRandomInt(TOTAL);
   private static String COLUMN_NAME = "squared";
 
   public static class SingleInt64WriteContext extends WriteTools.ParquetWriteContext {
@@ -82,8 +82,8 @@ public class TestInt64FFReaders extends UsesPersistence {
 
       Int64FastForwardReader reader = page.contentReader();
 
-      reader.fastForwardTo(ROW_TO_FAST_FORWARD_TO);
-      assertEquals(ROW_TO_FAST_FORWARD_TO * ROW_TO_FAST_FORWARD_TO, reader.readi64());
+      reader.fastForwardTo((int)ROW_TO_FAST_FORWARD_TO);
+      assertEquals((ROW_TO_FAST_FORWARD_TO * ROW_TO_FAST_FORWARD_TO), reader.readi64());
     }
   }
 }

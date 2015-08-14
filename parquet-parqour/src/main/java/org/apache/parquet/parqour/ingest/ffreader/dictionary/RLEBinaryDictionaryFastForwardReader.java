@@ -42,7 +42,7 @@ public final class RLEBinaryDictionaryFastForwardReader extends FastForwardReade
 
   private byte[][] readDictionaryEntries(DataPageInfo info) {
     DictionaryPageInfo dictionaryPage = info.dictionaryPage();
-    int dictionarySize = (int)dictionaryPage.entryCount();
+    int dictionarySize = dictionaryPage.entryCount();
     byte[] dictionaryData = dictionaryPage.data();
 
     int dictionaryOffset = dictionaryPage.startingOffset();
