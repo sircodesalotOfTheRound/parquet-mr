@@ -50,7 +50,7 @@ public class TestBinaryFFReader extends UsesPersistence {
   }
 
   @Test
-  public void testReaders() throws Exception {
+  public void testStringReading() throws Exception {
     for (ParquetConfiguration configuration : TestTools.CONFIGURATIONS) {
       TestTools.printerr("CONFIG %s: TOTAL: %s", configuration, TOTAL);
       TestTools.generateTestData(new SingleBinaryColumnWriter(configuration));
@@ -70,7 +70,27 @@ public class TestBinaryFFReader extends UsesPersistence {
   }
 
   @Test
-  public void testFastForwarding() throws Exception {
+  public void testByteReading() throws Exception {
+    for (ParquetConfiguration configuration : TestTools.CONFIGURATIONS) {
+      TestTools.printerr("CONFIG %s: TOTAL: %s", configuration, TOTAL);
+      TestTools.generateTestData(new SingleBinaryColumnWriter(configuration));
+      HDFSParquetFile file = new HDFSParquetFile(TestTools.EMPTY_CONFIGURATION, TestTools.TEST_FILE_PATH);
+      HDFSParquetFileMetadata metadata = new HDFSParquetFileMetadata(file);
+      DiskInterfaceManager diskInterfaceManager = new DiskInterfaceManager(metadata);
+      Page page = diskInterfaceManager.pagerFor(COLUMN_NAME).iterator().next();
+
+      BinaryFastForwardReader reader = page.contentReader();
+
+      int index = 0;
+      while (!reader.isEof()) {
+        assertEquals(TestTools.FIRST_NAMES.getModulo(index), new String(reader.readBytes()));
+        index++;
+      }
+    }
+  }
+
+  @Test
+  public void testStringFastForwarding() throws Exception {
     for (ParquetConfiguration configuration : TestTools.CONFIGURATIONS) {
       TestTools.printerr("CONFIG %s: TOTAL: %s, FAST-FORWARD-TO: %s",
         configuration, TOTAL, ROW_TO_FAST_FORWARD_TO);
@@ -84,6 +104,24 @@ public class TestBinaryFFReader extends UsesPersistence {
 
       reader.fastForwardTo(ROW_TO_FAST_FORWARD_TO);
       assertEquals(TestTools.FIRST_NAMES.getModulo(ROW_TO_FAST_FORWARD_TO), reader.readString());
+    }
+  }
+
+  @Test
+  public void testBytesFastForwarding() throws Exception {
+    for (ParquetConfiguration configuration : TestTools.CONFIGURATIONS) {
+      TestTools.printerr("CONFIG %s: TOTAL: %s, FAST-FORWARD-TO: %s",
+        configuration, TOTAL, ROW_TO_FAST_FORWARD_TO);
+      TestTools.generateTestData(new SingleBinaryColumnWriter(configuration));
+      HDFSParquetFile file = new HDFSParquetFile(TestTools.EMPTY_CONFIGURATION, TestTools.TEST_FILE_PATH);
+      HDFSParquetFileMetadata metadata = new HDFSParquetFileMetadata(file);
+      DiskInterfaceManager diskInterfaceManager = new DiskInterfaceManager(metadata);
+      Page page = diskInterfaceManager.pagerFor(COLUMN_NAME).iterator().next();
+
+      BinaryFastForwardReader reader = page.contentReader();
+
+      reader.fastForwardTo(ROW_TO_FAST_FORWARD_TO);
+      assertEquals(TestTools.FIRST_NAMES.getModulo(ROW_TO_FAST_FORWARD_TO), new String(reader.readBytes()));
     }
   }
 }

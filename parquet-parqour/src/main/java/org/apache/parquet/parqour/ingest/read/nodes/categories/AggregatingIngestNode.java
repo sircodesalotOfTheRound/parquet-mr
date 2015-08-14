@@ -1,7 +1,7 @@
 package org.apache.parquet.parqour.ingest.read.nodes.categories;
 
 import org.apache.parquet.parqour.cursor.iface.AdvanceableCursor;
-import org.apache.parquet.parqour.ingest.paging.DiskInterfaceManager_OLD;
+import org.apache.parquet.parqour.ingest.disk.manager.DiskInterfaceManager;
 import org.apache.parquet.parqour.ingest.read.nodes.IngestNodeGenerator;
 import org.apache.parquet.parqour.ingest.read.nodes.IngestNodeSet;
 import org.apache.parquet.parqour.ingest.schema.QueryInfo;
@@ -21,12 +21,12 @@ public abstract class AggregatingIngestNode extends IngestNode {
   protected final String path;
   protected final GroupType groupSchema;
   protected final IngestNodeSet children;
-  protected final DiskInterfaceManager_OLD diskInterfaceManager;
+  protected final DiskInterfaceManager diskInterfaceManager;
   protected final int childColumnCount;
 
   protected int schemaLinkWriteIndexForColumn[];
 
-  protected AggregatingIngestNode(QueryInfo queryInfo, Type schemaNode, DiskInterfaceManager_OLD diskInterfaceManager) {
+  protected AggregatingIngestNode(QueryInfo queryInfo, Type schemaNode, DiskInterfaceManager diskInterfaceManager) {
     super(queryInfo, null, "", schemaNode, IngestNodeCategory.AGGREGATOR, -1);
 
     this.path = EMPTY_PATH;
@@ -41,7 +41,7 @@ public abstract class AggregatingIngestNode extends IngestNode {
 
   public AggregatingIngestNode(QueryInfo queryInfo, AggregatingIngestNode parent,
                                String fqn, GroupType groupSchema,
-                               DiskInterfaceManager_OLD diskInterfaceManager, int childNodeIndex) {
+                               DiskInterfaceManager diskInterfaceManager, int childNodeIndex) {
 
     super(queryInfo, parent, fqn, groupSchema, IngestNodeCategory.AGGREGATOR, childNodeIndex);
 

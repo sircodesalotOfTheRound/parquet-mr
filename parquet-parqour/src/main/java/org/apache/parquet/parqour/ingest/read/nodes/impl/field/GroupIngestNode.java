@@ -2,7 +2,7 @@ package org.apache.parquet.parqour.ingest.read.nodes.impl.field;
 
 import org.apache.parquet.parqour.cursor.iface.AdvanceableCursor;
 import org.apache.parquet.parqour.cursor.implementations.noniterable.field.GroupCursor;
-import org.apache.parquet.parqour.ingest.paging.DiskInterfaceManager_OLD;
+import org.apache.parquet.parqour.ingest.disk.manager.DiskInterfaceManager;
 import org.apache.parquet.parqour.ingest.read.nodes.IngestNodeSet;
 import org.apache.parquet.parqour.ingest.read.nodes.categories.AggregatingIngestNode;
 import org.apache.parquet.parqour.ingest.schema.QueryInfo;
@@ -19,7 +19,7 @@ public abstract class GroupIngestNode extends AggregatingIngestNode {
 
   public GroupIngestNode(QueryInfo queryInfo, AggregatingIngestNode parent,
                          String fqn, GroupType groupSchema,
-                         DiskInterfaceManager_OLD diskInterfaceManager, int childNodeIndex) {
+                         DiskInterfaceManager diskInterfaceManager, int childNodeIndex) {
     super(queryInfo, parent, fqn, groupSchema, diskInterfaceManager, childNodeIndex);
 
     this.schemaLinks = generateSchemaLinks(childColumnCount, ingestBufferLength );

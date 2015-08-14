@@ -16,7 +16,4 @@ public abstract class DictionaryBasedFastForwardReader extends FastForwardReader
   public DictionaryBasedFastForwardReader(DataPageInfo info, ValuesType type) {
     super(info, type);
   }
-
-  public abstract int readNextDictionaryEntryIndex();
-  public abstract byte[] getDictionaryEntryIndexAsBytes(int index);
 }

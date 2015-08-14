@@ -31,7 +31,7 @@ public class DiskInterfaceManager_OLD {
       List<BlockMetaData> blocks = queryInfo.blocks();
       List<ColumnDescriptor> columns = queryInfo.columnDescriptors();
 
-      return new ParquetFileReader(queryInfo.configuration(), queryInfo.path(), blocks, columns);
+      return new ParquetFileReader(queryInfo.configuration(), queryInfo.fsPath(), blocks, columns);
     } catch (IOException ex) {
       throw new DataIngestException("Failed to read because as there was an IO Exception.");
     }

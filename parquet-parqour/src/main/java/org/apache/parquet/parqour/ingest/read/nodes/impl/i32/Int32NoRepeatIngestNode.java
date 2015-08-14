@@ -1,10 +1,10 @@
 package org.apache.parquet.parqour.ingest.read.nodes.impl.i32;
 
 import org.apache.parquet.column.ColumnDescriptor;
-import org.apache.parquet.parqour.cursor.implementations.noniterable.i32.Int32Cursor;
 import org.apache.parquet.parqour.cursor.iface.AdvanceableCursor;
+import org.apache.parquet.parqour.cursor.implementations.noniterable.i32.Int32Cursor;
+import org.apache.parquet.parqour.ingest.disk.manager.DiskInterfaceManager;
 import org.apache.parquet.parqour.ingest.ffreader.interfaces.Int32FastForwardReader;
-import org.apache.parquet.parqour.ingest.paging.DiskInterfaceManager_OLD;
 import org.apache.parquet.parqour.ingest.read.nodes.categories.AggregatingIngestNode;
 import org.apache.parquet.parqour.ingest.read.nodes.categories.PrimitiveIngestNodeBase;
 import org.apache.parquet.parqour.ingest.schema.QueryInfo;
@@ -25,7 +25,7 @@ public final class Int32NoRepeatIngestNode extends PrimitiveIngestNodeBase<Int32
                                  AggregatingIngestNode parent,
                                  Type schemaNode,
                                  ColumnDescriptor descriptor,
-                                 DiskInterfaceManager_OLD diskInterfaceManager,
+                                 DiskInterfaceManager diskInterfaceManager,
                                  int childIndex) {
 
     super(queryInfo, parent, schemaNode, descriptor, diskInterfaceManager, childIndex);

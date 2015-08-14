@@ -27,7 +27,7 @@ public class DataSlate {
   public int addSegment(PageHeader header) {
     if (!isBuilt) {
       int startOfPageOffset = computeStartOfPageOffset();
-      this.finalOffset += computeEndingOffset(stream, header);
+      this.finalOffset = computeEndingOffset(header);
       return startOfPageOffset;
     } else {
       throw new DataIngestException("Data Slate is already built.");
@@ -43,7 +43,7 @@ public class DataSlate {
     return data;
   }
 
-  public byte[] construct() {
+  private byte[] construct() {
     try {
       int totalSize = (int)(finalOffset - startingOffset);
       byte[] data = new byte[totalSize];
@@ -61,15 +61,15 @@ public class DataSlate {
     try {
       return (int)(stream.getPos() - startingOffset);
     } catch (IOException ex) {
-      throw new DataIngestException("Unable to read pages for file.");
+      throw new DataIngestException(ex, "Unable to read pages for file.");
     }
   }
 
-  private long computeEndingOffset(FSDataInputStream stream, PageHeader header) {
+  private long computeEndingOffset(PageHeader header) {
     try {
-      return stream.getPos() + header.getCompressed_page_size();
+      return (stream.getPos() + header.getCompressed_page_size());
     } catch (IOException ex) {
-      throw new DataIngestException("Unable to read pages for file.");
+      throw new DataIngestException(ex, "Unable to read pages for file.");
     }
   }
 

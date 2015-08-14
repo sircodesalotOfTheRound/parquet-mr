@@ -3,7 +3,7 @@ package org.apache.parquet.parqour.ingest.read.nodes.impl.field;
 import org.apache.parquet.parqour.cursor.iface.AdvanceableCursor;
 import org.apache.parquet.parqour.cursor.iface.Cursor;
 import org.apache.parquet.parqour.cursor.implementations.noniterable.root.RootCursor;
-import org.apache.parquet.parqour.ingest.paging.DiskInterfaceManager_OLD;
+import org.apache.parquet.parqour.ingest.disk.manager.DiskInterfaceManager;
 import org.apache.parquet.parqour.ingest.read.nodes.categories.AggregatingIngestNode;
 import org.apache.parquet.parqour.ingest.read.nodes.categories.IngestNode;
 import org.apache.parquet.parqour.ingest.schema.QueryInfo;
@@ -16,7 +16,7 @@ public final class RootIngestNode extends AggregatingIngestNode {
   private final Integer[] schemaLinks;
   private final RootCursor cursor;
 
-  public RootIngestNode(QueryInfo queryInfo, DiskInterfaceManager_OLD diskInterfaceManager) {
+  public RootIngestNode(QueryInfo queryInfo, DiskInterfaceManager diskInterfaceManager) {
     super(queryInfo, queryInfo.metadata().getFileMetaData().getSchema(), diskInterfaceManager);
 
     this.schemaLinks = new Integer[childColumnCount];

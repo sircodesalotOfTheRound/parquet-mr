@@ -34,14 +34,14 @@ public final class RLEFixedBinaryDictionaryFastForwardReader extends FastForward
     super(info, values);
 
     this.dictionaryEntries = this.readDictionaryEntries(info);
-    this.dictionaryEntriesAsStrings = new String[(int) info.dictionaryPage().entryCount()];
+    this.dictionaryEntriesAsStrings = new String[info.dictionaryPage().entryCount()];
     this.segment = PackedEncodingSegmentReader.createPackedEncodingSegmentReader(data, info.contentOffset(), expandToBitWidth(info));
   }
 
-
+  // Todo: centralize this.
   private byte[][] readDictionaryEntries(DataPageInfo info) {
     DictionaryPageInfo dictionaryPage = info.dictionaryPage();
-    int dictionarySize = (int) dictionaryPage.entryCount();
+    int dictionarySize = dictionaryPage.entryCount();
     int typeLength = info.typeLength();
     byte[] dictionaryData = dictionaryPage.data();
 
@@ -102,20 +102,6 @@ public final class RLEFixedBinaryDictionaryFastForwardReader extends FastForward
     }
   }
 
-  public int readNextDictionaryEntryIndex() {
-    super.advanceEntryNumber();
-    if (!segment.any()) {
-      this.segment = segment.generateReaderForNextSection();
-    }
-
-    return segment.readNext();
-  }
-
-  public byte[] getDictionaryEntryIndexAsBytes(int index) {
-    return dictionaryEntries[index];
-  }
-
-
   @Override
   public void fastForwardTo(int entryNumber) {
     for (int index = (int)currentEntryNumber; index < entryNumber; index++) {
@@ -147,7 +133,12 @@ public final class RLEFixedBinaryDictionaryFastForwardReader extends FastForward
 
   @Override
   public byte[] readBytes() {
-    return new byte[0];
+    super.advanceEntryNumber();
+    if (!segment.any()) {
+      this.segment = segment.generateReaderForNextSection();
+    }
+
+    return dictionaryEntries[segment.readNext()];
   }
 }
 

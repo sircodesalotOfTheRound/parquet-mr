@@ -60,7 +60,7 @@ public final class PlainBinaryDictionaryFastForwardReader extends DictionaryBase
 
 
   private byte[][] readDictionaryEntries(DictionaryPageInfo dictionaryPage) {
-    int dictionaryPageSize = (int) dictionaryPage.entryCount();
+    int dictionaryPageSize = dictionaryPage.entryCount();
     byte[][] entries = new byte[dictionaryPageSize][];
     for (int index = 0; index < dictionaryPageSize; index++) {
       int length = readDictionaryPageData();
@@ -94,16 +94,6 @@ public final class PlainBinaryDictionaryFastForwardReader extends DictionaryBase
       | (dictionaryPageData[++dictionaryPageOffset] & 0xFF) << 8
       | (dictionaryPageData[++dictionaryPageOffset] & 0xFF) << 16
       | (dictionaryPageData[++dictionaryPageOffset] & 0xFF) << 24;
-  }
-
-  @Deprecated
-  public int readNextDictionaryEntryIndex() {
-    throw new NotImplementedException();
-  }
-
-  @Deprecated
-  public byte[] getDictionaryEntryIndexAsBytes(int index) {
-    throw new NotImplementedException();
   }
 
 
@@ -141,7 +131,11 @@ public final class PlainBinaryDictionaryFastForwardReader extends DictionaryBase
   public byte[] readBytes() {
     super.advanceEntryNumber();
 
-    return new byte[0];
+    if (!segment.any()) {
+      this.segment = segment.generateReaderForNextSection();
+    }
+
+    return dictionaryEntries[segment.readNext()];
   }
 }
 

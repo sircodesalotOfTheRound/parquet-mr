@@ -63,7 +63,7 @@ public class ColumnPageSetIterator implements Iterator<PageMeta> {
   private PageMeta readDataPage() throws IOException {
     stream.seek(currentOffset);
     PageHeader header = Util.readPageHeader(stream);
-    DataSlate slate = new DataSlate(file, columnInfo.startingOffset());
+    DataSlate slate = new DataSlate(file, stream.getPos());
     PageInfo pageInfo = PageInfo.readPage(columnInfo, metadata, header, slate, dictionaryPage);
 
     // If the current page is a dictionary page, read it then read another page.

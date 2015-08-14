@@ -163,14 +163,14 @@ public class TestSingleColumnPredicate extends UsesPersistence {
     TestTools.repeat(1, new TestTools.RepeatCallback() {
       @Override
       public void execute() throws Exception {
-        ParquetMetadata metadata = ParquetFileReader.readFooter(EMPTY_CONFIGURATION, new Path(TEST_FILE_PATH), ParquetMetadataConverter.NO_FILTER);
+        /*ParquetMetadata metadata = ParquetFileReader.readFooter(EMPTY_CONFIGURATION, new Path(TEST_FILE_PATH), ParquetMetadataConverter.NO_FILTER);
 
         QueryInfo queryInfo = new QueryInfo(EMPTY_CONFIGURATION, new Path(TEST_FILE_PATH), metadata, COUNTING_SCHEMA, predicate);
         DiskInterfaceManager_OLD diskInterfaceManager = new DiskInterfaceManager_OLD(queryInfo);
 
         IngestTree ingest = new IngestTree(queryInfo, diskInterfaceManager);
         Int32NoRepeatIngestNode countNode = (Int32NoRepeatIngestNode) ingest.getIngestNodeByPath(COUNT);
-/*
+
         ingest.prepareForRead(TOTAL_ROWS);
         countNode.prepareForPredicateTesting();
 

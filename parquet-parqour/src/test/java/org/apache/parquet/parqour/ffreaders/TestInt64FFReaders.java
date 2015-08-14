@@ -28,8 +28,8 @@ import static org.junit.Assert.assertEquals;
  * Created by sircodesalot on 6/13/15.
  */
 public class TestInt64FFReaders extends UsesPersistence {
-  private static int TOTAL = 46731;//TestTools.generateRandomInt(50000);
-  private static int ROW_TO_FAST_FORWARD_TO = TestTools.generateRandomInt(TOTAL);
+  private static int TOTAL = TestTools.generateRandomInt(50000);
+  private static long ROW_TO_FAST_FORWARD_TO = TestTools.generateRandomInt(TOTAL);
   private static String COLUMN_NAME = "squared";
 
   public static class SingleInt64WriteContext extends WriteTools.ParquetWriteContext {
@@ -73,7 +73,7 @@ public class TestInt64FFReaders extends UsesPersistence {
   @Test
   public void testFastForwarding() throws Exception {
     for (ParquetConfiguration configuration : TestTools.CONFIGURATIONS) {
-      TestTools.printerr("CONFIG %s: TOTAL: %s, FAST-FORWARD-TO", configuration, TOTAL, ROW_TO_FAST_FORWARD_TO);
+      TestTools.printerr("CONFIG %s: TOTAL: %s, FAST-FORWARD-TO %s", configuration, TOTAL, ROW_TO_FAST_FORWARD_TO);
       TestTools.generateTestData(new SingleInt64WriteContext(configuration));
       HDFSParquetFile file = new HDFSParquetFile(TestTools.EMPTY_CONFIGURATION, TestTools.TEST_FILE_PATH);
       HDFSParquetFileMetadata metadata = new HDFSParquetFileMetadata(file);
@@ -82,8 +82,8 @@ public class TestInt64FFReaders extends UsesPersistence {
 
       Int64FastForwardReader reader = page.contentReader();
 
-      reader.fastForwardTo(ROW_TO_FAST_FORWARD_TO);
-      assertEquals(ROW_TO_FAST_FORWARD_TO * ROW_TO_FAST_FORWARD_TO, reader.readi64());
+      reader.fastForwardTo((int)ROW_TO_FAST_FORWARD_TO);
+      assertEquals((ROW_TO_FAST_FORWARD_TO * ROW_TO_FAST_FORWARD_TO), reader.readi64());
     }
   }
 }
