@@ -159,7 +159,10 @@ public class TextQueryInfixExpression extends TextQueryVariableExpression {
 
   @Override
   public TransformCollection<String> collectColumnDependencies(TransformList<String> collectTo) {
-    return null;
+    lhs.collectColumnDependencies(collectTo);
+    rhs.collectColumnDependencies(collectTo);
+
+    return collectTo;
   }
 
 }

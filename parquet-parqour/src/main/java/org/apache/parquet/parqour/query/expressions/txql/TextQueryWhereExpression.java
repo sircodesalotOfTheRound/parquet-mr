@@ -40,7 +40,7 @@ public class TextQueryWhereExpression extends TextQueryExpression {
 
   @Override
   public TransformCollection<String> collectColumnDependencies(TransformList<String> collectTo) {
-    return null;
+    return expression.collectColumnDependencies(collectTo);
   }
 
 }

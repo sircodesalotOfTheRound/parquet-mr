@@ -16,6 +16,8 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
  * Created by sircodesalot on 15/4/2.
  */
 public class TextQueryWildcardExpression extends TextQueryColumnExpression implements TextQueryMemberExpression {
+  public static final String STAR = "*";
+
   public TextQueryToken token;
 
   public TextQueryWildcardExpression(TextQueryExpression parent, TextQueryLexer lexer) {
@@ -54,7 +56,7 @@ public class TextQueryWildcardExpression extends TextQueryColumnExpression imple
 
   @Override
   public TransformCollection<String> collectColumnDependencies(TransformList<String> collectTo) {
-    throw new NotImplementedException();
+    return collectTo.add(STAR);
   }
 
 }

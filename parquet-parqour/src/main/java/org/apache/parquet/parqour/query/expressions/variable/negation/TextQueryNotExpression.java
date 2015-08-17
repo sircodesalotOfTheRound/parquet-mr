@@ -47,7 +47,7 @@ public class TextQueryNotExpression extends TextQueryVariableExpression {
 
   @Override
   public TransformCollection<String> collectColumnDependencies(TransformList<String> collectTo) {
-    return null;
+    return negatedExpression.collectColumnDependencies(collectTo);
   }
 
   public static TextQueryNotExpression read(TextQueryExpression parent, TextQueryLexer lexer) {

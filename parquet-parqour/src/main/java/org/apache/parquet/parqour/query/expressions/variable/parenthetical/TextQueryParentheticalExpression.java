@@ -56,6 +56,6 @@ public class TextQueryParentheticalExpression extends TextQueryVariableExpressio
 
   @Override
   public TransformCollection<String> collectColumnDependencies(TransformList<String> collectTo) {
-    return null;
+    return innerExpression.collectColumnDependencies(collectTo);
   }
 }

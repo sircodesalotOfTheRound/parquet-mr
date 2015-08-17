@@ -22,12 +22,12 @@ public class TransformList<T>  extends TransformCollection<T> {
     }
   }
 
-  public TransformList add(T item) {
+  public TransformList<T> add(T item) {
     this.items.add(item);
     return this;
   }
 
-  public TransformList add(Iterable<T> items) {
+  public TransformList<T> add(Iterable<T> items) {
     for (T item : items) {
       this.add(item);
     }

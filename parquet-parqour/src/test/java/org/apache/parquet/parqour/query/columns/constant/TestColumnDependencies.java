@@ -18,8 +18,15 @@ import static org.junit.Assert.assertTrue;
 public class TestColumnDependencies {
   @Test
   public void testNamedColumnExpression() {
+    assertContainsColumns("select *", "*");
     assertContainsColumns("select first, second, third", "first", "second", "third");
     assertContainsColumns("select first.one, second.two, third.three", "first.one", "second.two", "third.three");
+    assertContainsColumns("select same, same, same, same, same, different", "same", "different");
+    assertContainsColumns("select * where (lhs < rhs)", "*", "lhs", "rhs");
+    assertContainsColumns("select one, two where not ((three = four) AND (four = five))",
+      "one", "two", "three", "four", "five");
+    assertContainsColumns("select one, one, one where (one != two) OR (one = three)",
+      "one", "two", "three");
   }
 
 
