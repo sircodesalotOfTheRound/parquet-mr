@@ -6,6 +6,8 @@ import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressi
 import org.apache.parquet.parqour.query.expressions.variable.column.TextQueryColumnSetExpression;
 import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
 import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
+import org.apache.parquet.parqour.tools.TransformCollection;
+import org.apache.parquet.parqour.tools.TransformList;
 
 /**
  * Created by sircodesalot on 15/4/2.
@@ -68,6 +70,15 @@ public class TextQuerySelectStatementExpression extends TextQueryKeywordExpressi
   @Override
   public <TReturnType> TReturnType accept(TextQueryExpressionVisitor<TReturnType> visitor) {
     return visitor.visit(this);
+  }
+
+  @Override
+  public TransformCollection<String> collectColumnDependencies(TransformList<String> collectTo) {
+    columns.collectColumnDependencies(collectTo);
+    if (from != null) from.collectColumnDependencies(collectTo);
+    if (where != null) where.collectColumnDependencies(collectTo);
+
+    return collectTo;
   }
 
 }

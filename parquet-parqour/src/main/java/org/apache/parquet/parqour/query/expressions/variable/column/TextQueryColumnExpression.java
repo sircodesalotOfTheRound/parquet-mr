@@ -7,6 +7,8 @@ import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryVariableExpression;
 import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
+import org.apache.parquet.parqour.tools.TransformCollection;
+import org.apache.parquet.parqour.tools.TransformList;
 
 /**
  * Created by sircodesalot on 15/4/3.
@@ -18,6 +20,11 @@ public abstract class TextQueryColumnExpression extends TextQueryVariableExpress
 
   public TextQueryColumnExpression(TextQueryExpression parent, TextQueryLexer lexer, TextQueryExpressionType type) {
     super(parent, lexer, type);
+  }
+
+  @Override
+  public TransformCollection<String> collectColumnDependencies(TransformList<String> collectTo) {
+    return null;
   }
 
   /*

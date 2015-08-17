@@ -60,4 +60,9 @@ public class TextQueryTableSetExpression extends TextQueryExpression {
     return null;
   }
 
+  @Override
+  public TransformCollection<String> collectColumnDependencies(TransformList<String> collectTo) {
+    return null;
+  }
+
 }

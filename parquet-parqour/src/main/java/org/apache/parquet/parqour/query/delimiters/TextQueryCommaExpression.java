@@ -6,6 +6,8 @@ import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressi
 import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
 import org.apache.parquet.parqour.query.tokens.TextQueryPunctuationToken;
 import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
+import org.apache.parquet.parqour.tools.TransformCollection;
+import org.apache.parquet.parqour.tools.TransformList;
 
 /**
  * Created by sircodesalot on 15/4/9.
@@ -44,6 +46,11 @@ public class TextQueryCommaExpression extends TextQueryExpression implements Tex
 
   @Override
   public <TReturnType> TReturnType accept(TextQueryExpressionVisitor<TReturnType> visitor) {
+    return null;
+  }
+
+  @Override
+  public TransformCollection<String> collectColumnDependencies(TransformList<String> collectTo) {
     return null;
   }
 

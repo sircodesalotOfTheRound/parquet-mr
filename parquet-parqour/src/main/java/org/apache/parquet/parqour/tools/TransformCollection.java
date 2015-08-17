@@ -4,9 +4,7 @@ import org.apache.parquet.parqour.ingest.read.iterator.lamba.Predicate;
 import org.apache.parquet.parqour.ingest.read.iterator.lamba.Projection;
 import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by sircodesalot on 15/4/3.
@@ -159,4 +157,13 @@ public abstract class TransformCollection<T> implements Iterable<T> {
     return this.items().iterator();
   }
 
+  public TransformCollection<T> distinct() {
+    return this.where(new Predicate<T>() {
+      Set<T> seen = new HashSet<T>();
+      @Override
+      public boolean test(T item) {
+        return seen.add(item);
+      }
+    });
+  }
 }

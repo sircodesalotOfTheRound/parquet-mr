@@ -8,6 +8,9 @@ import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
 import org.apache.parquet.parqour.query.tokens.TextQueryPunctuationToken;
 import org.apache.parquet.parqour.query.tokens.TextQueryToken;
 import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
+import org.apache.parquet.parqour.tools.TransformCollection;
+import org.apache.parquet.parqour.tools.TransformList;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * Created by sircodesalot on 15/4/2.
@@ -47,6 +50,11 @@ public class TextQueryWildcardExpression extends TextQueryColumnExpression imple
   @Override
   public <TReturnType> TReturnType accept(TextQueryExpressionVisitor<TReturnType> visitor) {
     return visitor.visit(this);
+  }
+
+  @Override
+  public TransformCollection<String> collectColumnDependencies(TransformList<String> collectTo) {
+    throw new NotImplementedException();
   }
 
 }

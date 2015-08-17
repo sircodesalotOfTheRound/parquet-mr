@@ -5,6 +5,8 @@ import org.apache.parquet.parqour.query.expressions.categories.TextQueryVariable
 import org.apache.parquet.parqour.query.expressions.variable.infix.InfixOperator;
 import org.apache.parquet.parqour.query.expressions.variable.infix.TextQueryInfixExpression;
 import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
+import org.apache.parquet.parqour.tools.TransformCollection;
+import org.apache.parquet.parqour.tools.TransformList;
 
 /**
  * Created by sircodesalot on 7/27/15.
@@ -16,6 +18,11 @@ public class TextQueryTestableEqualsExpression extends TextQueryTestableBinaryEx
 
   @Override
   public <TReturnType> TReturnType accept(TextQueryExpressionVisitor<TReturnType> visitor) {
+    return null;
+  }
+
+  @Override
+  public TransformCollection<String> collectColumnDependencies(TransformList<String> collectTo) {
     return null;
   }
 

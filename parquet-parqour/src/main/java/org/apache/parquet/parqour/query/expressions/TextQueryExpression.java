@@ -5,6 +5,10 @@ import org.apache.parquet.parqour.query.expressions.categories.TextQueryVariable
 import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
 import org.apache.parquet.parqour.query.tokens.TextQueryToken;
 import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
+import org.apache.parquet.parqour.tools.TransformCollection;
+import org.apache.parquet.parqour.tools.TransformList;
+
+import java.util.List;
 
 /**
  * Created by sircodesalot on 15/4/2.
@@ -40,4 +44,6 @@ public abstract class TextQueryExpression extends TextQueryToken {
   }
 
   public <T> T as(Class<T> type) { return (T)this; }
+
+  public abstract TransformCollection<String> collectColumnDependencies(TransformList<String> collectTo);
 }

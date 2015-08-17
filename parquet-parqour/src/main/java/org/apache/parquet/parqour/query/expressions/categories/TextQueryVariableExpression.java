@@ -34,6 +34,11 @@ public abstract class TextQueryVariableExpression extends TextQueryExpression {
     super(parent, lexer, type);
   }
 
+  @Override
+  public TransformCollection<String> collectColumnDependencies(TransformList<String> collectTo) {
+    return null;
+  }
+
   public static boolean canParse(TextQueryExpression parent, TextQueryLexer lexer) {
     return rules.canParse(parent, lexer);
   }

@@ -1,6 +1,7 @@
 package org.apache.parquet.parqour.query.expressions.txql;
 
 import org.apache.parquet.parqour.ingest.read.iterator.lamba.Predicate;
+import org.apache.parquet.parqour.ingest.read.iterator.lamba.Projection;
 import org.apache.parquet.parqour.query.backtracking.rules.TextQuerySelectStatementBacktrackRule;
 import org.apache.parquet.parqour.query.backtracking.interfaces.TextQueryBacktrackingRuleSet;
 import org.apache.parquet.parqour.query.backtracking.rules.TextQueryFromExpressionBacktrackRule;
@@ -109,6 +110,15 @@ public class TextQueryTreeRootExpression extends TextQueryExpression {
   @Override
   public <TReturnType> TReturnType accept(TextQueryExpressionVisitor<TReturnType> visitor) {
     return visitor.visit(this);
+  }
+
+  @Override
+  public TransformCollection<String> collectColumnDependencies(TransformList<String> collectTo) {
+    for (TextQueryExpression expression : expressions) {
+      expression.collectColumnDependencies(collectTo);
+    }
+
+    return collectTo;
   }
 
 }

@@ -9,6 +9,8 @@ import org.apache.parquet.parqour.query.expressions.categories.TextQueryVariable
 import org.apache.parquet.parqour.query.expressions.predicate.TextQueryTestablePredicateExpression;
 import org.apache.parquet.parqour.query.expressions.variable.infix.InfixOperator;
 import org.apache.parquet.parqour.query.expressions.variable.infix.TextQueryInfixExpression;
+import org.apache.parquet.parqour.tools.TransformCollection;
+import org.apache.parquet.parqour.tools.TransformList;
 
 /**
  * Created by sircodesalot on 7/27/15.
@@ -66,4 +68,9 @@ public abstract class TextQueryTestableBinaryExpression<T> extends TextQueryTest
   public TextQueryVariableExpression lhs() { return infixExpression.lhs(); }
   public abstract InfixOperator operator();
   public TextQueryVariableExpression rhs() { return infixExpression.rhs(); }
+
+  @Override
+  public TransformCollection<String> collectColumnDependencies(TransformList<String> collectTo) {
+    return null;
+  }
 }

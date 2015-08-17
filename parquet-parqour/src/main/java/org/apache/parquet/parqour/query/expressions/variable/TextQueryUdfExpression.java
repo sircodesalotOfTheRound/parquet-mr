@@ -86,5 +86,10 @@ public class TextQueryUdfExpression extends TextQueryVariableExpression {
     return visitor.visit(this);
   }
 
+  @Override
+  public TransformCollection<String> collectColumnDependencies(TransformList<String> collectTo) {
+    return null;
+  }
+
   public boolean isNegated() { return this.isNegated; }
 }

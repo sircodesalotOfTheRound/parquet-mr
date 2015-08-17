@@ -11,6 +11,8 @@ import org.apache.parquet.parqour.query.expressions.txql.TextQueryKeywordExpress
 import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
 import org.apache.parquet.parqour.query.tokens.TextQueryToken;
 import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
+import org.apache.parquet.parqour.tools.TransformCollection;
+import org.apache.parquet.parqour.tools.TransformList;
 
 /**
  * Created by sircodesalot on 8/5/15.
@@ -48,6 +50,11 @@ public class TextQueryBooleanConstantExpression extends TextQueryTestablePredica
 
   @Override
   public <TReturnType> TReturnType accept(TextQueryExpressionVisitor<TReturnType> visitor) {
+    return null;
+  }
+
+  @Override
+  public TransformCollection<String> collectColumnDependencies(TransformList<String> collectTo) {
     return null;
   }
 

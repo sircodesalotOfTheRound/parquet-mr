@@ -7,6 +7,8 @@ import org.apache.parquet.parqour.query.expressions.predicate.TextQueryTestableP
 import org.apache.parquet.parqour.query.expressions.predicate.logical.TextQueryLogicalExpression;
 import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
 import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
+import org.apache.parquet.parqour.tools.TransformCollection;
+import org.apache.parquet.parqour.tools.TransformList;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
@@ -152,6 +154,11 @@ public class TextQueryInfixExpression extends TextQueryVariableExpression {
       rhs.accept(visitor);
     }
 
+    return null;
+  }
+
+  @Override
+  public TransformCollection<String> collectColumnDependencies(TransformList<String> collectTo) {
     return null;
   }
 

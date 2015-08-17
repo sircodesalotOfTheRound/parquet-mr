@@ -93,6 +93,11 @@ public class TextQueryFullyQualifiedNameExpression extends TextQueryVariableExpr
   }
 
   @Override
+  public TransformCollection<String> collectColumnDependencies(TransformList<String> collectTo) {
+    return null;
+  }
+
+  @Override
   public boolean equals(Object rhs) {
     if (rhs instanceof TextQueryFullyQualifiedNameExpression) {
       return this.representation.equals(((TextQueryFullyQualifiedNameExpression) rhs).representation);
