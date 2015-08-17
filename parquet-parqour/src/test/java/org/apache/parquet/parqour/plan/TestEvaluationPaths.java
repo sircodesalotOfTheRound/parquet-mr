@@ -3,7 +3,7 @@ package org.apache.parquet.parqour.plan;
 import org.apache.parquet.filter2.predicate.FilterPredicate;
 import org.apache.parquet.filter2.predicate.Operators;
 import org.apache.parquet.parqour.ingest.plan.analysis.PredicateAnalysis;
-import org.apache.parquet.parqour.ingest.plan.evaluation.EvaluationPathAnalysis;
+import org.apache.parquet.parqour.ingest.plan.evaluation.EvaluationPathAnalysis_OLD;
 import org.apache.parquet.parqour.ingest.plan.evaluation.skipchain.SkipChain;
 import org.apache.parquet.parqour.ingest.plan.evaluation.waypoints.PredicateTestWayPoint;
 import org.apache.parquet.parqour.ingest.plan.evaluation.waypoints.WayPoint;
@@ -31,7 +31,7 @@ public class TestEvaluationPaths {
 
     IngestTree ingestTree = TestTools.generateIngestTreeFromSchema(SINGLE_COLUMN_SCHEMA, equalsPredicate);
     PredicateAnalysis analysis = new PredicateAnalysis(ingestTree);
-    EvaluationPathAnalysis pathAnalysis = new EvaluationPathAnalysis(ingestTree, analysis);
+    EvaluationPathAnalysis_OLD pathAnalysis = new EvaluationPathAnalysis_OLD(ingestTree, analysis);
     PredicateTestWayPoint path = pathAnalysis.path();
 
     assertEquals(path.successPath(), PredicateTestWayPoint.SUCCESS);
@@ -46,7 +46,7 @@ public class TestEvaluationPaths {
     FilterPredicate andPredicate = and(eq(TestTools.NUMERIC_COLUMN, 0), eq(TestTools.NUMERIC_COLUMN, 0));
     IngestTree ingestTree = TestTools.generateIngestTreeFromSchema(SINGLE_COLUMN_SCHEMA, andPredicate);
     PredicateAnalysis analysis = new PredicateAnalysis(ingestTree);
-    EvaluationPathAnalysis pathAnalysis = new EvaluationPathAnalysis(ingestTree, analysis);
+    EvaluationPathAnalysis_OLD pathAnalysis = new EvaluationPathAnalysis_OLD(ingestTree, analysis);
     PredicateTestWayPoint path = pathAnalysis.path();
 
     assertEquals(path.successPath().successPath(), PredicateTestWayPoint.SUCCESS);
@@ -65,7 +65,7 @@ public class TestEvaluationPaths {
     FilterPredicate andPredicate = or(eq(TestTools.NUMERIC_COLUMN, 0), eq(TestTools.NUMERIC_COLUMN, 0));
     IngestTree ingestTree = TestTools.generateIngestTreeFromSchema(SINGLE_COLUMN_SCHEMA, andPredicate);
     PredicateAnalysis analysis = new PredicateAnalysis(ingestTree);
-    EvaluationPathAnalysis pathAnalysis = new EvaluationPathAnalysis(ingestTree, analysis);
+    EvaluationPathAnalysis_OLD pathAnalysis = new EvaluationPathAnalysis_OLD(ingestTree, analysis);
     PredicateTestWayPoint path = pathAnalysis.path();
 
     assertEquals(path.successPath(), PredicateTestWayPoint.SUCCESS);
@@ -87,7 +87,7 @@ public class TestEvaluationPaths {
 
     IngestTree ingestTree = TestTools.generateIngestTreeFromSchema(SINGLE_COLUMN_SCHEMA, andPredicate);
     PredicateAnalysis analysis = new PredicateAnalysis(ingestTree);
-    EvaluationPathAnalysis pathAnalysis = new EvaluationPathAnalysis(ingestTree, analysis);
+    EvaluationPathAnalysis_OLD pathAnalysis = new EvaluationPathAnalysis_OLD(ingestTree, analysis);
     PredicateTestWayPoint path = pathAnalysis.path();
 
     // Remember that the path will be optimized to start on the right side first, not the left!
@@ -122,7 +122,7 @@ public class TestEvaluationPaths {
 
     IngestTree ingestTree = TestTools.generateIngestTreeFromSchema(SINGLE_COLUMN_SCHEMA, orPredicate);
     PredicateAnalysis analysis = new PredicateAnalysis(ingestTree);
-    EvaluationPathAnalysis pathAnalysis = new EvaluationPathAnalysis(ingestTree, analysis);
+    EvaluationPathAnalysis_OLD pathAnalysis = new EvaluationPathAnalysis_OLD(ingestTree, analysis);
     PredicateTestWayPoint path = pathAnalysis.path();
 
     // Remember that the path will be optimized to start on the right side first, not the left!

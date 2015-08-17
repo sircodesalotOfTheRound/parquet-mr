@@ -10,7 +10,6 @@ import org.apache.parquet.parqour.ingest.read.nodes.IngestNodeSet;
 import org.apache.parquet.parqour.ingest.read.nodes.IngestTree;
 import org.apache.parquet.parqour.ingest.read.nodes.categories.IngestNode;
 import org.apache.parquet.parqour.ingest.read.nodes.categories.IngestNodeCategory;
-import org.apache.parquet.parqour.query.expressions.txql.TextQueryWhereExpression;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,7 +19,7 @@ import java.util.Map;
 /**
  * Created by sircodesalot on 6/8/15.
  */
-public class EvaluationPathAnalysis {
+public class EvaluationPathAnalysis_OLD {
   private final List<ColumnPredicate.LeafColumnPredicate> predicateLeaves;
   private final Map<ColumnPredicate.LeafColumnPredicate, Integer> indexesForLeaves;
   private final PredicateTestWayPoint path;
@@ -28,7 +27,7 @@ public class EvaluationPathAnalysis {
 
   private final SkipChain noPredicateIngestPath;
 
-  public EvaluationPathAnalysis(IngestTree tree, TextQueryWhereExpression whereClause, PredicateAnalysis predicate) {
+  public EvaluationPathAnalysis_OLD(IngestTree tree, PredicateAnalysis predicate) {
     this.tree = tree;
     this.predicateLeaves = collectLeaves(predicate.predicateTree());
 
