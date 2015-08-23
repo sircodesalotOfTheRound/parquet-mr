@@ -96,4 +96,7 @@ public abstract class AggregatingIngestNode extends IngestNode {
   public abstract void linkSchema(IngestNode child);
 
   public String path() { return this.path; }
+
+  @Override
+  public boolean isPrimitive() { return false; }
 }

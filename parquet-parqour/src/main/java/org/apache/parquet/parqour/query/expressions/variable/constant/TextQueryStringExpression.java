@@ -5,6 +5,7 @@ import org.apache.parquet.parqour.cursor.implementations.noniterable.resolved.Co
 import org.apache.parquet.parqour.exceptions.TextQueryException;
 import org.apache.parquet.parqour.ingest.plan.predicates.traversal.EvaluationDifficulty;
 import org.apache.parquet.parqour.ingest.plan.predicates.traversal.TraversalInfo;
+import org.apache.parquet.parqour.ingest.read.nodes.IngestTree;
 import org.apache.parquet.parqour.tools.TransformCollection;
 import org.apache.parquet.parqour.tools.TransformList;
 import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
@@ -78,6 +79,11 @@ public class TextQueryStringExpression extends TextQueryVariableExpression {
   @Override
   public TextQueryVariableExpression negate() {
     throw new TextQueryException("Attempted to negate a string value");
+  }
+
+  @Override
+  public void bindToTree(IngestTree tree) {
+
   }
 
   @Override

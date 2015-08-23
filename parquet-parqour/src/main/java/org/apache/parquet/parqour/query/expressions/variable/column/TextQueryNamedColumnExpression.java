@@ -3,6 +3,8 @@ package org.apache.parquet.parqour.query.expressions.variable.column;
 import org.apache.parquet.parqour.exceptions.TextQueryException;
 import org.apache.parquet.parqour.ingest.plan.predicates.traversal.EvaluationDifficulty;
 import org.apache.parquet.parqour.ingest.plan.predicates.traversal.TraversalInfo;
+import org.apache.parquet.parqour.ingest.read.nodes.IngestTree;
+import org.apache.parquet.parqour.ingest.read.nodes.categories.IngestNode;
 import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryVariableExpression;
@@ -11,6 +13,8 @@ import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
 import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
 import org.apache.parquet.parqour.tools.TransformCollection;
 import org.apache.parquet.parqour.tools.TransformList;
+import org.apache.parquet.schema.PrimitiveType;
+import org.apache.parquet.schema.Type;
 
 /**
  * Created by sircodesalot on 15/4/3.
@@ -18,11 +22,13 @@ import org.apache.parquet.parqour.tools.TransformList;
 public class TextQueryNamedColumnExpression extends TextQueryColumnExpression {
   private final TextQueryFullyQualifiedNameExpression identifier;
   private boolean isNegated = false;
+  private IngestNode ingestNode;
 
   public TextQueryNamedColumnExpression(TextQueryExpression parent, TextQueryLexer lexer) {
     super(parent, lexer, TextQueryExpressionType.NAMED_COLUMN);
 
     this.identifier = readFqn(lexer);
+    this.ingestNode = null;
   }
 
   private TextQueryFullyQualifiedNameExpression readFqn(TextQueryLexer lexer) {
@@ -39,7 +45,7 @@ public class TextQueryNamedColumnExpression extends TextQueryColumnExpression {
 
   @Override
   public TextQueryVariableExpression simplify(TextQueryExpression parent) {
-    return null;
+    return this;
   }
 
   @Override
@@ -49,13 +55,23 @@ public class TextQueryNamedColumnExpression extends TextQueryColumnExpression {
   }
 
   @Override
+  public void bindToTree(IngestTree tree) {
+    this.ingestNode = tree.getIngestNodeByPath(path());
+  }
+
+  @Override
+  public boolean test() {
+    return false;
+  }
+
+  @Override
   public TraversalInfo traversalInfo() {
     return null;
   }
 
   @Override
   public EvaluationDifficulty evaluationDifficulty() {
-    return null;
+    return EvaluationDifficulty.determineFromIngestNode(ingestNode);
   }
 
   public boolean isNegated() { return this.isNegated; }

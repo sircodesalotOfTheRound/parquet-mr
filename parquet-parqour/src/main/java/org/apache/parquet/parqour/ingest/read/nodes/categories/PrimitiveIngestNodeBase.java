@@ -173,4 +173,7 @@ public abstract class PrimitiveIngestNodeBase<TFFReaderType extends FastForwardR
   }
 
   public abstract void read(int rowNumber);
+
+  @Override
+  public boolean isPrimitive() { return true; }
 }

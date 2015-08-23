@@ -2,6 +2,7 @@ package org.apache.parquet.parqour.ingest.plan.predicates.traversal;
 
 import org.apache.parquet.parqour.exceptions.ColumnPredicateBuilderException;
 import org.apache.parquet.parqour.ingest.plan.predicates.ColumnPredicate;
+import org.apache.parquet.parqour.ingest.read.nodes.categories.IngestNode;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryVariableExpression;
 import org.apache.parquet.schema.PrimitiveType;
 
@@ -23,7 +24,17 @@ public enum EvaluationDifficulty implements Comparable<EvaluationDifficulty> {
     return this.difficultyLevel;
   }
 
-  public static EvaluationDifficulty determineFromPrimitiveTypeName(PrimitiveType.PrimitiveTypeName type) {
+
+  public static EvaluationDifficulty determineFromIngestNode(IngestNode node) {
+    if (node.isPrimitive()) {
+      PrimitiveType.PrimitiveTypeName primitiveTypeName = node.type().asPrimitiveType().getPrimitiveTypeName();
+      return determineFromPrimitiveTypeName(primitiveTypeName);
+    } else {
+      throw new UnsupportedOperationException();
+    }
+  }
+
+  private static EvaluationDifficulty determineFromPrimitiveTypeName(PrimitiveType.PrimitiveTypeName type) {
     switch (type) {
       case INT32:
         return EASY;

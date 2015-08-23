@@ -46,7 +46,7 @@ public class TestIngestNodeInfo {
 
   public static AggregatingIngestNode mockAggregationNode() {
     AggregatingIngestNode aggregatingIngestNode = mock(AggregatingIngestNode.class);
-    when(aggregatingIngestNode.schemaNode()).thenReturn(SCHEMA);
+    when(aggregatingIngestNode.type()).thenReturn(SCHEMA);
 
 
     return aggregatingIngestNode;
@@ -65,6 +65,11 @@ public class TestIngestNodeInfo {
     @Override
     protected void expandIngestBuffer() {
 
+    }
+
+    @Override
+    public boolean isPrimitive() {
+      return false;
     }
   }
 }

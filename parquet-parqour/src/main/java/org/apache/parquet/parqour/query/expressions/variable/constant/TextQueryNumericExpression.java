@@ -5,6 +5,7 @@ import org.apache.parquet.parqour.exceptions.TextQueryException;
 import org.apache.parquet.parqour.cursor.iface.Cursor;
 import org.apache.parquet.parqour.ingest.plan.predicates.traversal.EvaluationDifficulty;
 import org.apache.parquet.parqour.ingest.plan.predicates.traversal.TraversalInfo;
+import org.apache.parquet.parqour.ingest.read.nodes.IngestTree;
 import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryVariableExpression;
@@ -57,6 +58,11 @@ public class TextQueryNumericExpression extends TextQueryVariableExpression {
   @Override
   public TextQueryVariableExpression negate() {
     throw new TextQueryException("Attempted to negate a numeric value");
+  }
+
+  @Override
+  public void bindToTree(IngestTree tree) {
+
   }
 
   @Override

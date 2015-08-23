@@ -53,13 +53,13 @@ public class InfixPredicateCollectingVisitor extends TextQueryExpressionVisitor<
 
   private Operators.Column generateColumnFromPath(String path) {
     IngestNode ingestNode = ingestTree.getIngestNodeByPath(path);
-    Type schemaNode = ingestNode.schemaNode();
+    Type schemaNode = ingestNode.type();
 
     if (!schemaNode.isPrimitive()) {
       throw new DataIngestException("Currently WHERE only supports predicate on schema leaf-nodes.");
     }
 
-    PrimitiveType schemaNodeAsPrimitiveType = ingestNode.schemaNode().asPrimitiveType();
+    PrimitiveType schemaNodeAsPrimitiveType = ingestNode.type().asPrimitiveType();
     switch (schemaNodeAsPrimitiveType.getPrimitiveTypeName()) {
       case INT32:
         return FilterApi.intColumn(path);

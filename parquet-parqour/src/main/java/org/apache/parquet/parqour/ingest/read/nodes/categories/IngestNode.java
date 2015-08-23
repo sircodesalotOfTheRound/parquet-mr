@@ -32,7 +32,6 @@ public abstract class IngestNode {
 
   protected long currentRowNumber = 0;
 
-
   protected int currentEntryDefinitionLevel;
   protected int currentEntryRepetitionLevel;
   protected int currentLinkSiteIndex;
@@ -75,7 +74,7 @@ public abstract class IngestNode {
   // entry number. Otherwise, we can skip entries, but we cannot perform true fast-forwards.
   private boolean determineCanPerformTrueFastForwarding(IngestNode node) {
     if (node == null) return true;
-    if (node.schemaNode().getRepetition() == Type.Repetition.REQUIRED) {
+    if (node.type().getRepetition() == Type.Repetition.REQUIRED) {
       return determineCanPerformTrueFastForwarding(node.parent);
     } else {
       // If we've reached the root level without hitting an OPTIONAL, or REPEAT, then this
@@ -116,10 +115,11 @@ public abstract class IngestNode {
 
   protected abstract AdvanceableCursor onLinkToParent(AggregatingIngestNode parentNode);
   protected abstract void expandIngestBuffer();
+  public abstract boolean isPrimitive();
 
   public String name() { return this.name; }
   public int columnIndex() { return this.columnIndex; }
-  public Type schemaNode() { return this.schemaNode; }
+  public Type type() { return this.schemaNode; }
   public AggregatingIngestNode parent() { return this.parent; }
   public boolean hasParent() { return this.hasParent; }
   public String path() { return this.path; }

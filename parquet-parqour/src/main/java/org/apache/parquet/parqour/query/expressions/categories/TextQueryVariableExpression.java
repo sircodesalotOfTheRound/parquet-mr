@@ -3,6 +3,7 @@ package org.apache.parquet.parqour.query.expressions.categories;
 import org.apache.parquet.parqour.cursor.iface.Cursor;
 import org.apache.parquet.parqour.ingest.plan.predicates.traversal.EvaluationDifficulty;
 import org.apache.parquet.parqour.ingest.plan.predicates.traversal.TraversalInfo;
+import org.apache.parquet.parqour.ingest.read.nodes.IngestTree;
 import org.apache.parquet.parqour.query.backtracking.interfaces.TextQueryBacktrackingRuleSet;
 import org.apache.parquet.parqour.query.backtracking.rules.*;
 import org.apache.parquet.parqour.tools.TransformList;
@@ -76,6 +77,7 @@ public abstract class TextQueryVariableExpression extends TextQueryExpression {
 
   public abstract TextQueryVariableExpression simplify(TextQueryExpression parent);
   public abstract TextQueryVariableExpression negate();
+  public abstract void bindToTree(IngestTree tree);
 
   @Deprecated
   public abstract TraversalInfo traversalInfo();

@@ -3,6 +3,7 @@ package org.apache.parquet.parqour.query.expressions.variable;
 import org.apache.parquet.parqour.ingest.plan.predicates.traversal.EvaluationDifficulty;
 import org.apache.parquet.parqour.ingest.plan.predicates.traversal.TraversalInfo;
 import org.apache.parquet.parqour.ingest.read.iterator.lamba.Projection;
+import org.apache.parquet.parqour.ingest.read.nodes.IngestTree;
 import org.apache.parquet.parqour.query.expressions.predicate.TextQueryTestablePredicateExpression;
 import org.apache.parquet.parqour.tools.TransformList;
 import org.apache.parquet.parqour.tools.TransformCollection;
@@ -70,6 +71,11 @@ public class TextQueryUdfExpression extends TextQueryTestablePredicateExpression
   public TextQueryVariableExpression negate() {
     this.isNegated = !isNegated;
     return this;
+  }
+
+  @Override
+  public void bindToTree(IngestTree tree) {
+
   }
 
   @Override

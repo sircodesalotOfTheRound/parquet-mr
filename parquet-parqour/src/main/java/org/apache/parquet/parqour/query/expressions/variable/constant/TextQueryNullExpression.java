@@ -5,6 +5,7 @@ import org.apache.parquet.parqour.cursor.iface.Cursor;
 import org.apache.parquet.parqour.cursor.implementations.noniterable.resolved.ConstantValueCursor;
 import org.apache.parquet.parqour.ingest.plan.predicates.traversal.EvaluationDifficulty;
 import org.apache.parquet.parqour.ingest.plan.predicates.traversal.TraversalInfo;
+import org.apache.parquet.parqour.ingest.read.nodes.IngestTree;
 import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryVariableExpression;
@@ -43,6 +44,11 @@ public class TextQueryNullExpression extends TextQueryVariableExpression {
   public TextQueryVariableExpression negate() {
     this.isNegated = !isNegated;
     return this;
+  }
+
+  @Override
+  public void bindToTree(IngestTree tree) {
+
   }
 
   @Override

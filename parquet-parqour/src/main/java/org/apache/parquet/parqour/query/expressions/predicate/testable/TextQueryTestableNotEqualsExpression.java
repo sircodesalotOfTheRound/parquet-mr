@@ -1,6 +1,5 @@
 package org.apache.parquet.parqour.query.expressions.predicate.testable;
 
-import org.apache.parquet.parqour.ingest.plan.predicates.traversal.EvaluationDifficulty;
 import org.apache.parquet.parqour.ingest.plan.predicates.traversal.TraversalInfo;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryVariableExpression;
@@ -53,11 +52,6 @@ public class TextQueryTestableNotEqualsExpression extends TextQueryTestableBinar
 
   @Override
   public TraversalInfo traversalInfo() {
-    return null;
-  }
-
-  @Override
-  public EvaluationDifficulty evaluationDifficulty() {
     return null;
   }
 

@@ -2,6 +2,7 @@ package org.apache.parquet.parqour.query.expressions.predicate.logical;
 
 import org.apache.parquet.parqour.ingest.plan.predicates.traversal.EvaluationDifficulty;
 import org.apache.parquet.parqour.ingest.plan.predicates.traversal.TraversalInfo;
+import org.apache.parquet.parqour.ingest.read.nodes.IngestTree;
 import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryVariableExpression;
@@ -36,6 +37,11 @@ public class TextQueryLogicalOrExpression extends TextQueryLogicalExpression {
   @Override
   public TextQueryVariableExpression negate() {
     return new TextQueryLogicalAndExpression(lhs().negate(), rhs().negate());
+  }
+
+  @Override
+  public void bindToTree(IngestTree tree) {
+
   }
 
   @Override
