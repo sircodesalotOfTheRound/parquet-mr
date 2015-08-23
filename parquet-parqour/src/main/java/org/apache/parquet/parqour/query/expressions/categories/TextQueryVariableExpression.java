@@ -1,6 +1,8 @@
 package org.apache.parquet.parqour.query.expressions.categories;
 
 import org.apache.parquet.parqour.cursor.iface.Cursor;
+import org.apache.parquet.parqour.ingest.plan.predicates.traversal.EvaluationDifficulty;
+import org.apache.parquet.parqour.ingest.plan.predicates.traversal.TraversalInfo;
 import org.apache.parquet.parqour.query.backtracking.interfaces.TextQueryBacktrackingRuleSet;
 import org.apache.parquet.parqour.query.backtracking.rules.*;
 import org.apache.parquet.parqour.tools.TransformList;
@@ -32,11 +34,6 @@ public abstract class TextQueryVariableExpression extends TextQueryExpression {
 
   public TextQueryVariableExpression(TextQueryExpression parent, TextQueryLexer lexer, TextQueryExpressionType type) {
     super(parent, lexer, type);
-  }
-
-  @Override
-  public TransformCollection<String> collectColumnDependencies(TransformList<String> collectTo) {
-    return null;
   }
 
   public static boolean canParse(TextQueryExpression parent, TextQueryLexer lexer) {
@@ -79,6 +76,10 @@ public abstract class TextQueryVariableExpression extends TextQueryExpression {
 
   public abstract TextQueryVariableExpression simplify(TextQueryExpression parent);
   public abstract TextQueryVariableExpression negate();
+
+  @Deprecated
+  public abstract TraversalInfo traversalInfo();
+  public abstract EvaluationDifficulty evaluationDifficulty();
 
   public Cursor getCursor() { return null; }
 }

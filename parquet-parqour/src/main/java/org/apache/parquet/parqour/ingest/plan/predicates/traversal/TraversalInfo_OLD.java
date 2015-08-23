@@ -2,15 +2,12 @@ package org.apache.parquet.parqour.ingest.plan.predicates.traversal;
 
 import org.apache.parquet.parqour.ingest.plan.predicates.ColumnPredicate;
 import org.apache.parquet.parqour.ingest.plan.predicates.types.ColumnPredicateType;
-import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
-import org.apache.parquet.parqour.query.expressions.categories.TextQueryVariableExpression;
-import org.apache.parquet.parqour.query.expressions.predicate.logical.TextQueryLogicalExpression;
 
 /**
  * Created by sircodesalot on 6/8/15.
  */
-public class TraversalInfo {
-  private final TextQueryVariableExpression node;
+public class TraversalInfo_OLD {
+  private final ColumnPredicate node;
   private final TraversalPreference traversalPreference;
   private final EvaluationDifficulty maxEvaluationDifficulty;
   private final int orCount;
@@ -20,13 +17,13 @@ public class TraversalInfo {
   // Some paths will take less time than others, so the 'left' path
   // is the direction that will require the least amount of work, while the
   // right path will require the most. We name these paths 'chosenLeft' and 'chosenRight'.
-  private final TextQueryVariableExpression chosenLhsNode;
-  private final TextQueryVariableExpression chosenRhsNode;
+  private final ColumnPredicate chosenLhsNode;
+  private final ColumnPredicate chosenRhsNode;
 
-  public TraversalInfo(TextQueryVariableExpression node) {
+  public TraversalInfo_OLD(ColumnPredicate.LeafColumnPredicate node) {
     this.node = node;
     this.traversalPreference = TraversalPreference.THIS_NODE;
-    this.maxEvaluationDifficulty = null;//EvaluationDifficulty.determineFromColumnDescriptor(node);
+    this.maxEvaluationDifficulty = EvaluationDifficulty.determineFromColumnDescriptor(node);
     this.andCount = 0;
     this.orCount = 0;
     this.depth = 1;
@@ -37,15 +34,15 @@ public class TraversalInfo {
     this.chosenRhsNode = node;
   }
 
-  public TraversalInfo(TextQueryLogicalExpression node) {
+  public TraversalInfo_OLD(ColumnPredicate.LogicColumnPredicate node) {
     this.node = node;
-    this.depth = 0;//computeDepth(node);
-    this.maxEvaluationDifficulty = null;//determinePredicateDifficulty(node);
-    this.orCount = 0;//calculateOrCount(node);
-    this.andCount = 0;//calculateAndCount(node);
-    this.traversalPreference = null;//computeTraversalPreferenceForBinaryLogicNode(node);
-    this.chosenLhsNode = null;//determinePrefferedTraversalNode(node);
-    this.chosenRhsNode = null;//determineNonPreferredTraversalNode(node);
+    this.depth = computeDepth(node);
+    this.maxEvaluationDifficulty = determinePredicateDifficulty(node);
+    this.orCount = calculateOrCount(node);
+    this.andCount = calculateAndCount(node);
+    this.traversalPreference = computeTraversalPreferenceForBinaryLogicNode(node);
+    this.chosenLhsNode = determinePrefferedTraversalNode(node);
+    this.chosenRhsNode = determineNonPreferredTraversalNode(node);
   }
 
   private ColumnPredicate determinePrefferedTraversalNode(ColumnPredicate.LogicColumnPredicate node) {
@@ -92,7 +89,11 @@ public class TraversalInfo {
     EvaluationDifficulty lhs = node.lhs().traversalInfo().predicateEvaluationDifficulty();
     EvaluationDifficulty rhs = node.rhs().traversalInfo().predicateEvaluationDifficulty();
 
-    return (lhs.compareTo(rhs) > 0) ? lhs : rhs;
+    if (lhs.compareTo(rhs) > 0) {
+      return lhs;
+    } else {
+      return rhs;
+    }
   }
 
   private TraversalPreference computeTraversalPreferenceForBinaryLogicNode(ColumnPredicate.LogicColumnPredicate logicNode) {
@@ -131,9 +132,9 @@ public class TraversalInfo {
     int maxAndCount = Math.max(lhs.andCount(), rhs.andCount());
     int maxOrCount = Math.max(lhs.andCount(), rhs.andCount());
 
-    if (this.node.type() == TextQueryExpressionType.AND) {
+    if (this.node.predicateType() == ColumnPredicateType.AND) {
       maxAndCount += 1;
-    } else if (this.node.type() == TextQueryExpressionType.OR) {
+    } else if (this.node.predicateType() == ColumnPredicateType.OR) {
       maxOrCount += 1;
     }
 
@@ -146,9 +147,10 @@ public class TraversalInfo {
     }
   }
 
-  private int computeDepth(TextQueryLogicalExpression logicalExpression) {
-    int lhsDepth = logicalExpression.lhs().traversalInfo().depth();
-    int rhsDepth = logicalExpression.rhs().traversalInfo().depth();
+  private int computeDepth(ColumnPredicate node) {
+    ColumnPredicate.LogicColumnPredicate asLogicPredicate = (ColumnPredicate.LogicColumnPredicate) node;
+    int lhsDepth = asLogicPredicate.lhs().traversalInfo().depth();
+    int rhsDepth = asLogicPredicate.rhs().traversalInfo().depth();
     return Math.max(lhsDepth, rhsDepth) + 1;
   }
 
@@ -158,7 +160,7 @@ public class TraversalInfo {
   public TraversalPreference traversalPreference() { return this.traversalPreference; }
   public int depth() { return this.depth; }
 
-  public TextQueryVariableExpression chosenLhsNode() { return this.chosenLhsNode; }
-  public TextQueryVariableExpression chosenRhsNode() { return this.chosenRhsNode; }
+  public ColumnPredicate chosenLhsNode() { return this.chosenLhsNode; }
+  public ColumnPredicate chosenRhsNode() { return this.chosenRhsNode; }
 
 }

@@ -1,5 +1,7 @@
 package org.apache.parquet.parqour.query.expressions.txql;
 
+import org.apache.parquet.parqour.ingest.plan.predicates.traversal.EvaluationDifficulty;
+import org.apache.parquet.parqour.ingest.plan.predicates.traversal.TraversalInfo;
 import org.apache.parquet.parqour.query.backtracking.interfaces.TextQueryBacktrackingRuleSet;
 import org.apache.parquet.parqour.query.backtracking.rules.TextQueryIdentifierExpressionBacktrackRule;
 import org.apache.parquet.parqour.query.backtracking.rules.TextQueryWildcardExpressionBacktrackRule;
@@ -80,6 +82,16 @@ public class TextQueryFullyQualifiedNameExpression extends TextQueryVariableExpr
   @Override
   public TextQueryVariableExpression negate() {
     throw new NotImplementedException();
+  }
+
+  @Override
+  public TraversalInfo traversalInfo() {
+    return null;
+  }
+
+  @Override
+  public EvaluationDifficulty evaluationDifficulty() {
+    return null;
   }
 
   @Override

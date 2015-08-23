@@ -11,7 +11,6 @@ import org.apache.parquet.parqour.query.tokens.TextQueryPunctuationToken;
  * Created by sircodesalot on 15/4/3.
  */
 public class TextQueryWildcardExpressionBacktrackRule extends TextQueryBacktrackRuleBase {
-
   public TextQueryWildcardExpressionBacktrackRule() {
     super(TextQueryExpressionType.PUNCTUATION);
   }

@@ -1,7 +1,7 @@
 package org.apache.parquet.parqour.ingest.plan.predicates;
 
 import org.apache.parquet.column.ColumnDescriptor;
-import org.apache.parquet.parqour.ingest.plan.predicates.traversal.TraversalInfo;
+import org.apache.parquet.parqour.ingest.plan.predicates.traversal.TraversalInfo_OLD;
 import org.apache.parquet.parqour.ingest.plan.predicates.types.ColumnPredicateNodeCategory;
 import org.apache.parquet.parqour.ingest.plan.predicates.types.ColumnPredicateType;
 import org.apache.parquet.schema.PrimitiveType;
@@ -26,8 +26,8 @@ public class TautologicalColumnPredicate extends ColumnPredicate.LeafColumnPredi
   }
 
   @Override
-  public TraversalInfo traversalInfo() {
-    return new TraversalInfo(this);
+  public TraversalInfo_OLD traversalInfo() {
+    return new TraversalInfo_OLD(this);
   }
 }
 

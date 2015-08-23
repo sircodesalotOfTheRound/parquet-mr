@@ -10,6 +10,8 @@ import org.apache.parquet.parqour.ingest.read.nodes.IngestNodeSet;
 import org.apache.parquet.parqour.ingest.read.nodes.IngestTree;
 import org.apache.parquet.parqour.ingest.read.nodes.categories.IngestNode;
 import org.apache.parquet.parqour.ingest.read.nodes.categories.IngestNodeCategory;
+import org.apache.parquet.parqour.query.expressions.categories.TextQueryVariableExpression;
+import org.apache.parquet.parqour.query.expressions.predicate.TextQueryTestablePredicateExpression;
 import org.apache.parquet.parqour.query.expressions.txql.TextQueryWhereExpression;
 
 import java.util.ArrayList;
@@ -21,21 +23,21 @@ import java.util.Map;
  * Created by sircodesalot on 6/8/15.
  */
 public class EvaluationPathAnalysis {
-  private final List<ColumnPredicate.LeafColumnPredicate> predicateLeaves;
+  /*private final List<ColumnPredicate.LeafColumnPredicate> predicateLeaves;
   private final Map<ColumnPredicate.LeafColumnPredicate, Integer> indexesForLeaves;
   private final PredicateTestWayPoint path;
   private final IngestTree tree;
 
-  private final SkipChain noPredicateIngestPath;
+  private final SkipChain noPredicateIngestPath;*/
 
   public EvaluationPathAnalysis(IngestTree tree, TextQueryWhereExpression whereClause, PredicateAnalysis predicate) {
-    this.tree = tree;
+    /*this.tree = tree;
     this.predicateLeaves = collectLeaves(predicate.predicateTree());
 
     this.indexesForLeaves = calculateIndexesForLeaves(predicateLeaves);
     this.path = calculatePath(predicate.predicateTree());
 
-    this.noPredicateIngestPath = generateSkipChain(tree, predicateLeaves);
+    this.noPredicateIngestPath = generateSkipChain(tree, predicateLeaves);*/
   }
 
   private IngestNodeSet collectIngestNodesWithAPredicate(IngestTree tree, Iterable<ColumnPredicate.LeafColumnPredicate> predicateLeaves) {
@@ -72,6 +74,29 @@ public class EvaluationPathAnalysis {
     IngestNodeSet nodesNotAssociatedWithAPredicate = collectIngestNodesWithoutAPredicate(tree, nodesAssociatedWithAPredicate);
 
     return new SkipChain(nodesNotAssociatedWithAPredicate);
+  }
+
+  private List<TextQueryTestablePredicateExpression> collectTestablePredicates(TextQueryWhereExpression whereExpression) {
+    ArrayList<TextQueryTestablePredicateExpression> predicateList = new ArrayList<TextQueryTestablePredicateExpression>();
+    if (whereExpression.hasPredicate()) {
+      // Pass to in-order traversal
+      return collectPredicates(whereExpression.predicate(), predicateList);
+    } else {
+      return predicateList;
+    }
+  }
+
+  private List<TextQueryTestablePredicateExpression> collectPredicates(TextQueryVariableExpression node, List<TextQueryTestablePredicateExpression> testablePredicates) {
+    if (node.traversalInfo().traversalPreference() == TraversalPreference.THIS_NODE) {
+      // If a node points to itself as it's preferred traversal direction, this must be a leaf.
+      testablePredicates.add((TextQueryTestablePredicateExpression)node);
+    } else {
+      // First visit the chosen-left direction, then visit the chosen-right direction.
+      collectPredicates(node.traversalInfo().chosenLhsNode(), testablePredicates);
+      collectPredicates(node.traversalInfo().chosenRhsNode(), testablePredicates);
+    }
+
+    return testablePredicates;
   }
 
   private List<ColumnPredicate.LeafColumnPredicate> collectLeaves(ColumnPredicate root) {
@@ -174,11 +199,12 @@ public class EvaluationPathAnalysis {
     SkipChain successSkipChain = computeSkipSet(forNode, successPath.leafNode());
     SkipChain failureSkipChain = computeSkipSet(forNode, failurePath.leafNode());
 
-    return new PredicateTestWayPoint(tree, forNode, successPath, failurePath, successSkipChain, failureSkipChain);
+    return null;
+//    return new PredicateTestWayPoint(tree, forNode, successPath, failurePath, successSkipChain, failureSkipChain);
   }
 
   private SkipChain computeSkipSet(ColumnPredicate.LeafColumnPredicate startNode, ColumnPredicate.LeafColumnPredicate endNode) {
-    int startIndex = indexesForLeaves.get(startNode) + 1;
+    /*int startIndex = indexesForLeaves.get(startNode) + 1;
     int endIndex = indexesForLeaves.containsKey(endNode) ? indexesForLeaves.get(endNode) : predicateLeaves.size();
     int length = endIndex - startIndex;
 
@@ -187,12 +213,13 @@ public class EvaluationPathAnalysis {
       skipSet[index] = predicateLeaves.get(index);
     }
 
-    return new SkipChain(tree, skipSet);
+    return new SkipChain(tree, skipSet);*/
+    return null;
   }
 
-
+/*
   public PredicateTestWayPoint path() { return path; }
   public Iterable<ColumnPredicate.LeafColumnPredicate> leaves() { return this.predicateLeaves; }
 
-  public SkipChain finalCommitIngestPath() { return this.noPredicateIngestPath; }
+  public SkipChain finalCommitIngestPath() { return this.noPredicateIngestPath; }*/
 }

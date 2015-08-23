@@ -3,6 +3,8 @@ package org.apache.parquet.parqour.query.expressions.variable.constant;
 import org.apache.parquet.parqour.cursor.iface.Cursor;
 import org.apache.parquet.parqour.cursor.implementations.noniterable.resolved.ConstantValueCursor;
 import org.apache.parquet.parqour.exceptions.TextQueryException;
+import org.apache.parquet.parqour.ingest.plan.predicates.traversal.EvaluationDifficulty;
+import org.apache.parquet.parqour.ingest.plan.predicates.traversal.TraversalInfo;
 import org.apache.parquet.parqour.tools.TransformCollection;
 import org.apache.parquet.parqour.tools.TransformList;
 import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
@@ -76,6 +78,16 @@ public class TextQueryStringExpression extends TextQueryVariableExpression {
   @Override
   public TextQueryVariableExpression negate() {
     throw new TextQueryException("Attempted to negate a string value");
+  }
+
+  @Override
+  public TraversalInfo traversalInfo() {
+    return null;
+  }
+
+  @Override
+  public EvaluationDifficulty evaluationDifficulty() {
+    return null;
   }
 
   public String asString() {

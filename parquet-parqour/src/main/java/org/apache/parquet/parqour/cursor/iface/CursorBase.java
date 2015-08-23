@@ -12,16 +12,22 @@ public abstract class CursorBase implements Cursor {
   private final int columnIndex;
 
   protected int index = 0;
+  protected int pointerIndex = 0;
 
   public CursorBase(String name, int columnIndex) {
     this. name = name;
     this.columnIndex = columnIndex;
 
-    this.index= 0;
+    this.index = 0;
   }
 
   public String name() { return this.name; }
   public int columnIndex() { return this.columnIndex; }
+
+//  public AdvanceableCursor setPointerIndex(int pointerIndex) {
+//    this.pointerIndex = index;
+//    return this;
+//  }
 
   @Override
   public Integer i32() {

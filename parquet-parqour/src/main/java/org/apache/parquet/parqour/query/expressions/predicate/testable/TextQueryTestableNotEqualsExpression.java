@@ -1,5 +1,7 @@
 package org.apache.parquet.parqour.query.expressions.predicate.testable;
 
+import org.apache.parquet.parqour.ingest.plan.predicates.traversal.EvaluationDifficulty;
+import org.apache.parquet.parqour.ingest.plan.predicates.traversal.TraversalInfo;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryVariableExpression;
 import org.apache.parquet.parqour.query.expressions.variable.infix.InfixOperator;
@@ -47,6 +49,16 @@ public class TextQueryTestableNotEqualsExpression extends TextQueryTestableBinar
   @Override
   public TextQueryVariableExpression negate() {
     return new TextQueryTestableEqualsExpression(super.infixExpression);
+  }
+
+  @Override
+  public TraversalInfo traversalInfo() {
+    return null;
+  }
+
+  @Override
+  public EvaluationDifficulty evaluationDifficulty() {
+    return null;
   }
 
   @Override

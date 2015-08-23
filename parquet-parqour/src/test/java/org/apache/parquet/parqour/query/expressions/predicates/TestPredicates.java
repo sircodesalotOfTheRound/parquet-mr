@@ -1,4 +1,4 @@
-package org.apache.parquet.parqour.query.predicates;
+package org.apache.parquet.parqour.query.expressions.predicates;
 
 import org.apache.parquet.filter2.predicate.FilterPredicate;
 import org.apache.parquet.filter2.predicate.Operators;
@@ -46,13 +46,6 @@ public class TestPredicates {
     assertEquals(predicate.getValue(), 42);
   }
 
-
-  private <T extends TextQueryTestablePredicateExpression> T testablePredicateFromString(String expression) {
-    TextQueryTreeRootExpression rootExpression = TextQueryTreeRootExpression.fromString(expression);
-    TextQueryWhereExpression where = rootExpression.asSelectStatement().where();
-    TextQueryVariableExpression predicate = rootExpression.asSelectStatement().where().predicate();
-    return (T) predicate.simplify(where);
-  }
 
   @Deprecated
   private <T extends FilterPredicate> T generateFilterApiFromExpression(String expression) {

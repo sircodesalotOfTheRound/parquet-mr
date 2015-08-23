@@ -20,6 +20,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * Created by sircodesalot on 6/8/15.
  */
+@Deprecated
 public class TestTraversalPreferences {
   private static final MessageType SCHEMA = new MessageType("single_column_schema",
     new PrimitiveType(Type.Repetition.REQUIRED, BINARY, "binary_column"),

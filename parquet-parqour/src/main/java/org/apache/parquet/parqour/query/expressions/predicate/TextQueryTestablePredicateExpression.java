@@ -1,5 +1,7 @@
 package org.apache.parquet.parqour.query.expressions.predicate;
 
+import org.apache.parquet.parqour.ingest.plan.predicates.traversal.EvaluationDifficulty;
+import org.apache.parquet.parqour.ingest.plan.predicates.traversal.TraversalInfo;
 import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryVariableExpression;
@@ -30,11 +32,6 @@ public abstract class TextQueryTestablePredicateExpression extends TextQueryVari
 
   public TextQueryTestablePredicateExpression(TextQueryExpression parent, TextQueryExpressionType type) {
     super(parent, type);
-  }
-
-  @Override
-  public TransformCollection<String> collectColumnDependencies(TransformList<String> collectTo) {
-    return null;
   }
 
   public abstract boolean test();

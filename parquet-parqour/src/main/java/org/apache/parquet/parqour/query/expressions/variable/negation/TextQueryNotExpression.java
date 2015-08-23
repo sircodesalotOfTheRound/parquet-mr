@@ -1,5 +1,7 @@
 package org.apache.parquet.parqour.query.expressions.variable.negation;
 
+import org.apache.parquet.parqour.ingest.plan.predicates.traversal.EvaluationDifficulty;
+import org.apache.parquet.parqour.ingest.plan.predicates.traversal.TraversalInfo;
 import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryVariableExpression;
@@ -36,6 +38,16 @@ public class TextQueryNotExpression extends TextQueryVariableExpression {
   public TextQueryVariableExpression negate() {
     // Double negation.
     return this.negatedExpression;
+  }
+
+  @Override
+  public TraversalInfo traversalInfo() {
+    return null;
+  }
+
+  @Override
+  public EvaluationDifficulty evaluationDifficulty() {
+    return negatedExpression.evaluationDifficulty();
   }
 
   public TextQueryVariableExpression negatedExpression() { return this.negatedExpression; }

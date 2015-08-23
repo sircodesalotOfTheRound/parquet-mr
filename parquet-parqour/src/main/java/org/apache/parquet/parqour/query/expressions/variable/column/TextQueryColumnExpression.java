@@ -1,5 +1,7 @@
 package org.apache.parquet.parqour.query.expressions.variable.column;
 
+import org.apache.parquet.parqour.ingest.plan.predicates.traversal.EvaluationDifficulty;
+import org.apache.parquet.parqour.ingest.plan.predicates.traversal.TraversalInfo;
 import org.apache.parquet.parqour.query.backtracking.interfaces.TextQueryBacktrackingRuleSet;
 import org.apache.parquet.parqour.query.backtracking.rules.TextQueryNamedColumnExpressionBacktrackRule;
 import org.apache.parquet.parqour.query.backtracking.rules.TextQueryWildcardExpressionBacktrackRule;
@@ -22,19 +24,18 @@ public abstract class TextQueryColumnExpression extends TextQueryVariableExpress
     super(parent, lexer, type);
   }
 
+  public static TextQueryColumnExpression read(TextQueryExpression parent, TextQueryLexer lexer) {
+    return rules.read(parent, lexer);
+  }
+
   @Override
-  public TransformCollection<String> collectColumnDependencies(TransformList<String> collectTo) {
+  public TraversalInfo traversalInfo() {
     return null;
   }
 
-  /*
   @Override
-  public ParquelCollection<ParquelExpression> children() {
+  public EvaluationDifficulty evaluationDifficulty() {
     return null;
-  }*/
-
-  public static TextQueryColumnExpression read(TextQueryExpression parent, TextQueryLexer lexer) {
-    return rules.read(parent, lexer);
   }
 
   public static boolean canParse(TextQueryExpression parent, TextQueryLexer lexer) {

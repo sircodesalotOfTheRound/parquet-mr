@@ -12,13 +12,13 @@ import org.apache.parquet.parqour.tools.TransformList;
  * Created by sircodesalot on 6/30/15.
  */
 public class TextQueryWhereExpression extends TextQueryExpression {
-  private final TextQueryVariableExpression expression;
+  private final TextQueryVariableExpression predicate;
 
   private TextQueryWhereExpression(TextQueryExpression parent, TextQueryLexer lexer) {
     super(parent, lexer, TextQueryExpressionType.WHERE);
 
     lexer.readCurrentAndAdvance(TextQueryExpressionType.IDENTIFIER, TextQueryKeywordExpression.WHERE);
-    this.expression = TextQueryVariableExpression.read(this, lexer);
+    this.predicate = TextQueryVariableExpression.read(this, lexer);
   }
 
   public static boolean canParse(TextQuerySelectStatementExpression parent, TextQueryLexer lexer) {
@@ -30,7 +30,7 @@ public class TextQueryWhereExpression extends TextQueryExpression {
   }
 
   public TextQueryVariableExpression predicate() {
-    return expression;
+    return predicate;
   }
 
   @Override
@@ -40,7 +40,10 @@ public class TextQueryWhereExpression extends TextQueryExpression {
 
   @Override
   public TransformCollection<String> collectColumnDependencies(TransformList<String> collectTo) {
-    return expression.collectColumnDependencies(collectTo);
+    return predicate.collectColumnDependencies(collectTo);
   }
 
+  public boolean hasPredicate() {
+    return predicate != null;
+  }
 }

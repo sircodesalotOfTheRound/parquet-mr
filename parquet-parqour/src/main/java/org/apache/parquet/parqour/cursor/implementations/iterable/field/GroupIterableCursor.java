@@ -122,7 +122,7 @@ public class GroupIterableCursor extends GroupCursor implements Iterable<Cursor>
     Integer startOffset = schemaLinks[columnIndex][index];
 
     if (startOffset != null) {
-      return childCursorsByIndex[columnIndex].i32StartIteration(startOffset);
+      return childCursorsByIndex[columnIndex].i32StartIteration(index);
     } else {
       return RollableFieldEntries.EMPTY_I32_RECORDSET;
     }

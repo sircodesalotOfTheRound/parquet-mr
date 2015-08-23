@@ -17,6 +17,10 @@ import org.apache.parquet.parqour.ingest.paging.DataPageDecorator;
 import org.apache.parquet.parqour.ingest.paging.DiskInterfaceManager_OLD;
 import org.apache.parquet.parqour.ingest.read.nodes.IngestTree;
 import org.apache.parquet.parqour.ingest.schema.QueryInfo;
+import org.apache.parquet.parqour.query.expressions.categories.TextQueryVariableExpression;
+import org.apache.parquet.parqour.query.expressions.predicate.TextQueryTestablePredicateExpression;
+import org.apache.parquet.parqour.query.expressions.txql.TextQueryTreeRootExpression;
+import org.apache.parquet.parqour.query.expressions.txql.TextQueryWhereExpression;
 import org.apache.parquet.schema.GroupType;
 import org.apache.parquet.schema.MessageType;
 import org.apache.parquet.schema.PrimitiveType;
@@ -175,6 +179,13 @@ public class TestTools {
   public static <T> T randomListItem(List<T> list) {
     int index = generateRandomInt(list.size());
     return list.get(index);
+  }
+
+  public static <T extends TextQueryTestablePredicateExpression> T simplifiedPredicateFromString(String expression) {
+    TextQueryTreeRootExpression rootExpression = TextQueryTreeRootExpression.fromString(expression);
+    TextQueryWhereExpression where = rootExpression.asSelectStatement().where();
+    TextQueryVariableExpression predicate = rootExpression.asSelectStatement().where().predicate();
+    return (T) predicate.simplify(where);
   }
 
   public static void println(String format, Object ... args) {
