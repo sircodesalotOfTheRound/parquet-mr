@@ -4,7 +4,6 @@ import org.apache.parquet.parqour.cursor.iface.Cursor;
 import org.apache.parquet.parqour.cursor.implementations.noniterable.resolved.ConstantValueCursor;
 import org.apache.parquet.parqour.exceptions.TextQueryException;
 import org.apache.parquet.parqour.ingest.plan.predicates.traversal.EvaluationDifficulty;
-import org.apache.parquet.parqour.ingest.plan.predicates.traversal.TraversalInfo;
 import org.apache.parquet.parqour.ingest.read.nodes.IngestTree;
 import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
@@ -54,11 +53,6 @@ public class TextQueryBooleanConstantExpression extends TextQueryTestablePredica
   @Override
   public void bindToTree(IngestTree tree) {
 
-  }
-
-  @Override
-  public TraversalInfo traversalInfo() {
-    return null;
   }
 
   @Override

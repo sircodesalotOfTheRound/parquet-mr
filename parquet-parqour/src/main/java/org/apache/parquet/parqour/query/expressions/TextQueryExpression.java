@@ -1,5 +1,6 @@
 package org.apache.parquet.parqour.query.expressions;
 
+import org.apache.parquet.parqour.ingest.read.iterator.lamba.Predicate;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryVariableExpression;
 import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
@@ -35,6 +36,17 @@ public abstract class TextQueryExpression extends TextQueryToken {
 
   public TextQueryExpression parent() {
     return this.parent;
+  }
+
+  public boolean hasParentWhere(Predicate<TextQueryExpression> predicate) {
+    TextQueryExpression currentParent = this.parent;
+    while (currentParent != null) {
+      if (predicate.test(currentParent)) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   public abstract <TReturnType> TReturnType accept(TextQueryExpressionVisitor<TReturnType> visitor);

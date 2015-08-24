@@ -4,7 +4,6 @@ import org.apache.parquet.parqour.cursor.iface.Cursor;
 import org.apache.parquet.parqour.cursor.implementations.noniterable.resolved.ConstantValueCursor;
 import org.apache.parquet.parqour.cursor.implementations.noniterable.resolved.EvaluatedValueCursor;
 import org.apache.parquet.parqour.ingest.plan.predicates.traversal.EvaluationDifficulty;
-import org.apache.parquet.parqour.ingest.plan.predicates.traversal.TraversalInfo;
 import org.apache.parquet.parqour.ingest.read.nodes.IngestTree;
 import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
@@ -61,11 +60,6 @@ public abstract class TextQueryTestableBinaryExpression<T> extends TextQueryTest
   public void bindToTree(IngestTree tree) {
     lhs().bindToTree(tree);
     rhs().bindToTree(tree);
-  }
-
-  @Override
-  public TraversalInfo traversalInfo() {
-    return null;
   }
 
   @Override

@@ -1,15 +1,12 @@
 package org.apache.parquet.parqour.query.expressions.variable.constant;
 
-import com.sun.org.apache.xpath.internal.compiler.Keywords;
 import org.apache.parquet.parqour.cursor.iface.Cursor;
 import org.apache.parquet.parqour.cursor.implementations.noniterable.resolved.ConstantValueCursor;
 import org.apache.parquet.parqour.ingest.plan.predicates.traversal.EvaluationDifficulty;
-import org.apache.parquet.parqour.ingest.plan.predicates.traversal.TraversalInfo;
 import org.apache.parquet.parqour.ingest.read.nodes.IngestTree;
 import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryVariableExpression;
-import org.apache.parquet.parqour.query.expressions.txql.TextQueryIdentifierExpression;
 import org.apache.parquet.parqour.query.expressions.txql.TextQueryKeywordExpression;
 import org.apache.parquet.parqour.query.lexing.TextQueryLexer;
 import org.apache.parquet.parqour.query.tokens.TextQueryIdentifierToken;
@@ -49,11 +46,6 @@ public class TextQueryNullExpression extends TextQueryVariableExpression {
   @Override
   public void bindToTree(IngestTree tree) {
 
-  }
-
-  @Override
-  public TraversalInfo traversalInfo() {
-    return null;
   }
 
   @Override

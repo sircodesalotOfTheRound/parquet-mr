@@ -74,7 +74,7 @@ public enum InfixOperator {
   public static InfixOperator readInfixOperator(TextQueryLexer lexer) {
     if (InfixOperator.isInfixToken(lexer)) {
       TextQueryToken token = lexer.readCurrentAndAdvance();
-      return operators.get(token.toString());
+      return operators.get(token.toString().toLowerCase());
     } else {
       throw new TextQueryException("Invalid token for infix expression");
     }

@@ -1,8 +1,9 @@
 package org.apache.parquet.parqour.query.expressions.predicate.logical;
 
 import org.apache.parquet.parqour.ingest.plan.predicates.traversal.EvaluationDifficulty;
-import org.apache.parquet.parqour.ingest.plan.predicates.traversal.TraversalInfo;
+import org.apache.parquet.parqour.ingest.plan.predicates.traversal.TraversalPreference;
 import org.apache.parquet.parqour.ingest.read.nodes.IngestTree;
+import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryVariableExpression;
 import org.apache.parquet.parqour.query.expressions.variable.infix.InfixOperator;
@@ -43,11 +44,14 @@ public abstract class TextQueryLogicalExpression extends TextQueryVariableExpres
 
   public static TextQueryVariableExpression fromExpression(TextQueryInfixExpression expression) {
     if (expression.is(TextQueryExpressionType.INFIX)) {
+      TextQueryVariableExpression simplifiedLhsExpression = expression.lhs().simplify(expression);
+      TextQueryVariableExpression simplifiedRhsExpression = expression.rhs().simplify(expression);
+
       switch (expression.operator()) {
         case AND:
-          return new TextQueryLogicalAndExpression(expression.lhs(), expression.rhs());
+          return new TextQueryLogicalAndExpression(simplifiedLhsExpression, simplifiedRhsExpression);
         case OR:
-          return new TextQueryLogicalOrExpression(expression.lhs(), expression.rhs());
+          return new TextQueryLogicalOrExpression(simplifiedLhsExpression, simplifiedRhsExpression);
       }
     }
 
@@ -61,16 +65,21 @@ public abstract class TextQueryLogicalExpression extends TextQueryVariableExpres
 
   @Override
   public void bindToTree(IngestTree tree) {
-
+    lhs.bindToTree(tree);
+    rhs.bindToTree(tree);
   }
 
   @Override
-  public TraversalInfo traversalInfo() {
-    return null;
+  public TextQueryVariableExpression simplify(TextQueryExpression parent) {
+    return this;
+  }
+
+  public TraversalPreference traversalPreference() {
+    return TraversalPreference.computeTraversalPreference(lhs.evaluationDifficulty(), rhs.evaluationDifficulty());
   }
 
   @Override
   public EvaluationDifficulty evaluationDifficulty() {
-    return null;
+    return EvaluationDifficulty.max(lhs.evaluationDifficulty(), rhs.evaluationDifficulty());
   }
 }

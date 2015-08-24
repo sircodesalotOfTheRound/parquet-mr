@@ -87,7 +87,7 @@ public class EvaluationPathAnalysis {
   }
 
   private List<TextQueryTestablePredicateExpression> collectPredicates(TextQueryVariableExpression node, List<TextQueryTestablePredicateExpression> testablePredicates) {
-    if (node.traversalInfo().traversalPreference() == TraversalPreference.THIS_NODE) {
+    /*if (node.traversalInfo().traversalPreference() == TraversalPreference.THIS_NODE) {
       // If a node points to itself as it's preferred traversal direction, this must be a leaf.
       testablePredicates.add((TextQueryTestablePredicateExpression)node);
     } else {
@@ -96,7 +96,8 @@ public class EvaluationPathAnalysis {
       collectPredicates(node.traversalInfo().chosenRhsNode(), testablePredicates);
     }
 
-    return testablePredicates;
+    return testablePredicates;*/
+    return null;
   }
 
   private List<ColumnPredicate.LeafColumnPredicate> collectLeaves(ColumnPredicate root) {

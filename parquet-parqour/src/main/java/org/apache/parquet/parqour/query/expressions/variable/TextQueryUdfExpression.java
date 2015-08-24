@@ -1,7 +1,6 @@
 package org.apache.parquet.parqour.query.expressions.variable;
 
 import org.apache.parquet.parqour.ingest.plan.predicates.traversal.EvaluationDifficulty;
-import org.apache.parquet.parqour.ingest.plan.predicates.traversal.TraversalInfo;
 import org.apache.parquet.parqour.ingest.read.iterator.lamba.Projection;
 import org.apache.parquet.parqour.ingest.read.nodes.IngestTree;
 import org.apache.parquet.parqour.query.expressions.predicate.TextQueryTestablePredicateExpression;
@@ -76,11 +75,6 @@ public class TextQueryUdfExpression extends TextQueryTestablePredicateExpression
   @Override
   public void bindToTree(IngestTree tree) {
 
-  }
-
-  @Override
-  public TraversalInfo traversalInfo() {
-    return null;
   }
 
   @Override

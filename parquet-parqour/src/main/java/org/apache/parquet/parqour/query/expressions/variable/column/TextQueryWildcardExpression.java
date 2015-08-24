@@ -1,7 +1,6 @@
 package org.apache.parquet.parqour.query.expressions.variable.column;
 
 import org.apache.parquet.parqour.ingest.plan.predicates.traversal.EvaluationDifficulty;
-import org.apache.parquet.parqour.ingest.plan.predicates.traversal.TraversalInfo;
 import org.apache.parquet.parqour.ingest.read.nodes.IngestTree;
 import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryMemberExpression;
@@ -13,7 +12,6 @@ import org.apache.parquet.parqour.query.tokens.TextQueryToken;
 import org.apache.parquet.parqour.query.visitor.TextQueryExpressionVisitor;
 import org.apache.parquet.parqour.tools.TransformCollection;
 import org.apache.parquet.parqour.tools.TransformList;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * Created by sircodesalot on 15/4/2.
@@ -55,11 +53,6 @@ public class TextQueryWildcardExpression extends TextQueryColumnExpression imple
   @Override
   public boolean test() {
     return false;
-  }
-
-  @Override
-  public TraversalInfo traversalInfo() {
-    return null;
   }
 
   @Override

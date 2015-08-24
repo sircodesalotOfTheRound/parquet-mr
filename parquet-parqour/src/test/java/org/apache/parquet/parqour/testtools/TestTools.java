@@ -181,7 +181,7 @@ public class TestTools {
     return list.get(index);
   }
 
-  public static <T extends TextQueryTestablePredicateExpression> T simplifiedPredicateFromString(String expression) {
+  public static <T extends TextQueryVariableExpression> T simplifiedPredicateFromString(String expression) {
     TextQueryTreeRootExpression rootExpression = TextQueryTreeRootExpression.fromString(expression);
     TextQueryWhereExpression where = rootExpression.asSelectStatement().where();
     TextQueryVariableExpression predicate = rootExpression.asSelectStatement().where().predicate();

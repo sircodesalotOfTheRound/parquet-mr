@@ -1,7 +1,6 @@
 package org.apache.parquet.parqour.query.expressions.variable.infix;
 
 import org.apache.parquet.parqour.ingest.plan.predicates.traversal.EvaluationDifficulty;
-import org.apache.parquet.parqour.ingest.plan.predicates.traversal.TraversalInfo;
 import org.apache.parquet.parqour.ingest.read.nodes.IngestTree;
 import org.apache.parquet.parqour.query.expressions.TextQueryExpression;
 import org.apache.parquet.parqour.query.expressions.categories.TextQueryExpressionType;
@@ -150,11 +149,6 @@ public class TextQueryInfixExpression extends TextQueryVariableExpression {
   @Override
   public void bindToTree(IngestTree tree) {
 
-  }
-
-  @Override
-  public TraversalInfo traversalInfo() {
-    return null;
   }
 
   @Override

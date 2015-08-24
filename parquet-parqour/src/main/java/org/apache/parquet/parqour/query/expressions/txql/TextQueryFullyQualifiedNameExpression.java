@@ -1,7 +1,6 @@
 package org.apache.parquet.parqour.query.expressions.txql;
 
 import org.apache.parquet.parqour.ingest.plan.predicates.traversal.EvaluationDifficulty;
-import org.apache.parquet.parqour.ingest.plan.predicates.traversal.TraversalInfo;
 import org.apache.parquet.parqour.ingest.read.nodes.IngestTree;
 import org.apache.parquet.parqour.query.backtracking.interfaces.TextQueryBacktrackingRuleSet;
 import org.apache.parquet.parqour.query.backtracking.rules.TextQueryIdentifierExpressionBacktrackRule;
@@ -88,11 +87,6 @@ public class TextQueryFullyQualifiedNameExpression extends TextQueryVariableExpr
   @Override
   public void bindToTree(IngestTree tree) {
 
-  }
-
-  @Override
-  public TraversalInfo traversalInfo() {
-    return null;
   }
 
   @Override
